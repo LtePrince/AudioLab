@@ -1,0 +1,9 @@
+#
+Name: Eltaw
+Path: 9752727302241212
+Song: 9752727302241212.ogg
+Picture: 9752727302241212.png
+Chart: 9752727302241212.json
+Level: IN Lv.14
+Composer: Fl00t
+Charter: JKy
