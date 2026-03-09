@@ -201,17 +201,18 @@ AudioLab/
 
 ---
 
-### Phase 5 — 扩散训练框架（`src/models/diffusion.py`）
+### Phase 5 — 扩散训练框架
 
 参考 `Mug-Diffusion/mug/diffusion/diffusion.py`
 
-- [ ] **P5-1** 实现 `PhigrosDiffusionWrapper`：封装冻结 VAE + 音频编码器 + `ChartDiT1D`
-- [ ] **P5-2** 移植 `make_beta_schedule`（linear / cosine），注册 `alphas_cumprod` buffer
-- [ ] **P5-3** 实现 `q_sample(x0, t, noise)`：前向加噪
-- [ ] **P5-4** 实现训练损失（`eps` 预测）：`L = ||ε − DiT(z_t, t, audio_ctx)||²`
-- [ ] **P5-5** 实现 Classifier-Free Guidance（CFG）训练：以概率 `p=0.1` 将 `audio_ctx` 置零
-- [ ] **P5-6** 封装为 PyTorch Lightning `LightningModule`（`training_step`, `validation_step`, `configure_optimizers`）
-- [ ] **P5-7** 编写 `configs/chart_diffusion.yaml`（参考 `Mug-Diffusion/configs/mug/mug_diffusion.yaml`）
+- [x] **P5-1** `src/diffusion/schedule.py`：`make_beta_schedule`（linear / cosine）+ `NoiseSchedule`（含 `q_sample`、`snr`、posterior buffers）
+- [x] **P5-2** `src/train.py`：训练主循环（纯 PyTorch）
+  - 冻结 VAE + Wave encoder，只训练 DiT
+  - CFG Dropout（`--cfg-drop`，概率性将 `audio_c` 置零）
+  - AdamW + CosineAnnealingLR
+  - 梯度累积（`--grad-accum`）+ 梯度裁剪
+  - 定期 checkpoint 保存 + 续训支持（`--dit-ckpt`）
+- [ ] **P5-3** 编写 `configs/chart_diffusion.yaml`（训练超参配置文件）
 
 ---
 
@@ -243,6 +244,36 @@ AudioLab/
   - **音符密度–音频能量 Pearson 相关系数**（逐轨及全局）
 - [ ] **P7-3** 实现 VAE 重建基线（encode→decode，不经扩散，验证性能上界）
 - [ ] **P7-4** 音频对齐可视化：将生成谱面音符时刻叠加到 mel 图上，人工判断节拍对齐效果
+
+---
+
+### 未来计划 — PyTorch Lightning 训练框架
+
+> 当前 `src/train.py` 使用纯 PyTorch 实现，逻辑透明、易于调试。
+> 随着实验规模扩大（多 GPU、混合精度、自动 checkpoint 管理），可迁移至 **PyTorch Lightning**。
+
+迁移后的架构：
+
+```
+src/
+├── lit_module.py      # LightningModule：封装冻结 VAE + Wave + 可训练 DiT
+│     training_step()  # q_sample → DiT forward → MSE loss
+│     validation_step()# DDIM 采样 → 解码 → F1 评估
+│     configure_optimizers()  # AdamW + CosineAnnealingLR
+└── lit_train.py       # Trainer 入口：多 GPU / bf16 / 自动 checkpoint
+```
+
+Lightning 相比纯 PyTorch 的优势：
+
+| 功能 | 纯 PyTorch（当前）| Lightning（未来）|
+|------|:-----------------:|:----------------:|
+| 多 GPU（DDP）| 需手动实现 | 一行配置 |
+| 混合精度（bf16/fp16）| 需手动 scaler | 自动 |
+| Checkpoint 管理 | 手动 `torch.save` | `ModelCheckpoint` 回调 |
+| 日志（TensorBoard / WandB）| 手动 | 插件式 Logger |
+| 验证循环 | 需自行实现 | `validation_step` |
+
+迁移成本低（核心数学逻辑不变），可在模型结构稳定后按需实施。
 
 ---
 
