@@ -857,9 +857,9 @@ def parse_phigros_file(
 if __name__ == "__main__":
     _BASE = (
         "/home/adolph/Share_Document/code2/rhythm_generation/"
-        "AudioLab/data/chart/Eltaw_IN/"
+        "AudioLab/data/json/"
     )
-    _JSON = _BASE + "9752727302241212.json"
+    _JSON = _BASE + "Eltaw.json"
     _OUT  = _BASE + "generated_test.json"
 
     # --- 1. Load PhigrosChart ---
