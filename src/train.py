@@ -122,8 +122,8 @@ def _build_parser() -> argparse.ArgumentParser:
     g = p.add_argument_group("data")
     g.add_argument("--data-list",   required=True,          help="path to data_list.txt")
     g.add_argument("--cache-dir",   default=None,           help="directory for cached mel .npy files")
-    g.add_argument("--frame-ms",    type=float, default=512 / 22050 * 1000,
-                   help="milliseconds per chart frame; must match dataset (hop/sr*1000)")
+    g.add_argument("--frame-ms",    type=float, default=512 / 22050 / 4 * 8 * 1000,
+                   help="milliseconds per chart frame (hop/sr/4*8*1000 ≈ 46.44 ms)")
     g.add_argument("--max-frame",   type=int,   default=4096, help="maximum number of chart frames")
     g.add_argument("--hop-length",  type=int,   default=512,  help="mel STFT hop length")
     g.add_argument("--n-mels",      type=int,   default=128,  help="number of mel filter banks")
