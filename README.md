@@ -265,15 +265,70 @@ src/
 
 Lightning 相比纯 PyTorch 的优势：
 
-| 功能 | 纯 PyTorch（当前）| Lightning（未来）|
-|------|:-----------------:|:----------------:|
-| 多 GPU（DDP）| 需手动实现 | 一行配置 |
-| 混合精度（bf16/fp16）| 需手动 scaler | 自动 |
-| Checkpoint 管理 | 手动 `torch.save` | `ModelCheckpoint` 回调 |
-| 日志（TensorBoard / WandB）| 手动 | 插件式 Logger |
-| 验证循环 | 需自行实现 | `validation_step` |
+| 功能                      | 纯 PyTorch（当前）   | Lightning（未来）        |
+| ----------------------- |:---------------:|:--------------------:|
+| 多 GPU（DDP）              | 需手动实现           | 一行配置                 |
+| 混合精度（bf16/fp16）         | 需手动 scaler      | 自动                   |
+| Checkpoint 管理           | 手动 `torch.save` | `ModelCheckpoint` 回调 |
+| 日志（TensorBoard / WandB） | 手动              | 插件式 Logger           |
+| 验证循环                    | 需自行实现           | `validation_step`    |
 
 迁移成本低（核心数学逻辑不变），可在模型结构稳定后按需实施。
+
+---
+
+### 未来计划 — Mapperatorinator 参考特性
+
+> 以下特性来自 [Mapperatorinator](https://github.com/OliBomby/Mapperatorinator)（osuT5 + osu-diffusion 双阶段管线），
+> 当前 AudioLab 尚未实现，可在模型稳定后逐步引入。
+
+#### 一、多维条件控制（Conditioning）
+
+| 特性                                    | Mapperatorinator 实现                                                   | AudioLab 现状 | 预期收益        |
+| ------------------------------------- | --------------------------------------------------------------------- | ----------- | ----------- |
+| **难度条件**                              | StarRating → 离散难度类别嵌入，独立 CFG dropout (`diff_dropout_prob=0.2`)        | ❌ 无难度控制     | 可生成指定难度谱面   |
+| **风格 / Mapper 条件**                    | mapper_id → style embedding；`num_mappers=3731`                        | ❌ 无风格控制     | 可模仿特定制作者风格  |
+| **描述符 / Tag 条件**                      | 文字描述符（"stream"/"jump"/"tech"）→ 多热编码类别嵌入                               | ❌ 无描述控制     | 可定向生成特定图型风格 |
+| **多条件独立 CFG**                         | 每个条件维度（音频 / 难度 / Mapper / 描述符）分别 dropout + 独立引导尺度                     | 仅音频 CFG     | 更细粒度的生成控制   |
+| **Hold note ratio / Scroll speed 条件** | 专用前缀 Token：`add_hold_note_ratio_token`、`add_scroll_speed_ratio_token` | ❌           | 控制长按比例与滚动速度 |
+
+实现要点：
+
+- 在 `RhythmDiT` 中新增 `CondEmbedder`，将难度 / 风格标量映射为向量，拼接到 timestep embedding 后
+- 在 `train.py` 中对每个条件独立执行 dropout，推理时每个维度有独立的 `cfg_scale`
+
+#### 二、训练改进
+
+| 特性                               | Mapperatorinator 实现                                                              | 备注                                 |
+| -------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------- |
+| **节奏权重损失**                       | `rhythm_weight=3.0`：对节奏 Token 区间 `[rhythm_token_start, rhythm_token_end]` 放大损失权重 | 强制模型优先对齐节拍，避免音符位置漂移                |
+| **Double-time 数据增强**             | `double_time_prob=0.5`：以 50% 概率将谱面 2× 加速（等价于 0.5× 时间缩放）                          | 与现有 rate stretch 互补，扩展速度分布         |
+| **结构化训练日志 (WandB)**              | `log_with='wandb'`，每 10 步记录 loss / lr / grad norm                                | 当前仅 print，无法在线监控或对比实验              |
+| **HuggingFace Accelerate 多 GPU** | 通过 `accelerate` 管理分布式训练与混合精度                                                     | 与 Lightning 方案二选一，Accelerate 侵入性更低 |
+
+#### 三、推理改进
+
+| 特性                      | Mapperatorinator 实现                                 | 备注                                 |
+| ----------------------- | --------------------------------------------------- | ---------------------------------- |
+| **滑动窗口推理**              | `lookback` / `lookahead` 控制上下文重叠窗口；跨窗口传递历史 Token    | 突破当前 4096 帧（≈190 s）上限，支持任意时长       |
+| **二阶段精化模型**             | osu-diffusion 在 osuT5 生成序列后再做坐标精化（`refine_iters` 次） | AudioLab 若后续扩展 2D 坐标输出，可考虑同样的两阶段架构 |
+| **Beat snapping Token** | `EventRange(EventType.SNAPPING, 0, 16)` 量化节拍细分信息    | 辅助模型学习节奏规律，减少非节拍帧上的噪声预测            |
+
+#### 四、评估改进
+
+| 特性                                   | Mapperatorinator 实现                                                    | 备注                    |
+| ------------------------------------ | ---------------------------------------------------------------------- | --------------------- |
+| **FID 评估**                           | 训练专用 `OsuClassifier`，用其 feature 层计算生成集与真实集的 Fréchet Inception Distance | 比 F1@10ms 更全面反映谱面分布质量 |
+| **Drain time / BPM / StarRating 统计** | `calc_fid.py` 中同时输出谱面的客观难度统计量，与真实分布做对比                                 | 辅助验证生成谱面的难度分布是否符合预期   |
+
+> **优先级建议**（从高到低）：
+> 
+> 1. 节奏权重损失 — 一行改动，立竿见影
+> 2. WandB 日志 — 实验管理必备
+> 3. 难度条件控制 — 使模型实用化的关键
+> 4. 滑动窗口推理 — 解除时长限制
+> 5. FID 评估 — 需额外训练分类器，工程量较大
+> 6. 风格 / Mapper / 描述符条件 — 需大规模数据支撑
 
 ---
 
