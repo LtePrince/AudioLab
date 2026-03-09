@@ -56,25 +56,12 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-# ---------------------------------------------------------------------------
-# Local imports – work both as module (relative) and as __main__ (absolute)
-# ---------------------------------------------------------------------------
-try:
-    from .chart2array import (
-        NUM_CHANNELS,
-        Phigros4kConvertor,
-        parse_phigros_file,
-    )
-    from .audio2mel import AudioGPUprocessor
-except ImportError:  # running as __main__
-    import sys
-    sys.path.insert(0, str(Path(__file__).parent))
-    from chart2array import (  # type: ignore[no-redef]
-        NUM_CHANNELS,
-        Phigros4kConvertor,
-        parse_phigros_file,
-    )
-    from audio2mel import AudioGPUprocessor  # type: ignore[no-redef]
+from src.data.chart2array import (
+    NUM_CHANNELS,
+    Phigros4kConvertor,
+    parse_phigros_file,
+)
+from src.data.audio2mel import AudioGPUprocessor
 
 
 # ===========================================================================
