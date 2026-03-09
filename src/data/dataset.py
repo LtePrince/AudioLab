@@ -49,7 +49,6 @@ import random
 import warnings
 from pathlib import Path
 from typing import Optional
-import pathlib
 
 import cv2
 import numpy as np
@@ -377,83 +376,3 @@ class PhigrosDataset(Dataset):
             f"cache={'on' if self._cache_dir else 'off'})"
         )
 
-
-# ===========================================================================
-# Smoke test
-# ===========================================================================
-
-if __name__ == "__main__":
-    _REPO_ROOT  = pathlib.Path(__file__).resolve().parents[2]   # AudioLab/
-    _DATA_DIR   = _REPO_ROOT / "data"
-    _LIST_PATH  = _DATA_DIR / "data.txt"
-    _CACHE_DIR  = _DATA_DIR / "cache_mel"
-
-    FRAME_MS  = 512 / 22050 / 4 * 8 * 1000   # ≈ 46.44 ms
-    MAX_FRAME = 4096
-
-    # ---- 1. Use data/data.txt directly ----
-    list_path = str(_LIST_PATH)
-    print(f"[1] data list : {list_path}")
-
-    # ---- 2. Instantiate dataset (no augmentation, disk cache) ----
-    dataset = PhigrosDataset(
-        data_list_path=list_path,
-        convertor_params={"frame_ms": FRAME_MS, "max_frame": MAX_FRAME},
-        cache_dir=_CACHE_DIR,
-        augment=False,
-    )
-    print(f"[2] {repr(dataset)}")
-    assert len(dataset) == 1, f"Expected 1 entry, got {len(dataset)}"
-
-    # ---- 3. Fetch sample, verify shapes ----
-    sample = dataset[0]
-    audio      = sample["audio"]
-    note       = sample["note"]
-    valid_flag = sample["valid_flag"]
-    meta       = sample["meta"]
-
-    print(f"[3] audio      : {tuple(audio.shape)}  dtype={audio.dtype}")
-    print(f"    note       : {tuple(note.shape)}   dtype={note.dtype}")
-    print(f"    valid_flag : {tuple(valid_flag.shape)}  dtype={valid_flag.dtype}")
-    print(f"    meta       : {meta}")
-
-    assert audio.ndim == 2,      "audio must be 2-D (n_mels, T)"
-    assert audio.shape[0] == 128, f"expected n_mels=128, got {audio.shape[0]}"
-    assert note.shape    == (NUM_CHANNELS, MAX_FRAME), \
-        f"note shape mismatch: {note.shape}"
-    assert valid_flag.shape == (MAX_FRAME,), \
-        f"valid_flag shape mismatch: {valid_flag.shape}"
-    print("[3] shape assertions passed ✓")
-
-    # ---- 4. Fetch again – should hit mel cache ----
-    sample2 = dataset[0]
-    assert torch.allclose(sample["audio"], sample2["audio"]), \
-        "cache read differs from original"
-    print("[4] mel cache read consistent ✓")
-
-    # ---- 5. Instantiate with augmentation, fetch sample ----
-    dataset_aug = PhigrosDataset(
-        data_list_path=list_path,
-        convertor_params={"frame_ms": FRAME_MS, "max_frame": MAX_FRAME},
-        augment=True,
-        mirror_prob=1.0,    # always mirror for deterministic test
-        rate_range=(1.0, 1.0),   # fixed rate
-    )
-    sample_aug = dataset_aug[0]
-    print(f"[5] augmented note shape : {tuple(sample_aug['note'].shape)}")
-    # mirrored note array should differ from non-mirrored
-    assert not torch.allclose(sample["note"], sample_aug["note"]), \
-        "mirror augmentation had no effect"
-    print("[5] mirror augmentation changes note array ✓")
-
-    # ---- 6. DataLoader collation sanity check ----
-    from torch.utils.data import DataLoader
-
-    loader = DataLoader(dataset, batch_size=1, num_workers=0)
-    batch  = next(iter(loader))
-    print(f"[6] DataLoader batch audio : {tuple(batch['audio'].shape)}")
-    print(f"    DataLoader batch note  : {tuple(batch['note'].shape)}")
-    assert batch["audio"].shape[0] == 1, "batch size should be 1"
-    print("[6] DataLoader collation ✓")
-
-    print("\n=== All smoke tests passed ===")
