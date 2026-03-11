@@ -52,7 +52,7 @@ __all__ = ["RhythmDiT", "DEFAULT_DIT_CONFIG"]
 DEFAULT_DIT_CONFIG = dict(
     z_channels     = 16,       # ChartVAE z_channels
     audio_channels = 256,      # AudioWaveEncoder out_channels
-    hidden_dim     = 512,      # transformer width D
+    hidden_dim     = 384,      # transformer width D
     depth          = 12,       # number of DoubleStreamBlocks
     num_heads      = 8,        # attention heads H  (hidden_dim must be divisible)
     mlp_ratio      = 4.0,      # FFN hidden-dim multiplier
@@ -113,7 +113,7 @@ class RhythmDiT(nn.Module):
     Args:
         z_channels     : chart latent channels   (default 16)
         audio_channels : audio cond channels     (default 256)
-        hidden_dim     : model width D            (default 512)
+        hidden_dim     : model width D            (default 384)
         depth          : number of DoubleStreamBlocks (default 12)
         num_heads      : attention heads H        (default 8)
         mlp_ratio      : FFN expansion factor     (default 4.0)
@@ -125,7 +125,7 @@ class RhythmDiT(nn.Module):
         self,
         z_channels:     int   = 16,
         audio_channels: int   = 256,
-        hidden_dim:     int   = 512,
+        hidden_dim:     int   = 384,
         depth:          int   = 12,
         num_heads:      int   = 8,
         mlp_ratio:      float = 4.0,
