@@ -20,8 +20,10 @@ from src.data.chart2array import (
 # Constants
 # ---------------------------------------------------------------------------
 
-_BASE     = "data/json/"
-_JSON     = _BASE + "Eltaw.json"
+# generate.json is the 4-lane chart produced by the conversion pipeline.
+# 9752727302241212.json is the original multi-line Phigros chart and is NOT
+# used here — training always consumes the 4k-converted form.
+_JSON     = "data/chart/Eltaw_IN/generate.json"
 FRAME_MS  = 512 / 22050 / 4 * 8 * 1000   # ≈ 46.44 ms
 MAX_FRAME = 4096
 
@@ -106,6 +108,31 @@ def test_array_to_notes() -> None:
     print("[5] array_to_notes round-trip ✓")
 
 
+def test_save_load_flat_array() -> None:
+    """save_flat_array / load_flat_array round-trip preserves arrays and meta."""
+    import tempfile, os
+    chart = parse_phigros_file(_JSON, version="IN")
+    conv  = Phigros4kConvertor(frame_ms=FRAME_MS, max_frame=MAX_FRAME)
+    flat  = conv.flatten(chart)
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = os.path.join(tmp, "test.npz")
+        Phigros4kConvertor.save_flat_array(flat, path)
+        assert os.path.exists(path), "npz file was not created"
+
+        na, vf, bpm, offset = Phigros4kConvertor.load_flat_array(path)
+
+    from src.data.chart2array import NUM_CHANNELS
+    assert na.shape == (NUM_CHANNELS, MAX_FRAME), f"note_array shape mismatch: {na.shape}"
+    assert vf.shape == (MAX_FRAME,),              f"valid_flag shape mismatch: {vf.shape}"
+    assert na.dtype.name == "float32"
+    assert vf.dtype.name == "float32"
+    assert np.allclose(na, flat.note_array), "note_array mismatch after round-trip"
+    assert np.allclose(vf, flat.valid_flag), "valid_flag mismatch after round-trip"
+    assert abs(bpm - flat.bpm) < 1e-6,     f"bpm mismatch: {bpm} vs {flat.bpm}"
+    print(f"[6] save/load flat array  shape={na.shape}  bpm={bpm:.1f} ✓")
+
+
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
@@ -116,4 +143,5 @@ if __name__ == "__main__":
     test_flatten()
     test_chart_to_array()
     test_array_to_notes()
+    test_save_load_flat_array()
     print("\n=== All chart2array tests passed ===")
