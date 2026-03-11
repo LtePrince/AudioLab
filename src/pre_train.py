@@ -201,6 +201,7 @@ def _pretrain_vae(args: argparse.Namespace) -> None:
         data_list_path   = args.data_list,
         convertor_params = {"frame_ms": args.frame_ms, "max_frame": args.max_frame},
         cache_dir        = args.cache_dir,
+        chart_cache_dir  = args.chart_cache_dir,
         augment          = True,
         hop_length       = args.hop_length,
         n_mels           = args.n_mels,
@@ -344,6 +345,7 @@ def _pretrain_wave(args: argparse.Namespace) -> None:
         data_list_path   = args.data_list,
         convertor_params = {"frame_ms": args.frame_ms, "max_frame": args.max_frame},
         cache_dir        = args.cache_dir,
+        chart_cache_dir  = args.chart_cache_dir,
         augment          = False,   # mel autoencoder does not need chart mirror augmentation
         hop_length       = args.hop_length,
         n_mels           = args.n_mels,
@@ -500,6 +502,8 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="path to data_list.txt")
     g.add_argument("--cache-dir",   default=None,
                    help="directory for cached mel .npy files (optional)")
+    g.add_argument("--chart-cache-dir", default=None,
+                   help="directory for cached chart .npz files (skips JSON parse on cache hit; disables rate augmentation)")
     g.add_argument("--frame-ms",    type=float,
                    default=512 / 22050 / 4 * 8 * 1000,
                    help="milliseconds per chart frame (≈ 46.44 ms)")

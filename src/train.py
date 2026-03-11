@@ -122,6 +122,7 @@ def _build_parser() -> argparse.ArgumentParser:
     g = p.add_argument_group("data")
     g.add_argument("--data-list",   required=True,          help="path to data_list.txt")
     g.add_argument("--cache-dir",   default=None,           help="directory for cached mel .npy files")
+    g.add_argument("--chart-cache-dir", default=None,       help="directory for cached chart .npz files (skips JSON parse on cache hit; disables rate augmentation)")
     g.add_argument("--frame-ms",    type=float, default=512 / 22050 / 4 * 8 * 1000,
                    help="milliseconds per chart frame (hop/sr/4*8*1000 ≈ 46.44 ms)")
     g.add_argument("--max-frame",   type=int,   default=4096, help="maximum number of chart frames")
@@ -184,6 +185,7 @@ def main() -> None:
         data_list_path   = args.data_list,
         convertor_params = {"frame_ms": args.frame_ms, "max_frame": args.max_frame},
         cache_dir        = args.cache_dir,
+        chart_cache_dir  = args.chart_cache_dir,
         augment          = True,
         hop_length       = args.hop_length,
         n_mels           = args.n_mels,

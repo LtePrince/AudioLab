@@ -33,12 +33,22 @@ Data flow
 
     data_list.txt
         └─ PhigrosDataset.__getitem__()
-                ├─ AudioGPUprocessor  ──►  log-mel  (n_mels, T_audio)
-                └─ parse_phigros_file()
-                        └─ Phigros4kConvertor.flatten()
-                                └─ PhigrosFlatChart
-                                    ├─ .note_array  (NUM_CHANNELS, max_frame)
-                                    └─ .valid_flag  (max_frame,)
+                ├─ _load_mel()        ──►  log-mel  (n_mels, T_audio)      [mel_cache npy]
+                └─ _load_note_array()
+                        ├─ [chart_cache hit]  npz → note_array + valid_flag
+                        └─ [cache miss / disabled]
+                                parse_phigros_file()
+                                └─ Phigros4kConvertor.flatten()
+                                        └─ PhigrosFlatChart
+                                            ├─ .note_array  (NUM_CHANNELS, max_frame)
+                                            └─ .valid_flag  (max_frame,)
+                                [save to chart_cache if enabled]
+
+Note: when ``chart_cache_dir`` is set, note arrays are cached as compressed
+``.npz`` files (base form: rate=1.0, mirror=False).  Mirror augmentation is
+applied in-memory via a channel permutation.  Rate augmentation changes frame
+timings and **cannot** be reconstructed from a cached array, so it is
+automatically disabled whenever ``chart_cache_dir`` is active.
 """
 
 from __future__ import annotations
@@ -57,9 +67,21 @@ from torch.utils.data import Dataset
 
 from src.data.chart2array import (
     NUM_CHANNELS,
+    NUM_LANES,
     Phigros4kConvertor,
     parse_phigros_file,
 )
+
+# Channel permutation for mirror augmentation applied to a pre-encoded note_array.
+# Mirror swaps lane 0↔3 and lane 1↔2; each of the 5 channel groups is reversed.
+# Groups: is_start[0-3], start_off[4-7], is_holding[8-11], end_offset[12-15], note_type[16-19]
+_MIRROR_PERM: list[int] = [
+    3, 2, 1, 0,
+    7, 6, 5, 4,
+    11, 10, 9, 8,
+    15, 14, 13, 12,
+    19, 18, 17, 16,
+]
 from src.data.audio2mel import AudioGPUprocessor
 
 
@@ -81,7 +103,13 @@ class PhigrosDataset(Dataset):
         ``offset_ms`` (float), ``from_logits`` (bool).
     cache_dir:
         Directory for caching pre-computed log-mel ``.npy`` files.
-        Pass ``None`` (default) to disable caching.
+        Pass ``None`` (default) to disable mel caching.
+    chart_cache_dir:
+        Directory for caching pre-encoded note-array ``.npz`` files
+        (base form: rate=1.0, mirror=False).  When set, JSON parsing and
+        ``Phigros4kConvertor.flatten()`` are skipped on cache hits, and
+        rate augmentation is automatically disabled (mirror still works).
+        Pass ``None`` (default) to disable chart caching.
     augment:
         When ``True``, randomly apply mirror-flip and rate-stretch on every
         ``__getitem__`` call.
@@ -110,6 +138,7 @@ class PhigrosDataset(Dataset):
         convertor_params: dict,
         *,
         cache_dir: Optional[str | Path] = None,
+        chart_cache_dir: Optional[str | Path] = None,
         augment: bool = False,
         mirror_prob: float = 0.5,
         rate_range: tuple[float, float] = (0.9, 1.1),
@@ -186,13 +215,22 @@ class PhigrosDataset(Dataset):
         )
 
         # ------------------------------------------------------------------ #
-        # 5. Cache directory                                                  #
+        # 5. Mel cache directory                                              #
         # ------------------------------------------------------------------ #
         if cache_dir is not None:
             self._cache_dir: Optional[Path] = Path(cache_dir).resolve()
             self._cache_dir.mkdir(parents=True, exist_ok=True)
         else:
             self._cache_dir = None
+
+        # ------------------------------------------------------------------ #
+        # 6. Chart array cache directory                                      #
+        # ------------------------------------------------------------------ #
+        if chart_cache_dir is not None:
+            self._chart_cache_dir: Optional[Path] = Path(chart_cache_dir).resolve()
+            self._chart_cache_dir.mkdir(parents=True, exist_ok=True)
+        else:
+            self._chart_cache_dir = None
 
     # ---------------------------------------------------------------------- #
     # Internal helpers                                                        #
@@ -247,6 +285,63 @@ class PhigrosDataset(Dataset):
         h    = hashlib.sha1(audio_path.encode()).hexdigest()[:8]
         stem = Path(audio_path).stem
         return self._cache_dir / f"{stem}_{h}.npy"
+
+    def _chart_cache_path(self, json_path: str) -> Optional[Path]:
+        """Return the cache ``.npz`` path for *json_path*, or ``None`` if
+        chart caching is disabled."""
+        if self._chart_cache_dir is None:
+            return None
+        h    = hashlib.sha1(json_path.encode()).hexdigest()[:8]
+        stem = Path(json_path).stem
+        return self._chart_cache_dir / f"{stem}_{h}.npz"
+
+    def _load_note_array(
+        self,
+        json_path:  str,
+        audio_path: str,
+        version:    str,
+        mirror:     bool,
+        convertor:  Optional["Phigros4kConvertor"] = None,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """Return ``(note_array, valid_flag)`` for the given chart.
+
+        If chart caching is enabled:
+          - Cache hit:  load from ``.npz``, apply mirror in-memory.
+          - Cache miss: parse JSON, flatten (rate=1.0), save to cache,
+            apply mirror in-memory.
+        If chart caching is disabled: parse JSON with current convertor
+        settings (rate + mirror both applied during flatten).
+
+        Returns
+        -------
+        note_array : ndarray (NUM_CHANNELS, max_frame)  float32
+        valid_flag : ndarray (max_frame,)               float32
+        """
+        npz_path = self._chart_cache_path(json_path)
+
+        if npz_path is not None:
+            # --- chart cache path ---
+            if not npz_path.exists():
+                # First access: parse JSON with base convertor (rate=1.0, mirror=False)
+                chart = parse_phigros_file(json_path, audio_path=audio_path, version=version)
+                flat  = self._convertor.flatten(chart)   # base convertor: rate=1.0 mirror=False
+                Phigros4kConvertor.save_flat_array(flat, str(npz_path))
+                note_array = flat.note_array
+                valid_flag = flat.valid_flag
+            else:
+                note_array, valid_flag, _, _ = Phigros4kConvertor.load_flat_array(str(npz_path))
+
+            # Apply mirror augmentation in-memory (channel permutation, no re-parse needed)
+            if mirror:
+                note_array = note_array[_MIRROR_PERM, :]
+
+            return note_array, valid_flag
+
+        # --- no chart cache: use convertor directly (supports rate augmentation) ---
+        conv  = convertor if convertor is not None else self._convertor
+        chart = parse_phigros_file(json_path, audio_path=audio_path, version=version)
+        flat  = conv.flatten(chart)   # uses whatever mirror/rate is set
+        return flat.note_array, flat.valid_flag
 
     def _load_mel(self, audio_path: str) -> torch.Tensor:
         """Load log-mel spectrogram for *audio_path*.
@@ -325,25 +420,23 @@ class PhigrosDataset(Dataset):
         # ---- 1. Log-mel spectrogram ----
         audio = self._load_mel(audio_path)   # (n_mels, T_audio)
 
-        # ---- 2. Phigros chart ----
-        chart = parse_phigros_file(json_path, audio_path=audio_path, version=version)
+        # ---- 2 & 3. Augmentation parameters ----
+        # When chart_cache_dir is active, rate augmentation is disabled because
+        # the cached array encodes frame positions at rate=1.0 and cannot be
+        # re-indexed post-hoc.  Mirror is still applied as a channel permutation.
+        chart_cache_active = self._chart_cache_dir is not None
 
-        # ---- 3. Choose convertor (augmented or default) ----
         if self.augment:
-            mirror    = random.random() < self.mirror_prob
-            rate      = random.uniform(self.rate_range[0], self.rate_range[1])
-            convertor = self._make_convertor(mirror, rate)
+            mirror = random.random() < self.mirror_prob
+            rate   = 1.0 if chart_cache_active else random.uniform(self.rate_range[0], self.rate_range[1])
         else:
-            rate      = self._base_rate
-            convertor = self._convertor
+            mirror = self._base_mirror
+            rate   = self._base_rate
 
-        # ---- 3b. Time-stretch mel to match note rate ----
-        # note 时间轴已按 adjusted_ms = original_ms / rate 压缩，
-        # mel 需同步拉伸：new_T = round(T / rate)
+        # ---- 3b. Time-stretch mel when rate != 1.0 (only if not using chart cache) ----
         if rate != 1.0:
             n_mels, T = audio.shape
             new_T = max(1, int(round(T / rate)))
-            # cv2.resize: (width=new_T, height=n_mels)
             audio_np = cv2.resize(
                 audio.numpy().reshape(n_mels, T, 1),
                 (new_T, n_mels),
@@ -351,12 +444,30 @@ class PhigrosDataset(Dataset):
             ).reshape(n_mels, new_T)
             audio = torch.from_numpy(audio_np).float()
 
-        # ---- 4. Flatten chart → note_array + valid_flag ----
-        flat = convertor.flatten(chart)
+        # Update default convertor's mirror/rate so flatten() uses correct settings
+        # (only relevant when chart_cache is NOT active)
+        if not chart_cache_active and (mirror != self._base_mirror or rate != self._base_rate):
+            convertor = self._make_convertor(mirror, rate)
+        else:
+            convertor = self._convertor
 
-        note       = torch.from_numpy(flat.note_array).float()   # (NUM_CHANNELS, T)
-        valid_flag = torch.from_numpy(flat.valid_flag).float()   # (T,)
-        meta       = flat.for_batch()
+        # ---- 4. Load note_array + valid_flag (with chart caching) ----
+        note_array, valid_flag_arr = self._load_note_array(
+            json_path, audio_path, version, mirror=mirror, convertor=convertor
+        )
+
+        note       = torch.from_numpy(note_array).float()       # (NUM_CHANNELS, max_frame)
+        valid_flag = torch.from_numpy(valid_flag_arr).float()   # (max_frame,)
+
+        # Build minimal meta from JSON path (bpm/offset not available without parsing
+        # when chart cache is active; use 0.0 as placeholder)
+        meta = {
+            "json_path":  json_path,
+            "audio_path": audio_path,
+            "bpm":        0.0,
+            "offset":     0.0,
+            "version":    version,
+        }
 
         return {
             "audio":      audio,
@@ -373,6 +484,7 @@ class PhigrosDataset(Dataset):
             f"max_frame={self._max_frame}, "
             f"n_mels={self._n_mels}, "
             f"augment={self.augment}, "
-            f"cache={'on' if self._cache_dir else 'off'})"
+            f"mel_cache={'on' if self._cache_dir else 'off'}, "
+            f"chart_cache={'on' if self._chart_cache_dir else 'off'})"
         )
 

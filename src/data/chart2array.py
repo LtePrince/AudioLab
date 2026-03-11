@@ -718,6 +718,55 @@ class Phigros4kConvertor:
         return [n for _, n in notes]
 
     # ------------------------------------------------------------------
+    # Public: save_flat_array / load_flat_array  (npy I/O)
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def save_flat_array(flat: "PhigrosFlatChart", path: str) -> None:
+        """Save a :class:`PhigrosFlatChart` to a compressed ``.npz`` file.
+
+        Stores ``note_array``, ``valid_flag``, and a 2-element ``meta``
+        array ``[bpm, offset]``.  The flat note list and source paths are
+        not persisted (they are not needed for training).
+
+        Parameters
+        ----------
+        flat : PhigrosFlatChart
+        path : str
+            Destination path (e.g. ``cache/song.npz``); parent dirs are
+            created automatically.
+        """
+        os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+        np.savez_compressed(
+            path,
+            note_array = flat.note_array.astype(np.float32),
+            valid_flag = flat.valid_flag.astype(np.float32),
+            meta       = np.array([flat.bpm, flat.offset], dtype=np.float64),
+        )
+
+    @staticmethod
+    def load_flat_array(
+        path: str,
+    ) -> tuple[np.ndarray, np.ndarray, float, float]:
+        """Load a ``.npz`` flat chart saved by :meth:`save_flat_array`.
+
+        Returns
+        -------
+        note_array : ndarray (NUM_CHANNELS, T)  float32
+        valid_flag : ndarray (T,)               float32
+        bpm        : float
+        offset     : float
+        """
+        data = np.load(path)
+        meta = data["meta"]
+        return (
+            data["note_array"].astype(np.float32),
+            data["valid_flag"].astype(np.float32),
+            float(meta[0]),
+            float(meta[1]),
+        )
+
+    # ------------------------------------------------------------------
     # Public: save_phigros_file  (P1-6)
     # ------------------------------------------------------------------
 
