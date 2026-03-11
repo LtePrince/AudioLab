@@ -26,7 +26,7 @@ Usage
 ~~~~~
   uv run python src/train.py \\
       --data-list  data/data.txt \\
-      --ckpt-dir   checkpoints/ \\
+      --ckpt-dir   checkpoints/  \\
       --epochs     200 \\
       --batch-size 8 \\
       --lr         1e-4 \\
@@ -132,7 +132,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # ── checkpoint ─────────────────────────────────────────────────────────
     g = p.add_argument_group("checkpoint")
-    g.add_argument("--ckpt-dir",   default="checkpoints",   help="directory to save checkpoints")
+    g.add_argument("--ckpt-dir",   default="checkpoints",   help="root checkpoint directory (subdir dit/ is created automatically)")
     g.add_argument("--vae-ckpt",   default=None,            help="path to pretrained VAE .pt")
     g.add_argument("--wave-ckpt",  default=None,            help="path to pretrained Wave encoder .pt")
     g.add_argument("--dit-ckpt",   default=None,            help="path to DiT checkpoint to resume from")
@@ -173,7 +173,7 @@ def main() -> None:
     print(f"[train] device={device}  seed={args.seed}")
 
     # ── output directory ───────────────────────────────────────────────────
-    ckpt_dir = Path(args.ckpt_dir)
+    ckpt_dir = Path(args.ckpt_dir) / "dit"
     ckpt_dir.mkdir(parents=True, exist_ok=True)
 
     # ── Dataset & DataLoader ───────────────────────────────────────────────

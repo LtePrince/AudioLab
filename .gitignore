@@ -12,3 +12,4 @@ wheels/
 # training data and output
 data/
 out/
+checkpoints/
