@@ -21,8 +21,8 @@ from src.data.audio2mel import AudioCPUprocessor, AudioGPUprocessor
 # ---------------------------------------------------------------------------
 
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]   # AudioLab/
-_AUDIO     = str(_REPO_ROOT / "data" / "audio" / "Eltaw.ogg")
-_NPY       = str(_REPO_ROOT / "data" / "audio" / "Eltaw.npy")
+_AUDIO     = str(_REPO_ROOT / "data" / "example" / "audio" / "Eltaw.ogg")
+_NPY       = str(_REPO_ROOT / "data" / "example" / "audio" / "Eltaw.npy")
 
 N_MELS = 128
 

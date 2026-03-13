@@ -20,10 +20,11 @@ from src.data.chart2array import (
 # Constants
 # ---------------------------------------------------------------------------
 
-# generate.json is the 4-lane chart produced by the conversion pipeline.
-# 9752727302241212.json is the original multi-line Phigros chart and is NOT
-# used here — training always consumes the 4k-converted form.
-_JSON     = "data/chart/Eltaw_IN/generate.json"
+# Eltaw.json is the original multi-line Phigros chart (23 judge lines).
+# It is used here as the raw input to the 4k conversion pipeline.
+# test_generate_json() will produce generate.json in the same directory.
+_JSON     = "data/example/json/Eltaw.json"
+_GEN_JSON = "data/example/json/generate.json"   # output of the 4k conversion
 FRAME_MS  = 512 / 22050 / 4 * 8 * 1000   # ≈ 46.44 ms
 MAX_FRAME = 4096
 
@@ -108,6 +109,46 @@ def test_array_to_notes() -> None:
     print("[5] array_to_notes round-trip ✓")
 
 
+def test_generate_json() -> None:
+    """Flatten original Eltaw.json and write generate.json to the same dir.
+
+    The output is a single-judge-line Phigros-format JSON that can be loaded
+    back with ``parse_phigros_file`` and must have exactly one judge line.
+    """
+    import json as _json, warnings
+    chart = parse_phigros_file(_JSON, version="IN")
+    conv  = Phigros4kConvertor(frame_ms=FRAME_MS, max_frame=MAX_FRAME)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")          # suppress collision warnings
+        flat = conv.flatten(chart)
+
+    conv.save_phigros_file(
+        note_array=flat.note_array,
+        bpm=chart.bpm,
+        output_path=_GEN_JSON,
+        offset=chart.offset,
+    )
+
+    # Verify the output is readable and well-formed
+    with open(_GEN_JSON) as f:
+        data = _json.load(f)
+    assert data["formatVersion"] == 3
+    lines = data["judgeLineList"]
+    assert len(lines) == 1, f"expected 1 judge line, got {len(lines)}"
+    notes = lines[0]["notesAbove"]
+    assert len(notes) == flat.encoded_onset_count, (
+        f"note count mismatch: {len(notes)} vs {flat.encoded_onset_count}"
+    )
+
+    # Round-trip: reload with parse_phigros_file
+    gen_chart = parse_phigros_file(_GEN_JSON, version="IN")
+    assert gen_chart.total_note_count == flat.encoded_onset_count
+    assert abs(gen_chart.bpm - chart.bpm) < 1e-3
+
+    print(f"[6] generate.json written → {_GEN_JSON}")
+    print(f"    judge lines : {len(lines)},  notes : {len(notes)} ✓")
+
+
 def test_save_load_flat_array() -> None:
     """save_flat_array / load_flat_array round-trip preserves arrays and meta."""
     import tempfile, os
@@ -130,7 +171,7 @@ def test_save_load_flat_array() -> None:
     assert np.allclose(na, flat.note_array), "note_array mismatch after round-trip"
     assert np.allclose(vf, flat.valid_flag), "valid_flag mismatch after round-trip"
     assert abs(bpm - flat.bpm) < 1e-6,     f"bpm mismatch: {bpm} vs {flat.bpm}"
-    print(f"[6] save/load flat array  shape={na.shape}  bpm={bpm:.1f} ✓")
+    print(f"[7] save/load flat array  shape={na.shape}  bpm={bpm:.1f} ✓")
 
 
 # ---------------------------------------------------------------------------
@@ -143,5 +184,6 @@ if __name__ == "__main__":
     test_flatten()
     test_chart_to_array()
     test_array_to_notes()
+    test_generate_json()
     test_save_load_flat_array()
     print("\n=== All chart2array tests passed ===")
