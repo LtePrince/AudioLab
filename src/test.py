@@ -166,8 +166,9 @@ def generate_chart(
     waveform = audio_proc.load_from_path(audio_path)   # (1, C, T_wav)
     mel = audio_proc.forward(waveform)                 # (1, n_mels, T_audio)
     mel = mel.squeeze(0)                               # (n_mels, T_audio)
+    actual_audio_frames = mel.shape[-1]                # capture before padding
     print(f"         audio  : {audio_path}")
-    print(f"         mel    : {tuple(mel.shape)}")
+    print(f"         mel    : {tuple(mel.shape)}  (actual {actual_audio_frames} frames)")
 
     # ── Step 2: pad / trim mel to max_frame ──────────────────────────────
     mel = _pad_or_trim_mel(mel, max_frame)             # (n_mels, max_frame)
@@ -208,6 +209,18 @@ def generate_chart(
 
     # ── Step 6: save Phigros JSON ─────────────────────────────────────────
     frame_ms = hop_length / sr / 4 * 8 * 1000         # ≈ 46.44 ms  (must match training)
+    mel_frame_ms = hop_length / sr * 1000              # ≈ 23.22 ms per mel frame
+    mel_per_chart = round(frame_ms / mel_frame_ms)     # = 2: each chart frame ≈ 2 mel frames
+
+    # Clip note_array to the actual audio duration in chart frames.
+    # actual_audio_frames (mel frames) → convert to chart frames, cap at max_frame.
+    # This removes notes generated in the zero-padded / unconditioned region.
+    actual_chart_frames = min(actual_audio_frames // mel_per_chart, max_frame) # TEST LIST
+    if actual_chart_frames < max_frame:
+        note_array[:, actual_chart_frames:] = 0.0
+        print(f"         clipped: notes beyond chart frame {actual_chart_frames} "
+              f"({actual_chart_frames * frame_ms / 1000:.1f}s) removed")
+
     conv = Phigros4kConvertor(frame_ms=frame_ms, max_frame=max_frame)
     conv.save_phigros_file(
         note_array  = note_array,

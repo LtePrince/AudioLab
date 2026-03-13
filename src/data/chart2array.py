@@ -804,7 +804,7 @@ class Phigros4kConvertor:
                          ``floorPosition = speed_value * tick * 60 / (32 * bpm)``
         """
         notes     = self.array_to_notes(note_array, bpm)
-        # Scale floorPosition and hold note.speed to match speed_value.
+        # Scale floorPosition and note.speed to match speed_value.
         #
         # For all notes:
         #   floorPosition = speed_value * time_seconds
@@ -820,6 +820,8 @@ class Phigros4kConvertor:
             n["floorPosition"] = n["floorPosition"] * speed_value
             if n["holdTime"] > 0:
                 n["speed"] = speed_value
+            if n["type"] == NOTE_HOLD and n["holdTime"] == 0:
+                n["type"] = NOTE_TAP   # degenerate hold → tap
 
         last_tick = max(
             (int(n["time"]) + int(n["holdTime"]) for n in notes), default=0
