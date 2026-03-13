@@ -304,20 +304,20 @@ def main() -> None:
                 optimizer.zero_grad()
                 global_step += 1
 
-                # logging
-                if global_step % args.log_every == 0:
-                    avg_loss = loss_sum / loss_count
-                    lr_now   = optimizer.param_groups[0]["lr"]
-                    elapsed  = time.time() - t0
-                    print(
-                        f"epoch {epoch + 1:>4d}/{args.epochs}  "
-                        f"step {global_step:>7d}  "
-                        f"loss {avg_loss:.5f}  "
-                        f"lr {lr_now:.2e}  "
-                        f"t {elapsed:.0f}s"
-                    )
-                    loss_sum   = 0.0
-                    loss_count = 0
+        # ── per-epoch log ─────────────────────────────────────────────
+        if loss_count > 0:
+            avg_loss = loss_sum / loss_count
+            lr_now   = optimizer.param_groups[0]["lr"]
+            elapsed  = time.time() - t0
+            print(
+                f"epoch {epoch + 1:>4d}/{args.epochs}  "
+                f"step {global_step:>7d}  "
+                f"loss {avg_loss:.5f}  "
+                f"lr {lr_now:.2e}  "
+                f"t {elapsed:.0f}s"
+            )
+            loss_sum   = 0.0
+            loss_count = 0
 
         # ── save checkpoint every save_every epochs ───────────────────
         if (epoch + 1) % args.save_every == 0:

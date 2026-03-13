@@ -209,9 +209,13 @@ class PhigrosDataset(Dataset):
         self._n_fft      = n_fft
         self._hop_length = hop_length
         self._n_mels     = n_mels
+        # AudioGPUprocessor must always run on CPU inside DataLoader workers:
+        # CUDA cannot be re-initialized in forked subprocesses (Linux default
+        # start method = fork).  The training loop moves tensors to GPU after
+        # collation, and mel results are cached on disk anyway.
         self._audio_proc = AudioGPUprocessor(
             sr=sr, n_fft=n_fft, hop_length=hop_length, n_mels=n_mels,
-            device=device,
+            device="cpu",
         )
 
         # ------------------------------------------------------------------ #
