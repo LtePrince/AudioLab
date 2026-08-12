@@ -98,10 +98,15 @@ CH_NOTE_TYPE  = 16
 # ===========================================================================
 
 class SpeedEvent(TypedDict):
-    """Controls how fast notes fall past the judgment line."""
+    """Controls how fast notes fall past the judgment line.
+
+    ``value`` is an ABSOLUTE scroll speed in Y units per second (1 Y = 0.6
+    screen heights), not a multiplier.  The judgment line's floor position
+    at time t is the running integral of ``value`` over [0, t].
+    """
     startTime: float   # 1/32-beat ticks
     endTime:   float
-    value:     float   # speed multiplier
+    value:     float   # scroll speed, Y/s
 
 
 class MoveEvent(TypedDict):
@@ -163,9 +168,14 @@ class JudgeLine(TypedDict):
 
 
 class Chart(TypedDict):
-    """Top-level Phigros chart object (formatVersion = 3)."""
+    """Top-level Phigros chart object (formatVersion = 3).
+
+    ``offset`` delays the CHART relative to the audio: the music starts
+    immediately and the chart begins ``offset`` seconds later (official spec;
+    the game has never shipped a negative offset).
+    """
     formatVersion: int     # always 3 for official charts
-    offset:        float   # audio playback delay in seconds
+    offset:        float   # chart delay relative to audio, in seconds
     judgeLineList: list[JudgeLine]
 
 
@@ -270,7 +280,7 @@ class PhigrosChart:
 
     @property
     def offset(self) -> float:
-        """Audio playback delay in seconds."""
+        """Chart delay relative to the audio, in seconds (music starts first)."""
         return self._raw["offset"]
 
     @property
@@ -416,7 +426,8 @@ class Phigros4kConvertor:
     ----------
     frame_ms:
         Duration of one note-array frame in milliseconds.
-        Canonical derivation: ``n_fft / sr / 4 * audio_note_window_ratio * 1000``.
+        Canonical derivation: ``hop_length / sr / 4 * audio_note_window_ratio * 1000``
+        (hop_length = 512 with the default pipeline; n_fft plays no role here).
         Default pipeline: ``512 / 22050 / 4 * 8 * 1000 approx 46.44 ms``.
     max_frame:
         Maximum number of frames along the time axis.
@@ -790,15 +801,16 @@ class Phigros4kConvertor:
         note_array:      Float32 ndarray of shape ``(NUM_CHANNELS, T)``.
         bpm:             BPM written to the judgment line.
         output_path:     Destination ``.json`` file path (parent dirs created).
-        offset:          Chart-level audio offset in seconds.
+        offset:          Chart delay relative to the audio, in seconds.
         format_version:  Phigros format version tag; always 3 for official format.
         line_y:          Vertical position of the judgment line in Phigros
                          screen coordinates (0=bottom, 1=top).  Default 0.1
                          places the line near the bottom with a small margin,
                          matching standard fixed-drop 4k layout.
-        speed_value:     Visual scroll speed (``speedEvent.value``).  Controls
-                         how far above the judgment line notes appear; higher
-                         values give more spread-out note layouts.  Default 6.0.
+        speed_value:     Scroll speed (``speedEvent.value``, Y units/second).
+                         Controls how far above the judgment line notes appear;
+                         higher values give more spread-out note layouts.
+                         Default 3.0 (script/4k_verify.py checks this value).
                          ``floorPosition`` is scaled by the same factor to keep
                          timing exact:
                          ``floorPosition = speed_value * tick * 60 / (32 * bpm)``
@@ -815,7 +827,9 @@ class Phigros4kConvertor:
         #     tailFloor = headFloor + note.speed * holdTicks * 60 / (32 * bpm)
         #   We need tailFloor = speed_value * tailTimeSec, so:
         #     note.speed must equal speed_value (not 1.0)
-        #   Non-hold notes have no body, so their note.speed has no visual effect.
+        #   Non-hold notes keep speed=1.0, matching official-chart convention
+        #   (Tap/Drag/Flick carry speed 1.0; only Hold speed affects rendering
+        #   via the tail-length formula above — never judgment timing).
         for n in notes:
             n["floorPosition"] = n["floorPosition"] * speed_value
             if n["holdTime"] > 0:
