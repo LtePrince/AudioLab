@@ -16,21 +16,28 @@ Training pipeline
 
 Frame-rate alignment
 ~~~~~~~~~~~~~~~~~~~~~
-  With default settings (hop_length=512, sr=22050, frame_ms≈23.22) the mel and
-  chart time axes have the same length (1 mel frame ≈ 1 chart frame), so after
-  stride-16 downsampling both VAE and Wave encoder produce T ≈ max_frame // 16 = 256.
-  If different hop_length / frame_ms values are used, train.py automatically
-  aligns the time axis with F.interpolate.
+  One chart frame (frame_ms ≈ 46.44 ms) spans TWO mel frames (hop/sr ≈ 23.22 ms),
+  so the mel batch is padded/trimmed to max_frame × frame_ms / (hop/sr) ≈ 8192
+  frames — the same *duration* as the 4096-frame chart axis.  After stride-16
+  downsampling the wave encoder yields T_a = 512 audio tokens, which
+  _align_time() linearly interpolates onto the VAE's T_z = 256 latent grid, so
+  chart token i and audio token i cover the same span of time.
 
 Usage
 ~~~~~
   uv run python src/train.py \\
       --data-list  data/data.txt \\
+      --vae-ckpt   checkpoints/vae/vae_final.pt   \\
+      --wave-ckpt  checkpoints/wave/wave_final.pt \\
       --ckpt-dir   checkpoints/  \\
       --epochs     200 \\
       --batch-size 8 \\
       --lr         1e-4 \\
       --cfg-drop   0.1
+
+  --vae-ckpt is required (the VAE is frozen during DiT training); pre-train it
+  with src/pre_train.py --mode vae.  --wave-ckpt is optional but strongly
+  recommended — see the warning printed when it is omitted.
 """
 
 from __future__ import annotations
@@ -47,6 +54,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from src.condition.wave import AudioWaveEncoder, DEFAULT_WAVE_CONFIG
+from src.data.audio2mel import chart_frames_to_mel_frames
 from src.data.dataset import PhigrosDataset
 from src.diffusion.schedule import DEFAULT_SCHEDULE_CONFIG, NoiseSchedule
 from src.encoder.encoder import ChartVAE, DEFAULT_VAE_CONFIG
@@ -134,8 +142,14 @@ def _build_parser() -> argparse.ArgumentParser:
     # ── checkpoint ─────────────────────────────────────────────────────────
     g = p.add_argument_group("checkpoint")
     g.add_argument("--ckpt-dir",   default="checkpoints",   help="root checkpoint directory (subdir dit/ is created automatically)")
-    g.add_argument("--vae-ckpt",   default=None,            help="path to pretrained VAE .pt")
-    g.add_argument("--wave-ckpt",  default=None,            help="path to pretrained Wave encoder .pt")
+    g.add_argument("--vae-ckpt",   required=True,
+                   help="path to pretrained VAE .pt (required: the VAE is frozen "
+                        "during DiT training, so training against a randomly "
+                        "initialised VAE is meaningless)")
+    g.add_argument("--wave-ckpt",  default=None,
+                   help="path to pretrained Wave encoder .pt (strongly recommended: "
+                        "the wave encoder is frozen, so without a checkpoint the "
+                        "audio condition comes from random weights)")
     g.add_argument("--dit-ckpt",   default=None,            help="path to DiT checkpoint to resume from")
     g.add_argument("--save-every", type=int,   default=10,  help="save checkpoint every N epochs")
 
@@ -178,8 +192,17 @@ def main() -> None:
     ckpt_dir.mkdir(parents=True, exist_ok=True)
 
     # ── Dataset & DataLoader ───────────────────────────────────────────────
-    # mel padding target equals max_frame (hop_length/sr gives 1 mel ≈ 1 chart frame)
-    max_mel_frames = args.max_frame
+    # Pad/trim mel to the same *duration* as the chart axis: one chart frame
+    # (frame_ms ≈ 46.44 ms) spans two mel frames (hop/sr ≈ 23.22 ms), so
+    # 4096 chart frames ≈ 8192 mel frames.  Padding mel to max_frame instead
+    # would cover only half the song and desync audio/chart tokens by 2×.
+    max_mel_frames = chart_frames_to_mel_frames(
+        args.max_frame, args.frame_ms, args.hop_length, args.sr
+    )
+    print(
+        f"[train] time axes: chart {args.max_frame} frames × {args.frame_ms:.2f} ms "
+        f"≡ mel {max_mel_frames} frames × {args.hop_length / args.sr * 1000:.2f} ms"
+    )
 
     dataset = PhigrosDataset(
         data_list_path   = args.data_list,
@@ -209,17 +232,25 @@ def main() -> None:
     wave = AudioWaveEncoder(**DEFAULT_WAVE_CONFIG).to(device)
     dit  = RhythmDiT(**DEFAULT_DIT_CONFIG).to(device)
 
-    # load optional pretrained weights
-    if args.vae_ckpt:
-        vae.load_state_dict(
-            torch.load(args.vae_ckpt, map_location=device, weights_only=True)
-        )
-        print(f"[train] loaded VAE  ← {args.vae_ckpt}")
+    # load pretrained weights (VAE is mandatory — both models stay frozen below)
+    vae.load_state_dict(
+        torch.load(args.vae_ckpt, map_location=device, weights_only=True)
+    )
+    print(f"[train] loaded VAE  ← {args.vae_ckpt}")
     if args.wave_ckpt:
         wave.load_state_dict(
             torch.load(args.wave_ckpt, map_location=device, weights_only=True)
         )
         print(f"[train] loaded Wave ← {args.wave_ckpt}")
+    else:
+        print(
+            "[train] " + "!" * 68 + "\n"
+            "[train] WARNING: no --wave-ckpt given — the AudioWaveEncoder is\n"
+            "[train] FROZEN with RANDOM weights, so the audio condition fed to\n"
+            "[train] the DiT is essentially noise.  Pre-train it first:\n"
+            "[train]   python src/pre_train.py --mode wave --data-list <list>\n"
+            "[train] " + "!" * 68
+        )
 
     # freeze VAE and Wave encoder — only DiT is trained
     vae.eval()

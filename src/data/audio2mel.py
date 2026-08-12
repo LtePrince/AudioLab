@@ -9,6 +9,25 @@ import torchaudio.transforms as T
 
 from pathlib import Path
 
+
+def chart_frames_to_mel_frames(
+    n_chart_frames: int,
+    frame_ms: float,
+    hop_length: int,
+    sr: int,
+) -> int:
+    """Number of mel frames spanning the same duration as *n_chart_frames* chart frames.
+
+    One mel frame lasts ``hop_length / sr`` seconds (≈ 23.22 ms with defaults);
+    one chart frame lasts ``frame_ms`` (≈ 46.44 ms with defaults), i.e. two mel
+    frames.  Mel tensors must be padded/trimmed to this length — NOT to the
+    chart frame count — so that the audio and chart time axes cover the same
+    duration before the wave/VAE encoders align them token-for-token.
+    """
+    mel_frame_ms = hop_length / sr * 1000.0
+    return int(round(n_chart_frames * frame_ms / mel_frame_ms))
+
+
 class AudioCPUprocessor:
     def __init__(self, sr=22050, n_fft=2048, hop_length=512, n_mels=128):
         self.sr = sr

@@ -6,7 +6,7 @@ RhythmDiT: 1-D MMDiT diffusion transformer for Phigros rhythm generation.
 Pipeline context
 ~~~~~~~~~~~~~~~~
     ChartVAE.encode  →  z  (B, z_ch=16,  T=256)   ← noisy latent input
-    AudioWaveEncoder →  c  (B, a_ch=256, T=256)   ← audio condition
+    AudioWaveEncoder →  (B, a_ch=256, 512) ─ _align_time() ─→ c (B, a_ch, T=256)
     RhythmDiT        →  ε̂  (B, z_ch=16,  T=256)   ← predicted noise
     ChartVAE.decode  →  chart (B, 20, 4096)
 
@@ -25,8 +25,10 @@ Notes
   Only the chart stream x feeds the noise-prediction output head.
 - The audio stream c is treated as a learnable conditioning context.
   Its tokens shift / scale as the model learns which audio frames matter.
-- RoPE uses the same positions for x and c because both are time-aligned
-  (identical stride = 16 from VAE and AudioWaveEncoder).
+- RoPE uses the same positions for x and c because both are time-aligned:
+  the caller must interpolate the audio tokens onto the chart latent grid
+  (train.py/test.py `_align_time`, 512 → 256) BEFORE the DiT, so that token i
+  of both streams covers the same span of time.
 - FinalLayer is zero-initialised → ε̂ = 0 at the very start of training,
   which makes training loss well-defined from step 1 (DiT §3.4).
 """

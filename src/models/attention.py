@@ -14,7 +14,8 @@ Building blocks for RhythmDiT (P4):
 
 Notation used throughout:
   B   = batch size
-  T   = sequence length  (chart frames = audio frames, both stride-aligned)
+  T   = sequence length  (chart latent tokens; audio tokens are interpolated
+        to the same grid by the caller before entering the DiT)
   D   = hidden dimension
   H   = number of attention heads
   Dh  = D // H   (head dimension)

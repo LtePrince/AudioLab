@@ -9,8 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
-# training data and output
-data/
+# training data and output (repo-root data/ only; src/data and test/data are source code)
+/data/
 out/
 cache*/
 checkpoints/

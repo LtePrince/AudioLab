@@ -10,9 +10,8 @@ Architecture
     → mid ResBlocks
     → GroupNorm + SiLU + Conv1d(mid → out_channels)
 
-  Output:  (B, out_channels, T_chart)
-           T_chart = T_mel // audio_stride
-           audio_stride must equal chart VAE stride so the two time axes align.
+  Output:  (B, out_channels, T_audio)
+           T_audio = T_mel // audio_stride
 
 Default config
 --------------
@@ -23,17 +22,19 @@ Default config
   num_res_blocks  = 2
   num_groups      = 32
 
-  chart VAE stride = 16  (DEFAULT_VAE_CONFIG channel_mult has 4 downsamplings)
-  → T_chart = T_mel // 16   ✓  same temporal resolution as VAE latent
-
 Frame-rate alignment
 --------------------
   mel hop_length = 512,  sr = 22050  → one mel frame ≈ 23.2 ms
   chart FRAME_MS ≈ 46.44 ms          → one chart frame ≈ 2 mel frames
-  audio_stride   = 16                → one latent frame = 16 mel frames ≈ 371 ms
 
-  In practice the DiT learns to align audio and chart tokens through
-  attention; exact ms alignment is not required at this stage.
+  The mel batch is padded to the chart's *duration* (8192 mel frames for a
+  4096-frame chart; see chart_frames_to_mel_frames in src/data/audio2mel.py),
+  so this encoder outputs T_audio = 8192 // 16 = 512 tokens ≈ 371 ms each,
+  while the chart VAE latent has T_z = 4096 // 16 = 256 tokens ≈ 743 ms each.
+  train.py / test.py bridge the 2:1 ratio with _align_time() (linear
+  interpolation 512 → 256) so chart token i and audio token i cover the same
+  span of time.  Equal strides alone do NOT align the axes — do not pad mel
+  to the chart frame count.
 """
 
 from __future__ import annotations

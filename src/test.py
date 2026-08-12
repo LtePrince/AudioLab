@@ -6,18 +6,20 @@ RhythmDiT inference script — audio → Phigros chart JSON.
 Inference pipeline
 ~~~~~~~~~~~~~~~~~~
   1. Load audio file → log-mel spectrogram        (1, n_mels, T_audio)
-  2. Pad / trim mel to max_frame                  (1, n_mels, max_frame)
-  3. AudioWaveEncoder (frozen):  mel → audio_c    (1, 256, T_a)
-  4. Align audio_c time axis →                    (1, 256, T_z)
+  2. Pad / trim mel to max_mel_frames             (1, n_mels, 8192)
+     (same *duration* as the chart axis: 1 chart frame ≈ 2 mel frames)
+  3. AudioWaveEncoder (frozen):  mel → audio_c    (1, 256, T_a=512)
+  4. Align audio_c time axis →                    (1, 256, T_z=256)
   5. DDIM sampling:  z_T ~ N(0,I) → z_0           (1, z_ch, T_z)
   6. ChartVAE decode (frozen):   z_0 → note_array  (1, 20, max_frame)
   7. Phigros4kConvertor.save_phigros_file()       → output .json
 
 Key constants (must match training)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  frame_ms  = 512 / 22050 / 4 * 8 * 1000  ≈ 46.44 ms
-  max_frame = 4096
-  T_z       = max_frame // 16 = 256  (VAE / Wave encoder stride = 16)
+  frame_ms       = 512 / 22050 / 4 * 8 * 1000  ≈ 46.44 ms
+  max_frame      = 4096  (chart frames ≈ 190 s)
+  max_mel_frames = 8192  (mel frames covering the same 190 s)
+  T_z            = max_frame // 16 = 256  (VAE / Wave encoder stride = 16)
 
 Usage
 ~~~~~
@@ -56,7 +58,7 @@ import torch
 import torch.nn.functional as F
 
 from src.condition.wave import AudioWaveEncoder, DEFAULT_WAVE_CONFIG
-from src.data.audio2mel import AudioGPUprocessor
+from src.data.audio2mel import AudioGPUprocessor, chart_frames_to_mel_frames
 from src.data.chart2array import Phigros4kConvertor
 from src.diffusion.sampler import DDIMSampler
 from src.diffusion.schedule import DEFAULT_SCHEDULE_CONFIG, NoiseSchedule
@@ -158,6 +160,13 @@ def generate_chart(
 
     t0 = time.time()
 
+    # ── timing constants (must match training) ───────────────────────────
+    frame_ms      = hop_length / sr / 4 * 8 * 1000   # ≈ 46.44 ms per chart frame
+    mel_frame_ms  = hop_length / sr * 1000           # ≈ 23.22 ms per mel frame
+    mel_per_chart = round(frame_ms / mel_frame_ms)   # = 2: 1 chart frame ≈ 2 mel frames
+    # mel length covering the same duration as the chart axis (8192 by default)
+    max_mel_frames = chart_frames_to_mel_frames(max_frame, frame_ms, hop_length, sr)
+
     # ── Step 1: audio → log-mel ──────────────────────────────────────────
     print("[gen] step 1 / 4 : loading audio and computing mel …")
     audio_proc = AudioGPUprocessor(
@@ -170,9 +179,11 @@ def generate_chart(
     print(f"         audio  : {audio_path}")
     print(f"         mel    : {tuple(mel.shape)}  (actual {actual_audio_frames} frames)")
 
-    # ── Step 2: pad / trim mel to max_frame ──────────────────────────────
-    mel = _pad_or_trim_mel(mel, max_frame)             # (n_mels, max_frame)
-    mel = mel.unsqueeze(0)                             # (1, n_mels, max_frame)
+    # ── Step 2: pad / trim mel to the chart's duration ───────────────────
+    # Padding to max_frame instead would cover only half the song and desync
+    # the audio/chart token grids by 2×.
+    mel = _pad_or_trim_mel(mel, max_mel_frames)        # (n_mels, max_mel_frames)
+    mel = mel.unsqueeze(0)                             # (1, n_mels, max_mel_frames)
 
     # ── Step 3: AudioWaveEncoder → audio_c ───────────────────────────────
     print("[gen] step 2 / 4 : encoding audio condition …")
@@ -208,10 +219,6 @@ def generate_chart(
     print(f"         note   : {note_array.shape}  min={note_array.min():.3f}  max={note_array.max():.3f}")
 
     # ── Step 6: save Phigros JSON ─────────────────────────────────────────
-    frame_ms = hop_length / sr / 4 * 8 * 1000         # ≈ 46.44 ms  (must match training)
-    mel_frame_ms = hop_length / sr * 1000              # ≈ 23.22 ms per mel frame
-    mel_per_chart = round(frame_ms / mel_frame_ms)     # = 2: each chart frame ≈ 2 mel frames
-
     # Clip note_array to the actual audio duration in chart frames.
     # actual_audio_frames (mel frames) → convert to chart frames, cap at max_frame.
     # This removes notes generated in the zero-padded / unconditioned region.

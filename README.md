@@ -55,13 +55,15 @@
 ### 时序参数对齐
 
 ```
-sr = 22050,  n_fft = 512,  hop_length = 128
-音频帧时长       = hop / sr              ≈  5.8 ms / 帧
-音符帧时长       = audio_note_window_ratio(8) × 音频帧  ≈ 46.4 ms / 帧
-最大音频帧数     = 32768  →  最大时长 ≈ 190 s（约 3 分 10 秒）
-最大音符帧数     = 32768 / 8 = 4096
-VAE 压缩比       = 8×  →  latent 长度 = 512
-DiT token 数     = 512 / patch_size(4) = 128
+sr = 22050,  n_fft = 2048,  hop_length = 512
+mel 帧时长       = hop / sr                      ≈ 23.22 ms / 帧
+音符帧时长       = frame_ms = hop/sr/4×8×1000    ≈ 46.44 ms / 帧（= 2 个 mel 帧）
+最大音符帧数     = 4096  →  最大时长 ≈ 190 s（约 3 分 10 秒）
+最大 mel 帧数    = 8192（与谱面轴等时长；chart_frames_to_mel_frames() 换算，
+                   切勿按音符帧数填充 mel——那只覆盖半首歌且时间轴错位 2 倍）
+VAE 压缩比       = 16×  →  latent 长度 = 4096 / 16 = 256
+音频 token 数    = 8192 / 16 = 512  →  _align_time() 线性插值到 256 与 latent 对齐
+DiT token 数     = 256（无 patchify，与 latent 等长）
 Phigros tick→ms = tick / 32 × (60000 / bpm)
 ```
 

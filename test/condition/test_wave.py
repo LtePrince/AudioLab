@@ -17,13 +17,14 @@ from src.encoder.encoder import DEFAULT_VAE_CONFIG
 
 B      = 2
 N_MELS = 128
-T_MEL  = 16384   # ~190 s at hop=512/sr=22050  (≥ chart frames × audio_stride)
+T_MEL  = 8192    # ~190 s at hop=512/sr=22050 — the pipeline-realistic mel length
+                 # (same duration as the 4096-frame chart axis; 1 chart frame ≈ 2 mel frames)
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 _MULT         = DEFAULT_WAVE_CONFIG["channel_mult"]
 AUDIO_STRIDE  = 2 ** (len(_MULT) - 1)                   # 16
-T_COND        = T_MEL // AUDIO_STRIDE                    # 1024
+T_COND        = T_MEL // AUDIO_STRIDE                    # 512 (→ interpolated to 256 in train.py)
 OUT_CH        = DEFAULT_WAVE_CONFIG["out_channels"]      # 256
 
 VAE_STRIDE    = 2 ** (len(DEFAULT_VAE_CONFIG["channel_mult"]) - 1)   # 16
@@ -56,11 +57,12 @@ def test_output_shape() -> None:
 
 
 def test_stride_property() -> None:
-    """Encoder.stride must match chart VAE stride."""
+    """Encoder.stride must match chart VAE stride (keeps the audio→latent
+    interpolation in train.py at a clean 2:1 ratio)."""
     enc = _make_encoder()
     assert enc.stride == VAE_STRIDE, (
         f"[2] audio_stride={enc.stride} ≠ vae_stride={VAE_STRIDE}  "
-        "— temporal axes won't align!"
+        "— audio:latent token ratio is no longer the expected 2:1"
     )
     print(f"[2] stride         : {enc.stride}  (== VAE stride {VAE_STRIDE})  ✓")
 

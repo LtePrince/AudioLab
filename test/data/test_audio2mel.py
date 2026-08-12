@@ -14,7 +14,11 @@ import pathlib
 import numpy as np
 import torch
 
-from src.data.audio2mel import AudioCPUprocessor, AudioGPUprocessor
+from src.data.audio2mel import (
+    AudioCPUprocessor,
+    AudioGPUprocessor,
+    chart_frames_to_mel_frames,
+)
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -77,6 +81,35 @@ def test_gpu_load_mel_spec() -> None:
     print("[4] gpu_load_mel_spec ✓")
 
 
+def test_chart_frames_to_mel_frames() -> None:
+    """Chart→mel frame conversion covers the same duration on both axes.
+
+    With the default pipeline (sr=22050, hop=512, frame_ms≈46.44) one chart
+    frame spans exactly two mel frames, so 4096 chart frames ≡ 8192 mel
+    frames.  Padding mel to 4096 (the old bug) would cover only half the song.
+    """
+    sr, hop   = 22050, 512
+    frame_ms  = hop / sr / 4 * 8 * 1000          # ≈ 46.44 ms (train.py default)
+
+    n_mel = chart_frames_to_mel_frames(4096, frame_ms, hop, sr)
+    assert n_mel == 8192, f"expected 8192 mel frames for 4096 chart frames, got {n_mel}"
+
+    # duration equivalence must hold for arbitrary (frame_ms, hop, sr) combos
+    for n_chart, fms, h, s in [
+        (4096, 46.44, 512, 22050),
+        (2048, 23.22, 512, 22050),
+        (1000, 10.0,  256, 16000),
+    ]:
+        n_mel      = chart_frames_to_mel_frames(n_chart, fms, h, s)
+        chart_dur  = n_chart * fms / 1000.0
+        mel_dur    = n_mel * h / s
+        assert abs(chart_dur - mel_dur) <= h / s, (
+            f"duration mismatch: chart {chart_dur:.3f}s vs mel {mel_dur:.3f}s "
+            f"(n_chart={n_chart}, frame_ms={fms}, hop={h}, sr={s})"
+        )
+    print("[5] chart_frames_to_mel_frames ✓")
+
+
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
@@ -86,4 +119,5 @@ if __name__ == "__main__":
     test_cpu_save_and_reload()
     test_gpu_forward_shape()
     test_gpu_load_mel_spec()
+    test_chart_frames_to_mel_frames()
     print("\n=== All audio2mel tests passed ===")

@@ -73,6 +73,7 @@ from src.condition.wave import (
     ResnetBlock1D,
     Upsample1D,
 )
+from src.data.audio2mel import chart_frames_to_mel_frames
 from src.data.dataset import PhigrosDataset
 from src.encoder.encoder import (
     ChartReconLoss,
@@ -354,7 +355,12 @@ def _pretrain_wave(args: argparse.Namespace) -> None:
     )
     print(f"[wave] dataset: {len(dataset)} samples")
 
-    max_mel_frames = args.max_frame   # must stay consistent with train.py
+    # Same *duration* as the chart axis (≈ 8192 mel frames for 4096 chart
+    # frames) — must stay consistent with train.py so the encoder is
+    # pre-trained on the sequence length it will see during DiT training.
+    max_mel_frames = chart_frames_to_mel_frames(
+        args.max_frame, args.frame_ms, args.hop_length, args.sr
+    )
     loader = DataLoader(
         dataset,
         batch_size  = args.batch_size,
