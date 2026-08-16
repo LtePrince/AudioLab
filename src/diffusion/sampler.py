@@ -22,11 +22,22 @@ Per-step update (Song et al., 2020):
 Classifier-Free Guidance (P6-3):
     ε_cfg = ε_uncond + scale · (ε_cond - ε_uncond)
 
+Prefix conditioning (variable-length windowed inference):
+    ``sample(..., prefix_z0=z_known)`` treats the first ``L`` latent tokens as
+    KNOWN: at every denoising step the prefix region of x_t is replaced by
+    q_sample(z_known, t) (RePaint-style, single pass), so the freely-generated
+    suffix is denoised while attending to a consistent, already-decided
+    context.  ``sample_windowed()`` uses this to chain overlapping windows
+    over arbitrarily long songs.
+
 Public API
 ~~~~~~~~~~
     DDIMSampler.sample(
-        dit, audio_c, shape, steps, eta, cfg_scale, audio_c_uncond
+        dit, audio_c, shape, steps, eta, cfg_scale, audio_c_uncond, prefix_z0
     ) → z_0 : (B, C, T)
+    DDIMSampler.sample_windowed(
+        dit, audio_c, z_channels, window, overlap, ...
+    ) → z_0 : (B, C, T_total)
 """
 
 from __future__ import annotations
@@ -40,7 +51,7 @@ from tqdm import tqdm
 
 from src.diffusion.schedule import NoiseSchedule
 
-__all__ = ["DDIMSampler"]
+__all__ = ["DDIMSampler", "make_window_starts"]
 
 
 def _make_ddim_timesteps(T: int, S: int) -> np.ndarray:
@@ -50,10 +61,33 @@ def _make_ddim_timesteps(T: int, S: int) -> np.ndarray:
         ddim_steps : (S,) int, **descending** order (high → low),
                      values in [1, T] inclusive (consistent with Mug-Diffusion)
     """
-    c     = T // S
+    c     = max(T // S, 1)                  # S > T degenerates to S = T
     steps = np.arange(0, T, c) + 1          # [1, 1+c, 1+2c, ...]
     steps = steps[:S]                        # take exactly S steps
     return steps[::-1].copy()               # descending: denoise from T toward 0
+
+
+def make_window_starts(T_total: int, window: int, overlap: int) -> list[int]:
+    """Window start offsets covering ``[0, T_total)`` with ≥ *overlap* reuse.
+
+    Windows advance by ``window - overlap``; the final window is left-shifted
+    to end exactly at ``T_total`` (so every window has the full ``window``
+    length — the length the model was trained on), which can only INCREASE
+    its overlap with the previously generated region.
+
+    Requires ``T_total >= window`` and ``0 <= overlap < window``.
+    """
+    if not 0 <= overlap < window:
+        raise ValueError(f"overlap must be in [0, window); got {overlap} vs {window}")
+    if T_total < window:
+        raise ValueError(f"T_total {T_total} < window {window}: no windowing needed")
+    starts: list[int] = []
+    s = 0
+    while s + window < T_total:
+        starts.append(s)
+        s += window - overlap
+    starts.append(T_total - window)
+    return starts
 
 
 class DDIMSampler:
@@ -127,6 +161,7 @@ class DDIMSampler:
         cfg_scale:     float        = 1.0,
         audio_c_uncond: Optional[Tensor] = None,   # None → zero vector
         x_T:           Optional[Tensor] = None,    # initial noise; None → sample N(0,I)
+        prefix_z0:     Optional[Tensor] = None,    # known clean latent prefix
         callback:      Optional[Callable[[int, Tensor], None]] = None,
         show_progress: bool         = True,
     ) -> Tensor:
@@ -141,6 +176,12 @@ class DDIMSampler:
             cfg_scale     : CFG guidance strength (1.0=no guidance, >1 enhances condition)
             audio_c_uncond: unconditional audio features; None → all-zeros
             x_T           : starting noise; None → sample from N(0,I)
+            prefix_z0     : (B, z_ch, L_p) with L_p < T_seq — KNOWN clean latent
+                            for the first L_p tokens.  At every step the prefix
+                            region is re-noised from prefix_z0 to the current
+                            noise level (RePaint single pass), so the suffix is
+                            generated in a context consistent with it; the
+                            returned prefix equals prefix_z0 exactly.
             callback      : called after each step as callback(step_idx, x_t)
             show_progress : whether to show a tqdm progress bar
 
@@ -150,8 +191,19 @@ class DDIMSampler:
         device = self.schedule.device
         B, C, L = shape
 
+        L_p = 0
+        if prefix_z0 is not None:
+            L_p = prefix_z0.shape[-1]
+            if not 0 < L_p < L:
+                raise ValueError(
+                    f"prefix_z0 length {L_p} must be in (0, T_seq={L})"
+                )
+            prefix_z0 = prefix_z0.to(device)
+
         # ── initial noise ─────────────────────────────────────────────
-        x = x_T if x_T is not None else torch.randn(shape, device=device)
+        # clone: prefix injection writes in place and must not mutate the
+        # caller's x_T tensor
+        x = x_T.clone().to(device) if x_T is not None else torch.randn(shape, device=device)
 
         # ── CFG: prepare unconditional batch ──────────────────────────
         use_cfg = cfg_scale > 1.0
@@ -174,6 +226,15 @@ class DDIMSampler:
             ab_t    = float(ab[t_val - 1])   # ᾱ_t  (buffer is 0-indexed, steps are 1-indexed)
             ab_prev = float(ab[t_prev - 1]) if t_prev > 0 else 1.0
 
+            # ── prefix conditioning: re-noise the known region to ᾱ_t ─
+            # x enters this iteration at noise level ᾱ_t, so the known
+            # prefix must be injected at exactly that level.
+            if L_p > 0:
+                x[:, :, :L_p] = (
+                    ab_t ** 0.5 * prefix_z0
+                    + (1.0 - ab_t) ** 0.5 * torch.randn_like(prefix_z0)
+                )
+
             # Timestep passed to the DiT uses the TRAINING convention:
             # train.py samples t ∈ [0, T-1] and indexes alphas_bar[t], so the
             # noise level ab[t_val-1] corresponds to conditioning t = t_val - 1.
@@ -195,4 +256,80 @@ class DDIMSampler:
             if callback is not None:
                 callback(i, x)
 
+        # the known prefix is returned verbatim (fully denoised by definition)
+        if L_p > 0:
+            x[:, :, :L_p] = prefix_z0
+
         return x
+
+    # ------------------------------------------------------------------
+    # Windowed sampling for songs longer than the trained token length
+    # ------------------------------------------------------------------
+
+    @torch.no_grad()
+    def sample_windowed(
+        self,
+        dit,
+        audio_c:        Tensor,                    # (B, a_ch, T_total)
+        z_channels:     int,
+        window:         int,
+        overlap:        int,
+        steps:          int          = 50,
+        eta:            float        = 0.0,
+        cfg_scale:      float        = 1.0,
+        show_progress:  bool         = True,
+    ) -> Tensor:
+        """Generate a latent longer than the trained window by chaining
+        overlapping prefix-conditioned windows.
+
+        Window k sees RoPE positions 0..window-1 — exactly the positional
+        range the model was trained on — while its first ``overlap`` (or
+        more, for the end-aligned final window) tokens are frozen to the
+        previously generated content via ``prefix_z0``, so the seams stay
+        coherent without any positional extrapolation.
+
+        Args:
+            dit        : RhythmDiT (eval)
+            audio_c    : (B, a_ch, T_total) audio condition over the WHOLE song,
+                         already on the latent token grid
+            z_channels : latent channels (16)
+            window     : tokens per window — use the trained length (256)
+            overlap    : tokens of context carried into each next window
+            steps/eta/cfg_scale : as in :meth:`sample` (applied per window)
+
+        Returns:
+            z_0 : (B, z_channels, T_total)
+        """
+        B, _, T_total = audio_c.shape
+        starts = make_window_starts(T_total, window, overlap)
+
+        z_full: Optional[Tensor] = None
+        for k, s in enumerate(starts):
+            a_win = audio_c[:, :, s : s + window]
+            if show_progress:
+                print(f"[windowed] window {k + 1}/{len(starts)}  "
+                      f"tokens [{s}, {s + window})")
+
+            if z_full is None:
+                z_win = self.sample(
+                    dit, a_win, (B, z_channels, window),
+                    steps=steps, eta=eta, cfg_scale=cfg_scale,
+                    show_progress=show_progress,
+                )
+                z_full = z_win
+            else:
+                L_p = z_full.shape[-1] - s      # overlap with generated region
+                # With overlap=0 every seam has L_p=0 — windows become
+                # independent tiles with no coherence guarantee (opt-in).
+                # With overlap>0, L_p >= overlap for every window.
+                prefix = z_full[:, :, s : s + L_p] if L_p > 0 else None
+                z_win = self.sample(
+                    dit, a_win, (B, z_channels, window),
+                    steps=steps, eta=eta, cfg_scale=cfg_scale,
+                    prefix_z0=prefix,
+                    show_progress=show_progress,
+                )
+                z_full = torch.cat([z_full, z_win[:, :, L_p:]], dim=-1)
+
+        assert z_full is not None and z_full.shape[-1] == T_total
+        return z_full

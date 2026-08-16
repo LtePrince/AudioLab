@@ -3,23 +3,28 @@ src/test.py
 ─────────────────────────────────────────────────────────────────────────────
 RhythmDiT inference script — audio → Phigros chart JSON.
 
-Inference pipeline
-~~~~~~~~~~~~~~~~~~
+Inference pipeline (variable-length)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   1. Load audio file → log-mel spectrogram        (1, n_mels, T_audio)
-  2. Pad / trim mel to max_mel_frames             (1, n_mels, 8192)
-     (same *duration* as the chart axis: 1 chart frame ≈ 2 mel frames)
-  3. AudioWaveEncoder (frozen):  mel → audio_c    (1, 256, T_a=512)
-  4. Align audio_c time axis →                    (1, 256, T_z=256)
-  5. DDIM sampling:  z_T ~ N(0,I) → z_0           (1, z_ch, T_z)
-  6. ChartVAE decode (frozen):   z_0 → note_array  (1, 20, max_frame)
-  7. Phigros4kConvertor.save_phigros_file()       → output .json
+  2. Size the chart axis from the ACTUAL audio duration:
+       n_chart = ceil(T_audio / 2) rounded up to the latent grid (×16)
+       T_z     = n_chart // 16 latent tokens
+  3. Pad / trim mel to the chart axis duration (dB-floor padding)
+  4. AudioWaveEncoder (frozen) → align to the token grid  (1, 256, T_z)
+  5. DDIM sampling  z_T ~ N(0,I) → z_0            (1, z_ch, T_z)
+       - native   : T_z ≤ 256 → one pass at the song's own length
+       - windowed : T_z > 256 → overlapping 256-token windows chained with
+         RePaint-style prefix conditioning (arbitrary song length; each
+         window sees only trained RoPE positions)
+       - --fixed-length forces the legacy padded-to-4096 axis (A/B baseline)
+  6. ChartVAE decode (frozen):   z_0 → note_array  (1, 20, n_chart)
+  7. Clip to the audio duration, save Phigros JSON
 
 Key constants (must match training)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  frame_ms       = 512 / 22050 / 4 * 8 * 1000  ≈ 46.44 ms
-  max_frame      = 4096  (chart frames ≈ 190 s)
-  max_mel_frames = 8192  (mel frames covering the same 190 s)
-  T_z            = max_frame // 16 = 256  (VAE / Wave encoder stride = 16)
+  frame_ms  = 512 / 22050 / 4 * 8 * 1000  ≈ 46.44 ms per chart frame
+  1 chart frame ≈ 2 mel frames;  VAE / Wave stride = 16
+  trained window = max_frame // 16 = 256 tokens ≈ 190 s
 
 Usage
 ~~~~~
@@ -49,6 +54,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import time
 from pathlib import Path
 from typing import Optional
@@ -144,8 +150,25 @@ def generate_chart(
     n_mels:      int          = 128,
     sr:          int          = 22050,
     seed:        Optional[int] = None,
+    fixed_length:      bool          = False,
+    max_window_tokens: Optional[int] = None,
+    window_overlap:    int           = 64,
 ) -> np.ndarray:
-    """Full audio → chart inference pipeline.
+    """Full audio → chart inference pipeline (variable-length).
+
+    Length modes
+    ------------
+    The latent axis is sized from the ACTUAL audio duration:
+
+    - native   (T_z ≤ max_window_tokens): one DDIM pass at the song's own
+      length.  RoPE positions stay inside the trained range, and there is no
+      padded tail to hallucinate notes into.
+    - windowed (T_z > max_window_tokens): overlapping windows of exactly
+      max_window_tokens tokens, chained with RePaint-style prefix
+      conditioning (DDIMSampler.sample_windowed) — supports songs of any
+      length beyond the 190 s training cap.
+    - fixed    (fixed_length=True): legacy behaviour — pad everything to
+      max_frame chart frames; kept for A/B comparison.
 
     Parameters
     ----------
@@ -161,15 +184,20 @@ def generate_chart(
     ddim_steps  : number of DDIM denoising steps
     eta         : DDIM stochasticity (0=deterministic, 1=DDPM-like)
     cfg_scale   : CFG guidance scale (1.0 = no guidance)
-    max_frame   : chart time axis length (must match training)
+    max_frame   : trained chart axis length (fixed mode; also the default
+                  window size source: max_frame // vae_stride tokens)
     hop_length  : STFT hop length for mel (must match training)
     n_mels      : mel filter banks (must match training)
     sr          : audio sample rate (must match training)
     seed        : optional RNG seed for reproducibility
+    fixed_length      : force the legacy fixed-length axis
+    max_window_tokens : single-pass token limit / window size
+                        (None → max_frame // 16 = the trained length)
+    window_overlap    : context tokens carried between windows (windowed mode)
 
     Returns
     -------
-    note_array : np.ndarray, shape (20, max_frame), raw VAE decoder output
+    note_array : np.ndarray, shape (20, n_chart), raw VAE decoder output
     """
     if seed is not None:
         torch.manual_seed(seed)
@@ -180,8 +208,14 @@ def generate_chart(
     frame_ms      = hop_length / sr / 4 * 8 * 1000   # ≈ 46.44 ms per chart frame
     mel_frame_ms  = hop_length / sr * 1000           # ≈ 23.22 ms per mel frame
     mel_per_chart = round(frame_ms / mel_frame_ms)   # = 2: 1 chart frame ≈ 2 mel frames
-    # mel length covering the same duration as the chart axis (8192 by default)
-    max_mel_frames = chart_frames_to_mel_frames(max_frame, frame_ms, hop_length, sr)
+    vae_stride    = 2 ** (len(DEFAULT_VAE_CONFIG["channel_mult"]) - 1)   # 16
+    if max_window_tokens is None:
+        max_window_tokens = max_frame // vae_stride                      # 256
+    if not 0 <= window_overlap < max_window_tokens:
+        raise ValueError(
+            f"--window-overlap {window_overlap} must be in [0, "
+            f"max_window_tokens={max_window_tokens})"
+        )
 
     # ── Step 1: audio → log-mel ──────────────────────────────────────────
     print("[gen] step 1 / 4 : loading audio and computing mel …")
@@ -195,52 +229,77 @@ def generate_chart(
     print(f"         audio  : {audio_path}")
     print(f"         mel    : {tuple(mel.shape)}  (actual {actual_audio_frames} frames)")
 
-    # ── Step 2: pad / trim mel to the chart's duration ───────────────────
-    # Padding to max_frame instead would cover only half the song and desync
-    # the audio/chart token grids by 2×.  pad_or_trim pads with the mel's own
-    # dB floor (silence), not 0.0 (which is LOUD in dB scale).
-    mel = pad_or_trim(mel, max_mel_frames)             # (n_mels, max_mel_frames)
-    mel = mel.unsqueeze(0)                             # (1, n_mels, max_mel_frames)
+    # ── Step 2: size the chart axis from the audio duration ──────────────
+    # n_chart = audio duration in chart frames, rounded UP to the latent grid
+    # (multiple of vae_stride) so encode/decode lengths are exact.
+    n_chart_content = math.ceil(actual_audio_frames / mel_per_chart)
+    if fixed_length:
+        n_chart = max_frame
+    else:
+        n_chart = max(vae_stride,
+                      math.ceil(n_chart_content / vae_stride) * vae_stride)
+    T_z = n_chart // vae_stride
+    windowed = (not fixed_length) and T_z > max_window_tokens
+    mode = "fixed" if fixed_length else ("windowed" if windowed else "native")
+    print(f"         length : {n_chart_content} chart frames "
+          f"({n_chart_content * frame_ms / 1000:.1f}s) → axis {n_chart} "
+          f"→ {T_z} tokens  [mode={mode}]")
 
-    # ── Step 3: AudioWaveEncoder → audio_c ───────────────────────────────
+    # pad/trim mel to the chart axis duration (pad value = the mel's own dB
+    # floor — 0.0 would read as a LOUD signal, not silence)
+    mel_target = chart_frames_to_mel_frames(n_chart, frame_ms, hop_length, sr)
+    mel = pad_or_trim(mel, mel_target)                 # (n_mels, mel_target)
+    mel = mel.unsqueeze(0)                             # (1, n_mels, mel_target)
+
+    # ── Step 3: AudioWaveEncoder → audio_c on the latent token grid ──────
     print("[gen] step 2 / 4 : encoding audio condition …")
-    audio_c = wave(mel)                                # (1, 256, T_a)
-
-    # Align time axis to T_z = max_frame // 16
-    T_z = max_frame // 16                              # 256 with default settings
+    audio_c = wave(mel)                                # (1, 256, ~2*T_z)
     audio_c = _align_time(audio_c, T_z)               # (1, 256, T_z)
     print(f"         audio_c: {tuple(audio_c.shape)}")
 
     # ── Step 4: DDIM sampling z_T → z_0 ─────────────────────────────────
     print(f"[gen] step 3 / 4 : DDIM sampling  steps={ddim_steps}  cfg={cfg_scale}  eta={eta} …")
     z_channels = DEFAULT_VAE_CONFIG["z_channels"]      # 16
-    shape = (1, z_channels, T_z)
 
     sampler = DDIMSampler(schedule)
-    z0 = sampler.sample(
-        dit            = dit,
-        audio_c        = audio_c,
-        shape          = shape,
-        steps          = ddim_steps,
-        eta            = eta,
-        cfg_scale      = cfg_scale,
-        audio_c_uncond = None,          # zeros vector used as unconditional
-        show_progress  = True,
-    )                                                  # (1, 16, T_z)
+    if windowed:
+        print(f"         windowed: {T_z} tokens > window {max_window_tokens}, "
+              f"overlap {window_overlap}")
+        z0 = sampler.sample_windowed(
+            dit         = dit,
+            audio_c     = audio_c,
+            z_channels  = z_channels,
+            window      = max_window_tokens,
+            overlap     = window_overlap,
+            steps       = ddim_steps,
+            eta         = eta,
+            cfg_scale   = cfg_scale,
+            show_progress = True,
+        )                                              # (1, 16, T_z)
+    else:
+        z0 = sampler.sample(
+            dit            = dit,
+            audio_c        = audio_c,
+            shape          = (1, z_channels, T_z),
+            steps          = ddim_steps,
+            eta            = eta,
+            cfg_scale      = cfg_scale,
+            audio_c_uncond = None,      # zeros vector used as unconditional
+            show_progress  = True,
+        )                                              # (1, 16, T_z)
     print(f"         z_0    : {tuple(z0.shape)}")
 
     # ── Step 5: VAE decode z_0 → note_array ─────────────────────────────
     print("[gen] step 4 / 4 : decoding chart …")
-    note_raw = vae.decode(z0)                          # (1, 20, max_frame)
-    note_array = note_raw.squeeze(0).cpu().numpy()     # (20, max_frame)
+    note_raw = vae.decode(z0)                          # (1, 20, n_chart)
+    note_array = note_raw.squeeze(0).cpu().numpy()     # (20, n_chart)
     print(f"         note   : {note_array.shape}  min={note_array.min():.3f}  max={note_array.max():.3f}")
 
     # ── Step 6: save Phigros JSON ─────────────────────────────────────────
-    # Clip note_array to the actual audio duration in chart frames.
-    # actual_audio_frames (mel frames) → convert to chart frames, cap at max_frame.
-    # This removes notes generated in the zero-padded / unconditioned region.
-    actual_chart_frames = min(actual_audio_frames // mel_per_chart, max_frame) # TEST LIST
-    if actual_chart_frames < max_frame:
+    # Clip to the actual audio duration: removes notes in the rounded-up tail
+    # (≤ 15 frames in native mode) or the padded region (fixed mode).
+    actual_chart_frames = min(n_chart_content, n_chart)
+    if actual_chart_frames < n_chart:
         note_array[:, actual_chart_frames:] = 0.0
         print(f"         clipped: notes beyond chart frame {actual_chart_frames} "
               f"({actual_chart_frames * frame_ms / 1000:.1f}s) removed")
@@ -249,7 +308,7 @@ def generate_chart(
     # channels (trained with BCEWithLogitsLoss), so onset decoding must
     # threshold at 0 (p=0.5), not at 0.5 (p≈0.62) — the 0.5 threshold would
     # systematically drop notes with confidence in (0.5, 0.62).
-    conv = Phigros4kConvertor(frame_ms=frame_ms, max_frame=max_frame,
+    conv = Phigros4kConvertor(frame_ms=frame_ms, max_frame=n_chart,
                               from_logits=True)
     conv.save_phigros_file(
         note_array  = note_array,
@@ -297,10 +356,24 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # ── audio / frame settings ───────────────────────────────────────────────
     g = p.add_argument_group("audio / frame settings (must match training)")
-    g.add_argument("--max-frame",   type=int,   default=4096,  help="chart time axis frames")
+    g.add_argument("--max-frame",   type=int,   default=4096,
+                   help="trained chart axis length (fixed-length mode; also the "
+                        "default window size = max_frame/16 tokens)")
     g.add_argument("--hop-length",  type=int,   default=512,   help="mel STFT hop length")
     g.add_argument("--n-mels",      type=int,   default=128,   help="mel filter banks")
     g.add_argument("--sr",          type=int,   default=22050, help="audio sample rate")
+
+    # ── length mode ─────────────────────────────────────────────────────────
+    g = p.add_argument_group("length mode")
+    g.add_argument("--fixed-length", action="store_true",
+                   help="legacy behaviour: pad the chart axis to --max-frame "
+                        "regardless of the audio duration (A/B baseline)")
+    g.add_argument("--max-window-tokens", type=int, default=None,
+                   help="single-pass token limit and window size for long songs "
+                        "(default: max_frame/16 = 256, the trained length)")
+    g.add_argument("--window-overlap", type=int, default=64,
+                   help="latent tokens of generated context carried into each "
+                        "next window (~0.74 s per token; windowed mode only)")
 
     # ── diffusion / CFG ─────────────────────────────────────────────────────
     g = p.add_argument_group("diffusion / CFG")
@@ -322,6 +395,14 @@ def _build_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = _build_parser().parse_args()
+
+    # ── fail fast on invalid window config (before loading any model) ──────
+    _mwt = args.max_window_tokens or (args.max_frame // 16)
+    if not 0 <= args.window_overlap < _mwt:
+        raise SystemExit(
+            f"[ERROR] --window-overlap {args.window_overlap} must be in "
+            f"[0, max_window_tokens={_mwt})"
+        )
 
     # ── device & seed ──────────────────────────────────────────────────────
     device = torch.device(
@@ -401,6 +482,9 @@ def main() -> None:
         n_mels      = args.n_mels,
         sr          = args.sr,
         seed        = args.seed,
+        fixed_length      = args.fixed_length,
+        max_window_tokens = args.max_window_tokens,
+        window_overlap    = args.window_overlap,
     )
 
 
