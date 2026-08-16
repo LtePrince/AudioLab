@@ -9,8 +9,10 @@ Run from AudioLab root:
 
 from __future__ import annotations
 
+import atexit
 import pathlib
 import shutil
+import tempfile
 
 import torch
 from torch.utils.data import DataLoader
@@ -25,8 +27,13 @@ from src.data.dataset import PhigrosDataset
 _REPO_ROOT        = pathlib.Path(__file__).resolve().parents[2]   # AudioLab/
 _DATA_DIR         = _REPO_ROOT / "data"
 _LIST_PATH        = _DATA_DIR / "data.txt"
-_CACHE_DIR        = _DATA_DIR / "cache_mel"
-_CHART_CACHE_DIR  = _DATA_DIR / "cache_chart"  # persistent, mirrors cache_mel
+
+# Caches go to a THROWAWAY temp dir — never the real data/cache_* directories:
+# tests must not pollute the training mel cache or delete a built chart cache.
+_TMP_ROOT         = pathlib.Path(tempfile.mkdtemp(prefix="audiolab_test_"))
+atexit.register(shutil.rmtree, _TMP_ROOT, True)   # clean up after the run
+_CACHE_DIR        = _TMP_ROOT / "cache_mel"
+_CHART_CACHE_DIR  = _TMP_ROOT / "cache_chart"
 
 FRAME_MS  = 512 / 22050 / 4 * 8 * 1000   # ≈ 46.44 ms
 MAX_FRAME = 4096
@@ -45,15 +52,24 @@ def _make_dataset(**kwargs) -> PhigrosDataset:
     )
 
 
+def _expected_entries() -> int:
+    """Count valid (non-blank, non-comment) lines in the data list."""
+    return sum(
+        1 for l in _LIST_PATH.read_text().splitlines()
+        if l.strip() and not l.lstrip().startswith("#")
+    )
+
+
 # ---------------------------------------------------------------------------
 # Test cases
 # ---------------------------------------------------------------------------
 
 def test_parse_list() -> None:
-    """Dataset reads data.txt and finds exactly 1 entry."""
+    """Dataset finds every valid entry in data.txt."""
     ds = _make_dataset(augment=False)
     print(f"[1] {repr(ds)}")
-    assert len(ds) == 1, f"Expected 1 entry, got {len(ds)}"
+    expected = _expected_entries()
+    assert len(ds) == expected, f"Expected {expected} entries, got {len(ds)}"
     print("[1] parse_list ✓")
 
 
@@ -111,8 +127,7 @@ def test_mirror_augmentation() -> None:
 def test_chart_cache() -> None:
     """chart_cache_dir: first access writes npz, second access reads it.
 
-    Uses the persistent directory ``data/cache_chart/`` so the npz file is
-    visible on disk after the test (mirroring the mel-cache behaviour).
+    Uses the throwaway temp cache dir (never the real data/cache_chart/).
     The directory is wiped at the start of the test to guarantee a cache miss
     on the first access.
     """

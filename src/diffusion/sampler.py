@@ -174,8 +174,10 @@ class DDIMSampler:
             ab_t    = float(ab[t_val - 1])   # ᾱ_t  (buffer is 0-indexed, steps are 1-indexed)
             ab_prev = float(ab[t_prev - 1]) if t_prev > 0 else 1.0
 
-            # timestep tensor
-            t_tensor = torch.full((B,), t_val, device=device, dtype=torch.float32)
+            # Timestep passed to the DiT uses the TRAINING convention:
+            # train.py samples t ∈ [0, T-1] and indexes alphas_bar[t], so the
+            # noise level ab[t_val-1] corresponds to conditioning t = t_val - 1.
+            t_tensor = torch.full((B,), t_val - 1, device=device, dtype=torch.float32)
 
             # ── DiT forward ───────────────────────────────────────────
             if use_cfg:

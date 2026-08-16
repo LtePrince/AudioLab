@@ -303,13 +303,18 @@ class ChartVAE(nn.Module):
     kl_weight : float
         KL-divergence weight in ``compute_loss()``.  Default ``1e-6``.
     scale : float
-        Scaling factor applied to latent sample / mode.  Default ``1.0``.
+        Initial latent scaling factor.  Stored as a state_dict buffer
+        (``latent_scale``) so a value calibrated after pre-training travels
+        with the checkpoint automatically.  With kl_weight ≈ 1e-6 the raw
+        latent std is unconstrained; diffusion assumes roughly unit-variance
+        x₀, so pre_train.py calibrates ``latent_scale = 1 / std(z)`` on the
+        training set after VAE training (LDM's scale_factor).
 
     Usage
     -----
     >>> vae   = ChartVAE(DEFAULT_VAE_CONFIG)
     >>> recon, post = vae(x)              # forward  (x: B,20,T)
-    >>> z     = vae.encode(x).sample()   # latent   (B,16,T//16)
+    >>> z     = vae.encode(x).sample()   # latent   (B,16,T//16), scaled
     >>> recon = vae.decode(z)            # decode   (B,20,T)
     """
 
@@ -323,7 +328,16 @@ class ChartVAE(nn.Module):
         self.encoder   = ChartEncoder(**config)
         self.decoder   = ChartDecoder(**config)
         self.kl_weight = kl_weight
-        self.scale     = scale
+        self.register_buffer("latent_scale", torch.tensor(float(scale)))
+
+    @property
+    def scale(self) -> float:
+        """Current latent scale as a plain float (reads the buffer)."""
+        return float(self.latent_scale.item())
+
+    def set_scale(self, scale: float) -> None:
+        """Set the calibrated latent scale (persisted via state_dict)."""
+        self.latent_scale.fill_(float(scale))
 
     # ---------------------------------------------------------------------- #
     # Core API                                                                #

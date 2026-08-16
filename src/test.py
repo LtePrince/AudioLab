@@ -26,13 +26,13 @@ Usage
   # Minimal (random model weights — pipeline smoke test):
   uv run python src/test.py --audio data/audio/Eltaw.ogg --output out/test.json
 
-  # With trained checkpoints:
+  # With trained checkpoints (dit_best.pt = best-on-val EMA weights):
   uv run python src/test.py \\
       --audio     data/audio/Eltaw.ogg \\
       --output    out/Eltaw_IN.json \\
-      --dit-ckpt  checkpoints/dit_final.pt \\
-      --vae-ckpt  checkpoints/vae_final.pt \\
-      --wave-ckpt checkpoints/wave_final.pt \\
+      --dit-ckpt  checkpoints/dit/dit_best.pt \\
+      --vae-ckpt  checkpoints/vae/vae_final.pt \\
+      --wave-ckpt checkpoints/wave/wave_final.pt \\
       --bpm       193.0 \\
       --cfg-scale 3.0 \\
       --ddim-steps 50
@@ -64,6 +64,7 @@ from src.diffusion.sampler import DDIMSampler
 from src.diffusion.schedule import DEFAULT_SCHEDULE_CONFIG, NoiseSchedule
 from src.encoder.encoder import ChartVAE, DEFAULT_VAE_CONFIG
 from src.models.dit import DEFAULT_DIT_CONFIG, RhythmDiT
+from src.train_utils import pad_or_trim
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -77,14 +78,6 @@ def _align_time(audio_c: torch.Tensor, T_target: int) -> torch.Tensor:
     return F.interpolate(audio_c, size=T_target, mode="linear", align_corners=False)
 
 
-def _pad_or_trim_mel(mel: torch.Tensor, target: int) -> torch.Tensor:
-    """Zero-pad or right-trim mel (n_mels, T) to exactly `target` frames."""
-    T = mel.shape[-1]
-    if T >= target:
-        return mel[..., :target]
-    return F.pad(mel, (0, target - T))
-
-
 def _load_bpm_from_chart(json_path: str) -> float:
     """Read the BPM of the first judge line from a Phigros JSON file."""
     with open(json_path, encoding="utf-8") as fh:
@@ -93,15 +86,38 @@ def _load_bpm_from_chart(json_path: str) -> float:
 
 
 def _load_ckpt_weights(path: str, model: torch.nn.Module, device: torch.device) -> None:
-    """Load a checkpoint produced by train.py into *model* (in-place)."""
+    """Load a checkpoint produced by train.py / pre_train.py into *model*.
+
+    For DiT checkpoints the EMA weights are preferred when present — they are
+    what validation selected on and sample noticeably better than the raw
+    weights on a 300-song dataset.
+    """
     ckpt = torch.load(path, map_location=device, weights_only=True)
-    # Support both raw state_dict and train.py envelope {"dit": ..., "epoch": ...}
+    # Support raw state_dict and train.py envelopes ({"ema"/"dit"/...: state_dict})
     if isinstance(ckpt, dict):
-        for key in ("dit", "vae", "wave", "state_dict", "model"):
+        for key in ("ema", "dit", "vae", "wave", "state_dict", "model"):
             if key in ckpt:
                 ckpt = ckpt[key]
                 break
     model.load_state_dict(ckpt)
+
+
+def _build_dit(ckpt_path: Optional[str], device: torch.device) -> RhythmDiT:
+    """Build a RhythmDiT sized from the checkpoint's stored dit_config.
+
+    train.py saves ``dit_config`` inside every checkpoint so inference always
+    reconstructs the exact trained architecture (e.g. --dit-depth 8
+    --dit-hidden-dim 256 runs) without needing matching CLI flags here.
+    """
+    config = dict(DEFAULT_DIT_CONFIG)
+    if ckpt_path:
+        ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=True)
+        if isinstance(ckpt, dict) and "dit_config" in ckpt:
+            config.update(ckpt["dit_config"])
+            print(f"[gen] DiT config from checkpoint: "
+                  f"depth={config['depth']} D={config['hidden_dim']} "
+                  f"H={config['num_heads']}")
+    return RhythmDiT(**config).to(device)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -181,8 +197,9 @@ def generate_chart(
 
     # ── Step 2: pad / trim mel to the chart's duration ───────────────────
     # Padding to max_frame instead would cover only half the song and desync
-    # the audio/chart token grids by 2×.
-    mel = _pad_or_trim_mel(mel, max_mel_frames)        # (n_mels, max_mel_frames)
+    # the audio/chart token grids by 2×.  pad_or_trim pads with the mel's own
+    # dB floor (silence), not 0.0 (which is LOUD in dB scale).
+    mel = pad_or_trim(mel, max_mel_frames)             # (n_mels, max_mel_frames)
     mel = mel.unsqueeze(0)                             # (1, n_mels, max_mel_frames)
 
     # ── Step 3: AudioWaveEncoder → audio_c ───────────────────────────────
@@ -228,7 +245,12 @@ def generate_chart(
         print(f"         clipped: notes beyond chart frame {actual_chart_frames} "
               f"({actual_chart_frames * frame_ms / 1000:.1f}s) removed")
 
-    conv = Phigros4kConvertor(frame_ms=frame_ms, max_frame=max_frame)
+    # from_logits=True: the VAE decoder outputs raw logits for the binary
+    # channels (trained with BCEWithLogitsLoss), so onset decoding must
+    # threshold at 0 (p=0.5), not at 0.5 (p≈0.62) — the 0.5 threshold would
+    # systematically drop notes with confidence in (0.5, 0.62).
+    conv = Phigros4kConvertor(frame_ms=frame_ms, max_frame=max_frame,
+                              from_logits=True)
     conv.save_phigros_file(
         note_array  = note_array,
         bpm         = bpm,
@@ -325,12 +347,14 @@ def main() -> None:
     # ── build models ───────────────────────────────────────────────────────
     vae  = ChartVAE(DEFAULT_VAE_CONFIG).to(device)
     wave = AudioWaveEncoder(**DEFAULT_WAVE_CONFIG).to(device)
-    dit  = RhythmDiT(**DEFAULT_DIT_CONFIG).to(device)
+    dit  = _build_dit(args.dit_ckpt, device)   # sized from ckpt's dit_config
 
     # ── load checkpoints ───────────────────────────────────────────────────
     if args.vae_ckpt:
         _load_ckpt_weights(args.vae_ckpt, vae, device)
-        print(f"[gen] loaded VAE  ← {args.vae_ckpt}")
+        print(f"[gen] loaded VAE  ← {args.vae_ckpt}  (latent_scale={vae.scale:.4f})")
+        if vae.scale == 1.0:
+            print("[gen] WARNING: VAE latent_scale is 1.0 (uncalibrated checkpoint)")
     else:
         print("[gen] WARNING: VAE  using random weights (no --vae-ckpt)")
 

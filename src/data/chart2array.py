@@ -580,8 +580,8 @@ class Phigros4kConvertor:
                 RuntimeWarning, stacklevel=3,
             )
 
-        valid_flag           = np.zeros(self.max_frame, dtype=np.float32)
-        valid_flag[:max_idx] = 1.0
+        valid_flag = np.zeros(self.max_frame, dtype=np.float32)
+        valid_flag[: max_idx + 1] = 1.0   # inclusive: the last onset/tail frame is valid
         return array, valid_flag
 
     # ------------------------------------------------------------------

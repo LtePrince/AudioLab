@@ -202,6 +202,17 @@ class PhigrosDataset(Dataset):
         self.mirror_prob = mirror_prob
         self.rate_range  = tuple(rate_range)
 
+        if augment and chart_cache_dir is not None:
+            warnings.warn(
+                "PhigrosDataset: chart_cache_dir is set, so rate augmentation "
+                "is DISABLED (cached arrays encode rate=1.0 frame positions). "
+                "Only mirror augmentation will be applied.  For full "
+                "augmentation on a small dataset, drop chart_cache_dir — "
+                "JSON parsing costs only a few ms per item.",
+                UserWarning,
+                stacklevel=2,
+            )
+
         # ------------------------------------------------------------------ #
         # 4. Audio processor                                                  #
         # ------------------------------------------------------------------ #
@@ -281,22 +292,45 @@ class PhigrosDataset(Dataset):
             return str(p)
         return str((self._list_dir / p).resolve())
 
+    # Bump when the cached array/mel SEMANTICS change (e.g. the valid_flag
+    # off-by-one fix), so stale caches are re-computed instead of silently
+    # serving pre-fix data.
+    _CACHE_SCHEMA = "v2"
+
     def _cache_path(self, audio_path: str) -> Optional[Path]:
         """Return the cache ``.npy`` path for *audio_path*, or ``None`` if
-        the cache directory is not set."""
+        the cache directory is not set.
+
+        The key hashes the path RELATIVE to the list dir plus every mel
+        hyperparameter, so caches survive machine moves and can never be
+        silently reused across different (sr, n_fft, hop, n_mels) settings.
+        """
         if self._cache_dir is None:
             return None
-        h    = hashlib.sha1(audio_path.encode()).hexdigest()[:8]
+        try:
+            rel = str(Path(audio_path).relative_to(self._list_dir))
+        except ValueError:
+            rel = audio_path
+        key  = f"{rel}|sr{self._sr}|fft{self._n_fft}|hop{self._hop_length}" \
+               f"|mel{self._n_mels}|{self._CACHE_SCHEMA}"
+        h    = hashlib.sha1(key.encode()).hexdigest()[:8]
         stem = Path(audio_path).stem
         return self._cache_dir / f"{stem}_{h}.npy"
 
     def _chart_cache_path(self, json_path: str) -> Optional[Path]:
         """Return the cache ``.npz`` path for *json_path*, or ``None`` if
-        chart caching is disabled."""
+        chart caching is disabled.  Key includes the frame parameters and a
+        schema version (see ``_cache_path``); stem uses the parent directory
+        name because every converted chart file is called generate.json."""
         if self._chart_cache_dir is None:
             return None
-        h    = hashlib.sha1(json_path.encode()).hexdigest()[:8]
-        stem = Path(json_path).stem
+        try:
+            rel = str(Path(json_path).relative_to(self._list_dir))
+        except ValueError:
+            rel = json_path
+        key  = f"{rel}|fms{self._frame_ms:.6f}|mf{self._max_frame}|{self._CACHE_SCHEMA}"
+        h    = hashlib.sha1(key.encode()).hexdigest()[:8]
+        stem = Path(json_path).parent.name or Path(json_path).stem
         return self._chart_cache_dir / f"{stem}_{h}.npz"
 
     def _load_note_array(

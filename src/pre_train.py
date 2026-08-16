@@ -3,7 +3,8 @@ src/pre_train.py
 ─────────────────────────────────────────────────────────────────────────────
 Pre-training script for ChartVAE and AudioWaveEncoder.
 
-The VAE must be pre-trained before running train.py (wave encoder is optional).
+The VAE must be pre-trained before running train.py (wave encoder is optional
+but strongly recommended).
 
 Modes (--mode)
 ~~~~~~~~~~~~~~
@@ -18,49 +19,51 @@ ChartVAE training objective
 
   β is linearly annealed from kl_weight_start to kl_weight to prevent KL collapse.
 
-AudioWaveEncoder training objective
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  A temporary WaveDecoder (symmetric to the encoder) is built during training:
-  mel → WaveEncoder → latent → WaveDecoder → mel̂
-  L = MSE(mel̂, mel)
-  Only the WaveEncoder weights are saved at the end; the decoder is discarded.
+Validation / checkpointing (all stages)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - --val-list holds out songs never trained on; a deterministic val loss
+    (posterior.mode(), no augmentation) runs every epoch.
+  - The best-on-val weights are kept; --patience epochs without improvement
+    stops the stage early (0 disables).
+  - Intermediate (resumable) checkpoints are rotated: only the newest 2 kept.
+  - One JSON line per epoch is appended to <ckpt_dir>/<stage>/metrics.jsonl
+    (plot with script/plot_metrics.py).
+
+Latent scale calibration (VAE)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  After training, the best weights are reloaded and the latent std is
+  measured over the training set; ``latent_scale = 1 / std`` is stored as a
+  buffer inside vae_final.pt (LDM scale_factor).  train.py / test.py pick it
+  up automatically via load_state_dict — no extra flags.
 
 Checkpoint format
 ~~~~~~~~~~~~~~~~~
-  - Intermediate: {"vae"/"wave": state_dict, "optimizer": ..., "epoch": ..., "step": ...}
-  - Final vae_final.pt / wave_final.pt: plain state_dict (compatible with train.py)
+  - Intermediate: {"vae"/"wave": state_dict, "optimizer": ..., "lr_scheduler": ...,
+                   "epoch": ..., "step": ...}
+  - Final vae_final.pt / wave_final.pt: plain state_dict (best-on-val weights;
+    vae_final.pt carries the calibrated latent_scale buffer)
 
 Usage
 ~~~~~
-  # Step 1: pre-train VAE (required)
   uv run python src/pre_train.py --mode vae \\
-      --data-list data/data.txt \\
-      --ckpt-dir  checkpoints/    \\
-      --epochs    100
+      --data-list data/train.txt --val-list data/val.txt \\
+      --ckpt-dir  checkpoints/ --epochs 100
 
-  # Step 2: pre-train Wave encoder (optional)
   uv run python src/pre_train.py --mode wave \\
-      --data-list data/data.txt \\
-      --ckpt-dir  checkpoints/    \\
-      --epochs    50
-
-  # Run both in one go
-  uv run python src/pre_train.py --mode both \\
-      --data-list data/data.txt \\
-      --ckpt-dir  checkpoints/
-
-  # Resume from a checkpoint
-  uv run python src/pre_train.py --mode vae \\
-      --data-list data/data.txt \\
-      --vae-ckpt  checkpoints/vae/vae_e0010_s000500.pt
+      --data-list data/train.txt --val-list data/val.txt \\
+      --ckpt-dir  checkpoints/ --epochs 50
 """
 
 from __future__ import annotations
 
 import argparse
+import copy
+import math
 import time
+import warnings
 from functools import partial
 from pathlib import Path
+from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -79,6 +82,12 @@ from src.encoder.encoder import (
     ChartReconLoss,
     ChartVAE,
     DEFAULT_VAE_CONFIG,
+)
+from src.train_utils import (
+    EarlyStopper,
+    MetricLogger,
+    pad_or_trim,
+    rotate_checkpoints,
 )
 
 
@@ -162,30 +171,126 @@ class WaveDecoder(nn.Module):
 # Data helpers
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _pad_or_trim(t: torch.Tensor, target: int) -> torch.Tensor:
-    """Right-trim or zero-pad tensor to exactly ``target`` frames (last dimension)."""
-    T = t.shape[-1]
-    if T >= target:
-        return t[..., :target]
-    return F.pad(t, (0, target - T))
-
-
 def _collate_vae(batch: list[dict], max_frame: int) -> dict:
-    """Collate function for VAE training: returns note and valid_flag only."""
-    notes = torch.stack([_pad_or_trim(s["note"],       max_frame) for s in batch])
-    flags = torch.stack([_pad_or_trim(s["valid_flag"], max_frame) for s in batch])
+    """Collate for VAE training: note + valid_flag, zero-padded (0 = empty)."""
+    notes = torch.stack([pad_or_trim(s["note"],       max_frame, 0.0) for s in batch])
+    flags = torch.stack([pad_or_trim(s["valid_flag"], max_frame, 0.0) for s in batch])
     return {"note": notes, "valid_flag": flags}
 
 
 def _collate_wave(batch: list[dict], max_mel_frames: int) -> dict:
-    """Collate function for Wave training: returns mel spectrogram only."""
-    mels = torch.stack([_pad_or_trim(s["audio"], max_mel_frames) for s in batch])
+    """Collate for Wave training: mel only, padded with the dB floor (mel.min())."""
+    mels = torch.stack([pad_or_trim(s["audio"], max_mel_frames) for s in batch])
     return {"audio": mels}
+
+
+def _make_dataset(args: argparse.Namespace, list_path: str, augment: bool) -> PhigrosDataset:
+    return PhigrosDataset(
+        data_list_path   = list_path,
+        convertor_params = {"frame_ms": args.frame_ms, "max_frame": args.max_frame},
+        cache_dir        = args.cache_dir,
+        chart_cache_dir  = args.chart_cache_dir,
+        augment          = augment,
+        hop_length       = args.hop_length,
+        n_mels           = args.n_mels,
+        sr               = args.sr,
+    )
+
+
+def _make_loader(dataset, args, collate_fn, *, train: bool) -> DataLoader:
+    return DataLoader(
+        dataset,
+        batch_size  = args.batch_size,
+        shuffle     = train,
+        num_workers = args.num_workers,
+        collate_fn  = collate_fn,
+        pin_memory  = torch.cuda.is_available(),
+        drop_last   = train,
+    )
+
+
+def _warn_no_val() -> None:
+    warnings.warn(
+        "no --val-list given: validation loss, best-checkpoint selection and "
+        "early stopping are all DISABLED.  With 300 songs this stage can "
+        "overfit silently — generate a split with script/split_datalist.py "
+        "and pass --val-list data/val.txt.",
+        UserWarning,
+        stacklevel=2,
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ChartVAE pre-training
 # ─────────────────────────────────────────────────────────────────────────────
+
+@torch.no_grad()
+def _evaluate_vae(
+    vae:        ChartVAE,
+    loss_fn:    ChartReconLoss,
+    val_loader: DataLoader,
+    device:     torch.device,
+) -> dict:
+    """Deterministic val pass: posterior.mode(), no augmentation, no sampling.
+
+    Returns the masked reconstruction loss (the early-stop metric — comparable
+    across epochs, unlike the β-annealed total) plus KL for logging.
+    """
+    vae.eval()
+    recon_sum = kl_sum = 0.0
+    n = 0
+    for batch in val_loader:
+        note = batch["note"].to(device)
+        flag = batch["valid_flag"].to(device)
+        recon, posterior = vae(note, sample=False)   # mode(): deterministic
+        recon_loss, _    = loss_fn(note, recon, flag)
+        recon_sum += recon_loss.item()
+        kl_sum    += posterior.kl().item()
+        n += 1
+    vae.train()
+    n = max(n, 1)
+    return {"val_recon": recon_sum / n, "val_kl": kl_sum / n}
+
+
+@torch.no_grad()
+def _calibrate_latent_scale(
+    vae:         ChartVAE,
+    loader:      DataLoader,
+    device:      torch.device,
+    max_batches: int = 64,
+) -> float:
+    """Measure latent std over the (unaugmented) training set and store
+    ``latent_scale = 1 / std`` in the VAE (LDM scale_factor).
+
+    Must run with scale reset to 1.0 so the measurement is of the raw latent.
+    """
+    vae.eval()
+    vae.set_scale(1.0)
+    total, total_sq, count = 0.0, 0.0, 0
+    for i, batch in enumerate(loader):
+        if i >= max_batches:
+            break
+        note      = batch["note"].to(device)
+        posterior = vae.encode(note)
+        # DiT training consumes posterior.sample(), whose variance is
+        # Var(mean) + E[var].  Measure that second moment analytically
+        # (mean² + var) instead of sampling — deterministic and exact.
+        total    += posterior.mean.sum().item()
+        total_sq += (posterior.mean ** 2 + posterior.var).sum().item()
+        count    += posterior.mean.numel()
+    if count == 0:
+        warnings.warn("latent-scale calibration saw no data; keeping scale=1.0",
+                      UserWarning)
+        return 1.0
+    mean = total / count
+    var  = max(total_sq / count - mean ** 2, 1e-12)
+    std  = var ** 0.5
+    scale = 1.0 / std
+    vae.set_scale(scale)
+    print(f"[vae] latent calibration: mean={mean:+.4f}  std={std:.4f}  "
+          f"→ latent_scale={scale:.4f}")
+    return scale
+
 
 def _pretrain_vae(args: argparse.Namespace) -> None:
     device = torch.device(
@@ -197,29 +302,21 @@ def _pretrain_vae(args: argparse.Namespace) -> None:
     ckpt_dir = Path(args.ckpt_dir) / "vae"
     ckpt_dir.mkdir(parents=True, exist_ok=True)
 
-    # ── Dataset & DataLoader ───────────────────────────────────────────────
-    dataset = PhigrosDataset(
-        data_list_path   = args.data_list,
-        convertor_params = {"frame_ms": args.frame_ms, "max_frame": args.max_frame},
-        cache_dir        = args.cache_dir,
-        chart_cache_dir  = args.chart_cache_dir,
-        augment          = True,
-        hop_length       = args.hop_length,
-        n_mels           = args.n_mels,
-        sr               = args.sr,
-        device           = str(device),
-    )
-    print(f"[vae] dataset: {len(dataset)} samples")
+    # ── Datasets & DataLoaders ─────────────────────────────────────────────
+    train_set = _make_dataset(args, args.data_list, augment=True)
+    print(f"[vae] train: {len(train_set)} samples")
+    loader = _make_loader(train_set, args,
+                          partial(_collate_vae, max_frame=args.max_frame), train=True)
 
-    loader = DataLoader(
-        dataset,
-        batch_size  = args.batch_size,
-        shuffle     = True,
-        num_workers = args.num_workers,
-        collate_fn  = partial(_collate_vae, max_frame=args.max_frame),
-        pin_memory  = (device.type == "cuda"),
-        drop_last   = True,
-    )
+    val_loader = None
+    if args.val_list:
+        val_set    = _make_dataset(args, args.val_list, augment=False)
+        val_loader = _make_loader(val_set, args,
+                                  partial(_collate_vae, max_frame=args.max_frame),
+                                  train=False)
+        print(f"[vae] val:   {len(val_set)} samples")
+    else:
+        _warn_no_val()
 
     # ── Model ─────────────────────────────────────────────────────────────
     vae     = ChartVAE(DEFAULT_VAE_CONFIG, kl_weight=args.kl_weight).to(device)
@@ -233,10 +330,14 @@ def _pretrain_vae(args: argparse.Namespace) -> None:
         weight_decay = args.weight_decay,
         betas        = (0.9, 0.999),
     )
-    total_steps = args.epochs * max(1, len(loader) // args.grad_accum)
+    # ceil: the trailing partial accumulation window is flushed at epoch end
+    total_steps = args.epochs * max(1, math.ceil(len(loader) / args.grad_accum))
     lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
         optimizer, T_max=total_steps, eta_min=args.min_lr
     )
+
+    metrics = MetricLogger(ckpt_dir / "metrics.jsonl", stage="vae")
+    stopper = EarlyStopper(patience=args.patience)
 
     # ── Resume ────────────────────────────────────────────────────────────
     start_epoch = 0
@@ -247,6 +348,18 @@ def _pretrain_vae(args: argparse.Namespace) -> None:
             vae.load_state_dict(raw["vae"])
             if "optimizer" in raw:
                 optimizer.load_state_dict(raw["optimizer"])
+            if "lr_scheduler" in raw:
+                lr_scheduler.load_state_dict(raw["lr_scheduler"])
+                # re-anchor the horizon: past the OLD T_max the periodic
+                # cosine rises back toward base lr instead of annealing
+                if lr_scheduler.T_max != total_steps:
+                    print(f"[vae] resume: lr horizon {lr_scheduler.T_max} → {total_steps}")
+                    lr_scheduler.T_max = total_steps
+                lr_scheduler.eta_min = args.min_lr
+            if "stopper" in raw:
+                stopper.best       = raw["stopper"].get("best", float("inf"))
+                stopper.best_epoch = raw["stopper"].get("best_epoch", -1)
+                stopper.bad_epochs = raw["stopper"].get("bad_epochs", 0)
             start_epoch = raw.get("epoch", 0)
             global_step = raw.get("step", 0)
         else:
@@ -258,14 +371,27 @@ def _pretrain_vae(args: argparse.Namespace) -> None:
     kl_end            = args.kl_weight
     kl_anneal_epochs  = max(1, int(args.epochs * args.kl_anneal_frac))
 
-    loss_sum  = 0.0
+    best_state: Optional[dict] = None
+
+    loss_sum   = 0.0
     loss_count = 0
-    t0        = time.time()
+    epoch_loss_sum   = 0.0
+    epoch_loss_count = 0
+    t0 = time.time()
     optimizer.zero_grad()
+
+    def _opt_step() -> None:
+        nonlocal global_step
+        nn.utils.clip_grad_norm_(vae.parameters(), args.clip_grad)
+        optimizer.step()
+        lr_scheduler.step()
+        optimizer.zero_grad()
+        global_step += 1
 
     # ── Training loop ──────────────────────────────────────────────────────
     for epoch in range(start_epoch, args.epochs):
         vae.train()
+        pending_grads = False
 
         # current β (linear anneal)
         frac          = min(1.0, epoch / kl_anneal_epochs)
@@ -277,16 +403,16 @@ def _pretrain_vae(args: argparse.Namespace) -> None:
 
             loss, log = vae.compute_loss(note, flag, loss_fn)
             (loss / args.grad_accum).backward()
+            pending_grads = True
 
             loss_sum   += loss.item()
             loss_count += 1
+            epoch_loss_sum   += loss.item()
+            epoch_loss_count += 1
 
             if (batch_idx + 1) % args.grad_accum == 0:
-                nn.utils.clip_grad_norm_(vae.parameters(), args.clip_grad)
-                optimizer.step()
-                lr_scheduler.step()
-                optimizer.zero_grad()
-                global_step += 1
+                _opt_step()
+                pending_grads = False
 
                 if global_step % args.log_every == 0:
                     avg_loss = loss_sum / loss_count
@@ -306,21 +432,79 @@ def _pretrain_vae(args: argparse.Namespace) -> None:
                     loss_sum   = 0.0
                     loss_count = 0
 
-        # save intermediate checkpoint every save_every epochs (with optimizer state for resuming)
+        # flush the trailing partial accumulation window (grad_accum > 1)
+        if pending_grads:
+            _opt_step()
+
+        # ── per-epoch validation + metric log ─────────────────────────────
+        epoch_train = epoch_loss_sum / max(epoch_loss_count, 1)
+        epoch_loss_sum, epoch_loss_count = 0.0, 0
+
+        record = {
+            "epoch": epoch + 1, "step": global_step,
+            "train_loss": epoch_train,
+            "beta": vae.kl_weight,
+            "lr": optimizer.param_groups[0]["lr"],
+        }
+        if val_loader is not None:
+            val = _evaluate_vae(vae, loss_fn, val_loader, device)
+            record.update(val)
+            is_best = stopper.update(val["val_recon"], epoch + 1)
+            if is_best:
+                best_state = copy.deepcopy(vae.state_dict())
+                torch.save(best_state, ckpt_dir / "vae_best.pt")
+            print(
+                f"[vae] epoch {epoch + 1:>4d}  train {epoch_train:.5f}  "
+                f"val_recon {val['val_recon']:.5f}"
+                f"{'  *best*' if is_best else ''}"
+            )
+        metrics.log(**record)
+
+        # save intermediate checkpoint every save_every epochs, keep newest 2
         if (epoch + 1) % args.save_every == 0:
             mid_path = ckpt_dir / f"vae_e{epoch + 1:04d}_s{global_step:07d}.pt"
             torch.save(
                 {
-                    "vae":       vae.state_dict(),
-                    "optimizer": optimizer.state_dict(),
-                    "epoch":     epoch + 1,
-                    "step":      global_step,
+                    "vae":          vae.state_dict(),
+                    "optimizer":    optimizer.state_dict(),
+                    "lr_scheduler": lr_scheduler.state_dict(),
+                    "stopper":      {"best": stopper.best,
+                                     "best_epoch": stopper.best_epoch,
+                                     "bad_epochs": stopper.bad_epochs},
+                    "epoch":        epoch + 1,
+                    "step":         global_step,
                 },
                 mid_path,
             )
+            rotate_checkpoints(ckpt_dir, "vae_e*.pt", keep=2)
             print(f"[vae] saved → {mid_path}")
 
-    # final checkpoint: plain state_dict, directly compatible with train.py --vae-ckpt
+        if stopper.should_stop:
+            print(f"[vae] early stop at epoch {epoch + 1} "
+                  f"(best val_recon {stopper.best:.5f} @ epoch {stopper.best_epoch})")
+            break
+
+    # ── Final: best weights + latent scale calibration ────────────────────
+    best_path = ckpt_dir / "vae_best.pt"
+    if best_state is not None:
+        vae.load_state_dict(best_state)
+        print(f"[vae] using best-on-val weights "
+              f"(val_recon {stopper.best:.5f} @ epoch {stopper.best_epoch})")
+    elif best_path.exists():
+        # resumed run that never improved on the previous run's best:
+        # the true best lives on disk from before the resume
+        vae.load_state_dict(
+            torch.load(best_path, map_location=device, weights_only=True)
+        )
+        print(f"[vae] using best-on-val weights from disk ← {best_path}")
+
+    calib_set    = _make_dataset(args, args.data_list, augment=False)
+    calib_loader = _make_loader(calib_set, args,
+                                partial(_collate_vae, max_frame=args.max_frame),
+                                train=False)
+    _calibrate_latent_scale(vae, calib_loader, device,
+                            max_batches=args.calib_batches)
+
     final_path = ckpt_dir / "vae_final.pt"
     torch.save(vae.state_dict(), final_path)
     print(f"[vae] done → {final_path}  elapsed={time.time() - t0:.0f}s")
@@ -329,6 +513,31 @@ def _pretrain_vae(args: argparse.Namespace) -> None:
 # ─────────────────────────────────────────────────────────────────────────────
 # AudioWaveEncoder pre-training (mel autoencoder)
 # ─────────────────────────────────────────────────────────────────────────────
+
+@torch.no_grad()
+def _evaluate_wave(
+    encoder:    AudioWaveEncoder,
+    decoder:    WaveDecoder,
+    val_loader: DataLoader,
+    device:     torch.device,
+    stride:     int,
+) -> float:
+    encoder.eval()
+    decoder.eval()
+    total, n = 0.0, 0
+    for batch in val_loader:
+        mel    = batch["audio"].to(device)
+        T_trim = (mel.shape[-1] // stride) * stride
+        mel    = mel[..., :T_trim]
+        mel_hat = decoder(encoder(mel))
+        if mel_hat.shape[-1] != mel.shape[-1]:
+            mel_hat = mel_hat[..., :mel.shape[-1]]
+        total += F.mse_loss(mel_hat, mel).item()
+        n += 1
+    encoder.train()
+    decoder.train()
+    return total / max(n, 1)
+
 
 def _pretrain_wave(args: argparse.Namespace) -> None:
     device = torch.device(
@@ -340,36 +549,27 @@ def _pretrain_wave(args: argparse.Namespace) -> None:
     ckpt_dir = Path(args.ckpt_dir) / "wave"
     ckpt_dir.mkdir(parents=True, exist_ok=True)
 
-    # ── Dataset & DataLoader ───────────────────────────────────────────────
-    # Wave pre-training does not need chart data, but reusing PhigrosDataset is simplest
-    dataset = PhigrosDataset(
-        data_list_path   = args.data_list,
-        convertor_params = {"frame_ms": args.frame_ms, "max_frame": args.max_frame},
-        cache_dir        = args.cache_dir,
-        chart_cache_dir  = args.chart_cache_dir,
-        augment          = False,   # mel autoencoder does not need chart mirror augmentation
-        hop_length       = args.hop_length,
-        n_mels           = args.n_mels,
-        sr               = args.sr,
-        device           = str(device),
-    )
-    print(f"[wave] dataset: {len(dataset)} samples")
-
-    # Same *duration* as the chart axis (≈ 8192 mel frames for 4096 chart
-    # frames) — must stay consistent with train.py so the encoder is
-    # pre-trained on the sequence length it will see during DiT training.
+    # Same duration as the chart axis — must stay consistent with train.py.
     max_mel_frames = chart_frames_to_mel_frames(
         args.max_frame, args.frame_ms, args.hop_length, args.sr
     )
-    loader = DataLoader(
-        dataset,
-        batch_size  = args.batch_size,
-        shuffle     = True,
-        num_workers = args.num_workers,
-        collate_fn  = partial(_collate_wave, max_mel_frames=max_mel_frames),
-        pin_memory  = (device.type == "cuda"),
-        drop_last   = True,
-    )
+
+    # ── Datasets & DataLoaders ─────────────────────────────────────────────
+    train_set = _make_dataset(args, args.data_list, augment=False)
+    print(f"[wave] train: {len(train_set)} samples")
+    loader = _make_loader(train_set, args,
+                          partial(_collate_wave, max_mel_frames=max_mel_frames),
+                          train=True)
+
+    val_loader = None
+    if args.val_list:
+        val_set    = _make_dataset(args, args.val_list, augment=False)
+        val_loader = _make_loader(val_set, args,
+                                  partial(_collate_wave, max_mel_frames=max_mel_frames),
+                                  train=False)
+        print(f"[wave] val:   {len(val_set)} samples")
+    else:
+        _warn_no_val()
 
     # ── Model ─────────────────────────────────────────────────────────────
     encoder = AudioWaveEncoder(**DEFAULT_WAVE_CONFIG).to(device)
@@ -387,10 +587,14 @@ def _pretrain_wave(args: argparse.Namespace) -> None:
         weight_decay = args.weight_decay,
         betas        = (0.9, 0.999),
     )
-    total_steps = args.epochs * max(1, len(loader) // args.grad_accum)
+    # ceil: the trailing partial accumulation window is flushed at epoch end
+    total_steps = args.epochs * max(1, math.ceil(len(loader) / args.grad_accum))
     lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
         optimizer, T_max=total_steps, eta_min=args.min_lr
     )
+
+    metrics = MetricLogger(ckpt_dir / "metrics.jsonl", stage="wave")
+    stopper = EarlyStopper(patience=args.patience)
 
     # ── Resume ────────────────────────────────────────────────────────────
     start_epoch = 0
@@ -403,6 +607,16 @@ def _pretrain_wave(args: argparse.Namespace) -> None:
                 decoder.load_state_dict(raw["decoder"])
             if "optimizer" in raw:
                 optimizer.load_state_dict(raw["optimizer"])
+            if "lr_scheduler" in raw:
+                lr_scheduler.load_state_dict(raw["lr_scheduler"])
+                if lr_scheduler.T_max != total_steps:
+                    print(f"[wave] resume: lr horizon {lr_scheduler.T_max} → {total_steps}")
+                    lr_scheduler.T_max = total_steps
+                lr_scheduler.eta_min = args.min_lr
+            if "stopper" in raw:
+                stopper.best       = raw["stopper"].get("best", float("inf"))
+                stopper.best_epoch = raw["stopper"].get("best_epoch", -1)
+                stopper.bad_epochs = raw["stopper"].get("bad_epochs", 0)
             start_epoch = raw.get("epoch", 0)
             global_step = raw.get("step", 0)
         else:
@@ -414,13 +628,24 @@ def _pretrain_wave(args: argparse.Namespace) -> None:
 
     loss_sum   = 0.0
     loss_count = 0
-    t0         = time.time()
+    epoch_loss_sum   = 0.0
+    epoch_loss_count = 0
+    t0 = time.time()
     optimizer.zero_grad()
+
+    def _opt_step() -> None:
+        nonlocal global_step
+        nn.utils.clip_grad_norm_(all_params, args.clip_grad)
+        optimizer.step()
+        lr_scheduler.step()
+        optimizer.zero_grad()
+        global_step += 1
 
     # ── Training loop ──────────────────────────────────────────────────────
     for epoch in range(start_epoch, args.epochs):
         encoder.train()
         decoder.train()
+        pending_grads = False
 
         for batch_idx, batch in enumerate(loader):
             mel = batch["audio"].to(device)   # (B, n_mels, T_mel)
@@ -439,16 +664,16 @@ def _pretrain_wave(args: argparse.Namespace) -> None:
 
             loss = F.mse_loss(mel_hat, mel)
             (loss / args.grad_accum).backward()
+            pending_grads = True
 
             loss_sum   += loss.item()
             loss_count += 1
+            epoch_loss_sum   += loss.item()
+            epoch_loss_count += 1
 
             if (batch_idx + 1) % args.grad_accum == 0:
-                nn.utils.clip_grad_norm_(all_params, args.clip_grad)
-                optimizer.step()
-                lr_scheduler.step()
-                optimizer.zero_grad()
-                global_step += 1
+                _opt_step()
+                pending_grads = False
 
                 if global_step % args.log_every == 0:
                     avg_loss = loss_sum / loss_count
@@ -464,24 +689,66 @@ def _pretrain_wave(args: argparse.Namespace) -> None:
                     loss_sum   = 0.0
                     loss_count = 0
 
-        # save intermediate checkpoint every save_every epochs (encoder + decoder, resumable)
+        # flush the trailing partial accumulation window (grad_accum > 1)
+        if pending_grads:
+            _opt_step()
+
+        # ── per-epoch validation + metric log ─────────────────────────────
+        epoch_train = epoch_loss_sum / max(epoch_loss_count, 1)
+        epoch_loss_sum, epoch_loss_count = 0.0, 0
+
+        record = {
+            "epoch": epoch + 1, "step": global_step,
+            "train_loss": epoch_train,
+            "lr": optimizer.param_groups[0]["lr"],
+        }
+        if val_loader is not None:
+            val_mse = _evaluate_wave(encoder, decoder, val_loader, device, stride)
+            record["val_loss"] = val_mse
+            is_best = stopper.update(val_mse, epoch + 1)
+            if is_best:
+                torch.save(encoder.state_dict(), ckpt_dir / "wave_best.pt")
+            print(
+                f"[wave] epoch {epoch + 1:>4d}  train {epoch_train:.5f}  "
+                f"val {val_mse:.5f}{'  *best*' if is_best else ''}"
+            )
+        metrics.log(**record)
+
+        # save intermediate checkpoint every save_every epochs, keep newest 2
         if (epoch + 1) % args.save_every == 0:
             mid_path = ckpt_dir / f"wave_e{epoch + 1:04d}_s{global_step:07d}.pt"
             torch.save(
                 {
-                    "wave":      encoder.state_dict(),
-                    "decoder":   decoder.state_dict(),
-                    "optimizer": optimizer.state_dict(),
-                    "epoch":     epoch + 1,
-                    "step":      global_step,
+                    "wave":         encoder.state_dict(),
+                    "decoder":      decoder.state_dict(),
+                    "optimizer":    optimizer.state_dict(),
+                    "lr_scheduler": lr_scheduler.state_dict(),
+                    "stopper":      {"best": stopper.best,
+                                     "best_epoch": stopper.best_epoch,
+                                     "bad_epochs": stopper.bad_epochs},
+                    "epoch":        epoch + 1,
+                    "step":         global_step,
                 },
                 mid_path,
             )
+            rotate_checkpoints(ckpt_dir, "wave_e*.pt", keep=2)
             print(f"[wave] saved → {mid_path}")
 
-    # final checkpoint: encoder state_dict only, directly compatible with train.py --wave-ckpt
+        if stopper.should_stop:
+            print(f"[wave] early stop at epoch {epoch + 1} "
+                  f"(best val {stopper.best:.5f} @ epoch {stopper.best_epoch})")
+            break
+
+    # ── Final: best-on-val encoder weights (decoder is discarded) ─────────
+    best_path = ckpt_dir / "wave_best.pt"
     final_path = ckpt_dir / "wave_final.pt"
-    torch.save(encoder.state_dict(), final_path)
+    if val_loader is not None and best_path.exists():
+        final_state = torch.load(best_path, map_location=device, weights_only=True)
+        print(f"[wave] using best-on-val weights "
+              f"(val {stopper.best:.5f} @ epoch {stopper.best_epoch})")
+    else:
+        final_state = encoder.state_dict()
+    torch.save(final_state, final_path)
     print(f"[wave] done → {final_path}  elapsed={time.time() - t0:.0f}s")
 
 
@@ -505,11 +772,15 @@ def _build_parser() -> argparse.ArgumentParser:
     # ── data ───────────────────────────────────────────────────────────────
     g = p.add_argument_group("data")
     g.add_argument("--data-list",   required=True,
-                   help="path to data_list.txt")
+                   help="training list (use data/train.txt from script/split_datalist.py)")
+    g.add_argument("--val-list",    default=None,
+                   help="held-out validation list (data/val.txt) — enables val loss, "
+                        "best-checkpoint selection and early stopping")
     g.add_argument("--cache-dir",   default=None,
                    help="directory for cached mel .npy files (optional)")
     g.add_argument("--chart-cache-dir", default=None,
-                   help="directory for cached chart .npz files (skips JSON parse on cache hit; disables rate augmentation)")
+                   help="directory for cached chart .npz files (skips JSON parse on "
+                        "cache hit; DISABLES rate augmentation)")
     g.add_argument("--frame-ms",    type=float,
                    default=512 / 22050 / 4 * 8 * 1000,
                    help="milliseconds per chart frame (≈ 46.44 ms)")
@@ -529,7 +800,8 @@ def _build_parser() -> argparse.ArgumentParser:
     g.add_argument("--wave-ckpt",  default=None,
                    help="Wave checkpoint path to resume training from")
     g.add_argument("--save-every", type=int, default=10,
-                   help="save intermediate checkpoint every N epochs")
+                   help="save intermediate checkpoint every N epochs (only the "
+                        "newest 2 are kept; best/final are separate files)")
 
     # ── training hyperparameters ────────────────────────────────────────────
     g = p.add_argument_group("training")
@@ -542,6 +814,9 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="gradient accumulation steps")
     g.add_argument("--clip-grad",    type=float, default=1.0,
                    help="max gradient norm for clipping")
+    g.add_argument("--patience",     type=int,   default=25,
+                   help="early-stop after N epochs without val improvement "
+                        "(0 disables; requires --val-list)")
 
     # ── VAE-specific ────────────────────────────────────────────────────────
     g = p.add_argument_group("vae")
@@ -551,6 +826,8 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="initial KL divergence weight β_start (prevents KL collapse)")
     g.add_argument("--kl-anneal-frac",  type=float, default=0.2,
                    help="fraction of epochs over which β is linearly annealed from β_start to β_end")
+    g.add_argument("--calib-batches",   type=int,   default=64,
+                   help="number of batches used for latent-scale calibration after VAE training")
 
     # ── misc ───────────────────────────────────────────────────────────────
     g = p.add_argument_group("misc")
