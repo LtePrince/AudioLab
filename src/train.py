@@ -157,21 +157,27 @@ def _validate(
     val_loader: DataLoader,
     device:     torch.device,
     n_timesteps: int = 8,
-) -> float:
+) -> tuple[float, float]:
     """Deterministic validation: fixed stratified timesteps × fixed-seed noise.
 
     Uses posterior.mode() (not sample) and a fresh fixed-seed generator each
-    call, so the metric is exactly comparable across epochs.  Returns plain
-    masked ε-MSE (unweighted — a monitoring metric, not the training loss).
-    Call with EMA weights swapped in.
+    call, so the metric is exactly comparable across epochs.  Returns
+    ``(val_loss, cond_gain)`` where val_loss is the plain masked ε-MSE and
+    cond_gain = (val_zero_audio - val_loss) / val_zero_audio — the fraction
+    of the loss explained by the audio condition.  cond_gain ≈ 0 means the
+    model is ignoring the audio (an unconditional chart prior), which decoded
+    to chance-level onset F1 in the first training round.  Call with EMA
+    weights swapped in.
     """
     was_training = dit.training
     dit.eval()
+    wave_training = wave.training
+    wave.eval()
     g = torch.Generator(device="cpu").manual_seed(12345)
     T = schedule.T
     t_values = [int((k + 0.5) / n_timesteps * T) for k in range(n_timesteps)]
 
-    total, count = 0.0, 0
+    total, total_zero, count = 0.0, 0.0, 0
     for batch in val_loader:
         note = batch["note"].to(device)
         mel  = batch["audio"].to(device)
@@ -185,16 +191,24 @@ def _validate(
             t     = torch.full((B,), t_val, device=device, dtype=torch.long)
             noise = torch.randn(z0.shape, generator=g).to(device)
             z_t, _   = schedule.q_sample(z0, t, noise)
-            eps_pred = dit(z_t, audio_c, t.float())
+            mask  = _latent_valid_mask(flag, z_t.shape[-1])
+            denom = (mask.sum() * z_t.shape[1]).clamp_min(1.0)
 
-            mask = _latent_valid_mask(flag, eps_pred.shape[-1])
-            err  = ((eps_pred - noise) ** 2 * mask).sum()
-            total += (err / (mask.sum() * eps_pred.shape[1]).clamp_min(1.0)).item()
+            eps_pred = dit(z_t, audio_c, t.float())
+            total += (((eps_pred - noise) ** 2 * mask).sum() / denom).item()
+
+            eps_zero = dit(z_t, torch.zeros_like(audio_c), t.float())
+            total_zero += (((eps_zero - noise) ** 2 * mask).sum() / denom).item()
             count += 1
 
     if was_training:
         dit.train()
-    return total / max(count, 1)
+    if wave_training:
+        wave.train()
+    val_loss = total / max(count, 1)
+    val_zero = total_zero / max(count, 1)
+    cond_gain = (val_zero - val_loss) / max(val_zero, 1e-9)
+    return val_loss, cond_gain
 
 
 def _save_ckpt(
@@ -207,23 +221,24 @@ def _save_ckpt(
     stopper:      EarlyStopper,
     epoch:        int,
     step:         int,
+    wave:         Optional[AudioWaveEncoder] = None,
 ) -> None:
-    torch.save(
-        {
-            "epoch": epoch, "step": step,
-            "dit":          dit.state_dict(),
-            "ema":          ema.state_dict(),
-            "ema_step":     ema.step,
-            "optimizer":    opt.state_dict(),
-            "lr_scheduler": lr_scheduler.state_dict(),
-            "dit_config":   dit_config,
-            # persist best/patience so a resumed run cannot clobber the true
-            # best checkpoint or restart the early-stop countdown
-            "stopper": {"best": stopper.best, "best_epoch": stopper.best_epoch,
-                        "bad_epochs": stopper.bad_epochs},
-        },
-        path,
-    )
+    payload = {
+        "epoch": epoch, "step": step,
+        "dit":          dit.state_dict(),
+        "ema":          ema.state_dict(),
+        "ema_step":     ema.step,
+        "optimizer":    opt.state_dict(),
+        "lr_scheduler": lr_scheduler.state_dict(),
+        "dit_config":   dit_config,
+        # persist best/patience so a resumed run cannot clobber the true
+        # best checkpoint or restart the early-stop countdown
+        "stopper": {"best": stopper.best, "best_epoch": stopper.best_epoch,
+                    "bad_epochs": stopper.bad_epochs},
+    }
+    if wave is not None:   # --train-wave: the finetuned encoder ships with the DiT
+        payload["wave"] = wave.state_dict()
+    torch.save(payload, path)
     print(f"  [ckpt] saved → {path}")
 
 
@@ -234,9 +249,13 @@ def _load_ckpt(
     opt:          Optional[torch.optim.Optimizer] = None,
     lr_scheduler = None,
     stopper:      Optional[EarlyStopper] = None,
+    wave:         Optional[AudioWaveEncoder] = None,
 ) -> tuple[int, int]:
     ckpt = torch.load(path, map_location="cpu", weights_only=True)
     dit.load_state_dict(ckpt["dit"])
+    if wave is not None and "wave" in ckpt:
+        wave.load_state_dict(ckpt["wave"])
+        print("[train] resumed finetuned wave encoder from checkpoint")
     if ema is not None:
         if "ema" in ckpt:
             ema.load_state_dict(ckpt["ema"],
@@ -346,6 +365,15 @@ def _build_parser() -> argparse.ArgumentParser:
     g.add_argument("--clip-grad",  type=float, default=1.0,   help="max gradient norm for clipping")
     g.add_argument("--min-snr-gamma", type=float, default=5.0,
                    help="min-SNR loss weighting γ (0 disables)")
+    g.add_argument("--train-wave", action="store_true",
+                   help="jointly finetune the AudioWaveEncoder with the DiT "
+                        "instead of freezing it (fixes the conditioning-collapse "
+                        "failure where frozen mel-autoencoder features carry no "
+                        "usable beat information; the finetuned encoder is saved "
+                        "inside every DiT checkpoint and as wave_finetuned.pt)")
+    g.add_argument("--wave-lr", type=float, default=None,
+                   help="learning rate for the wave encoder when --train-wave "
+                        "(default: same as --lr)")
     g.add_argument("--ema-decay",  type=float, default=0.999, help="EMA decay for shadow weights")
     g.add_argument("--patience",   type=int,   default=100,
                    help="early-stop after N epochs without val improvement "
@@ -473,25 +501,40 @@ def main() -> None:
             "[train] " + "!" * 68
         )
 
-    # freeze VAE and Wave encoder — only DiT is trained
+    # freeze the VAE always; freeze the wave encoder unless --train-wave
     vae.eval()
-    wave.eval()
-    for param in (*vae.parameters(), *wave.parameters()):
+    for param in vae.parameters():
         param.requires_grad_(False)
+    if args.train_wave:
+        wave.train()
+        for param in wave.parameters():
+            param.requires_grad_(True)
+    else:
+        wave.eval()
+        for param in wave.parameters():
+            param.requires_grad_(False)
 
     dit.train()
     print(f"[train] RhythmDiT  params: {dit.num_params:,}  "
           f"[depth={dit_config['depth']} D={dit_config['hidden_dim']} "
           f"H={dit_config['num_heads']} dropout={dit_config['dropout']}]")
     print(f"[train] ChartVAE   params: {sum(p.numel() for p in vae.parameters()):,}  (frozen)")
-    print(f"[train] WaveEncoder params: {sum(p.numel() for p in wave.parameters()):,}  (frozen)")
+    print(f"[train] WaveEncoder params: {sum(p.numel() for p in wave.parameters()):,}  "
+          f"({'FINETUNING with the DiT' if args.train_wave else 'frozen'})")
 
     # ── noise schedule ─────────────────────────────────────────────────────
     schedule = NoiseSchedule(**DEFAULT_SCHEDULE_CONFIG).to(device)
 
     # ── optimizer, lr scheduler, EMA ───────────────────────────────────────
+    param_groups = [{"params": list(dit.parameters()), "lr": args.lr}]
+    trainable_params = list(dit.parameters())
+    if args.train_wave:
+        wave_lr = args.wave_lr if args.wave_lr is not None else args.lr
+        param_groups.append({"params": list(wave.parameters()), "lr": wave_lr})
+        trainable_params += list(wave.parameters())
+        print(f"[train] wave encoder lr: {wave_lr:.2e}")
     optimizer = torch.optim.AdamW(
-        dit.parameters(),
+        param_groups,
         lr           = args.lr,
         weight_decay = args.weight_decay,
         betas        = (0.9, 0.999),
@@ -513,7 +556,8 @@ def main() -> None:
     global_step = 0
     if args.dit_ckpt:
         start_epoch, global_step = _load_ckpt(
-            Path(args.dit_ckpt), dit, ema, optimizer, lr_scheduler, stopper
+            Path(args.dit_ckpt), dit, ema, optimizer, lr_scheduler, stopper,
+            wave=wave if args.train_wave else None,
         )
         # The loaded scheduler state carries the OLD run's T_max; past it the
         # periodic cosine RISES back toward base lr (verified: 1e-4 → 3.6e-1).
@@ -539,7 +583,7 @@ def main() -> None:
     def _opt_step() -> None:
         """One optimizer step: clip → step → schedule → zero → EMA."""
         nonlocal global_step
-        nn.utils.clip_grad_norm_(dit.parameters(), args.clip_grad)
+        nn.utils.clip_grad_norm_(trainable_params, args.clip_grad)
         optimizer.step()
         lr_scheduler.step()
         optimizer.zero_grad()
@@ -557,11 +601,15 @@ def main() -> None:
             mel  = batch["audio"].to(device)         # (B, n_mels, max_mel_frames)
             flag = batch["valid_flag"].to(device)    # (B, max_frame)
 
-            # ── encode (VAE + Wave, no grad) ──────────────────────────
+            # ── encode: VAE always no-grad; wave with grad iff --train-wave ─
             with torch.no_grad():
-                z0      = vae.encode(note).sample()  # (B, 16, T_z), scaled
-                audio_c = wave(mel)                  # (B, 256, T_a)
-                audio_c = _align_time(audio_c, z0.shape[-1])  # → (B, 256, T_z)
+                z0 = vae.encode(note).sample()       # (B, 16, T_z), scaled
+            if args.train_wave:
+                audio_c = wave(mel)                  # (B, 256, T_a), grads flow
+            else:
+                with torch.no_grad():
+                    audio_c = wave(mel)
+            audio_c = _align_time(audio_c, z0.shape[-1])      # → (B, 256, T_z)
 
             # ── CFG Dropout ───────────────────────────────────────────
             if args.cfg_drop > 0.0:
@@ -627,21 +675,25 @@ def main() -> None:
         }
         if val_loader is not None:
             with ema.swapped_into(dit):
-                val_loss = _validate(
+                val_loss, cond_gain = _validate(
                     dit, vae, wave, schedule, val_loader, device,
                     n_timesteps=args.val_timesteps,
                 )
-            record["val_loss"] = val_loss
+            record["val_loss"]      = val_loss
+            record["val_cond_gain"] = cond_gain
             is_best = stopper.update(val_loss, epoch + 1)
             if is_best:
-                torch.save(
-                    {"dit": ema.state_dict(), "dit_config": dit_config,
-                     "epoch": epoch + 1, "val_loss": val_loss},
-                    ckpt_dir / "dit_best.pt",
-                )
+                best_payload = {"dit": ema.state_dict(), "dit_config": dit_config,
+                                "epoch": epoch + 1, "val_loss": val_loss}
+                if args.train_wave:
+                    best_payload["wave"] = wave.state_dict()
+                    # standalone copy for test.py --wave-ckpt
+                    torch.save(wave.state_dict(), ckpt_dir / "wave_finetuned.pt")
+                torch.save(best_payload, ckpt_dir / "dit_best.pt")
             print(
                 f"epoch {epoch + 1:>4d}  train {epoch_train:.5f}  "
-                f"val {val_loss:.5f}{'  *best*' if is_best else ''}"
+                f"val {val_loss:.5f}  cond_gain {cond_gain * 100:.1f}%"
+                f"{'  *best*' if is_best else ''}"
             )
         metrics.log(**record)
 
@@ -649,7 +701,8 @@ def main() -> None:
         if (epoch + 1) % args.save_every == 0:
             ckpt_path = ckpt_dir / f"dit_e{epoch + 1:04d}_s{global_step:07d}.pt"
             _save_ckpt(ckpt_path, dit, ema, optimizer, lr_scheduler,
-                       dit_config, stopper, epoch + 1, global_step)
+                       dit_config, stopper, epoch + 1, global_step,
+                       wave=wave if args.train_wave else None)
             rotate_checkpoints(ckpt_dir, "dit_e*.pt", keep=2)
 
         if stopper.should_stop:
@@ -659,11 +712,13 @@ def main() -> None:
 
     # ── training complete: save final weights (EMA preferred at inference) ─
     final_path = ckpt_dir / "dit_final.pt"
-    torch.save(
-        {"dit": dit.state_dict(), "ema": ema.state_dict(), "ema_step": ema.step,
-         "dit_config": dit_config, "epoch": final_epoch, "step": global_step},
-        final_path,
-    )
+    final_payload = {
+        "dit": dit.state_dict(), "ema": ema.state_dict(), "ema_step": ema.step,
+        "dit_config": dit_config, "epoch": final_epoch, "step": global_step,
+    }
+    if args.train_wave:
+        final_payload["wave"] = wave.state_dict()
+    torch.save(final_payload, final_path)
     print(f"[train] done.  total_steps={global_step}  elapsed={time.time() - t0:.0f}s")
     if val_loader is not None and stopper.best_epoch > 0:
         print(f"[train] best val {stopper.best:.5f} @ epoch {stopper.best_epoch} "
