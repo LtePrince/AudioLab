@@ -1,19 +1,21 @@
-"""plot_chart.py — Render a Phigros chart as a piano-roll image (P7-1).
+"""plot_chart.py — Render a Phigros chart as a vertical piano-roll image (P7-1).
 
-Time runs left→right, folded into rows (like sheet-music lines); each row
-shows the 4 lanes bottom-to-top.  Note types are colour-coded, Holds are
-drawn as bars spanning their duration, and beat gridlines (from the chart's
-BPM) make rhythm alignment visible at a glance.
+Time flows BOTTOM → TOP (the falling-note direction), folded into vertical
+strips arranged left→right (each strip covers --row-seconds).  With --ref,
+every strip shows EIGHT lanes: the reference chart's 4 lanes on the left,
+the generated chart's 4 lanes on the right, so the two charts can be read
+side by side at the same instant by scanning horizontally.
 
-With ``--ref`` a second chart is drawn INSIDE each lane band: reference in
-the upper half, the main chart in the lower half — generated-vs-real
-alignment can be judged lane by lane without playing anything.
+Notes are drawn as game-like bars: Tap = wide blue bar, Drag = narrow amber
+bar, Hold = green body spanning its duration with a solid head, Flick = pink
+bar with a ▲.  Horizontal gridlines mark beats (thin) and 4-beat measures
+(thick), computed from the chart BPM.
 
 Usage
 -----
     uv run python script/plot_chart.py gen.json -o gen.png
     uv run python script/plot_chart.py gen.json --ref real.json -o cmp.png
-    uv run python script/plot_chart.py gen.json --row-seconds 15 --start 30 --end 90
+    uv run python script/plot_chart.py gen.json --ref real.json --start 60 --end 100
 """
 
 from __future__ import annotations
@@ -27,7 +29,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Polygon, Rectangle
 
 # CJK song titles: fall back to a system font that has the glyphs
 from matplotlib import font_manager as _fm
@@ -39,9 +41,10 @@ if _CJK:
 
 # ── palette (dark, game-flavoured) ──────────────────────────────────────────
 BG      = "#14171c"
-LANE_BG = ("#1a1e24", "#20242b")           # alternating lane bands
-GRID_B  = "#2e3540"                        # beat line
-GRID_M  = "#465064"                        # measure (4-beat) line
+LANE_BG = ("#1a1e24", "#20242b")
+GRID_B  = "#2b323d"                        # beat line
+GRID_M  = "#49546a"                        # measure (4-beat) line
+DIVIDER = "#0c0e11"
 TYPE_STYLE = {
     1: dict(color="#4fc3f7", label="Tap"),
     2: dict(color="#ffd54f", label="Drag"),
@@ -67,21 +70,41 @@ def load_notes(path: str) -> tuple[list[dict], float, float]:
     return out, bpm, dur_s
 
 
-def _draw_note(ax, n: dict, y0: float, h: float, alpha: float = 1.0) -> None:
-    """Draw one note inside the vertical band [y0, y0+h] at its time."""
+def _draw_note(ax, n: dict, x0: float, seg: float) -> None:
+    """Draw one note as a horizontal bar at its time (y) in lane column x0..x0+1."""
     st = TYPE_STYLE[n["type"]]
-    yc = y0 + h / 2
-    if n["type"] == 3 and n["dur"] > 0:                    # Hold: body bar + head
-        ax.add_patch(Rectangle((n["t"], y0 + h * 0.18), n["dur"], h * 0.64,
-                               facecolor=st["color"], alpha=0.45 * alpha,
-                               edgecolor=st["color"], linewidth=0.6, zorder=3))
-        ax.plot([n["t"]], [yc], marker="s", ms=3.4, color=st["color"],
-                alpha=alpha, zorder=4)
-    else:
-        marker = {1: "s", 2: "D", 4: "^"}[n["type"]] if n["type"] != 3 else "s"
-        ms     = {1: 3.8, 2: 2.9, 4: 4.2}.get(n["type"], 3.4)
-        ax.plot([n["t"]], [yc], marker=marker, ms=ms, color=st["color"],
-                alpha=alpha, linestyle="none", zorder=4)
+    h  = seg / 110.0                                        # bar thickness (time units)
+    if n["type"] == 3 and n["dur"] > 0:                     # Hold: body + head
+        ax.add_patch(Rectangle((x0 + 0.16, n["t"]), 0.68, n["dur"],
+                               facecolor=st["color"], alpha=0.32,
+                               edgecolor=st["color"], linewidth=0.7, zorder=3))
+        ax.add_patch(Rectangle((x0 + 0.10, n["t"] - h / 2), 0.80, h,
+                               facecolor=st["color"], zorder=4))
+    elif n["type"] == 2:                                    # Drag: narrow bar
+        ax.add_patch(Rectangle((x0 + 0.26, n["t"] - h / 2), 0.48, h,
+                               facecolor=st["color"], zorder=4))
+    elif n["type"] == 4:                                    # Flick: bar + ▲
+        ax.add_patch(Rectangle((x0 + 0.10, n["t"] - h / 2), 0.80, h,
+                               facecolor=st["color"], zorder=4))
+        ax.add_patch(Polygon([(x0 + 0.38, n["t"] + h * 0.7),
+                              (x0 + 0.62, n["t"] + h * 0.7),
+                              (x0 + 0.50, n["t"] + h * 1.9)],
+                             closed=True, facecolor=st["color"], zorder=5))
+    else:                                                   # Tap: wide bar
+        ax.add_patch(Rectangle((x0 + 0.10, n["t"] - h / 2), 0.80, h,
+                               facecolor=st["color"], zorder=4))
+
+
+def _draw_half(ax, notes: list[dict], x_base: float, t0: float, t1: float,
+               seg: float) -> int:
+    n_drawn = 0
+    for n in notes:
+        if (t0 - 0.5 <= n["t"] <= t1 + 0.5) or \
+           (n["type"] == 3 and n["t"] < t1 and n["t"] + n["dur"] > t0):
+            _draw_note(ax, n, x_base + n["lane"], seg)
+            if t0 <= n["t"] <= t1:
+                n_drawn += 1
+    return n_drawn
 
 
 def plot_chart(
@@ -92,93 +115,112 @@ def plot_chart(
     start:       float = 0.0,
     end:         float | None = None,
     title:       str | None = None,
+    main_label:  str = "生成",
+    ref_label:   str = "真实",
 ) -> None:
     notes, bpm, dur = load_notes(main_path)
     ref_notes = None
     if ref_path:
-        ref_notes, ref_bpm, ref_dur = load_notes(ref_path)
+        ref_notes, _, ref_dur = load_notes(ref_path)
         dur = max(dur, ref_dur)
-    end  = min(end, dur) if end else dur
-    span = end - start
-    rows = max(1, math.ceil(span / row_seconds))
+    end    = min(end, dur) if end else dur
+    span   = end - start
+    strips = max(1, math.ceil(span / row_seconds))
+    beat   = 60.0 / bpm
 
-    fig_h = rows * 1.55 + 0.9
-    fig, axes = plt.subplots(rows, 1, figsize=(15, fig_h), squeeze=False)
+    # x geometry per strip: [0,4) ref lanes · gap · [4.6,8.6) gen lanes
+    two   = ref_notes is not None
+    gap   = 0.6
+    width = (2 * NUM_LANES + gap) if two else NUM_LANES
+
+    fig_w = strips * (2.1 if two else 1.15) + 0.7
+    fig, axes = plt.subplots(1, strips, figsize=(fig_w, 10.5), squeeze=False)
     fig.patch.set_facecolor(BG)
-    beat = 60.0 / bpm
 
-    for r in range(rows):
-        ax = axes[r][0]
-        t0 = start + r * row_seconds
+    total_main = 0
+    for s in range(strips):
+        ax = axes[0][s]
+        t0 = start + s * row_seconds
         t1 = min(t0 + row_seconds, end)
         ax.set_facecolor(BG)
-        ax.set_xlim(t0, t0 + row_seconds)
-        ax.set_ylim(0, NUM_LANES)
+        ax.set_xlim(0, width)
+        ax.set_ylim(t0, t0 + row_seconds)          # bottom → top = earlier → later
 
-        for k in range(NUM_LANES):                          # lane bands
-            ax.add_patch(Rectangle((t0, k), row_seconds, 1,
-                                   facecolor=LANE_BG[k % 2], zorder=0))
-            if ref_notes is not None:                       # split line
-                ax.plot([t0, t0 + row_seconds], [k + 0.5, k + 0.5],
-                        color=BG, linewidth=0.7, zorder=2)
+        halves = [(0.0, ref_notes), (NUM_LANES + gap, notes)] if two \
+                 else [(0.0, notes)]
+        for x_base, _ in halves:                    # lane bands
+            for k in range(NUM_LANES):
+                ax.add_patch(Rectangle((x_base + k, t0), 1, row_seconds,
+                                       facecolor=LANE_BG[k % 2], zorder=0))
+        if two:                                     # divider between the halves
+            ax.add_patch(Rectangle((NUM_LANES, t0), gap, row_seconds,
+                                   facecolor=DIVIDER, zorder=1))
 
-        b0 = math.ceil(t0 / beat)                           # beat grid
-        for b in range(b0, int(t1 / beat) + 1):
-            x = b * beat
+        for b in range(math.ceil(t0 / beat), int(t1 / beat) + 1):   # beat grid
+            y = b * beat
             major = (b % 4 == 0)
-            ax.axvline(x, color=GRID_M if major else GRID_B,
-                       linewidth=0.9 if major else 0.5, zorder=1)
+            for x_base, _ in halves:
+                ax.plot([x_base, x_base + NUM_LANES], [y, y],
+                        color=GRID_M if major else GRID_B,
+                        linewidth=1.0 if major else 0.45, zorder=2)
 
-        for n in notes:                                     # main: lower half
-            if t0 - 0.5 <= n["t"] <= t1 + 0.5 or (n["type"] == 3 and n["t"] < t1 and n["t"] + n["dur"] > t0):
-                if ref_notes is not None:
-                    _draw_note(ax, n, n["lane"] + 0.03, 0.44)
-                else:
-                    _draw_note(ax, n, n["lane"] + 0.08, 0.84)
-        if ref_notes is not None:                           # ref: upper half
-            for n in ref_notes:
-                if t0 - 0.5 <= n["t"] <= t1 + 0.5 or (n["type"] == 3 and n["t"] < t1 and n["t"] + n["dur"] > t0):
-                    _draw_note(ax, n, n["lane"] + 0.53, 0.44, alpha=0.85)
+        for x_base, ns in halves:
+            drawn = _draw_half(ax, ns, x_base, t0, t1, row_seconds)
+            if ns is notes:
+                total_main += drawn
 
-        ax.set_yticks([k + 0.5 for k in range(NUM_LANES)])
-        ax.set_yticklabels([f"L{k}" for k in range(NUM_LANES)],
-                           color="#8b96a5", fontsize=7)
-        ax.tick_params(axis="x", colors="#8b96a5", labelsize=7)
-        ax.tick_params(axis="y", length=0)
-        for s in ax.spines.values():
-            s.set_color("#2a2f37")
-        ax.set_xlabel("")
+        # labels: half names on top, lane numbers at bottom
+        if two:
+            ax.text(NUM_LANES / 2, t0 + row_seconds * 1.006, ref_label,
+                    ha="center", va="bottom", color="#8b96a5", fontsize=8)
+            ax.text(NUM_LANES + gap + NUM_LANES / 2, t0 + row_seconds * 1.006,
+                    main_label, ha="center", va="bottom",
+                    color="#8b96a5", fontsize=8)
+        xt = ([x + 0.5 for x in range(NUM_LANES)]
+              + ([NUM_LANES + gap + x + 0.5 for x in range(NUM_LANES)] if two else []))
+        ax.set_xticks(xt)
+        ax.set_xticklabels([str(k) for k in range(NUM_LANES)] * (2 if two else 1),
+                           color="#5f6a78", fontsize=6)
+        ax.tick_params(axis="x", length=0)
+        ax.tick_params(axis="y", colors="#8b96a5", labelsize=7)
+        if s == 0:
+            ax.set_ylabel("time (s)  ↑", color="#8b96a5", fontsize=8)
+        for sp in ax.spines.values():
+            sp.set_color("#2a2f37")
 
-    # ── legend / title ──────────────────────────────────────────────────
-    handles = [plt.Line2D([], [], marker={1: "s", 2: "D", 3: "s", 4: "^"}[t],
-                          linestyle="none", ms=6, color=TYPE_STYLE[t]["color"],
-                          label=TYPE_STYLE[t]["label"]) for t in (1, 2, 3, 4)]
-    n_main = len([n for n in notes if start <= n["t"] <= end])
-    parts = [title or Path(main_path).stem,
-             f"bpm {bpm:.0f}", f"{n_main} notes"]
-    if ref_notes is not None:
-        parts.append("each lane: ▲upper=reference  ▼lower=generated")
-    fig.legend(handles=handles, loc="upper right", ncol=4, frameon=False,
-               labelcolor="#c8d0da", fontsize=8, bbox_to_anchor=(0.99, 0.995))
+    handles = [plt.Line2D([], [], marker="s", linestyle="none", ms=7,
+                          color=TYPE_STYLE[t]["color"], label=TYPE_STYLE[t]["label"])
+               for t in (1, 2, 3, 4)]
+    parts = [title or Path(main_path).stem, f"bpm {bpm:.0f}",
+             f"{total_main} notes ({main_label})"]
+    fig.legend(handles=handles, loc="lower right", ncol=4, frameon=False,
+               labelcolor="#c8d0da", fontsize=8, bbox_to_anchor=(0.995, 0.002))
     fig.suptitle("  ·  ".join(parts), color="#dfe6ee", fontsize=10,
                  x=0.01, ha="left")
-    fig.tight_layout(rect=(0, 0, 1, 0.97))
+    if two:
+        fig.text(0.01, 0.006, f"每列:左 4 轨 = {ref_label} · 右 4 轨 = {main_label} · 时间从下往上",
+                 color="#8b96a5", fontsize=8)
+    fig.tight_layout(rect=(0, 0.02, 1, 0.97))
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=135, facecolor=BG)
     plt.close(fig)
-    print(f"[plot] {rows} rows × {row_seconds:.0f}s → {out_path}")
+    print(f"[plot] {strips} strips × {row_seconds:.0f}s → {out_path}")
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Render a Phigros chart as a piano-roll PNG.")
-    p.add_argument("chart", help="chart JSON to render (drawn in the lower half if --ref)")
+    p = argparse.ArgumentParser(
+        description="Render a Phigros chart as a vertical piano-roll PNG.")
+    p.add_argument("chart", help="chart JSON to render (right half if --ref)")
     p.add_argument("--ref", default=None,
-                   help="reference chart JSON — drawn in each lane's upper half")
+                   help="reference chart JSON — drawn as the LEFT 4 lanes")
     p.add_argument("-o", "--out", default=None, help="output PNG (default: <chart>.png)")
-    p.add_argument("--row-seconds", type=float, default=20.0)
+    p.add_argument("--row-seconds", type=float, default=20.0,
+                   help="seconds per vertical strip")
     p.add_argument("--start", type=float, default=0.0, help="start time (s)")
     p.add_argument("--end",   type=float, default=None, help="end time (s)")
     p.add_argument("--title", default=None)
+    p.add_argument("--main-label", default="生成")
+    p.add_argument("--ref-label",  default="真实")
     args = p.parse_args()
 
     out = args.out or str(Path(args.chart).with_suffix(".png"))
@@ -186,7 +228,8 @@ def main() -> None:
         print(f"[ERROR] not found: {args.chart}", file=sys.stderr)
         sys.exit(1)
     plot_chart(args.chart, args.ref, out, row_seconds=args.row_seconds,
-               start=args.start, end=args.end, title=args.title)
+               start=args.start, end=args.end, title=args.title,
+               main_label=args.main_label, ref_label=args.ref_label)
 
 
 if __name__ == "__main__":
