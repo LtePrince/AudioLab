@@ -172,6 +172,11 @@ def _build_parser() -> argparse.ArgumentParser:
     g.add_argument("--grad-accum", type=int,   default=1)
     g.add_argument("--clip-grad",  type=float, default=1.0)
     g.add_argument("--onset-pos-weight", type=float, default=3.0)
+    g.add_argument("--holding-pos-weight", type=float, default=5.0,
+                   help="BCE pos_weight for the sparse is_holding channel")
+    g.add_argument("--type-weights", default="1.7,4.3,8.3,15.4",
+                   help="CE class weights Tap,Drag,Hold,Flick — inverse train "
+                        "marginals by default; 'none' disables")
     g.add_argument("--ema-decay",  type=float, default=0.999)
     g.add_argument("--patience",   type=int,   default=50,
                    help="early-stop after N epochs without val-F1 improvement")
@@ -244,7 +249,13 @@ def main() -> None:
     )
     model = TranscriberNet(**config).to(device)
     model.train()
-    loss_fn = TranscriptionLoss(onset_pos_weight=args.onset_pos_weight).to(device)
+    type_w = (None if args.type_weights.strip().lower() == "none"
+              else tuple(float(x) for x in args.type_weights.split(",")))
+    loss_fn = TranscriptionLoss(
+        onset_pos_weight   = args.onset_pos_weight,
+        holding_pos_weight = args.holding_pos_weight,
+        type_class_weights = type_w,
+    ).to(device)
     print(f"[tsc] TranscriberNet params: {model.num_params:,}  "
           f"[conv={config['conv_blocks']} depth={config['depth']} "
           f"D={config['hidden_dim']} dropout={config['dropout']}]")

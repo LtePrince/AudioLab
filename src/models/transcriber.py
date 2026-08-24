@@ -215,14 +215,31 @@ class TranscriptionLoss(nn.Module):
 
     def __init__(
         self,
-        onset_pos_weight: float = 3.0,
+        onset_pos_weight:   float = 3.0,
+        holding_pos_weight: float = 5.0,
         w_holding: float = 0.5,
         w_soff:    float = 0.5,
         w_eoff:    float = 0.2,
         w_type:    float = 0.3,
+        type_class_weights: tuple[float, float, float, float] | None = (1.7, 4.3, 8.3, 15.4),
     ):
+        """type_class_weights: per-class CE weights (Tap/Drag/Hold/Flick).
+
+        Default = inverse of the training-set marginals (58.3/23.2/12.0/6.5 %),
+        countering the type head's collapse to the majority class under argmax
+        decoding (measured: 99.8% Tap without weighting).  holding_pos_weight
+        counters the ~5%-positive is_holding channel, whose silence was the
+        second gate killing Holds (holdTime=0 → downgraded to Tap on save).
+        None disables class weighting.
+        """
         super().__init__()
         self.register_buffer("pos_weight", torch.tensor(float(onset_pos_weight)))
+        self.register_buffer("hold_pos_weight", torch.tensor(float(holding_pos_weight)))
+        if type_class_weights is not None:
+            self.register_buffer("type_weights",
+                                 torch.tensor([float(x) for x in type_class_weights]))
+        else:
+            self.type_weights = None
         self.wh, self.ws, self.we, self.wt = w_holding, w_soff, w_eoff, w_type
 
     def forward(
@@ -254,7 +271,7 @@ class TranscriptionLoss(nn.Module):
         ) * vf).sum() / vf.expand_as(pr_on).sum().clamp_min(1.0)
 
         loss_hold = (F.binary_cross_entropy_with_logits(
-            pr_hold, gt_hold, reduction="none",
+            pr_hold, gt_hold, pos_weight=self.hold_pos_weight, reduction="none",
         ) * vf).sum() / vf.expand_as(pr_hold).sum().clamp_min(1.0)
 
         loss_soff = ((torch.sigmoid(pr_soff) - gt_soff) ** 2
@@ -269,7 +286,7 @@ class TranscriptionLoss(nn.Module):
         gt_cls = (gt_type * 4.0).round().long().clamp(1, 4) - 1   # (B, K, T) in 0..3
         ce = F.cross_entropy(
             type_logits.permute(0, 2, 1, 3),               # (B, class, lane, T)
-            gt_cls, reduction="none",
+            gt_cls, weight=self.type_weights, reduction="none",
         )                                                  # (B, lane, T)
         loss_type = (ce * m_on).sum() / m_on.sum().clamp_min(1.0)
 
