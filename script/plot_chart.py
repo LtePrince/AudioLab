@@ -27,7 +27,15 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch, Rectangle
+from matplotlib.patches import Rectangle
+
+# CJK song titles: fall back to a system font that has the glyphs
+from matplotlib import font_manager as _fm
+_CJK = [f for f in ("Noto Sans CJK SC", "Noto Sans CJK JP", "Droid Sans Fallback")
+        if any(f == x.name for x in _fm.fontManager.ttflist)]
+if _CJK:
+    plt.rcParams["font.family"] = ["DejaVu Sans", *_CJK]
+    plt.rcParams["font.sans-serif"] = ["DejaVu Sans", *_CJK]
 
 # ── palette (dark, game-flavoured) ──────────────────────────────────────────
 BG      = "#14171c"
