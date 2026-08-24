@@ -75,7 +75,10 @@ def _draw_note(ax, n: dict, x0: float, seg: float) -> None:
     st = TYPE_STYLE[n["type"]]
     h  = seg / 110.0                                        # bar thickness (time units)
     if n["type"] == 3 and n["dur"] > 0:                     # Hold: body + head
-        ax.add_patch(Rectangle((x0 + 0.16, n["t"]), 0.68, n["dur"],
+        # enforce a minimum VISUAL body length so short holds stay
+        # distinguishable from taps at coarse zoom levels
+        body = max(n["dur"], h * 1.8)
+        ax.add_patch(Rectangle((x0 + 0.16, n["t"]), 0.68, body,
                                facecolor=st["color"], alpha=0.32,
                                edgecolor=st["color"], linewidth=0.7, zorder=3))
         ax.add_patch(Rectangle((x0 + 0.10, n["t"] - h / 2), 0.80, h,
