@@ -815,80 +815,103 @@ class Phigros4kConvertor:
                          timing exact:
                          ``floorPosition = speed_value * tick * 60 / (32 * bpm)``
         """
-        notes     = self.array_to_notes(note_array, bpm)
-        # Scale floorPosition and note.speed to match speed_value.
-        #
-        # For all notes:
-        #   floorPosition = speed_value * time_seconds
-        #   → currentFloor(t_onset) = speed_value * t_onset = floorPosition  ✓
-        #
-        # For hold notes additionally:
-        #   The renderer computes tail floor as:
-        #     tailFloor = headFloor + note.speed * holdTicks * 60 / (32 * bpm)
-        #   We need tailFloor = speed_value * tailTimeSec, so:
-        #     note.speed must equal speed_value (not 1.0)
-        #   Non-hold notes keep speed=1.0, matching official-chart convention
-        #   (Tap/Drag/Flick carry speed 1.0; only Hold speed affects rendering
-        #   via the tail-length formula above — never judgment timing).
-        for n in notes:
-            n["floorPosition"] = n["floorPosition"] * speed_value
-            if n["holdTime"] > 0:
-                n["speed"] = speed_value
-            if n["type"] == NOTE_HOLD and n["holdTime"] == 0:
-                n["type"] = NOTE_TAP   # degenerate hold → tap
+        notes = self.array_to_notes(note_array, bpm)
+        save_phigros_notes(notes, bpm, output_path, offset=offset,
+                           format_version=format_version, line_y=line_y,
+                           speed_value=speed_value)
 
-        last_tick = max(
-            (int(n["time"]) + int(n["holdTime"]) for n in notes), default=0
-        )
-        # All event times are in 1/32-beat tick units.
-        # Use a large sentinel value so events cover the full chart.
-        end_time = float(last_tick + 128)   # 4-beat tail margin
-        inf_time = 1_000_000_000.0          # standard Phigros terminal sentinel
 
-        judge_line: JudgeLine = {
-            "bpm":        bpm,
-            "notesAbove": notes,
-            "notesBelow": [],
-            # speedEvents: currentFloor(t) = speed_value * t_seconds.
-            # floorPosition = speed_value * time_seconds, so the note reaches
-            # the judgment line exactly at its onset time.
-            "speedEvents": [
-                {"startTime": 0.0,      "endTime": end_time, "value": speed_value},
-                {"startTime": end_time, "endTime": inf_time,  "value": 0.0},
-            ],
-            # move/rotate/disappear events must start at -999999 so the renderer
-            # has a defined initial state before the chart begins.
-            "judgeLineMoveEvents": [
-                {
-                    "startTime": -999999.0, "endTime": 0.0,
-                    "start":  0.5,  "end":  0.5,
-                    "start2": line_y, "end2": line_y,
-                },
-                {
-                    "startTime": 0.0,     "endTime": inf_time,
-                    "start":  0.5,  "end":  0.5,
-                    "start2": line_y, "end2": line_y,
-                },
-            ],
-            "judgeLineRotateEvents": [
-                {"startTime": -999999.0, "endTime": 0.0,      "start": 0.0, "end": 0.0},
-                {"startTime": 0.0,       "endTime": inf_time, "start": 0.0, "end": 0.0},
-            ],
-            "judgeLineDisappearEvents": [
-                {"startTime": -999999.0, "endTime": 0.0,      "start": 1.0, "end": 1.0},
-                {"startTime": 0.0,       "endTime": inf_time, "start": 1.0, "end": 1.0},
-            ],
-        }
+# ===========================================================================
+# Section 6b – save_phigros_notes  (shared writer: note list -> official JSON)
+# ===========================================================================
 
-        chart: Chart = {
-            "formatVersion": format_version,
-            "offset":        offset,
-            "judgeLineList": [judge_line],
-        }
+def save_phigros_notes(
+    notes:          list,
+    bpm:            float,
+    output_path:    str,
+    offset:         float = 0.0,
+    format_version: int   = 3,
+    line_y:         float = 0.1,
+    speed_value:    float = 3.0,
+) -> None:
+    """Serialise a list of :class:`Note` dicts (as produced by
+    ``Phigros4kConvertor.array_to_notes`` or ``ChartTokenizer.to_phigros_notes``)
+    to a valid single-line Phigros JSON.  ``floorPosition`` must be the
+    unscaled ``tick * 60 / (32 * bpm)``; it is scaled by *speed_value* here.
+    """
+    # Scale floorPosition and note.speed to match speed_value.
+    #
+    # For all notes:
+    #   floorPosition = speed_value * time_seconds
+    #   → currentFloor(t_onset) = speed_value * t_onset = floorPosition  ✓
+    #
+    # For hold notes additionally:
+    #   The renderer computes tail floor as:
+    #     tailFloor = headFloor + note.speed * holdTicks * 60 / (32 * bpm)
+    #   We need tailFloor = speed_value * tailTimeSec, so:
+    #     note.speed must equal speed_value (not 1.0)
+    #   Non-hold notes keep speed=1.0, matching official-chart convention
+    #   (Tap/Drag/Flick carry speed 1.0; only Hold speed affects rendering
+    #   via the tail-length formula above — never judgment timing).
+    for n in notes:
+        n["floorPosition"] = n["floorPosition"] * speed_value
+        if n["holdTime"] > 0:
+            n["speed"] = speed_value
+        if n["type"] == NOTE_HOLD and n["holdTime"] == 0:
+            n["type"] = NOTE_TAP   # degenerate hold → tap
 
-        os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as fh:
-            json.dump(chart, fh, ensure_ascii=False, indent=2)
+    last_tick = max(
+        (int(n["time"]) + int(n["holdTime"]) for n in notes), default=0
+    )
+    # All event times are in 1/32-beat tick units.
+    # Use a large sentinel value so events cover the full chart.
+    end_time = float(last_tick + 128)   # 4-beat tail margin
+    inf_time = 1_000_000_000.0          # standard Phigros terminal sentinel
+
+    judge_line: JudgeLine = {
+        "bpm":        bpm,
+        "notesAbove": notes,
+        "notesBelow": [],
+        # speedEvents: currentFloor(t) = speed_value * t_seconds.
+        # floorPosition = speed_value * time_seconds, so the note reaches
+        # the judgment line exactly at its onset time.
+        "speedEvents": [
+            {"startTime": 0.0,      "endTime": end_time, "value": speed_value},
+            {"startTime": end_time, "endTime": inf_time,  "value": 0.0},
+        ],
+        # move/rotate/disappear events must start at -999999 so the renderer
+        # has a defined initial state before the chart begins.
+        "judgeLineMoveEvents": [
+            {
+                "startTime": -999999.0, "endTime": 0.0,
+                "start":  0.5,  "end":  0.5,
+                "start2": line_y, "end2": line_y,
+            },
+            {
+                "startTime": 0.0,     "endTime": inf_time,
+                "start":  0.5,  "end":  0.5,
+                "start2": line_y, "end2": line_y,
+            },
+        ],
+        "judgeLineRotateEvents": [
+            {"startTime": -999999.0, "endTime": 0.0,      "start": 0.0, "end": 0.0},
+            {"startTime": 0.0,       "endTime": inf_time, "start": 0.0, "end": 0.0},
+        ],
+        "judgeLineDisappearEvents": [
+            {"startTime": -999999.0, "endTime": 0.0,      "start": 1.0, "end": 1.0},
+            {"startTime": 0.0,       "endTime": inf_time, "start": 1.0, "end": 1.0},
+        ],
+    }
+
+    chart: Chart = {
+        "formatVersion": format_version,
+        "offset":        offset,
+        "judgeLineList": [judge_line],
+    }
+
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as fh:
+        json.dump(chart, fh, ensure_ascii=False, indent=2)
 
 
 # ===========================================================================

@@ -242,6 +242,21 @@ class ChartTokenizer:
         flush()
         return notes
 
+    # ── per-position musical time (for decoder time-embedding injection) ─
+    @classmethod
+    def ticks_per_position(cls, tokens: list[int]) -> list[int]:
+        """Tick reached BEFORE emitting each token (time of the event the
+        token belongs to).  DTB/DTT advance the clock for later positions."""
+        out, cur = [], 0
+        for tok in tokens:
+            out.append(cur)
+            k = cls.kind(tok)
+            if k == "DTB":
+                cur += cls.value(tok) * TICKS_PER_BEAT
+            elif k == "DTT":
+                cur += cls.value(tok)
+        return out
+
     # ── convenience: decoded notes → Phigros Note dicts ─────────────────
     @staticmethod
     def to_phigros_notes(notes: list[TokenNote], bpm: float) -> list[dict]:

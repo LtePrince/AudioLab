@@ -178,25 +178,28 @@ class TranscriberNet(nn.Module):
     def num_params(self) -> int:
         return sum(p.numel() for p in self.parameters())
 
+    def features(self, mel: Tensor) -> Tensor:
+        """Chart-frame-rate hidden states (B, T_chart, D) — the audio memory
+        consumed by the AR chart decoder (src/models/chart_decoder.py)."""
+        h = self.conv_in(mel)
+        for blk in self.conv_blocks:
+            h = blk(h)
+        h = self.pool(h)
+        T_chart = mel.shape[-1] // self.mel_per_frame
+        h = h[..., :T_chart]
+        x = h.transpose(1, 2)
+        pos   = torch.arange(T_chart, device=x.device).float()
+        freqs = rope1d(pos, self.head_dim, self.rope_theta)
+        for blk in self.blocks:
+            x = blk(x, freqs)
+        return self.norm_out(x)
+
     def forward(self, mel: Tensor) -> Tensor:
         """
         mel : (B, n_mels, T_mel)  with T_mel divisible by mel_per_frame
         →     (B, OUT_CHANNELS, T_mel // mel_per_frame)
         """
-        h = self.conv_in(mel)
-        for blk in self.conv_blocks:
-            h = blk(h)
-        h = self.pool(h)                       # (B, D, T_chart[+1])
-        T_chart = mel.shape[-1] // self.mel_per_frame
-        h = h[..., :T_chart]                   # exact length (even-kernel pad)
-
-        x = h.transpose(1, 2)                  # (B, T, D)
-        pos   = torch.arange(T_chart, device=x.device).float()
-        freqs = rope1d(pos, self.head_dim, self.rope_theta)
-        for blk in self.blocks:
-            x = blk(x, freqs)
-        out = self.head(self.norm_out(x))      # (B, T, 32)
-        return out.transpose(1, 2)             # (B, 32, T)
+        return self.head(self.features(mel)).transpose(1, 2)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

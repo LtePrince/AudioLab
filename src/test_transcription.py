@@ -82,8 +82,10 @@ def main() -> None:
         description="Generate a Phigros chart with the transcription baseline",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    p.add_argument("--audio",  required=True)
-    p.add_argument("--output", required=True)
+    p.add_argument("--audio")
+    p.add_argument("--output")
+    p.add_argument("--list",    help="batch mode: data list (json,audio,...) per line")
+    p.add_argument("--out-dir", help="batch mode: write <song_dir>.json here")
     p.add_argument("--ckpt",   required=True,
                    help="transcriber_best.pt (EMA weights + config)")
     p.add_argument("--ref-chart", default=None,
@@ -115,6 +117,25 @@ def main() -> None:
     print(f"[tsc] loaded {args.ckpt}  "
           f"(val_f1={ckpt.get('val_f1', float('nan')):.4f} "
           f"@ epoch {ckpt.get('epoch', '?')})  params={model.num_params:,}")
+
+    if args.list:
+        base = Path(args.list).resolve().parent
+        Path(args.out_dir).mkdir(parents=True, exist_ok=True)
+        for line in open(args.list):
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            j, a = line.split(",")[:2]
+            d = json.load(open(base / j, encoding="utf-8"))
+            transcribe_chart(
+                audio_path=str(base / a),
+                output_path=str(Path(args.out_dir) / f"{Path(j).parent.name}.json"),
+                model=model, device=device,
+                bpm=float(d["judgeLineList"][0]["bpm"]), offset=float(d["offset"]),
+                onset_bias=args.onset_bias, hop_length=args.hop_length,
+                n_mels=args.n_mels, sr=args.sr,
+            )
+        return
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     transcribe_chart(
