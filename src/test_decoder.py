@@ -33,6 +33,14 @@ from src.models.transcriber import TranscriberNet
 from src.train_utils import pad_or_trim
 
 
+def skeleton_from_chart(path: str) -> list[int]:
+    """Onset ticks of every note in a chart JSON (e.g. a transcriber output) —
+    the rhythm skeleton for listen-then-write decoding."""
+    d = json.load(open(path, encoding="utf-8"))
+    return sorted({int(round(n["time"])) for l in d["judgeLineList"]
+                   for n in l["notesAbove"] + l["notesBelow"]})
+
+
 def load_models(ckpt_path: str, device: torch.device):
     ck = torch.load(ckpt_path, map_location="cpu", weights_only=True)
     enc = TranscriberNet(**ck["enc_config"]); dec = ChartDecoder(**ck["dec_config"])
@@ -46,7 +54,8 @@ def load_models(ckpt_path: str, device: torch.device):
 def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: float,
                    offset: float = 0.0, temperature: float = 1.0, top_p: float = 0.95,
                    seed: int | None = None, hop_length: int = 512, n_mels: int = 128,
-                   sr: int = 22050, quiet: bool = False) -> int:
+                   sr: int = 22050, quiet: bool = False,
+                   skeleton_ticks: list[int] | None = None) -> int:
     t0 = time.time()
     frame_ms = hop_length / sr / 4 * 8 * 1000
     mpf = enc.mel_per_frame
@@ -60,7 +69,8 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     if seed is not None: gen.manual_seed(seed)
     tk = ChartTokenizer(n_lanes=dec.n_lanes)
     out = generate_tokens(dec, memory, valid, bpm, frame_ms, n_frames,
-                          temperature=temperature, top_p=top_p, generator=gen, tokenizer=tk)
+                          temperature=temperature, top_p=top_p, generator=gen, tokenizer=tk,
+                          skeleton_ticks=skeleton_ticks)
     if dec.offset_head is not None:                      # free-x: (tokens, offsets)
         tokens, pos_offsets = out
         notes = tk.decode_tokens(tokens, strict=True)
@@ -89,6 +99,10 @@ def main() -> None:
     p.add_argument("--top-p", type=float, default=0.95)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--device", default=None)
+    p.add_argument("--skeleton-json", default=None,
+                   help="hybrid mode: chart JSON whose onset times force the time structure")
+    p.add_argument("--skeleton-dir", default=None,
+                   help="hybrid batch mode: <song_dir>.json skeletons (e.g. out/eval_tsc_r2)")
     args = p.parse_args()
     device = torch.device(args.device or ("cuda" if torch.cuda.is_available() else "cpu"))
     enc, dec = load_models(args.ckpt, device)
@@ -103,10 +117,17 @@ def main() -> None:
             song = Path(j).parent.name
             if (Path(args.out_dir) / f"{song}.json").exists():
                 continue                                   # resumable batch
+            skel = None
+            if args.skeleton_dir:
+                sp = Path(args.skeleton_dir) / f"{song}.json"
+                if not sp.exists():
+                    print(f"[dec] skeleton missing for {song}, skipped"); continue
+                skel = skeleton_from_chart(str(sp))
             generate_chart(str(base / a), str(Path(args.out_dir) / f"{song}.json"),
                            enc=enc, dec=dec, device=device,
                            bpm=float(d["judgeLineList"][0]["bpm"]), offset=float(d["offset"]),
-                           temperature=args.temperature, top_p=args.top_p, seed=args.seed)
+                           temperature=args.temperature, top_p=args.top_p, seed=args.seed,
+                           skeleton_ticks=skel)
         return
     bpm, offset = args.bpm, args.offset
     if args.ref_chart:
@@ -114,7 +135,8 @@ def main() -> None:
         bpm, offset = float(d["judgeLineList"][0]["bpm"]), float(d["offset"])
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     generate_chart(args.audio, args.output, enc=enc, dec=dec, device=device, bpm=bpm,
-                   offset=offset, temperature=args.temperature, top_p=args.top_p, seed=args.seed)
+                   offset=offset, temperature=args.temperature, top_p=args.top_p, seed=args.seed,
+                   skeleton_ticks=skeleton_from_chart(args.skeleton_json) if args.skeleton_json else None)
 
 
 if __name__ == "__main__":

@@ -124,3 +124,21 @@ def test_kv_cache_matches_full_forward():
             lg, _ = d.step(toks[:, i], frames[:, i], i, caches, 25, valid)
             assert torch.allclose(lg[0], full[i], atol=1e-4), f"cw={cw} pos {i} 不一致"
     print("[T8] KV cache ≡ 全量前向 ✓")
+
+
+def test_skeleton_forced_generation():
+    """骨架模式:生成的 onset tick 集合必须精确等于骨架;每个骨架时刻至少 1 个音符;语法合法。"""
+    from src.data.chart_tokenizer import ChartTokenizer
+    tk = ChartTokenizer()
+    torch.manual_seed(5)
+    d = ChartDecoder(**CFG).eval()
+    mem = d.prepare_memory(torch.randn(1, 200, 48)); valid = torch.ones(1, 200, dtype=torch.bool)
+    for skel in ([0, 16, 48, 96, 160, 400], [32, 33, 64, 1000], [5]):
+        toks = generate_tokens(d, mem, valid, bpm=120.0, frame_ms=46.44, audio_frames=200,
+                               temperature=1.5, top_p=1.0, max_tokens=400,
+                               generator=torch.Generator().manual_seed(9), skeleton_ticks=skel)
+        notes = tk.decode_tokens(toks, strict=True)
+        got = sorted({n.tick for n in notes})
+        assert got == sorted(skel), f"skeleton {skel} → onsets {got}"
+        assert toks[-1] == EOS
+    print("[T9] 骨架强制生成 ✓")

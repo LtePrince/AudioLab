@@ -271,6 +271,7 @@ def generate_tokens(
     max_tokens:  int   = 6000,
     generator:   torch.Generator | None = None,
     tokenizer    = None,          # ChartTokenizer instance (default: 4-lane)
+    skeleton_ticks: list[int] | None = None,
 ) -> list[int]:
     """Sample a grammar-valid token sequence.
 
@@ -278,9 +279,17 @@ def generate_tokens(
     mandatory hold durations, chain rules) ∧ time cutoff (once the musical
     clock passes the end of the audio only EOS — or the tokens needed to
     close an open duration — remain legal) → temperature / top-p sampling.
+
+    skeleton_ticks (hybrid "listen-then-write" mode): sorted onset ticks from
+    the transcriber.  Time advance is FORCED: DT tokens are never sampled —
+    "advance" is one action whose probability is the sum over DT tokens, and
+    when chosen the canonical DT chain to the next skeleton onset is injected.
+    At every onset at least one NOTE must be placed; extra chord members,
+    lanes, types and hold durations are the decoder's decisions.  Alignment
+    is therefore exactly the skeleton's; the decoder supplies design semantics.
     """
     from src.data.chart_tokenizer import (
-        BOS, EOS, TICKS_PER_BEAT, ChartTokenizer, GrammarState,
+        BOS, EOS, N_DTB, N_DTT, TICKS_PER_BEAT, ChartTokenizer, GrammarState,
     )
     T = tokenizer if tokenizer is not None else ChartTokenizer()
     assert T.vocab_size == decoder.lm_head.out_features, "tokenizer/decoder vocab mismatch"
@@ -295,6 +304,24 @@ def generate_tokens(
     cur_tick = 0
     caches = decoder.init_cache(memory)
     T_mem = memory.shape[1]
+    is_dt   = torch.tensor([k in ("DTB", "DTT") for k in kinds], device=device)
+    is_note = torch.tensor([k == "NOTE" for k in kinds], device=device)
+    is_eos  = torch.tensor([k == "EOS" for k in kinds], device=device)
+    skel = sorted(set(int(x) for x in skeleton_ticks)) if skeleton_ticks is not None else None
+    skel_i, notes_here = 0, 0            # next skeleton onset index; notes placed at cur_tick
+    if skel and skel[0] == 0:            # an onset at tick 0: we already stand on it
+        skel_i = 1
+
+    def feed(tok: int) -> None:
+        """Append a token, advance grammar/clock, run one decoder step."""
+        nonlocal cur_tick
+        tokens.append(tok); gs.step(tok)
+        if kinds[tok] == "DTB":
+            cur_tick += values[tok] * TICKS_PER_BEAT
+        elif kinds[tok] == "DTT":
+            cur_tick += values[tok]
+        frames.append(cur_tick * frames_per_tick)
+
     for _ in range(max_tokens):
         pos = len(tokens) - 1
         logits, hidden = decoder.step(
@@ -307,16 +334,36 @@ def generate_tokens(
 
         allowed = torch.tensor([gs.is_allowed(i) for i in range(len(kinds))], device=device)
         past_end = cur_tick * frames_per_tick >= audio_frames
-        if past_end:
+        if skel is not None and not gs.in_dur:
+            at_onset = skel_i > 0 and cur_tick == skel[skel_i - 1]
+            more = skel_i < len(skel)
+            if not at_onset:                  # NOTE only at a skeleton onset
+                allowed = allowed & ~is_note
+            elif notes_here == 0:             # ≥1 note per onset before advancing
+                allowed = allowed & is_note
+            if not more:                      # no onsets left → no advance
+                allowed = allowed & ~is_dt
+            eos_ok = (not more) and (notes_here > 0 or not at_onset)
+            if not eos_ok:
+                allowed = allowed & ~is_eos
+        elif past_end:
             # close any open duration, otherwise only EOS
             closing = torch.tensor(
                 [k in ("DURB", "DURT") if gs.in_dur else k == "EOS" for k in kinds],
                 device=device)
             if (allowed & closing).any():
                 allowed = allowed & closing
+        if not allowed.any():                      # safety: never dead-end
+            allowed = torch.tensor([k == "EOS" for k in kinds], device=device)
         logits = logits.masked_fill(~allowed, float("-inf"))
 
         probs = torch.softmax(logits / max(temperature, 1e-6), dim=-1)
+        if skel is not None and (allowed & is_dt).any():
+            # collapse all DT tokens into one "advance" action
+            p_adv = probs[is_dt].sum()
+            probs = torch.where(is_dt, torch.zeros_like(probs), probs)
+            adv_id = int(is_dt.nonzero()[0])
+            probs[adv_id] = p_adv
         if 0.0 < top_p < 1.0:
             sp, si = torch.sort(probs, descending=True)
             keep = torch.cumsum(sp, 0) - sp < top_p
@@ -324,12 +371,22 @@ def generate_tokens(
             probs = probs / probs.sum()
         nxt = int(torch.multinomial(probs, 1, generator=generator).item())
 
-        tokens.append(nxt); gs.step(nxt)
-        if kinds[nxt] == "DTB":
-            cur_tick += values[nxt] * TICKS_PER_BEAT
-        elif kinds[nxt] == "DTT":
-            cur_tick += values[nxt]
-        frames.append(cur_tick * frames_per_tick)
+        if skel is not None and kinds[nxt] in ("DTB", "DTT"):
+            # forced advance: inject the canonical DT chain to the next onset
+            gap = skel[skel_i] - cur_tick
+            chain: list[int] = []
+            T._emit_span(chain, gap, T.dtb, T.dtt, N_DTB, N_DTT)
+            for tok in chain[:-1]:
+                feed(tok)
+                pos = len(tokens) - 1
+                decoder.step(torch.tensor([tokens[-1]], device=device),
+                             torch.tensor([frames[-1]], device=device, dtype=torch.float32),
+                             pos, caches, T_mem, mem_valid)
+            nxt = chain[-1]
+            skel_i += 1; notes_here = 0
+        elif kinds[nxt] == "NOTE":
+            notes_here += 1
+        feed(nxt)
         if nxt == EOS:
             break
     if tokens[-1] != EOS:
