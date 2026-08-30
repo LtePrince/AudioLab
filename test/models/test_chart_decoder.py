@@ -142,3 +142,21 @@ def test_skeleton_forced_generation():
         assert got == sorted(skel), f"skeleton {skel} → onsets {got}"
         assert toks[-1] == EOS
     print("[T9] 骨架强制生成 ✓")
+
+
+def test_skeleton_from_transcriber_monotone():
+    """logits 骨架:返回排序去重 tick;阈值越高 onset 越少;tick 与帧数一致。"""
+    import sys
+    sys.path.insert(0, ".")
+    from src.test_decoder import skeleton_from_transcriber
+    torch.manual_seed(0)
+    tr = TranscriberNet(n_mels=128, hidden_dim=64, conv_blocks=1, depth=1, num_heads=4).eval()
+    mel = torch.randn(1, 128, 400)                     # 200 chart frames
+    counts = []
+    for thr in (0.05, 0.3, 0.6, 0.9):
+        sk = skeleton_from_transcriber(mel, tr, bpm=120.0, frame_ms=46.44, threshold=thr)
+        assert sk == sorted(set(sk)) and all(isinstance(x, int) for x in sk)
+        assert all(0 <= x <= 200 * 46.44 / 1000 * 120 * 32 / 60 + 32 for x in sk)
+        counts.append(len(sk))
+    assert counts == sorted(counts, reverse=True), f"阈值升高 onset 应单调减少: {counts}"
+    print("[T10] 转录骨架提取 ✓")

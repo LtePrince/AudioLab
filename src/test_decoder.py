@@ -41,6 +41,26 @@ def skeleton_from_chart(path: str) -> list[int]:
                    for n in l["notesAbove"] + l["notesBelow"]})
 
 
+@torch.no_grad()
+def skeleton_from_transcriber(mel: torch.Tensor, transcriber, bpm: float, frame_ms: float,
+                              threshold: float = 0.5) -> list[int]:
+    """Rhythm skeleton straight from transcriber logits (no lane collapse):
+    a frame is an onset if ANY lane fires, p_any = 1 - Π(1 - p_lane) ≥ threshold;
+    sub-frame start offsets refine the tick.  Returns sorted unique ticks."""
+    from src.models.transcriber import H_ONSET, H_SOFF
+    pred = transcriber(mel)                                   # (1, 32, T)
+    p_lane = torch.sigmoid(pred[0, H_ONSET:H_ONSET + 4])      # (4, T)
+    p_any  = 1.0 - torch.prod(1.0 - p_lane, dim=0)            # (T,)
+    off    = torch.sigmoid(pred[0, H_SOFF:H_SOFF + 4])        # (4, T)
+    frames = torch.nonzero(p_any >= threshold).flatten()
+    ticks_per_frame = frame_ms / 1000.0 * bpm * 32.0 / 60.0
+    ticks = set()
+    for f in frames.tolist():
+        lane = int(p_lane[:, f].argmax())
+        ticks.add(int(round((f + float(off[lane, f])) * ticks_per_frame)))
+    return sorted(ticks)
+
+
 def load_models(ckpt_path: str, device: torch.device):
     ck = torch.load(ckpt_path, map_location="cpu", weights_only=True)
     enc = TranscriberNet(**ck["enc_config"]); dec = ChartDecoder(**ck["dec_config"])
@@ -55,7 +75,8 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
                    offset: float = 0.0, temperature: float = 1.0, top_p: float = 0.95,
                    seed: int | None = None, hop_length: int = 512, n_mels: int = 128,
                    sr: int = 22050, quiet: bool = False,
-                   skeleton_ticks: list[int] | None = None) -> int:
+                   skeleton_ticks: list[int] | None = None,
+                   transcriber=None, onset_threshold: float = 0.5) -> int:
     t0 = time.time()
     frame_ms = hop_length / sr / 4 * 8 * 1000
     mpf = enc.mel_per_frame
@@ -65,6 +86,8 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     mel = pad_or_trim(mel, n_frames * mpf).unsqueeze(0).to(device)
     memory = dec.prepare_memory(enc.features(mel))
     valid = torch.ones(1, n_frames, dtype=torch.bool, device=device)
+    if transcriber is not None and skeleton_ticks is None:
+        skeleton_ticks = skeleton_from_transcriber(mel, transcriber, bpm, frame_ms, onset_threshold)
     gen = torch.Generator(device=device)
     if seed is not None: gen.manual_seed(seed)
     tk = ChartTokenizer(n_lanes=dec.n_lanes)
@@ -103,10 +126,20 @@ def main() -> None:
                    help="hybrid mode: chart JSON whose onset times force the time structure")
     p.add_argument("--skeleton-dir", default=None,
                    help="hybrid batch mode: <song_dir>.json skeletons (e.g. out/eval_tsc_r2)")
+    p.add_argument("--skeleton-ckpt", default=None,
+                   help="hybrid mode: transcriber checkpoint — skeleton from any-lane onset "
+                        "probability (no lane collapse) at --onset-threshold")
+    p.add_argument("--onset-threshold", type=float, default=0.5)
     args = p.parse_args()
     device = torch.device(args.device or ("cuda" if torch.cuda.is_available() else "cpu"))
     enc, dec = load_models(args.ckpt, device)
     print(f"[dec] loaded {args.ckpt}")
+    transcriber = None
+    if args.skeleton_ckpt:
+        tck = torch.load(args.skeleton_ckpt, map_location="cpu", weights_only=True)
+        transcriber = TranscriberNet(**tck["config"]).to(device).eval()
+        transcriber.load_state_dict(tck.get("ema", tck["model"]))
+        print(f"[dec] skeleton from transcriber {args.skeleton_ckpt} @ p_any ≥ {args.onset_threshold}")
 
     if args.list:
         base = Path(args.list).resolve().parent
@@ -127,7 +160,8 @@ def main() -> None:
                            enc=enc, dec=dec, device=device,
                            bpm=float(d["judgeLineList"][0]["bpm"]), offset=float(d["offset"]),
                            temperature=args.temperature, top_p=args.top_p, seed=args.seed,
-                           skeleton_ticks=skel)
+                           skeleton_ticks=skel, transcriber=transcriber,
+                           onset_threshold=args.onset_threshold)
         return
     bpm, offset = args.bpm, args.offset
     if args.ref_chart:
@@ -136,7 +170,8 @@ def main() -> None:
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     generate_chart(args.audio, args.output, enc=enc, dec=dec, device=device, bpm=bpm,
                    offset=offset, temperature=args.temperature, top_p=args.top_p, seed=args.seed,
-                   skeleton_ticks=skeleton_from_chart(args.skeleton_json) if args.skeleton_json else None)
+                   skeleton_ticks=skeleton_from_chart(args.skeleton_json) if args.skeleton_json else None,
+                   transcriber=transcriber, onset_threshold=args.onset_threshold)
 
 
 if __name__ == "__main__":
