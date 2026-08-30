@@ -83,6 +83,26 @@ class DecoderBlock(nn.Module):
             nn.Linear(mlp_dim, dim), nn.Dropout(dropout),
         )
 
+    def init_cache(self, mem: Tensor) -> dict:
+        """Per-song cache: cross-attention K/V computed once; self-attention K/V grow."""
+        B, T, D = mem.shape
+        kx, vx = self.kv_x(mem).reshape(B, T, 2, self.h, self.dh).permute(2, 0, 3, 1, 4)
+        return {"kx": kx, "vx": vx, "k": None, "v": None}
+
+    def step(self, x: Tensor, freqs: Tensor, cache: dict, mem_mask: Tensor | None) -> Tensor:
+        """x: (B,1,D) new token; freqs: (1,Dh//2,2,2) RoPE for its position."""
+        B, _, D = x.shape
+        q, k, v = self.qkv(self.norm1(x)).reshape(B, 1, 3, self.h, self.dh).permute(2, 0, 3, 1, 4)
+        q, k = apply_rope(self.qn(q), self.kn(k), freqs)
+        cache["k"] = k if cache["k"] is None else torch.cat([cache["k"], k], dim=2)
+        cache["v"] = v if cache["v"] is None else torch.cat([cache["v"], v], dim=2)
+        a = F.scaled_dot_product_attention(q, cache["k"], cache["v"])      # past+current only
+        x = x + self.proj(a.permute(0, 2, 1, 3).reshape(B, 1, D))
+        qx = self.q_x(self.norm2(x)).reshape(B, 1, self.h, self.dh).transpose(1, 2)
+        a = F.scaled_dot_product_attention(qx, cache["kx"], cache["vx"], attn_mask=mem_mask)
+        x = x + self.proj_x(a.transpose(1, 2).reshape(B, 1, D))
+        return x + self.mlp(self.norm3(x))
+
     def forward(self, x: Tensor, freqs: Tensor, mem: Tensor,
                 mem_mask: Tensor | None) -> Tensor:
         B, L, D = x.shape
@@ -104,16 +124,27 @@ class ChartDecoder(nn.Module):
                  depth: int = 6, num_heads: int = 8, mlp_ratio: float = 4.0,
                  dropout: float = 0.1, mem_dim: int = 256, time_dim: int = 128,
                  rope_theta: float = 10000.0, n_lanes: int = 4,
-                 factorized: bool = False, offset_head: bool = False):
+                 factorized: bool = False, offset_head: bool = False,
+                 cross_window: int | None = None, token_dropout: float = 0.0):
         """
-        n_lanes     : position slots in the NOTE block (4 = 4k lanes, 64 = free-x bins)
-        factorized  : NOTE embeddings = E_type[t] + E_pos[bin]  (shares parameters
-                      across the 4×n_lanes fused tokens — docs/freeform_design.md P1)
-        offset_head : regress the sub-bin position offset from the NOTE token's
-                      hidden state (anchor+offset; not part of the autoregression)
+        n_lanes      : position slots in the NOTE block (4 = 4k lanes, 64 = free-x bins)
+        factorized   : NOTE embeddings = E_type[t] + E_pos[bin]  (shares parameters
+                       across the 4×n_lanes fused tokens — docs/freeform_design.md P1)
+        offset_head  : regress the sub-bin position offset from the NOTE token's
+                       hidden state (anchor+offset; not part of the autoregression)
+        cross_window : LOCAL cross-attention — a token whose musical clock is at
+                       frame f may only attend memory frames |f' - f| <= window
+                       (None = global).  The alignment is known from the clock, so
+                       the model should not have to discover it; round 1 (global
+                       attention) collapsed into an unconditional chart LM
+                       (mismatched audio changed val NLL by 0.3%).
+        token_dropout: word-dropout on the token embedding (time embedding kept)
+                       during training, so the history cannot fully explain the
+                       next token and the audio path receives gradient pressure.
         """
         super().__init__()
         self.head_dim, self.rope_theta, self.time_dim = hidden_dim // num_heads, rope_theta, time_dim
+        self.cross_window, self.token_dropout = cross_window, token_dropout
         self.n_lanes, self.factorized = n_lanes, factorized
         self._note0, self._n_note = 50, 4 * n_lanes
         self.tok_emb   = nn.Embedding(vocab_size, hidden_dim)
@@ -153,12 +184,14 @@ class ChartDecoder(nn.Module):
         → logits (B, L, vocab)
         """
         B, L = tokens.shape
-        x = self.embed(tokens) + self.time_proj(time_embed(tok_frames, self.time_dim))
+        tok = self.embed(tokens)
+        if self.training and self.token_dropout > 0:
+            keep = (torch.rand(B, L, 1, device=tok.device) >= self.token_dropout).to(tok.dtype)
+            tok = tok * keep
+        x = tok + self.time_proj(time_embed(tok_frames, self.time_dim))
         x = self.drop(x)
         freqs = rope1d(torch.arange(L, device=x.device).float(), self.head_dim, self.rope_theta)
-        mask = None
-        if mem_valid is not None:
-            mask = mem_valid[:, None, None, :]           # (B,1,1,T) broadcast over heads/queries
+        mask = self.cross_mask(tok_frames, memory.shape[1], mem_valid)
         for blk in self.blocks:
             x = blk(x, freqs, memory, mask)
         h = self.norm_out(x)
@@ -166,6 +199,44 @@ class ChartDecoder(nn.Module):
         if return_hidden:
             return logits, h
         return logits
+
+    def init_cache(self, memory: Tensor) -> list[dict]:
+        return [blk.init_cache(memory) for blk in self.blocks]
+
+    def step(self, token: Tensor, frame: Tensor, pos: int, caches: list[dict],
+             T_mem: int, mem_valid: Tensor | None):
+        """One incremental decoding step.
+        token (B,) long · frame (B,) float · pos = sequence index of this token.
+        Returns (logits (B,V), hidden (B,D))."""
+        x = self.embed(token[:, None]) + self.time_proj(time_embed(frame[:, None], self.time_dim))
+        freqs = rope1d(torch.tensor([pos], device=x.device).float(), self.head_dim, self.rope_theta)
+        mask = self.cross_mask(frame[:, None], T_mem, mem_valid)
+        for blk, cache in zip(self.blocks, caches):
+            x = blk.step(x, freqs, cache, mask)
+        h = self.norm_out(x)
+        return self.lm_head(h)[:, 0], h[:, 0]
+
+    def cross_mask(self, tok_frames: Tensor, T: int, mem_valid: Tensor | None):
+        """Boolean cross-attention mask (B,1,L,T): valid memory ∧ local window."""
+        if mem_valid is None and self.cross_window is None:
+            return None
+        B = tok_frames.shape[0]
+        mask = torch.ones(B, 1, 1, T, dtype=torch.bool, device=tok_frames.device)
+        if mem_valid is not None:
+            mask = mask & mem_valid[:, None, None, :]
+        if self.cross_window is not None:
+            fidx = torch.arange(T, device=tok_frames.device).float()
+            local = (tok_frames[:, None, :, None] - fidx[None, None, None, :]).abs() <= self.cross_window
+            mask = mask & local                                # (B,1,L,T)
+            # a token whose window falls entirely off the valid memory (e.g. past
+            # the audio end) must keep at least one key → allow the nearest frame
+            empty = ~mask.any(dim=-1, keepdim=True)            # (B,1,L,1)
+            if empty.any():
+                nearest = tok_frames.clamp(0, T - 1).round().long()  # (B,L)
+                fallback = torch.zeros_like(mask)
+                fallback.scatter_(-1, nearest[:, None, :, None], True)
+                mask = mask | (fallback & empty)
+        return mask
 
     def embed(self, tokens: Tensor) -> Tensor:
         """Token embeddings; the NOTE block is factorised when enabled."""
@@ -222,13 +293,17 @@ def generate_tokens(
     offsets: dict[int, float] = {}       # token position → sub-bin offset (free-x)
     gs = GrammarState(T); gs.step(BOS)
     cur_tick = 0
+    caches = decoder.init_cache(memory)
+    T_mem = memory.shape[1]
     for _ in range(max_tokens):
-        tok_t = torch.tensor([tokens], device=device)
-        frm_t = torch.tensor([frames], device=device, dtype=torch.float32)
-        out = decoder(tok_t, frm_t, memory, mem_valid, return_hidden=True)
-        logits = out[0][0, -1].float()
+        pos = len(tokens) - 1
+        logits, hidden = decoder.step(
+            torch.tensor([tokens[-1]], device=device),
+            torch.tensor([frames[-1]], device=device, dtype=torch.float32),
+            pos, caches, T_mem, mem_valid)
+        logits = logits[0].float()
         if decoder.offset_head is not None and kinds[tokens[-1]] == "NOTE":
-            offsets[len(tokens) - 1] = float(decoder.predict_offset(out[1][:, -1:])[0, 0])
+            offsets[pos] = float(decoder.predict_offset(hidden[:, None])[0, 0])
 
         allowed = torch.tensor([gs.is_allowed(i) for i in range(len(kinds))], device=device)
         past_end = cur_tick * frames_per_tick >= audio_frames

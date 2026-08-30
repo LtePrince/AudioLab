@@ -42,7 +42,7 @@ from src.data.chart_tokenizer import (
 from src.data.gameplay_miner import GameplayNote, load_jsonl
 from src.data.dataset import PhigrosDataset
 from src.models.chart_decoder import DEFAULT_DECODER_CONFIG, ChartDecoder
-from src.models.transcriber import TranscriberNet
+from src.models.transcriber import TranscriberNet, TranscriptionLoss
 from src.train_utils import EMA, EarlyStopper, MetricLogger, pad_or_trim, rotate_checkpoints
 
 
@@ -88,7 +88,8 @@ class TokenChartDataset(Dataset):
 
     def __getitem__(self, i: int) -> dict:
         json_path, audio_path, _ = self.base._entries[i]
-        mel = self.base._load_mel(audio_path)                         # (n_mels, T)
+        base_item = self.base[i]                                      # mel + 4k note array
+        mel = base_item["audio"]                                      # (n_mels, T)
         notes, bpm = self._notes(i)
         mirror = self.mirror_prob > 0 and random.random() < self.mirror_prob
         frames_per_tick = 60.0 / (32.0 * bpm) * 1000.0 / self.frame_ms
@@ -105,8 +106,13 @@ class TokenChartDataset(Dataset):
             tokens = self.tk.encode_notes(notes)
             offs, omask = [0.0] * len(tokens), [False] * len(tokens)
         frames = [t * frames_per_tick for t in self.tk.ticks_per_position(tokens)]
+        note_arr, vflag = base_item["note"], base_item["valid_flag"]
+        if mirror:                                                    # keep aux targets consistent
+            from src.data.dataset import _MIRROR_PERM
+            note_arr = note_arr[_MIRROR_PERM, :]
         return {"mel": mel, "tokens": torch.tensor(tokens), "frames": torch.tensor(frames),
                 "offsets": torch.tensor(offs), "offset_mask": torch.tensor(omask),
+                "note": note_arr, "valid_flag": vflag,
                 "bpm": bpm, "mel_frames": mel.shape[-1]}
 
 
@@ -125,7 +131,9 @@ def _collate(batch: list[dict], max_mel: int, mel_per_frame: int) -> dict:
         v[: min(b["mel_frames"] // mel_per_frame, len(v))] = True
         valid.append(v)
     return {"mel": torch.stack(mels), "tokens": tokens, "frames": frames,
-            "offsets": offsets, "offset_mask": omask, "mem_valid": torch.stack(valid)}
+            "offsets": offsets, "offset_mask": omask, "mem_valid": torch.stack(valid),
+            "note": torch.stack([b["note"] for b in batch]),
+            "valid_flag": torch.stack([b["valid_flag"] for b in batch])}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -133,29 +141,47 @@ def _collate(batch: list[dict], max_mel: int, mel_per_frame: int) -> dict:
 # ─────────────────────────────────────────────────────────────────────────────
 
 class ARChartModel(nn.Module):
+    """encoder.features → decoder; the encoder's transcription head stays
+    attached so an auxiliary per-frame loss can keep the memory onset-aligned."""
+
     def __init__(self, encoder: TranscriberNet, decoder: ChartDecoder):
         super().__init__()
         self.encoder, self.decoder = encoder, decoder
 
-    def forward(self, mel, tokens, frames, mem_valid, return_hidden=False):
-        memory = self.decoder.prepare_memory(self.encoder.features(mel))
-        return self.decoder(tokens, frames, memory, mem_valid, return_hidden=return_hidden)
+    def forward(self, mel, tokens, frames, mem_valid, return_hidden=False, return_feats=False):
+        feats  = self.encoder.features(mel)
+        memory = self.decoder.prepare_memory(feats)
+        out = self.decoder(tokens, frames, memory, mem_valid, return_hidden=return_hidden)
+        return (out, feats) if return_feats else out
 
 
 OFFSET_LOSS_WEIGHT = 1.0
+AUX_LOSS_WEIGHT    = 1.0     # auxiliary transcription loss on encoder features
+_aux_loss_fn: TranscriptionLoss | None = None
 
 
 def _step_loss(model, batch, device) -> tuple[torch.Tensor, torch.Tensor, int]:
+    global _aux_loss_fn
     mel    = batch["mel"].to(device)
     tokens = batch["tokens"].to(device)
     frames = batch["frames"].to(device)
     valid  = batch["mem_valid"].to(device)
     has_offset = model.decoder.offset_head is not None
-    out = model(mel, tokens[:, :-1], frames[:, :-1], valid, return_hidden=has_offset)
+    out, feats = model(mel, tokens[:, :-1], frames[:, :-1], valid,
+                       return_hidden=has_offset, return_feats=True)
     logits, hidden = (out if has_offset else (out, None))
+    if AUX_LOSS_WEIGHT > 0:
+        if _aux_loss_fn is None:
+            _aux_loss_fn = TranscriptionLoss().to(device)
+        pred = model.encoder.head(feats).transpose(1, 2)              # (B, 32, T)
+        note = batch["note"].to(device); vflag = batch["valid_flag"].to(device)
+        T = min(pred.shape[-1], note.shape[-1])
+        aux, _ = _aux_loss_fn(pred[..., :T], note[..., :T], vflag[..., :T])
+    else:
+        aux = torch.zeros((), device=device)
     target = tokens[:, 1:]
     loss = F.cross_entropy(logits.reshape(-1, logits.shape[-1]), target.reshape(-1),
-                           ignore_index=PAD)
+                           ignore_index=PAD) + AUX_LOSS_WEIGHT * aux
     if has_offset:
         # offset of the NOTE token at input position t is predicted from h_t
         omask = batch["offset_mask"][:, :-1].to(device)
@@ -207,6 +233,12 @@ def _build_parser():
     g.add_argument("--depth",      type=int, default=DEFAULT_DECODER_CONFIG["depth"])
     g.add_argument("--hidden-dim", type=int, default=DEFAULT_DECODER_CONFIG["hidden_dim"])
     g.add_argument("--dec-dropout", type=float, default=DEFAULT_DECODER_CONFIG["dropout"])
+    g.add_argument("--cross-window", type=int, default=64,
+                   help="local cross-attention window in chart frames (≈3 s); 0 = global")
+    g.add_argument("--token-dropout", type=float, default=0.15,
+                   help="word-dropout on token embeddings during training")
+    g.add_argument("--aux-weight", type=float, default=1.0,
+                   help="auxiliary transcription-loss weight on encoder features (0 = off)")
     g = p.add_argument_group("checkpoint")
     g.add_argument("--ckpt-dir",  default="checkpoints")
     g.add_argument("--resume",    default=None)
@@ -260,7 +292,12 @@ def main() -> None:
     encoder.load_state_dict(enc_ckpt.get("ema", enc_ckpt["model"]))
     dec_config = dict(DEFAULT_DECODER_CONFIG)
     dec_config.update(depth=args.depth, hidden_dim=args.hidden_dim, dropout=args.dec_dropout,
-                      mem_dim=enc_ckpt["config"]["hidden_dim"])
+                      mem_dim=enc_ckpt["config"]["hidden_dim"],
+                      cross_window=(args.cross_window or None), token_dropout=args.token_dropout)
+    global AUX_LOSS_WEIGHT
+    AUX_LOSS_WEIGHT = args.aux_weight
+    print(f"[dec] conditioning aids: cross_window={dec_config['cross_window']} "
+          f"token_dropout={args.token_dropout} aux_weight={args.aux_weight}")
     if args.gameplay_dir:
         dec_config.update(vocab_size=train_set.tk.vocab_size, n_lanes=FREE_BINS,
                           factorized=True, offset_head=True)

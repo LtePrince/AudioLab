@@ -84,3 +84,43 @@ def test_encoder_features_shape():
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+def test_cross_window_mask():
+    """局部窗:token 只看 |frame-f| ≤ window 的 memory 帧;窗全落在无效区时回退到最近帧。"""
+    d = ChartDecoder(**{**CFG, "cross_window": 2})
+    frames = torch.tensor([[0.0, 5.0, 40.0]])          # 第 3 个 token 超出 memory(T=10)
+    valid = torch.ones(1, 10, dtype=torch.bool); valid[0, 8:] = False
+    m = d.cross_mask(frames, 10, valid)[0, 0]          # (L, T)
+    assert m[0].nonzero().flatten().tolist() == [0, 1, 2]
+    assert m[1].nonzero().flatten().tolist() == [3, 4, 5, 6, 7]
+    assert m[2].sum() == 1 and m[2, 9]                  # 回退:最近帧(钳位到 T-1)
+    print("[T6] 局部交叉注意力窗 ✓")
+
+
+def test_token_dropout_train_only():
+    torch.manual_seed(0)
+    d = ChartDecoder(**{**CFG, "token_dropout": 0.5}).eval()
+    mem = d.prepare_memory(torch.randn(1, 20, 48)); valid = torch.ones(1, 20, dtype=torch.bool)
+    toks = torch.randint(3, 66, (1, 8)); fr = torch.zeros(1, 8)
+    a = d(toks, fr, mem, valid); b = d(toks, fr, mem, valid)
+    assert torch.allclose(a, b), "eval 模式不应有随机 dropout"
+    d.train()
+    c = d(toks, fr, mem, valid); e = d(toks, fr, mem, valid)
+    assert not torch.allclose(c, e), "train 模式 token dropout 应引入随机性"
+    print("[T7] token dropout 仅训练时 ✓")
+
+
+def test_kv_cache_matches_full_forward():
+    """增量 step(KV cache)的 logits 必须与全量前向逐位置一致(局部窗 + 全局两种)。"""
+    for cw in (None, 3):
+        torch.manual_seed(2)
+        d = ChartDecoder(**{**CFG, "cross_window": cw}).eval()
+        mem = d.prepare_memory(torch.randn(1, 25, 48)); valid = torch.ones(1, 25, dtype=torch.bool)
+        toks = torch.randint(3, 66, (1, 9)); frames = torch.cumsum(torch.rand(1, 9) * 4, dim=1)
+        full = d(toks, frames, mem, valid)[0]                          # (9, V)
+        caches = d.init_cache(mem)
+        for i in range(9):
+            lg, _ = d.step(toks[:, i], frames[:, i], i, caches, 25, valid)
+            assert torch.allclose(lg[0], full[i], atol=1e-4), f"cw={cw} pos {i} 不一致"
+    print("[T8] KV cache ≡ 全量前向 ✓")

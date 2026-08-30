@@ -101,6 +101,8 @@ def main() -> None:
         for j, a, *_ in entries:
             d = json.load(open(base / j, encoding="utf-8"))
             song = Path(j).parent.name
+            if (Path(args.out_dir) / f"{song}.json").exists():
+                continue                                   # resumable batch
             generate_chart(str(base / a), str(Path(args.out_dir) / f"{song}.json"),
                            enc=enc, dec=dec, device=device,
                            bpm=float(d["judgeLineList"][0]["bpm"]), offset=float(d["offset"]),
