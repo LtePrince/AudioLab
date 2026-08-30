@@ -27,7 +27,7 @@ import torch
 
 from src.data.audio2mel import AudioGPUprocessor
 from src.data.chart2array import save_phigros_notes
-from src.data.chart_tokenizer import ChartTokenizer
+from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.models.chart_decoder import ChartDecoder, generate_tokens
 from src.models.transcriber import TranscriberNet
 from src.train_utils import pad_or_trim
@@ -58,11 +58,20 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     valid = torch.ones(1, n_frames, dtype=torch.bool, device=device)
     gen = torch.Generator(device=device)
     if seed is not None: gen.manual_seed(seed)
-    tokens = generate_tokens(dec, memory, valid, bpm, frame_ms, n_frames,
-                             temperature=temperature, top_p=top_p, generator=gen)
-    tk = ChartTokenizer()
-    notes = tk.decode_tokens(tokens, strict=True)
-    save_phigros_notes(tk.to_phigros_notes(notes, bpm), bpm, output_path, offset=offset)
+    tk = ChartTokenizer(n_lanes=dec.n_lanes)
+    out = generate_tokens(dec, memory, valid, bpm, frame_ms, n_frames,
+                          temperature=temperature, top_p=top_p, generator=gen, tokenizer=tk)
+    if dec.offset_head is not None:                      # free-x: (tokens, offsets)
+        tokens, pos_offsets = out
+        notes = tk.decode_tokens(tokens, strict=True)
+        ticks = tk.ticks_per_position(tokens)
+        offsets = {(ticks[i], tk.value(tokens[i]) // 4): o for i, o in pos_offsets.items()}
+        pnotes = free_notes_to_phigros(tk, notes, offsets, bpm)
+    else:
+        tokens = out
+        notes = tk.decode_tokens(tokens, strict=True)
+        pnotes = tk.to_phigros_notes(notes, bpm)
+    save_phigros_notes(pnotes, bpm, output_path, offset=offset)
     if not quiet:
         print(f"[dec] {Path(audio_path).name}: {n_frames} frames, {len(tokens)} tokens, "
               f"{len(notes)} notes → {output_path} ({time.time()-t0:.1f}s)")

@@ -26,7 +26,11 @@ from pathlib import Path
 import numpy as np
 
 
-def onsets(path: str, shift_ms: float = 0.0) -> list[tuple[float, int, int]]:
+X_UNIT_W = 0.05625   # positionX unit in screen widths (line at x=0.5)
+
+
+def onsets(path: str, shift_ms: float = 0.0) -> list[tuple[float, int, int, float]]:
+    """(time_ms, lane, type, screen_x) per note; screen_x = 0.5 + positionX·0.05625."""
     d = json.load(open(path, encoding="utf-8"))
     out = []
     for l in d["judgeLineList"]:
@@ -34,11 +38,13 @@ def onsets(path: str, shift_ms: float = 0.0) -> list[tuple[float, int, int]]:
         for n in l["notesAbove"] + l["notesBelow"]:
             t = n["time"] / 32.0 * 60000.0 / bpm + shift_ms
             lane = min(max(round((n["positionX"] + 3.75) / 2.5), 0), 3)
-            out.append((t, lane, int(n["type"])))
+            out.append((t, lane, int(n["type"]), 0.5 + n["positionX"] * X_UNIT_W))
     return sorted(out)
 
 
-def f1(gen, ref, tol: float, lane_aware: bool) -> float:
+def f1(gen, ref, tol: float, lane_aware: bool, pos_tol: float | None = None) -> float:
+    """Greedy one-to-one onset matching within ±tol ms.
+    lane_aware: lanes must agree (4k).  pos_tol: |Δscreen_x| ≤ pos_tol (free-x)."""
     import bisect
     ref_t = [r[0] for r in ref]
     used = [False] * len(ref)
@@ -49,6 +55,8 @@ def f1(gen, ref, tol: float, lane_aware: bool) -> float:
         best, bd = -1, tol + 1
         for i in range(lo, hi):
             if used[i] or (lane_aware and ref[i][1] != g[1]):
+                continue
+            if pos_tol is not None and abs(ref[i][3] - g[3]) > pos_tol:
                 continue
             d = abs(ref[i][0] - g[0])
             if d < bd:
@@ -67,6 +75,11 @@ def main() -> None:
     ap.add_argument("--list", default="data/val.txt")
     ap.add_argument("--tol-ms", type=float, default=92.9)
     ap.add_argument("--shifts", default="500,-400", help="control shifts (ms)")
+    ap.add_argument("--ref-dir", default=None,
+                    help="use <song_dir>.json under this dir as references instead of the "
+                         "list's chart files (free-x: data/gameplay_charts)")
+    ap.add_argument("--pos-tol", type=float, default=0.05,
+                    help="position tolerance (screen fraction) for pos-F1")
     args = ap.parse_args()
 
     base = Path(args.list).resolve().parent
@@ -83,14 +96,19 @@ def main() -> None:
         if not gen_path.exists():
             missing += 1
             continue
-        ref = onsets(str(base / rel)); gen = onsets(str(gen_path))
+        ref_path = (Path(args.ref_dir) / f"{song}.json") if args.ref_dir else (base / rel)
+        if not ref_path.exists():
+            missing += 1
+            continue
+        ref = onsets(str(ref_path)); gen = onsets(str(gen_path))
         aligned = f1(gen, ref, args.tol_ms, False)
         control = float(np.mean([f1(onsets(str(gen_path), s), ref, args.tol_ms, False)
                                  for s in shifts]))
         lane = f1(gen, ref, args.tol_ms, True)
-        rows.append((aligned, control, lane))
-        for _, _, t in gen: types_g[t] += 1
-        for _, _, t in ref: types_r[t] += 1
+        pos  = f1(gen, ref, args.tol_ms, False, pos_tol=args.pos_tol)
+        rows.append((aligned, control, lane, pos))
+        for _, _, t, _ in gen: types_g[t] += 1
+        for _, _, t, _ in ref: types_r[t] += 1
 
     if not rows:
         print("[ERROR] no generated charts matched the list", file=sys.stderr); sys.exit(1)
@@ -99,7 +117,7 @@ def main() -> None:
     print(f"songs={len(rows)} (missing {missing})  tol=±{args.tol_ms:.0f}ms")
     print(f"time-F1   {R[:,0].mean():.3f}   shifted-control {R[:,1].mean():.3f}   "
           f"uplift {100*up:+.0f}%   win-rate {100*(R[:,0] > R[:,1]).mean():.0f}%")
-    print(f"lane-F1   {R[:,2].mean():.3f}")
+    print(f"lane-F1   {R[:,2].mean():.3f}   pos-F1(±{args.pos_tol:.2f} screen) {R[:,3].mean():.3f}")
     names = ["", "Tap", "Drag", "Hold", "Flick"]
     def pct(v): return "  ".join(f"{names[i]}={100*v[i]/max(v.sum(),1):4.1f}%" for i in range(1, 5))
     print(f"types gen  {pct(types_g)}   (n={int(types_g.sum())})")

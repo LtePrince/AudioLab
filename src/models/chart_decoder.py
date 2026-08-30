@@ -103,10 +103,25 @@ class ChartDecoder(nn.Module):
     def __init__(self, vocab_size: int = VOCAB_SIZE, hidden_dim: int = 256,
                  depth: int = 6, num_heads: int = 8, mlp_ratio: float = 4.0,
                  dropout: float = 0.1, mem_dim: int = 256, time_dim: int = 128,
-                 rope_theta: float = 10000.0):
+                 rope_theta: float = 10000.0, n_lanes: int = 4,
+                 factorized: bool = False, offset_head: bool = False):
+        """
+        n_lanes     : position slots in the NOTE block (4 = 4k lanes, 64 = free-x bins)
+        factorized  : NOTE embeddings = E_type[t] + E_pos[bin]  (shares parameters
+                      across the 4×n_lanes fused tokens — docs/freeform_design.md P1)
+        offset_head : regress the sub-bin position offset from the NOTE token's
+                      hidden state (anchor+offset; not part of the autoregression)
+        """
         super().__init__()
         self.head_dim, self.rope_theta, self.time_dim = hidden_dim // num_heads, rope_theta, time_dim
+        self.n_lanes, self.factorized = n_lanes, factorized
+        self._note0, self._n_note = 50, 4 * n_lanes
         self.tok_emb   = nn.Embedding(vocab_size, hidden_dim)
+        if factorized:
+            self.type_emb = nn.Embedding(4, hidden_dim)
+            self.pos_emb  = nn.Embedding(n_lanes, hidden_dim)
+        self.offset_head = nn.Sequential(nn.Linear(hidden_dim, hidden_dim), nn.GELU(),
+                                         nn.Linear(hidden_dim, 1)) if offset_head else None
         self.time_proj = nn.Linear(time_dim, hidden_dim)
         self.mem_proj  = nn.Linear(mem_dim, hidden_dim)
         self.mem_time  = nn.Linear(time_dim, hidden_dim)
@@ -129,7 +144,7 @@ class ChartDecoder(nn.Module):
         return self.mem_norm(mem)
 
     def forward(self, tokens: Tensor, tok_frames: Tensor, memory: Tensor,
-                mem_valid: Tensor | None = None) -> Tensor:
+                mem_valid: Tensor | None = None, return_hidden: bool = False):
         """
         tokens     : (B, L) long
         tok_frames : (B, L) float — musical time of each token in chart frames
@@ -138,7 +153,7 @@ class ChartDecoder(nn.Module):
         → logits (B, L, vocab)
         """
         B, L = tokens.shape
-        x = self.tok_emb(tokens) + self.time_proj(time_embed(tok_frames, self.time_dim))
+        x = self.embed(tokens) + self.time_proj(time_embed(tok_frames, self.time_dim))
         x = self.drop(x)
         freqs = rope1d(torch.arange(L, device=x.device).float(), self.head_dim, self.rope_theta)
         mask = None
@@ -146,7 +161,26 @@ class ChartDecoder(nn.Module):
             mask = mem_valid[:, None, None, :]           # (B,1,1,T) broadcast over heads/queries
         for blk in self.blocks:
             x = blk(x, freqs, memory, mask)
-        return self.lm_head(self.norm_out(x))
+        h = self.norm_out(x)
+        logits = self.lm_head(h)
+        if return_hidden:
+            return logits, h
+        return logits
+
+    def embed(self, tokens: Tensor) -> Tensor:
+        """Token embeddings; the NOTE block is factorised when enabled."""
+        if not self.factorized:
+            return self.tok_emb(tokens)
+        note_block = (self.pos_emb.weight[:, None, :] + self.type_emb.weight[None, :, :]
+                      ).reshape(self._n_note, -1)                  # (4·n_lanes, D), bin-major
+        table = torch.cat([self.tok_emb.weight[: self._note0], note_block,
+                           self.tok_emb.weight[self._note0 + self._n_note:]], dim=0)
+        return F.embedding(tokens, table)
+
+    def predict_offset(self, hidden: Tensor) -> Tensor:
+        """Sub-bin offset ∈ (0,1) from NOTE-token hidden states (B, L, D) → (B, L)."""
+        assert self.offset_head is not None
+        return torch.sigmoid(self.offset_head(hidden)).squeeze(-1)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -165,6 +199,7 @@ def generate_tokens(
     top_p:       float = 0.95,
     max_tokens:  int   = 6000,
     generator:   torch.Generator | None = None,
+    tokenizer    = None,          # ChartTokenizer instance (default: 4-lane)
 ) -> list[int]:
     """Sample a grammar-valid token sequence.
 
@@ -176,19 +211,24 @@ def generate_tokens(
     from src.data.chart_tokenizer import (
         BOS, EOS, TICKS_PER_BEAT, ChartTokenizer, GrammarState,
     )
-    T = ChartTokenizer
+    T = tokenizer if tokenizer is not None else ChartTokenizer()
+    assert T.vocab_size == decoder.lm_head.out_features, "tokenizer/decoder vocab mismatch"
     device = memory.device
     frames_per_tick = 60.0 / (32.0 * bpm) * 1000.0 / frame_ms
     kinds = [T.kind(i) for i in range(decoder.lm_head.out_features)]
     values = [T.value(i) for i in range(decoder.lm_head.out_features)]
 
     tokens, frames = [BOS], [0.0]
-    gs = GrammarState(); gs.step(BOS)
+    offsets: dict[int, float] = {}       # token position → sub-bin offset (free-x)
+    gs = GrammarState(T); gs.step(BOS)
     cur_tick = 0
     for _ in range(max_tokens):
         tok_t = torch.tensor([tokens], device=device)
         frm_t = torch.tensor([frames], device=device, dtype=torch.float32)
-        logits = decoder(tok_t, frm_t, memory, mem_valid)[0, -1].float()
+        out = decoder(tok_t, frm_t, memory, mem_valid, return_hidden=True)
+        logits = out[0][0, -1].float()
+        if decoder.offset_head is not None and kinds[tokens[-1]] == "NOTE":
+            offsets[len(tokens) - 1] = float(decoder.predict_offset(out[1][:, -1:])[0, 0])
 
         allowed = torch.tensor([gs.is_allowed(i) for i in range(len(kinds))], device=device)
         past_end = cur_tick * frames_per_tick >= audio_frames
@@ -219,4 +259,6 @@ def generate_tokens(
             break
     if tokens[-1] != EOS:
         tokens.append(EOS)
+    if decoder.offset_head is not None:
+        return tokens, offsets
     return tokens

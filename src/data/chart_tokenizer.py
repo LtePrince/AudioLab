@@ -41,13 +41,34 @@ __all__ = ["ChartTokenizer", "GrammarState", "TokenNote", "VOCAB_SIZE"]
 
 # ── id layout ───────────────────────────────────────────────────────────────
 PAD, BOS, EOS = 0, 1, 2
-_DTB0,  N_DTB  = 2,   16     # DTB_n  = _DTB0 + n,  n ∈ [1, 16]
-_DTT0,  N_DTT  = 18,  31     # DTT_n  = _DTT0 + n,  n ∈ [1, 31]
-_NOTE0         = 50          # NOTE(lane, type) = _NOTE0 + lane*4 + (type-1)
-_DURB0, N_DURB = 65,  16     # DURB_n = _DURB0 + n
-_DURT0, N_DURT = 81,  31     # DURT_n = _DURT0 + n
-_COND0, N_COND = 113, 16     # COND_i = _COND0 + i
-VOCAB_SIZE     = 129
+N_DTB, N_DTT, N_DURB, N_DURT, N_COND = 16, 31, 16, 31, 16
+_DTB0, _DTT0, _NOTE0 = 2, 18, 50       # fixed prefix; NOTE block size = 4 × n_lanes
+
+
+@dataclass(frozen=True)
+class VocabLayout:
+    """Token-id layout for a given number of position slots ("lanes").
+
+    n_lanes=4  → the 4k chart vocabulary (129 ids, docs/ar_tokenizer_design.md)
+    n_lanes=64 → the free-x vocabulary (369 ids): lane == horizontal position
+                 bin, NOTE_{bin}_{type} = fused position×type token
+                 (docs/freeform_design.md P1).  Everything else is shared.
+    """
+    n_lanes: int = 4
+
+    @property
+    def n_note(self) -> int: return 4 * self.n_lanes
+    @property
+    def durb0(self) -> int: return _NOTE0 + self.n_note - 1
+    @property
+    def durt0(self) -> int: return self.durb0 + N_DURB
+    @property
+    def cond0(self) -> int: return self.durt0 + N_DURT + 1
+    @property
+    def vocab_size(self) -> int: return self.cond0 + N_COND
+
+
+VOCAB_SIZE = VocabLayout(4).vocab_size      # 129 — the 4k default
 
 TICKS_PER_BEAT = 32
 NOTE_TYPES     = ("TAP", "DRAG", "HOLD", "FLICK")   # type ids 1..4
@@ -63,75 +84,72 @@ class TokenNote:
 
 
 class ChartTokenizer:
-    """Encode/decode between note lists (or chart JSON) and token ids."""
+    """Encode/decode between note lists (or chart JSON) and token ids.
 
-    vocab_size = VOCAB_SIZE
+    ``n_lanes`` selects the vocabulary: 4 (4k lanes) or 64 (free-x bins).
+    """
+
+    def __init__(self, n_lanes: int = 4) -> None:
+        self.layout = VocabLayout(n_lanes)
+        self.n_lanes = n_lanes
+        self.vocab_size = self.layout.vocab_size
 
     # ── id constructors / predicates ────────────────────────────────────
-    @staticmethod
-    def dtb(n: int) -> int:
+    def dtb(self, n: int) -> int:
         assert 1 <= n <= N_DTB
         return _DTB0 + n
 
-    @staticmethod
-    def dtt(n: int) -> int:
+    def dtt(self, n: int) -> int:
         assert 1 <= n <= N_DTT
         return _DTT0 + n
 
-    @staticmethod
-    def note(lane: int, type_: int) -> int:
-        assert 0 <= lane < 4 and 1 <= type_ <= 4
+    def note(self, lane: int, type_: int) -> int:
+        assert 0 <= lane < self.n_lanes and 1 <= type_ <= 4
         return _NOTE0 + lane * 4 + (type_ - 1)
 
-    @staticmethod
-    def durb(n: int) -> int:
+    def durb(self, n: int) -> int:
         assert 1 <= n <= N_DURB
-        return _DURB0 + n
+        return self.layout.durb0 + n
 
-    @staticmethod
-    def durt(n: int) -> int:
+    def durt(self, n: int) -> int:
         assert 1 <= n <= N_DURT
-        return _DURT0 + n
+        return self.layout.durt0 + n
 
-    @staticmethod
-    def cond(i: int) -> int:
+    def cond(self, i: int) -> int:
         assert 0 <= i < N_COND
-        return _COND0 + i
+        return self.layout.cond0 + i
 
-    @staticmethod
-    def kind(tok: int) -> str:
+    def kind(self, tok: int) -> str:
         """Coarse token class: PAD/BOS/EOS/DTB/DTT/NOTE/DURB/DURT/COND."""
+        L = self.layout
         if tok == PAD: return "PAD"
         if tok == BOS: return "BOS"
         if tok == EOS: return "EOS"
-        if _DTB0 < tok <= _DTB0 + N_DTB:    return "DTB"
-        if _DTT0 < tok <= _DTT0 + N_DTT:    return "DTT"
-        if _NOTE0 <= tok < _NOTE0 + 16:     return "NOTE"
-        if _DURB0 < tok <= _DURB0 + N_DURB: return "DURB"
-        if _DURT0 < tok <= _DURT0 + N_DURT: return "DURT"
-        if _COND0 <= tok < _COND0 + N_COND: return "COND"
-        raise ValueError(f"invalid token id {tok}")
+        if _DTB0 < tok <= _DTB0 + N_DTB:      return "DTB"
+        if _DTT0 < tok <= _DTT0 + N_DTT:      return "DTT"
+        if _NOTE0 <= tok < _NOTE0 + L.n_note: return "NOTE"
+        if L.durb0 < tok <= L.durb0 + N_DURB: return "DURB"
+        if L.durt0 < tok <= L.durt0 + N_DURT: return "DURT"
+        if L.cond0 <= tok < L.cond0 + N_COND: return "COND"
+        raise ValueError(f"invalid token id {tok} for n_lanes={self.n_lanes}")
 
-    @classmethod
-    def value(cls, tok: int) -> int:
+    def value(self, tok: int) -> int:
         """Numeric payload: n for DTB/DTT/DURB/DURT, lane*4+type-1 for NOTE."""
-        k = cls.kind(tok)
-        base = {"DTB": _DTB0, "DTT": _DTT0, "DURB": _DURB0, "DURT": _DURT0,
-                "NOTE": _NOTE0, "COND": _COND0}.get(k)
-        if base is None:
-            return 0
-        return tok - base
+        k = self.kind(tok)
+        base = {"DTB": _DTB0, "DTT": _DTT0, "NOTE": _NOTE0,
+                "DURB": self.layout.durb0, "DURT": self.layout.durt0,
+                "COND": self.layout.cond0}.get(k)
+        return 0 if base is None else tok - base
 
-    @classmethod
-    def token_name(cls, tok: int) -> str:
-        k = cls.kind(tok)
+    def token_name(self, tok: int) -> str:
+        k = self.kind(tok)
         if k == "NOTE":
             v = tok - _NOTE0
             return f"NOTE_L{v // 4}_{NOTE_TYPES[v % 4]}"
         if k in ("DTB", "DTT", "DURB", "DURT"):
-            return f"{k}_{cls.value(tok)}"
+            return f"{k}_{self.value(tok)}"
         if k == "COND":
-            return f"COND_{cls.value(tok)}"
+            return f"COND_{self.value(tok)}"
         return k
 
     # ── time/duration emission (canonical maximal chunks) ───────────────
@@ -198,7 +216,7 @@ class ChartTokenizer:
     # ── decode ──────────────────────────────────────────────────────────
     def decode_tokens(self, tokens: list[int], strict: bool = True) -> list[TokenNote]:
         """Token ids → note list.  strict=True validates the grammar."""
-        gs = GrammarState()
+        gs = GrammarState(self)
         notes: list[TokenNote] = []
         cur_tick = 0
         pending: TokenNote | None = None       # HOLD awaiting duration
@@ -243,18 +261,17 @@ class ChartTokenizer:
         return notes
 
     # ── per-position musical time (for decoder time-embedding injection) ─
-    @classmethod
-    def ticks_per_position(cls, tokens: list[int]) -> list[int]:
+    def ticks_per_position(self, tokens: list[int]) -> list[int]:
         """Tick reached BEFORE emitting each token (time of the event the
         token belongs to).  DTB/DTT advance the clock for later positions."""
         out, cur = [], 0
         for tok in tokens:
             out.append(cur)
-            k = cls.kind(tok)
+            k = self.kind(tok)
             if k == "DTB":
-                cur += cls.value(tok) * TICKS_PER_BEAT
+                cur += self.value(tok) * TICKS_PER_BEAT
             elif k == "DTT":
-                cur += cls.value(tok)
+                cur += self.value(tok)
         return out
 
     # ── convenience: decoded notes → Phigros Note dicts ─────────────────
@@ -294,6 +311,7 @@ class GrammarState:
     Use ``is_allowed`` as the constrained-decoding mask and ``step`` to
     advance after emitting a token.
     """
+    tok:          ChartTokenizer = field(default_factory=ChartTokenizer)
     started:      bool = False
     after_bos:    bool = False   # COND window (directly after BOS)
     in_dur:       bool = False   # HOLD emitted, zero duration tokens so far
@@ -306,7 +324,7 @@ class GrammarState:
     finished:     bool = False
 
     def is_allowed(self, tok: int) -> bool:
-        T = ChartTokenizer
+        T = self.tok
         k = T.kind(tok)
         if self.finished:
             return k == "PAD"
@@ -333,7 +351,7 @@ class GrammarState:
         return False
 
     def step(self, tok: int) -> None:
-        T = ChartTokenizer
+        T = self.tok
         k = T.kind(tok)
         if k == "BOS":
             self.started, self.after_bos = True, True
@@ -372,3 +390,70 @@ class GrammarState:
         return (f"started={self.started} in_dur={self.in_dur} "
                 f"dur_open={self.dur_open} can_beat={self.dur_can_beat} "
                 f"lanes={sorted(self.used_lanes)} finished={self.finished}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Free-x (trackless) support: continuous hit_x ↔ 64 position bins + offset
+# ─────────────────────────────────────────────────────────────────────────────
+
+FREE_BINS         = 64
+FREE_LO, FREE_HI  = 0.05, 0.95          # playfield span in screen-normalised x
+_FREE_W           = (FREE_HI - FREE_LO) / FREE_BINS
+
+
+def hit_to_bin(hit_x: float) -> tuple[int, float]:
+    """screen x → (bin, sub-bin offset ∈ [0,1))."""
+    u = (min(max(hit_x, FREE_LO), FREE_HI - 1e-9) - FREE_LO) / _FREE_W
+    b = int(u)
+    return b, u - b
+
+
+def bin_to_hit(b: int, offset: float = 0.5) -> float:
+    return FREE_LO + (b + offset) * _FREE_W
+
+
+def encode_gameplay(tk: ChartTokenizer, gnotes) -> tuple[list[int], list[float], list[bool]]:
+    """Mined gameplay notes (GameplayNote-like: tick/type/dur/hit_x) → tokens
+    for a 64-lane tokenizer, plus the per-position sub-bin offset targets
+    (offset_mask marks NOTE positions).  Same dedupe rule as encode_notes:
+    first note per (tick, bin) wins."""
+    assert tk.n_lanes == FREE_BINS, "encode_gameplay needs ChartTokenizer(n_lanes=64)"
+    offsets: dict[tuple[int, int], float] = {}
+    notes: list[TokenNote] = []
+    for g in gnotes:
+        b, off = hit_to_bin(g.hit_x)
+        key = (int(g.tick), b)
+        if key in offsets:
+            continue
+        offsets[key] = off
+        type_ = g.type if not (g.type == 3 and g.dur < 1) else 1
+        notes.append(TokenNote(int(g.tick), b, type_, int(g.dur) if type_ == 3 else 0))
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        tokens = tk.encode_notes(notes)
+    ticks = tk.ticks_per_position(tokens)
+    offs, mask = [], []
+    for tok, tick in zip(tokens, ticks):
+        if tk.kind(tok) == "NOTE":
+            b = tk.value(tok) // 4
+            offs.append(offsets.get((tick, b), 0.5)); mask.append(True)
+        else:
+            offs.append(0.0); mask.append(False)
+    return tokens, offs, mask
+
+
+def free_notes_to_phigros(tk: ChartTokenizer, notes: list[TokenNote],
+                          offsets: dict[tuple[int, int], float], bpm: float) -> list[dict]:
+    """Decoded 64-lane TokenNotes (+ per-(tick,bin) offsets) → Phigros notes
+    on a single static line at x=0.5 (positionX = (hit_x - 0.5) / 0.05625)."""
+    from src.data.gameplay_miner import X_UNIT_W
+    out = []
+    for n in sorted(notes, key=lambda x: (x.tick, x.lane)):
+        hx = bin_to_hit(n.lane, offsets.get((n.tick, n.lane), 0.5))
+        out.append({
+            "type": n.type, "time": n.tick,
+            "positionX": (hx - 0.5) / X_UNIT_W,
+            "holdTime": float(n.dur), "speed": 1.0,
+            "floorPosition": n.tick * 60.0 / (32.0 * bpm),
+        })
+    return out

@@ -36,7 +36,10 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 
 from src.data.audio2mel import chart_frames_to_mel_frames
-from src.data.chart_tokenizer import EOS, PAD, ChartTokenizer, TokenNote
+from src.data.chart_tokenizer import (
+    EOS, FREE_BINS, PAD, ChartTokenizer, TokenNote, encode_gameplay,
+)
+from src.data.gameplay_miner import GameplayNote, load_jsonl
 from src.data.dataset import PhigrosDataset
 from src.models.chart_decoder import DEFAULT_DECODER_CONFIG, ChartDecoder
 from src.models.transcriber import TranscriberNet
@@ -52,26 +55,34 @@ class TokenChartDataset(Dataset):
 
     def __init__(self, list_path: str, cache_dir: str | None, *, frame_ms: float,
                  max_frame: int, hop_length: int, sr: int, n_mels: int,
-                 mirror_prob: float = 0.0):
+                 mirror_prob: float = 0.0, gameplay_dir: str | None = None):
+        """gameplay_dir: free-x mode — notes come from data/gameplay/<song>.jsonl
+        (continuous hit_x → 64 bins + sub-bin offsets) instead of the 4k JSON."""
         self.base = PhigrosDataset(
             data_list_path=list_path,
             convertor_params={"frame_ms": frame_ms, "max_frame": max_frame},
             cache_dir=cache_dir, augment=False,
             hop_length=hop_length, n_mels=n_mels, sr=sr,
         )
-        self.tk = ChartTokenizer()
+        self.freeform = gameplay_dir is not None
+        self.gameplay_dir = Path(gameplay_dir) if gameplay_dir else None
+        self.tk = ChartTokenizer(n_lanes=FREE_BINS if self.freeform else 4)
         self.frame_ms, self.max_frame, self.mirror_prob = frame_ms, max_frame, mirror_prob
-        self._cache: dict[int, tuple[list[TokenNote], float]] = {}
+        self._cache: dict[int, tuple[list, float]] = {}
 
     def __len__(self) -> int:
         return len(self.base)
 
-    def _notes(self, i: int) -> tuple[list[TokenNote], float]:
+    def _notes(self, i: int) -> tuple[list, float]:
         if i not in self._cache:
             json_path = self.base._entries[i][0]
             d = json.load(open(json_path, encoding="utf-8"))
             bpm = float(d["judgeLineList"][0]["bpm"])
-            notes = self.tk.decode_tokens(self.tk.encode_chart(json_path), strict=False)
+            if self.freeform:
+                song = Path(json_path).parent.name
+                notes = load_jsonl(self.gameplay_dir / f"{song}.jsonl")   # GameplayNote list
+            else:
+                notes = self.tk.decode_tokens(self.tk.encode_chart(json_path), strict=False)
             self._cache[i] = (notes, bpm)
         return self._cache[i]
 
@@ -79,14 +90,23 @@ class TokenChartDataset(Dataset):
         json_path, audio_path, _ = self.base._entries[i]
         mel = self.base._load_mel(audio_path)                         # (n_mels, T)
         notes, bpm = self._notes(i)
-        if self.mirror_prob > 0 and random.random() < self.mirror_prob:
-            notes = [TokenNote(n.tick, 3 - n.lane, n.type, n.dur) for n in notes]
-        # drop notes beyond the audio memory horizon (songs > max_frame frames)
+        mirror = self.mirror_prob > 0 and random.random() < self.mirror_prob
         frames_per_tick = 60.0 / (32.0 * bpm) * 1000.0 / self.frame_ms
-        notes = [n for n in notes if n.tick * frames_per_tick < self.max_frame]
-        tokens = self.tk.encode_notes(notes)
+        horizon = lambda tick: tick * frames_per_tick < self.max_frame   # noqa: E731
+        if self.freeform:
+            if mirror:
+                notes = [GameplayNote(**{**n.__dict__, "hit_x": 1.0 - n.hit_x}) for n in notes]
+            notes = [n for n in notes if horizon(n.tick)]
+            tokens, offs, omask = encode_gameplay(self.tk, notes)
+        else:
+            if mirror:
+                notes = [TokenNote(n.tick, 3 - n.lane, n.type, n.dur) for n in notes]
+            notes = [n for n in notes if horizon(n.tick)]
+            tokens = self.tk.encode_notes(notes)
+            offs, omask = [0.0] * len(tokens), [False] * len(tokens)
         frames = [t * frames_per_tick for t in self.tk.ticks_per_position(tokens)]
         return {"mel": mel, "tokens": torch.tensor(tokens), "frames": torch.tensor(frames),
+                "offsets": torch.tensor(offs), "offset_mask": torch.tensor(omask),
                 "bpm": bpm, "mel_frames": mel.shape[-1]}
 
 
@@ -94,16 +114,18 @@ def _collate(batch: list[dict], max_mel: int, mel_per_frame: int) -> dict:
     L = max(len(b["tokens"]) for b in batch)
     tokens = torch.full((len(batch), L), PAD, dtype=torch.long)
     frames = torch.zeros(len(batch), L)
+    offsets = torch.zeros(len(batch), L); omask = torch.zeros(len(batch), L, dtype=torch.bool)
     mels, valid = [], []
     for i, b in enumerate(batch):
         n = len(b["tokens"])
         tokens[i, :n] = b["tokens"]; frames[i, :n] = b["frames"]
+        offsets[i, :n] = b["offsets"]; omask[i, :n] = b["offset_mask"]
         mels.append(pad_or_trim(b["mel"], max_mel))
         v = torch.zeros(max_mel // mel_per_frame, dtype=torch.bool)
         v[: min(b["mel_frames"] // mel_per_frame, len(v))] = True
         valid.append(v)
     return {"mel": torch.stack(mels), "tokens": tokens, "frames": frames,
-            "mem_valid": torch.stack(valid)}
+            "offsets": offsets, "offset_mask": omask, "mem_valid": torch.stack(valid)}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -115,9 +137,12 @@ class ARChartModel(nn.Module):
         super().__init__()
         self.encoder, self.decoder = encoder, decoder
 
-    def forward(self, mel, tokens, frames, mem_valid):
+    def forward(self, mel, tokens, frames, mem_valid, return_hidden=False):
         memory = self.decoder.prepare_memory(self.encoder.features(mel))
-        return self.decoder(tokens, frames, memory, mem_valid)
+        return self.decoder(tokens, frames, memory, mem_valid, return_hidden=return_hidden)
+
+
+OFFSET_LOSS_WEIGHT = 1.0
 
 
 def _step_loss(model, batch, device) -> tuple[torch.Tensor, torch.Tensor, int]:
@@ -125,10 +150,19 @@ def _step_loss(model, batch, device) -> tuple[torch.Tensor, torch.Tensor, int]:
     tokens = batch["tokens"].to(device)
     frames = batch["frames"].to(device)
     valid  = batch["mem_valid"].to(device)
-    logits = model(mel, tokens[:, :-1], frames[:, :-1], valid)     # predict next
+    has_offset = model.decoder.offset_head is not None
+    out = model(mel, tokens[:, :-1], frames[:, :-1], valid, return_hidden=has_offset)
+    logits, hidden = (out if has_offset else (out, None))
     target = tokens[:, 1:]
     loss = F.cross_entropy(logits.reshape(-1, logits.shape[-1]), target.reshape(-1),
                            ignore_index=PAD)
+    if has_offset:
+        # offset of the NOTE token at input position t is predicted from h_t
+        omask = batch["offset_mask"][:, :-1].to(device)
+        if omask.any():
+            pred = model.decoder.predict_offset(hidden)
+            tgt  = batch["offsets"][:, :-1].to(device)
+            loss = loss + OFFSET_LOSS_WEIGHT * (((pred - tgt) ** 2) * omask).sum() / omask.sum()
     with torch.no_grad():
         m = target != PAD
         correct = ((logits.argmax(-1) == target) & m).sum()
@@ -164,6 +198,9 @@ def _build_parser():
     g.add_argument("--sr",        type=int, default=22050)
     g.add_argument("--num-workers", type=int, default=4)
     g.add_argument("--mirror-prob", type=float, default=0.5)
+    g.add_argument("--gameplay-dir", default=None,
+                   help="FREE-X mode: data/gameplay (mined hit_x); enables 64-bin fused "
+                        "NOTE tokens, factorized embeddings and the offset head")
     g = p.add_argument_group("model")
     g.add_argument("--encoder-ckpt", required=True, help="transcriber_best.pt for warm start")
     g.add_argument("--freeze-encoder", action="store_true")
@@ -194,13 +231,15 @@ def main() -> None:
     args = _build_parser().parse_args()
     device = torch.device(args.device or ("cuda" if torch.cuda.is_available() else "cpu"))
     torch.manual_seed(args.seed); random.seed(args.seed)
-    ckpt_dir = Path(args.ckpt_dir) / "decoder"; ckpt_dir.mkdir(parents=True, exist_ok=True)
+    ckpt_dir = Path(args.ckpt_dir) / ("decoder_freex" if args.gameplay_dir else "decoder")
+    ckpt_dir.mkdir(parents=True, exist_ok=True)
     print(f"[dec] device={device} seed={args.seed}")
 
     mel_per_frame = round(args.frame_ms / (args.hop_length / args.sr * 1000))
     max_mel = chart_frames_to_mel_frames(args.max_frame, args.frame_ms, args.hop_length, args.sr)
     ds_kw = dict(frame_ms=args.frame_ms, max_frame=args.max_frame, hop_length=args.hop_length,
                  sr=args.sr, n_mels=args.n_mels)
+    ds_kw["gameplay_dir"] = args.gameplay_dir
     train_set = TokenChartDataset(args.data_list, args.cache_dir, mirror_prob=args.mirror_prob, **ds_kw)
     collate = partial(_collate, max_mel=max_mel, mel_per_frame=mel_per_frame)
     loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
@@ -222,6 +261,11 @@ def main() -> None:
     dec_config = dict(DEFAULT_DECODER_CONFIG)
     dec_config.update(depth=args.depth, hidden_dim=args.hidden_dim, dropout=args.dec_dropout,
                       mem_dim=enc_ckpt["config"]["hidden_dim"])
+    if args.gameplay_dir:
+        dec_config.update(vocab_size=train_set.tk.vocab_size, n_lanes=FREE_BINS,
+                          factorized=True, offset_head=True)
+        print(f"[dec] FREE-X mode: vocab {dec_config['vocab_size']}, 64 position bins, "
+              f"factorized NOTE embeddings + offset head")
     decoder = ChartDecoder(**dec_config)
     model = ARChartModel(encoder, decoder).to(device)
     if args.freeze_encoder:

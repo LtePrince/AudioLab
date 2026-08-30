@@ -23,7 +23,29 @@ if str(_ROOT) not in sys.path:
 
 import numpy as np
 
-from src.data.gameplay_miner import mine_chart, save_jsonl
+from src.data.chart2array import save_phigros_notes
+from src.data.gameplay_miner import X_UNIT_W, mine_chart, save_jsonl
+
+
+def gameplay_to_chart_json(notes, bpm: float, out_path: Path, offset: float = 0.0) -> None:
+    """Write the mined gameplay layer as a SINGLE static-line official chart:
+    every note keeps its screen hit_x (line at x=0.5 → positionX = (hit_x-0.5)/X_UNIT_W).
+    This is the free-x reference target and the free-x eval reference."""
+    seen, out = set(), []
+    for g in sorted(notes, key=lambda g: (g.tick, g.hit_x)):
+        key = (g.tick, round(g.hit_x, 3))
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append({
+            "type": g.type if not (g.type == 3 and g.dur < 1) else 1,
+            "time": g.tick,
+            "positionX": (min(max(g.hit_x, 0.0), 1.0) - 0.5) / X_UNIT_W,
+            "holdTime": float(g.dur if g.type == 3 else 0),
+            "speed": 1.0,
+            "floorPosition": g.tick * 60.0 / (32.0 * bpm),
+        })
+    save_phigros_notes(out, bpm, str(out_path), offset=offset)
 
 
 def _parse_info(info_path: Path) -> dict[str, str]:
@@ -39,6 +61,8 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Mine gameplay layer from original charts.")
     p.add_argument("--data-dir", default="data/chart")
     p.add_argument("--out-dir",  default="data/gameplay")
+    p.add_argument("--chart-dir", default="data/gameplay_charts",
+                   help="also write single-line reference charts (free-x eval refs)")
     args = p.parse_args()
 
     dirs = sorted(d for d in Path(args.data_dir).iterdir() if d.is_dir())
@@ -59,6 +83,12 @@ def main() -> None:
             n_fail += 1; print(f"[FAIL] {d.name}: {type(exc).__name__}: {exc}")
             continue
         save_jsonl(notes, Path(args.out_dir) / f"{d.name}.jsonl")
+        if args.chart_dir:
+            import json as _json
+            src_d = _json.load(open(src, encoding="utf-8"))
+            gameplay_to_chart_json(notes, float(src_d["judgeLineList"][0]["bpm"]),
+                                   Path(args.chart_dir) / f"{d.name}.json",
+                                   offset=float(src_d.get("offset", 0.0)))
         all_notes.extend(notes)
         off = np.mean([not (0 <= g.hit_x <= 1 and 0 <= g.hit_y <= 1) for g in notes])
         per_song_offscreen.append((off, d.name))
