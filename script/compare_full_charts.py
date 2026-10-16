@@ -157,8 +157,8 @@ def model_markdown(report, model):
     for comparison, metrics in data['paired'].items():
         for metric in ['f1_25', 'f1_93', 'position_f1_93']:
             r = metrics[metric]
-            lines.append(f'| {comparison} | {metric} | {r["mean_delta"]:+.4f} | '
-                f'[{r["ci95"][0]:+.4f}, {r["ci95"][1]:+.4f}] | {r["wins"]}/{r["ties"]}/{r["losses"]} |')
+            lines.append(f'| {comparison} | {metric} | {r["mean_delta"]:+.5f} | '
+                f'[{r["ci95"][0]:+.5f}, {r["ci95"][1]:+.5f}] | {r["wins"]}/{r["ties"]}/{r["losses"]} |')
     lines += ['', '## 相同后处理的修复结果', '',
         '起点及音符数逐谱核对保持不变，因此时间 F1 不受后处理影响。冲突按当前静态线',
         '规则计算（屏宽距离 <0.03）；不能据此断言已通过双手可达性或人工试玩。', '',
@@ -175,6 +175,13 @@ def model_markdown(report, model):
                                       'invalid_positions', 'invalid_durations']}
         if any(errors.values()):
             lines.append(f'\n{labels[variant]} 修复后仍有检查异常：`{json.dumps(errors)}`。\n')
+    lines += ['', '## 同刻音符与局部密度', '',
+        '以下数值是观测量，不是统一的人体工学阈值；同刻多音符、不同键型和长按占用',
+        '还需要结合实际操作检查。静态位置去碰撞不会减少这些音符。', '',
+        '| 骨架 | 最大同刻音符数 | 任意 1 秒窗口最大音符数 |', '|---|---:|---:|']
+    for variant in VARIANTS:
+        summary = data['summary'][variant]['raw']
+        lines.append(f'| {labels[variant]} | {summary["max_chord_size"]} | {summary["max_peak_notes_per_1s"]} |')
     lines += ['', '## 逐曲时间 F1@25ms', '',
         '| 曲目 | 原始 | NMS35 | 全局 v2 | 全局−NMS35 | 全局密度/参考 |',
         '|---|---:|---:|---:|---:|---:|']
