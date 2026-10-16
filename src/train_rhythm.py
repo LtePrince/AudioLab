@@ -1,4 +1,4 @@
-"""Train a small global onset/offset head on a frozen audio encoder.
+"""Train a global onset/offset head, optionally finetuning the audio encoder.
 
 Targets are unique audio-aligned gameplay onsets at mel-frame resolution;
 lanes, positions and note types are deliberately absent from this objective.
@@ -79,6 +79,19 @@ def rhythm_loss(logits, target, valid):
     return loss, (bce_sum.detach(), offset_sum.detach(), n.detach(), positives.detach())
 
 
+def trainable_backbone(model, encoder_lr):
+    """Keep the unused lane head frozen; return optional acoustic parameters."""
+    model.requires_grad_(False)
+    model.rhythm_head.requires_grad_(True)
+    backbone = []
+    if encoder_lr > 0:
+        for name, parameter in model.named_parameters():
+            if not name.startswith(('head.', 'rhythm_head.')):
+                parameter.requires_grad_(True)
+                backbone.append(parameter)
+    return backbone
+
+
 @torch.no_grad()
 def validate(model, loader, device, budget):
     model.eval()
@@ -101,13 +114,15 @@ def main():
     p.add_argument('--epochs', type=int, default=8)
     p.add_argument('--batch-size', type=int, default=2)
     p.add_argument('--lr', type=float, default=0.001)
+    p.add_argument('--encoder-lr', type=float, default=0.0,
+                   help='0 freezes encoder; positive enables staged acoustic finetuning')
     p.add_argument('--seed', type=int, default=42)
     p.add_argument('--device', default='cuda:0')
     p.add_argument('--resume', action='store_true')
     add_resource_args(p)
     args = p.parse_args()
-    if args.epochs < 1 or args.batch_size < 1:
-        p.error('epochs and batch size must be positive')
+    if args.epochs < 1 or args.batch_size < 1 or args.lr <= 0 or args.encoder_lr < 0:
+        p.error('epochs, batch size and head lr must be positive; encoder lr nonnegative')
     random.seed(args.seed); torch.manual_seed(args.seed)
     run = Path(args.run_dir); run.mkdir(parents=True, exist_ok=True)
     if (run / 'rhythm_best.pt').exists() and not args.resume:
@@ -123,39 +138,46 @@ def main():
     if unexpected or any(not key.startswith('rhythm_head.') for key in missing):
         raise ValueError(f'incompatible encoder: missing={missing}, unexpected={unexpected}')
     del ck, state
-    model.to(device).requires_grad_(False).eval()
-    model.rhythm_head.requires_grad_(True)
+    model.to(device).eval()
+    backbone = trainable_backbone(model, args.encoder_lr)
     train = RhythmDataset(args.data_list)
     val = RhythmDataset(args.val_list)
     loader = DataLoader(train, batch_size=args.batch_size, shuffle=True, num_workers=0)
     val_loader = DataLoader(val, batch_size=args.batch_size, num_workers=0)
-    optimizer = torch.optim.AdamW(model.rhythm_head.parameters(), lr=args.lr, weight_decay=.01)
+    groups = [dict(params=list(model.rhythm_head.parameters()), lr=args.lr)]
+    if backbone:
+        groups.append(dict(params=backbone, lr=args.encoder_lr))
+    optimizer = torch.optim.AdamW(groups, weight_decay=.01)
+    trainable = [p for group in groups for p in group['params']]
     schedule = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer,
-                    T_max=args.epochs * len(loader), eta_min=args.lr / 100)
+                    T_max=args.epochs * len(loader), eta_min=min(g['lr'] for g in groups) / 100)
     start, best = 0, float('inf')
     if args.resume:
         ck = torch.load(run / 'rhythm_last.pt', map_location='cpu', weights_only=True)
-        for key in ['epochs', 'lr', 'batch_size', 'data_list', 'val_list', 'encoder_ckpt', 'seed']:
-            if ck['run_config'][key] != vars(args)[key]:
+        for key in ['epochs', 'lr', 'encoder_lr', 'batch_size', 'data_list', 'val_list', 'encoder_ckpt', 'seed']:
+            if ck['run_config'].get(key, 0.0) != vars(args)[key]:
                 raise ValueError(f'resume must preserve {key}')
         model.load_state_dict(ck['model'])
         optimizer.load_state_dict(ck['optimizer']); schedule.load_state_dict(ck['schedule'])
         start, best = ck['epoch'], ck['best_val']
         if 'rng_state' in ck:
             torch.set_rng_state(ck['rng_state'])
+        if device.type == 'cuda' and 'cuda_rng_state' in ck:
+            torch.cuda.set_rng_state(ck['cuda_rng_state'], device)
         del ck
     logger = MetricLogger(run / 'metrics.jsonl', stage='rhythm')
-    print(f'[rhythm] training {sum(p.numel() for p in model.parameters() if p.requires_grad):,} parameters; encoder frozen', flush=True)
+    print(f'[rhythm] training {sum(p.numel() for p in model.parameters() if p.requires_grad):,} parameters; encoder_lr={args.encoder_lr}', flush=True)
     for epoch in range(start, args.epochs):
-        model.eval(); model.rhythm_head.train()
+        model.train() if backbone else model.eval()
+        model.rhythm_head.train()
         for mel, target, valid, _ in loader:
             budget.check()
-            with torch.no_grad():
+            with torch.set_grad_enabled(bool(backbone)):
                 features = model.features(mel.to(device))
             loss, _ = rhythm_loss(model.rhythm_from_features(features), target.to(device), valid.to(device))
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.rhythm_head.parameters(), 1)
+            torch.nn.utils.clip_grad_norm_(trainable, 1)
             optimizer.step(); schedule.step()
         scores = validate(model, val_loader, device, budget)
         payload = dict(model=model.state_dict(), config=config, timing_schema=TIMING_SCHEMA,
@@ -164,7 +186,9 @@ def main():
             best = scores['val_loss']
             budget.save({**payload, **scores}, run / 'rhythm_best.pt')
         budget.save({**payload, 'optimizer': optimizer.state_dict(), 'schedule': schedule.state_dict(),
-                     'best_val': best, 'rng_state': torch.get_rng_state()}, run / 'rhythm_last.pt')
+                     'best_val': best, 'rng_state': torch.get_rng_state(),
+                     **({'cuda_rng_state': torch.cuda.get_rng_state(device)} if device.type == 'cuda' else {})},
+                    run / 'rhythm_last.pt')
         logger.log(epoch=epoch + 1, **scores, **budget.log_state())
         print(f'[rhythm] epoch {epoch+1}/{args.epochs} {scores}, best={best:.6f}', flush=True)
     budget.save(payload, run / 'rhythm_final.pt') if start < args.epochs else None
