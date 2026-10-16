@@ -82,6 +82,12 @@ Hold 期间邻近音符 627→0；位置 F1 @92.9ms/0.05 从 0.18958 到 0.18965
 相同 checkpoint、冻结的 `--calibration` 报告和独立列表执行 `--phase evaluate`。
 本实验的接受条件是音频起点和完整生成质量，不是 Hold 占比。
 
+第二阶段可从已有节奏头继续微调声学骨干，使用独立 run 目录，例如
+`--encoder-ckpt checkpoints/rhythm_global_v1/rhythm_best.pt --lr 0.0001
+--encoder-lr 0.00001 --run-dir checkpoints/rhythm_global_v2`。四轨分类头保持冻结，
+该 checkpoint 应通过全局节奏骨架接口使用；不将它视为重新校准过的四轨转录器。
+默认 `--encoder-lr 0` 仍只训练节奏头，旧 checkpoint 和训练入口行为保留。
+
 ---
 
 ## 4K 扩散路线的原始设计

@@ -3,7 +3,7 @@ import torch
 
 from src.models.transcriber import TranscriberNet
 from src.models.rhythm_skeleton import predict_onsets
-from src.train_rhythm import onset_targets, rhythm_loss
+from src.train_rhythm import onset_targets, rhythm_loss, trainable_backbone
 
 
 def test_global_targets_deduplicate_chords_and_average_subframe_collisions():
@@ -41,3 +41,12 @@ def test_frozen_encoder_and_fine_onset_head_backward_compatibility():
     times, scores = predict_onsets(model, mel, 40)
     assert len(times) == len(scores) == 20
     assert all(i*20 <= t <= (i+1)*20 for i, t in enumerate(times))
+
+
+def test_staged_finetuning_only_enables_backbone_and_rhythm_head():
+    model = TranscriberNet(n_mels=8, hidden_dim=32, conv_blocks=1, depth=1,
+                           num_heads=2, rhythm_head=True)
+    assert not trainable_backbone(model, 0)
+    assert all(p.requires_grad == n.startswith('rhythm_head.') for n, p in model.named_parameters())
+    assert trainable_backbone(model, 1e-5)
+    assert all(p.requires_grad == (not n.startswith('head.')) for n, p in model.named_parameters())
