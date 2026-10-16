@@ -60,6 +60,28 @@ Hold 期间邻近音符 627→0；位置 F1 @92.9ms/0.05 从 0.18958 到 0.18965
 它没有手工提高 Hold 权重，也不保证连续生成时恢复训练集的键型比例。
 默认仍为 `flat`。诊断脚本同样接受该开关，需先比较真实生成质量再考虑推广。
 
+## 音频节奏实验
+
+`--onset-threshold 0.7 --onset-min-interval-ms 35` 可启用按置信度去重的转录骨架。
+参数在 32 首训练曲校准，独立 30 首验证曲的唯一起点 F1 @25ms 为 0.6920
+（原始阈值模式 0.6626）。这项指标把同刻和弦计为一个事件，与整谱音符 F1 不同。
+
+`src.train_rhythm` 可在已有音频编码器上训练独立的全局节奏头：以 mel 帧
+（约 23.2ms）为单位预测 onset 和时间偏移，训练标签不包含位置或键型配额。
+默认冻结编码器，仅训练 33,412 个参数，保留原转录器的 32 通道输出接口：
+
+```bash
+.venv/bin/python -m script.train_models --worker src.train_rhythm -- \
+  --epochs 8 --run-dir checkpoints/rhythm_global_v1
+```
+
+输出 `rhythm_best.pt`、`rhythm_last.pt`、`rhythm_final.pt`（含完整编码器配置与
+权重），`--resume` 从 last 继续并检查实验配置。新 checkpoint 可作为生成入口的
+`--skeleton-ckpt`，但其概率需要重新校准；不能沿用四轨联合概率的 0.7 阈值。
+先用 `script.calibrate_skeleton --phase fit --ckpt ...` 在训练列表校准，再以
+相同 checkpoint、冻结的 `--calibration` 报告和独立列表执行 `--phase evaluate`。
+本实验的接受条件是音频起点和完整生成质量，不是 Hold 占比。
+
 ---
 
 ## 4K 扩散路线的原始设计

@@ -18,7 +18,7 @@ from script.eval_onset_f1 import onsets
 from script.train_models import write_json
 from src.data.dataset import PhigrosDataset
 from src.data.timing import check_checkpoint_timing
-from src.models.rhythm_skeleton import onset_candidates, candidates_to_ticks
+from src.models.rhythm_skeleton import predict_onsets, candidates_to_ticks
 from src.models.transcriber import TranscriberNet
 from src.resource_budget import ResourceBudget, add_resource_args
 from src.train_utils import pad_or_trim
@@ -71,6 +71,8 @@ def main():
         calibration = json.loads(Path(args.calibration).read_text())
         if not calibration.get('complete') or calibration['config']['phase'] != 'fit':
             p.error('calibration must be a completed fit report')
+        if Path(calibration['config']['ckpt']).resolve() != Path(args.ckpt).resolve():
+            p.error('evaluation must use the same checkpoint as calibration')
         if Path(calibration['config']['data_list']).resolve() == Path(args.data_list).resolve():
             p.error('evaluation must use a different data list')
         choices = [baseline, calibration['selected']]
@@ -106,7 +108,7 @@ def main():
         mel = ds._load_mel(audio)
         frames = math.ceil(mel.shape[-1] / model.mel_per_frame)
         mel = pad_or_trim(mel, frames * model.mel_per_frame)[None].to(device)
-        times, confidence = onset_candidates(model(mel), frame_ms)
+        times, confidence = predict_onsets(model, mel, frame_ms)
         ref = sorted({round(x[0], 4) for x in onsets(source) if 0 <= x[0] < duration_ms})
         for choice in report['choices']:
             ticks = candidates_to_ticks(times, confidence, bpm, offset, **choice['parameters'])

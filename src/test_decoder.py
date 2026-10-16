@@ -55,8 +55,8 @@ def skeleton_from_transcriber(mel: torch.Tensor, transcriber, bpm: float, frame_
     """Rhythm skeleton straight from transcriber logits (no lane collapse):
     a frame is an onset if ANY lane fires, p_any = 1 - Π(1 - p_lane) ≥ threshold;
     sub-frame start offsets refine the tick.  Returns sorted unique ticks."""
-    from src.models.rhythm_skeleton import onset_candidates, candidates_to_ticks
-    times, confidence = onset_candidates(transcriber(mel), frame_ms)
+    from src.models.rhythm_skeleton import predict_onsets, candidates_to_ticks
+    times, confidence = predict_onsets(transcriber, mel, frame_ms)
     return candidates_to_ticks(times, confidence, bpm, offset, threshold, min_interval_ms)
 
 

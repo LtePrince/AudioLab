@@ -145,6 +145,7 @@ class TranscriberNet(nn.Module):
         dropout:       float = 0.1,
         rope_theta:    float = 10000.0,
         mel_per_frame: int   = 2,
+        rhythm_head:   bool  = False,
     ):
         super().__init__()
         self.mel_per_frame = mel_per_frame
@@ -173,6 +174,11 @@ class TranscriberNet(nn.Module):
         ])
         self.norm_out = nn.LayerNorm(hidden_dim, eps=1e-6)
         self.head     = nn.Linear(hidden_dim, OUT_CHANNELS)
+        # Optional lane-independent head: onset + offset at each MEL frame.
+        # Existing checkpoints keep the original 32-channel forward unchanged.
+        self.rhythm_head = (nn.Sequential(nn.Linear(hidden_dim, hidden_dim // 2),
+                            nn.GELU(), nn.Linear(hidden_dim // 2, 2 * mel_per_frame))
+                            if rhythm_head else None)
 
     @property
     def num_params(self) -> int:
@@ -200,6 +206,17 @@ class TranscriberNet(nn.Module):
         →     (B, OUT_CHANNELS, T_mel // mel_per_frame)
         """
         return self.head(self.features(mel)).transpose(1, 2)
+
+    def rhythm_from_features(self, features: Tensor) -> Tensor:
+        """(B,T,D) -> (B,2,T*mel_per_frame), onset/offset per mel frame."""
+        if self.rhythm_head is None:
+            raise ValueError('checkpoint has no rhythm head')
+        b, t, _ = features.shape
+        return self.rhythm_head(features).reshape(b, t, self.mel_per_frame, 2).permute(
+            0, 3, 1, 2).reshape(b, 2, t * self.mel_per_frame)
+
+    def rhythm_logits(self, mel: Tensor) -> Tensor:
+        return self.rhythm_from_features(self.features(mel))
 
 
 # ─────────────────────────────────────────────────────────────────────────────

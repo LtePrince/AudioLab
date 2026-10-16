@@ -10,7 +10,11 @@ from src.models.transcriber import H_ONSET, H_SOFF
 
 
 def onset_candidates(pred: torch.Tensor, frame_ms: float) -> tuple[list[float], list[float]]:
-    """Transcriber (1,32,T) -> audio milliseconds and any-lane confidence."""
+    """(1,32,T) lane heads or (1,2,T) global head -> audio time/confidence."""
+    if pred.shape[1] == 2:
+        subframe = pred[0, 1].sigmoid().double()
+        times = (torch.arange(len(subframe), device=pred.device) + subframe) * frame_ms
+        return times.tolist(), pred[0, 0].sigmoid().tolist()
     lane_p = pred[0, H_ONSET:H_ONSET + 4].sigmoid()
     confidence = 1 - (1 - lane_p).prod(0)
     offsets = pred[0, H_SOFF:H_SOFF + 4].sigmoid()
@@ -18,6 +22,12 @@ def onset_candidates(pred: torch.Tensor, frame_ms: float) -> tuple[list[float], 
     subframe = offsets.gather(0, peak_lane)[0].double()
     times = (torch.arange(len(subframe), device=pred.device) + subframe) * frame_ms
     return times.tolist(), confidence.tolist()
+
+
+def predict_onsets(model, mel, frame_ms):
+    if getattr(model, 'rhythm_head', None) is not None:
+        return onset_candidates(model.rhythm_logits(mel), frame_ms / model.mel_per_frame)
+    return onset_candidates(model(mel), frame_ms)
 
 
 def select_onsets(times_ms, confidence, threshold=0.7, min_interval_ms=0.0):

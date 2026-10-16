@@ -106,6 +106,7 @@ def main():
     p.add_argument('--models', nargs='+', choices=['decoder', 'decoder_freex'],
                    default=['decoder', 'decoder_freex'])
     p.add_argument('--checkpoint-root', default='checkpoints/timing_v1')
+    p.add_argument('--skeleton-ckpt', help='optional separate transcriber/global rhythm checkpoint')
     p.add_argument('--output', default='out/decoder_diagnostics')
     p.add_argument('--top-ps', default='0.95,1.0')
     p.add_argument('--teacher-only', action='store_true')
@@ -127,7 +128,7 @@ def main():
     top_ps = [float(v) for v in args.top_ps.split(',')]
     if any(not 0 < v <= 1 for v in top_ps):
         raise ValueError('top-ps must be in (0, 1]')
-    ck = torch.load(Path(args.checkpoint_root) / 'transcriber/transcriber_best.pt',
+    ck = torch.load(args.skeleton_ckpt or Path(args.checkpoint_root) / 'transcriber/transcriber_best.pt',
                     map_location='cpu', weights_only=True)
     transcriber = TranscriberNet(**ck['config']).to(device).eval()
     transcriber.load_state_dict(ck.get('ema', ck['model']))
