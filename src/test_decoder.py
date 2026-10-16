@@ -32,6 +32,7 @@ from src.data.chart_constraints import constrain_4k_notes, constrain_free_notes
 from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.models.chart_decoder import ChartDecoder, generate_tokens
 from src.models.transcriber import TranscriberNet
+from src.models.rhythm_skeleton import resolve_skeleton_settings
 from src.train_utils import pad_or_trim
 from src.data.timing import tick_seconds
 
@@ -52,9 +53,11 @@ def skeleton_from_chart(path: str, bpm: float | None = None, offset: float | Non
 def skeleton_from_transcriber(mel: torch.Tensor, transcriber, bpm: float, frame_ms: float,
                               threshold: float = 0.5, offset: float = 0.0,
                               min_interval_ms: float = 0.0) -> list[int]:
-    """Rhythm skeleton straight from transcriber logits (no lane collapse):
-    a frame is an onset if ANY lane fires, p_any = 1 - Π(1 - p_lane) ≥ threshold;
-    sub-frame start offsets refine the tick.  Returns sorted unique ticks."""
+    """Audio-aligned ticks from lane onset logits or the optional global head.
+
+    Legacy heads combine lanes with p_any = 1 - Π(1 - p_lane); the global head
+    predicts one probability per mel frame. Each uses sub-frame start offsets.
+    """
     from src.models.rhythm_skeleton import predict_onsets, candidates_to_ticks
     times, confidence = predict_onsets(transcriber, mel, frame_ms)
     return candidates_to_ticks(times, confidence, bpm, offset, threshold, min_interval_ms)
@@ -147,12 +150,19 @@ def main() -> None:
     p.add_argument("--skeleton-dir", default=None,
                    help="hybrid batch mode: <song_dir>.json skeletons (e.g. out/eval_tsc_r2)")
     p.add_argument("--skeleton-ckpt", default=None,
-                   help="hybrid mode: transcriber checkpoint — skeleton from any-lane onset "
-                        "probability (no lane collapse) at --onset-threshold")
-    p.add_argument("--onset-threshold", type=float, default=0.5)
-    p.add_argument("--onset-min-interval-ms", type=float, default=0.0,
+                   help="hybrid mode: transcriber or global rhythm checkpoint")
+    p.add_argument("--skeleton-calibration", help="completed TRAIN fit report for this checkpoint")
+    p.add_argument("--onset-threshold", type=float, default=None,
+                   help="manual onset threshold (default: 0.5 without calibration)")
+    p.add_argument("--onset-min-interval-ms", type=float, default=None,
                    help="optional confidence NMS on sub-frame onsets; 0 keeps all threshold crossings")
     args = p.parse_args()
+    try:
+        args.onset_threshold, args.onset_min_interval_ms = resolve_skeleton_settings(
+            args.skeleton_ckpt, args.skeleton_calibration, args.onset_threshold,
+            args.onset_min_interval_ms, default_threshold=0.5)
+    except ValueError as error:
+        p.error(str(error))
     device = torch.device(args.device or ("cuda" if torch.cuda.is_available() else "cpu"))
     enc, dec = load_models(args.ckpt, device)
     print(f"[dec] loaded {args.ckpt}")
@@ -162,7 +172,8 @@ def main() -> None:
         check_checkpoint_timing(tck)
         transcriber = TranscriberNet(**tck["config"]).to(device).eval()
         transcriber.load_state_dict(tck.get("ema", tck["model"]))
-        print(f"[dec] skeleton from transcriber {args.skeleton_ckpt} @ p_any ≥ {args.onset_threshold}")
+        print(f"[dec] skeleton from {args.skeleton_ckpt} @ onset probability ≥ {args.onset_threshold}, "
+              f"min interval={args.onset_min_interval_ms}ms")
 
     if args.list:
         base = Path(args.list).resolve().parent

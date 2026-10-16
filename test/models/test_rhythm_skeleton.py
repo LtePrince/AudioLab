@@ -1,8 +1,11 @@
+import json
+
 import pytest
 import torch
 
 from script.calibrate_skeleton import event_score
-from src.models.rhythm_skeleton import select_onsets, onset_candidates, candidates_to_ticks
+from src.models.rhythm_skeleton import (select_onsets, onset_candidates, candidates_to_ticks,
+                                       resolve_skeleton_settings)
 from src.models.transcriber import H_ONSET, H_SOFF
 
 
@@ -38,3 +41,37 @@ def test_invalid_suppression_settings():
         select_onsets([1], [.8], .7, -1)
     with pytest.raises(ValueError):
         select_onsets([1], [], .7)
+
+
+def test_generation_uses_frozen_training_calibration(tmp_path):
+    checkpoint = tmp_path / 'rhythm.pt'
+    report = tmp_path / 'fit.json'
+    report.write_text(json.dumps(dict(complete=True, config=dict(phase='fit', ckpt=str(checkpoint)),
+                                     selected=dict(threshold=.25, min_interval_ms=25))))
+    assert resolve_skeleton_settings(checkpoint, report) == (.25, 25)
+    assert resolve_skeleton_settings(None, default_threshold=.5) == (.5, 0)
+    assert resolve_skeleton_settings(None) == (.7, 0)
+    assert resolve_skeleton_settings(checkpoint, threshold=0, min_interval_ms=0) == (0, 0)
+    with pytest.raises(ValueError, match='differs'):
+        resolve_skeleton_settings(tmp_path / 'other.pt', report)
+    with pytest.raises(ValueError, match='requires'):
+        resolve_skeleton_settings(None, report)
+    with pytest.raises(ValueError, match='manual'):
+        resolve_skeleton_settings(checkpoint, report, threshold=.7)
+    with pytest.raises(ValueError, match='manual'):
+        resolve_skeleton_settings(checkpoint, report, min_interval_ms=0)
+
+
+@pytest.mark.parametrize('complete,phase,selected', [
+    (False, 'fit', dict(threshold=.25, min_interval_ms=25)),
+    (True, 'evaluate', dict(threshold=.25, min_interval_ms=25)),
+    (True, 'fit', {}),
+    (True, 'fit', dict(threshold=.25, min_interval_ms=-1)),
+])
+def test_generation_rejects_invalid_calibration(tmp_path, complete, phase, selected):
+    report = tmp_path / 'report.json'
+    checkpoint = tmp_path / 'rhythm.pt'
+    report.write_text(json.dumps(dict(complete=complete, config=dict(phase=phase, ckpt=str(checkpoint)),
+                                     selected=selected)))
+    with pytest.raises(ValueError):
+        resolve_skeleton_settings(checkpoint, report)
