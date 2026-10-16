@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 WORKERS = ['src.train_transcription', 'src.train_decoder', 'src.test_decoder',
            'src.test_transcription', 'script.eval_onset_f1', 'script.diagnose_decoder',
-           'script.audit_audio_conditioning']
+           'script.audit_audio_conditioning', 'script.calibrate_skeleton']
 
 
 def write_json(path: Path, data: dict) -> None:

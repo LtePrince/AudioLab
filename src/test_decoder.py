@@ -50,24 +50,14 @@ def skeleton_from_chart(path: str, bpm: float | None = None, offset: float | Non
 
 @torch.no_grad()
 def skeleton_from_transcriber(mel: torch.Tensor, transcriber, bpm: float, frame_ms: float,
-                              threshold: float = 0.5, offset: float = 0.0) -> list[int]:
+                              threshold: float = 0.5, offset: float = 0.0,
+                              min_interval_ms: float = 0.0) -> list[int]:
     """Rhythm skeleton straight from transcriber logits (no lane collapse):
     a frame is an onset if ANY lane fires, p_any = 1 - Π(1 - p_lane) ≥ threshold;
     sub-frame start offsets refine the tick.  Returns sorted unique ticks."""
-    from src.models.transcriber import H_ONSET, H_SOFF
-    pred = transcriber(mel)                                   # (1, 32, T)
-    p_lane = torch.sigmoid(pred[0, H_ONSET:H_ONSET + 4])      # (4, T)
-    p_any  = 1.0 - torch.prod(1.0 - p_lane, dim=0)            # (T,)
-    off    = torch.sigmoid(pred[0, H_SOFF:H_SOFF + 4])        # (4, T)
-    frames = torch.nonzero(p_any >= threshold).flatten()
-    ticks_per_frame = frame_ms / 1000.0 * bpm * 32.0 / 60.0
-    ticks = set()
-    for f in frames.tolist():
-        lane = int(p_lane[:, f].argmax())
-        chart_frame = f + float(off[lane, f]) - offset * 1000.0 / frame_ms
-        if chart_frame >= 0:
-            ticks.add(int(round(chart_frame * ticks_per_frame)))
-    return sorted(ticks)
+    from src.models.rhythm_skeleton import onset_candidates, candidates_to_ticks
+    times, confidence = onset_candidates(transcriber(mel), frame_ms)
+    return candidates_to_ticks(times, confidence, bpm, offset, threshold, min_interval_ms)
 
 
 def load_models(ckpt_path: str, device: torch.device):
@@ -88,7 +78,7 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
                    skeleton_ticks: list[int] | None = None,
                    transcriber=None, onset_threshold: float = 0.5,
                    raw_output: bool = False, free_min_gap: float = 0.04,
-                   sampling_policy: str = 'flat') -> int:
+                   sampling_policy: str = 'flat', onset_min_interval_ms: float = 0.0) -> int:
     t0 = time.time()
     frame_ms = hop_length / sr / 4 * 8 * 1000
     mpf = enc.mel_per_frame
@@ -103,7 +93,8 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     valid = torch.ones(1, n_frames, dtype=torch.bool, device=device)
     if transcriber is not None and skeleton_ticks is None:
         skeleton_ticks = skeleton_from_transcriber(mel, transcriber, bpm, frame_ms,
-                                                    onset_threshold, offset=offset)
+                                                    onset_threshold, offset=offset,
+                                                    min_interval_ms=onset_min_interval_ms)
     gen = torch.Generator(device=device)
     if seed is not None: gen.manual_seed(seed)
     tk = ChartTokenizer(n_lanes=dec.n_lanes)
@@ -159,6 +150,8 @@ def main() -> None:
                    help="hybrid mode: transcriber checkpoint — skeleton from any-lane onset "
                         "probability (no lane collapse) at --onset-threshold")
     p.add_argument("--onset-threshold", type=float, default=0.5)
+    p.add_argument("--onset-min-interval-ms", type=float, default=0.0,
+                   help="optional confidence NMS on sub-frame onsets; 0 keeps all threshold crossings")
     args = p.parse_args()
     device = torch.device(args.device or ("cuda" if torch.cuda.is_available() else "cpu"))
     enc, dec = load_models(args.ckpt, device)
@@ -193,7 +186,8 @@ def main() -> None:
                            temperature=args.temperature, top_p=args.top_p, seed=args.seed,
                            skeleton_ticks=skel, transcriber=transcriber,
                            onset_threshold=args.onset_threshold, raw_output=args.raw_output,
-                           free_min_gap=args.free_min_gap, sampling_policy=args.sampling_policy)
+                           free_min_gap=args.free_min_gap, sampling_policy=args.sampling_policy,
+                           onset_min_interval_ms=args.onset_min_interval_ms)
         return
     bpm, offset = args.bpm, args.offset
     if args.ref_chart:
@@ -205,7 +199,7 @@ def main() -> None:
                    skeleton_ticks=skeleton_from_chart(args.skeleton_json, bpm, offset) if args.skeleton_json else None,
                    transcriber=transcriber, onset_threshold=args.onset_threshold,
                    raw_output=args.raw_output, free_min_gap=args.free_min_gap,
-                   sampling_policy=args.sampling_policy)
+                   sampling_policy=args.sampling_policy, onset_min_interval_ms=args.onset_min_interval_ms)
 
 
 if __name__ == "__main__":

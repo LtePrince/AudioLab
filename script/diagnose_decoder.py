@@ -110,6 +110,8 @@ def main():
     p.add_argument('--top-ps', default='0.95,1.0')
     p.add_argument('--teacher-only', action='store_true')
     p.add_argument('--sampling-policy', choices=['flat', 'type_preserving'], default='flat')
+    p.add_argument('--onset-threshold', type=float, default=0.7)
+    p.add_argument('--onset-min-interval-ms', type=float, default=0.0)
     p.add_argument('--skeleton-source', choices=['transcriber', 'reference'], default='transcriber',
                    help='reference is an oracle diagnostic, never an audio-only quality score')
     p.add_argument('--snap-ticks', type=int, default=0,
@@ -160,7 +162,8 @@ def main():
                 frame_ms = dataset.frame_ms
                 skeleton = (skeleton_from_chart(str(reference), bpm, offset)
                             if args.skeleton_source == 'reference' else
-                            skeleton_from_transcriber(mel, transcriber, bpm, frame_ms, 0.7, offset))
+                            skeleton_from_transcriber(mel, transcriber, bpm, frame_ms,
+                                args.onset_threshold, offset, args.onset_min_interval_ms))
                 if args.snap_ticks and args.skeleton_source == 'transcriber':
                     skeleton = sorted({round(t / args.snap_ticks) * args.snap_ticks for t in skeleton})
                 record['skeleton_onsets'] = len(skeleton)
