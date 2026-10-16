@@ -104,6 +104,37 @@ free-x 使用 `decoder_freex/decoder_best.pt` 并换一个输出目录。上述�
 组合；详见 [节奏实验结果](docs/freeform_design.md#11-独立全局节奏模型2026-10-17)。
 校准后不要覆盖原 checkpoint；权重、校准原始报告和生成谱保留在本地，不提交 Git。
 
+### 完整验证集对照
+
+三套冻结配置为 timing_v1 原始骨架、原转录器 0.7/35ms 去重骨架，以及全局
+v2 的 0.25/25ms 骨架。固定 seed=42、flat top-p=0.95，两种 AR 权重不变。
+下面两个 GPU 任务依次执行；已完成的 6 曲子集可以复用：
+
+```bash
+.venv/bin/python -m script.train_models --worker script.diagnose_decoder -- \
+  --data-list data/val.txt --samples 30 --top-ps 0.95 \
+  --onset-threshold 0.7 --onset-min-interval-ms 35 \
+  --reuse-report out/decoder_nms35_val6/report.json --output out/decoder_nms35_val30
+
+.venv/bin/python -m script.train_models --worker script.diagnose_decoder -- \
+  --data-list data/val.txt --samples 30 --top-ps 0.95 \
+  --skeleton-ckpt checkpoints/rhythm_global_v2/rhythm_best.pt \
+  --skeleton-calibration out/global_rhythm_v2_refined_train32/report.json \
+  --reuse-report out/decoder_global_v2_refined_val6/report.json \
+  --output out/decoder_global_v2_refined_val30
+
+.venv/bin/python -m script.compare_full_charts
+```
+
+没有子集时省略 `--reuse-report`。中断恢复时保持同一参数和输出目录，将
+`--reuse-report ...` 换为 `--resume`。复用时检查生成设置、权重与文件指纹；旧版
+报告没有历史指纹，只能检查设置和 checkpoint 修改时间，此限制写入新报告。
+
+CPU 对照要求每套配置都有完整 30 曲，保留原始输出，并对三套方案应用相同的
+静态线修复。`out/full_chart_comparison_val30/report.json` 包含逐曲指标、配对
+bootstrap 区间、退化曲目、时间/格式检查与修复量；`playable/` 下保存修复后的
+三套定轨/无轨谱面。指标沿用整谱多音符匹配，不与唯一起点 F1 混用。
+
 ---
 
 ## 4K 扩散路线的原始设计

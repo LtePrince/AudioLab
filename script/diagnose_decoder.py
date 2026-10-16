@@ -7,9 +7,12 @@ Writes only small JSON charts/reports; never modifies checkpoints or datasets.
 from __future__ import annotations
 
 import argparse
+import copy
+import hashlib
 import json
 import math
 import random
+import shutil
 import time
 from pathlib import Path
 
@@ -27,6 +30,62 @@ from src.resource_budget import ResourceBudget, add_resource_args
 from src.test_decoder import load_models, skeleton_from_chart, skeleton_from_transcriber
 from src.train_decoder import TokenChartDataset
 from src.train_utils import pad_or_trim
+
+
+def sha256_file(path):
+    digest = hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def generation_settings(config):
+    """Settings affecting samples; subset size/output location may change."""
+    result = {k: config[k] for k in ['seed', 'top_ps', 'teacher_only', 'sampling_policy',
+              'onset_threshold', 'onset_min_interval_ms', 'skeleton_source', 'snap_ticks']}
+    for key in ['data_list', 'checkpoint_root']:
+        result[key] = str(Path(config[key]).resolve())
+    result['skeleton_ckpt'] = str(Path(config.get('skeleton_ckpt') or
+        Path(config['checkpoint_root']) / 'transcriber/transcriber_best.pt').resolve())
+    return result
+
+
+def reuse_records(report_path, config, checkpoints, fingerprints, *, resume=False):
+    """Reuse completed songs only after checking configuration and provenance."""
+    previous = json.loads(Path(report_path).read_text())
+    if not resume and not previous.get('finished'):
+        raise ValueError('reuse report must be complete; use --resume for an interrupted run')
+    if generation_settings(previous['config']) != generation_settings(config):
+        raise ValueError('reuse/resume generation settings differ')
+    if 'fingerprints' in previous:
+        if previous['fingerprints'] != fingerprints:
+            raise ValueError('reuse/resume checkpoint or data-list fingerprint differs')
+    else:
+        # Older diagnostic reports predate hashing. Refuse weights modified since
+        # that run; record the weaker provenance explicitly in the new report.
+        if any(Path(p).stat().st_mtime > previous['started'] for p in checkpoints):
+            raise ValueError('checkpoint changed after legacy generation; cannot reuse')
+    records = {}
+    source_root = Path(report_path).parent
+    for model, songs in previous['models'].items():
+        for song in songs:
+            if not config['teacher_only'] and set(song['samples']) != set(config['top_ps'].split(',')):
+                continue
+            record = copy.deepcopy(song)
+            for top_p, stats in record['samples'].items():
+                source = source_root / model / f'p{float(top_p)}' / f'{song["song"]}.json'
+                observed = chart_stats(source)
+                if observed != {key: stats[key] for key in observed}:
+                    raise ValueError(f'reused chart statistics changed: {source}')
+                digest = sha256_file(source)
+                if stats.get('sha256', digest) != digest:
+                    raise ValueError(f'reused chart hash changed: {source}')
+                stats['sha256'] = digest
+            records[(model, song['song'])] = record
+    provenance = dict(report=str(report_path), report_sha256=sha256_file(report_path),
+                      verification='sha256' if 'fingerprints' in previous else 'legacy_config_and_checkpoint_mtime')
+    return records, source_root, provenance
 
 
 def truncate(probs, top_p):
@@ -110,6 +169,9 @@ def main():
     p.add_argument('--skeleton-ckpt', help='optional separate transcriber/global rhythm checkpoint')
     p.add_argument('--skeleton-calibration', help='completed TRAIN fit report for this checkpoint')
     p.add_argument('--output', default='out/decoder_diagnostics')
+    recovery = p.add_mutually_exclusive_group()
+    recovery.add_argument('--reuse-report', help='reuse a completed compatible subset report')
+    recovery.add_argument('--resume', action='store_true', help='resume this output directory')
     p.add_argument('--top-ps', default='0.95,1.0')
     p.add_argument('--teacher-only', action='store_true')
     p.add_argument('--sampling-policy', choices=['flat', 'type_preserving'], default='flat')
@@ -136,12 +198,26 @@ def main():
     top_ps = [float(v) for v in args.top_ps.split(',')]
     if any(not 0 < v <= 1 for v in top_ps):
         raise ValueError('top-ps must be in (0, 1]')
+    args.top_ps = ','.join(str(v) for v in top_ps)
+    report_path = output / 'report.json'
+    if report_path.exists() and not args.resume:
+        raise ValueError('output report exists; use --resume or a new output directory')
+    skeleton_ckpt = args.skeleton_ckpt or str(Path(args.checkpoint_root) / 'transcriber/transcriber_best.pt')
+    checkpoints = [skeleton_ckpt] + [str(Path(args.checkpoint_root) / name / 'decoder_best.pt')
+                                    for name in args.models]
+    fingerprints = {str(Path(path).resolve()): sha256_file(path)
+                    for path in [*checkpoints, args.data_list]}
+    reused, reuse_root, provenance = {}, None, None
+    if args.reuse_report or args.resume:
+        reused, reuse_root, provenance = reuse_records(args.reuse_report or report_path,
+                    vars(args), checkpoints, fingerprints, resume=args.resume)
     ck = torch.load(args.skeleton_ckpt or Path(args.checkpoint_root) / 'transcriber/transcriber_best.pt',
                     map_location='cpu', weights_only=True)
     transcriber = TranscriberNet(**ck['config']).to(device).eval()
     transcriber.load_state_dict(ck.get('ema', ck['model']))
     del ck
-    report = {'config': vars(args), 'started': time.time(), 'models': {}}
+    report = {'config': vars(args), 'started': time.time(), 'models': {},
+              'fingerprints': fingerprints, 'reuse': provenance, 'reused_songs': 0}
     for name in args.models:
         free = name == 'decoder_freex'
         enc, dec = load_models(str(Path(args.checkpoint_root) / name / 'decoder_best.pt'), device)
@@ -156,6 +232,20 @@ def main():
             budget.check(force=True)
             source, audio, _ = dataset.base._entries[index]
             song = Path(source).parent.name
+            if (name, song) in reused:
+                record = reused[(name, song)]
+                for top_p in record['samples']:
+                    relative = Path(name) / f'p{float(top_p)}' / f'{song}.json'
+                    target = output / relative
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    if (reuse_root / relative).resolve() != target.resolve():
+                        shutil.copyfile(reuse_root / relative, target)
+                records.append(record)
+                report['reused_songs'] += 1
+                report['resources'] = budget.log_state()
+                write_json(report_path, report)
+                print(f'[reuse] {name} {song}', flush=True)
+                continue
             item = dataset[index]
             reference = Path('data/gameplay_charts', song + '.json') if free else Path(source)
             record = {'song': song, 'reference': chart_stats(reference),
@@ -196,6 +286,7 @@ def main():
                     stats = chart_stats(path)
                     stats.update(time_f1_25=f1(gen, ref, 25, False), time_f1_93=f1(gen, ref, 92.9, False),
                         position_f1_93=f1(gen, ref, 92.9, False, 0.05) if free else f1(gen, ref, 92.9, True))
+                    stats['sha256'] = sha256_file(path)
                     record['samples'][str(top_p)] = stats
                     print(json.dumps({'model': name, 'song': song, 'top_p': top_p, **stats}), flush=True)
             report['resources'] = budget.log_state()
