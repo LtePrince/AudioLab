@@ -22,6 +22,7 @@ from src.data.chart2array import save_phigros_notes
 from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.models.chart_decoder import generate_tokens
 from src.models.transcriber import TranscriberNet
+from src.models.rhythm_skeleton import resolve_skeleton_settings
 from src.resource_budget import ResourceBudget, add_resource_args
 from src.test_decoder import load_models, skeleton_from_chart, skeleton_from_transcriber
 from src.train_decoder import TokenChartDataset
@@ -107,12 +108,13 @@ def main():
                    default=['decoder', 'decoder_freex'])
     p.add_argument('--checkpoint-root', default='checkpoints/timing_v1')
     p.add_argument('--skeleton-ckpt', help='optional separate transcriber/global rhythm checkpoint')
+    p.add_argument('--skeleton-calibration', help='completed TRAIN fit report for this checkpoint')
     p.add_argument('--output', default='out/decoder_diagnostics')
     p.add_argument('--top-ps', default='0.95,1.0')
     p.add_argument('--teacher-only', action='store_true')
     p.add_argument('--sampling-policy', choices=['flat', 'type_preserving'], default='flat')
-    p.add_argument('--onset-threshold', type=float, default=0.7)
-    p.add_argument('--onset-min-interval-ms', type=float, default=0.0)
+    p.add_argument('--onset-threshold', type=float, default=None)
+    p.add_argument('--onset-min-interval-ms', type=float, default=None)
     p.add_argument('--skeleton-source', choices=['transcriber', 'reference'], default='transcriber',
                    help='reference is an oracle diagnostic, never an audio-only quality score')
     p.add_argument('--snap-ticks', type=int, default=0,
@@ -120,6 +122,12 @@ def main():
     p.add_argument('--device', default='cuda:0')
     add_resource_args(p)
     args = p.parse_args()
+    try:
+        args.onset_threshold, args.onset_min_interval_ms = resolve_skeleton_settings(
+            args.skeleton_ckpt or str(Path(args.checkpoint_root) / 'transcriber/transcriber_best.pt'),
+            args.skeleton_calibration, args.onset_threshold, args.onset_min_interval_ms)
+    except ValueError as error:
+        p.error(str(error))
     if args.samples < 1 or args.snap_ticks < 0:
         p.error('samples must be positive and snap-ticks nonnegative')
     output = Path(args.output); output.mkdir(parents=True, exist_ok=True)

@@ -2,11 +2,39 @@
 from __future__ import annotations
 
 import bisect
+import json
 import math
+from pathlib import Path
 
 import torch
 
 from src.models.transcriber import H_ONSET, H_SOFF
+
+
+def resolve_skeleton_settings(checkpoint, calibration=None, threshold=None,
+                              min_interval_ms=None, default_threshold=0.7):
+    """Use a completed TRAIN calibration or explicit settings, never mix them."""
+    if calibration:
+        if not checkpoint:
+            raise ValueError('skeleton calibration requires a skeleton checkpoint')
+        if threshold is not None or min_interval_ms is not None:
+            raise ValueError('calibration cannot be combined with manual onset settings')
+        report = json.loads(Path(calibration).read_text())
+        if not report.get('complete') or report.get('config', {}).get('phase') != 'fit':
+            raise ValueError('skeleton calibration must be a completed TRAIN fit report')
+        source = report.get('config', {}).get('ckpt')
+        if not source or Path(source).resolve() != Path(checkpoint).resolve():
+            raise ValueError('skeleton checkpoint differs from the calibration checkpoint')
+        selected = report.get('selected', {})
+        if set(selected) != {'threshold', 'min_interval_ms'}:
+            raise ValueError('calibration has no valid selected onset settings')
+        threshold, min_interval_ms = selected['threshold'], selected['min_interval_ms']
+    else:
+        threshold = default_threshold if threshold is None else threshold
+        min_interval_ms = 0.0 if min_interval_ms is None else min_interval_ms
+    # Validate even when the input audio eventually yields no candidates.
+    select_onsets([], [], threshold, min_interval_ms)
+    return float(threshold), float(min_interval_ms)
 
 
 def onset_candidates(pred: torch.Tensor, frame_ms: float) -> tuple[list[float], list[float]]:

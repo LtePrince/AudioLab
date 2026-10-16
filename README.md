@@ -88,6 +88,22 @@ Hold 期间邻近音符 627→0；位置 F1 @92.9ms/0.05 从 0.18958 到 0.18965
 该 checkpoint 应通过全局节奏骨架接口使用；不将它视为重新校准过的四轨转录器。
 默认 `--encoder-lr 0` 仍只训练节奏头，旧 checkpoint 和训练入口行为保留。
 
+生成入口和诊断入口支持 `--skeleton-calibration <训练集 fit 报告>`，自动读取
+已选阈值与最小间隔，并检查报告已完成、来自 fit 阶段且 checkpoint 路径一致。
+使用它时不再同时传手工阈值/间隔，避免混用不同模型的概率标度。例如：
+
+```bash
+.venv/bin/python -m script.train_models --worker src.test_decoder -- \
+  --ckpt checkpoints/timing_v1/decoder/decoder_best.pt \
+  --skeleton-ckpt checkpoints/rhythm_global_v2/rhythm_best.pt \
+  --skeleton-calibration out/global_rhythm_v2_refined_train32/report.json \
+  --list data/val.txt --out-dir out/global_rhythm_4k --seed 42 --device cuda:0
+```
+
+free-x 使用 `decoder_freex/decoder_best.pt` 并换一个输出目录。上述仍是开发实验
+组合；详见 [节奏实验结果](docs/freeform_design.md#11-独立全局节奏模型2026-10-17)。
+校准后不要覆盖原 checkpoint；权重、校准原始报告和生成谱保留在本地，不提交 Git。
+
 ---
 
 ## 4K 扩散路线的原始设计
