@@ -28,7 +28,7 @@ import torch
 from src.data.timing import check_checkpoint_timing
 from src.data.audio2mel import AudioGPUprocessor
 from src.data.chart2array import save_phigros_notes
-from src.data.chart_constraints import constrain_4k_notes
+from src.data.chart_constraints import constrain_4k_notes, constrain_free_notes
 from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.models.chart_decoder import ChartDecoder, generate_tokens
 from src.models.transcriber import TranscriberNet
@@ -87,7 +87,7 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
                    sr: int = 22050, quiet: bool = False,
                    skeleton_ticks: list[int] | None = None,
                    transcriber=None, onset_threshold: float = 0.5,
-                   raw_output: bool = False) -> int:
+                   raw_output: bool = False, free_min_gap: float = 0.04) -> int:
     t0 = time.time()
     frame_ms = hop_length / sr / 4 * 8 * 1000
     mpf = enc.mel_per_frame
@@ -120,9 +120,12 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
         notes = tk.decode_tokens(tokens, strict=True)
         pnotes = tk.to_phigros_notes(notes, bpm)
     repairs = {}
-    if not raw_output and dec.n_lanes == 4:
+    if not raw_output:
         end_tick = (audio_seconds - offset) / tick_seconds(1, bpm)
-        pnotes, repairs = constrain_4k_notes(pnotes, end_tick)
+        if dec.n_lanes == 4:
+            pnotes, repairs = constrain_4k_notes(pnotes, end_tick)
+        else:
+            pnotes, repairs = constrain_free_notes(pnotes, end_tick, free_min_gap)
     save_phigros_notes(pnotes, bpm, output_path, offset=offset)
     if not quiet:
         print(f"[dec] {Path(audio_path).name}: {n_frames} frames, {len(tokens)} tokens, "
@@ -142,6 +145,8 @@ def main() -> None:
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--raw-output", action="store_true",
                    help="export model output without static-line playability repairs")
+    p.add_argument("--free-min-gap", type=float, default=0.04,
+                   help="free-x static-line chord/Hold clearance as screen width (default: 0.04)")
     p.add_argument("--device", default=None)
     p.add_argument("--skeleton-json", default=None,
                    help="hybrid mode: chart JSON whose onset times force the time structure")
@@ -184,7 +189,8 @@ def main() -> None:
                            bpm=float(d["judgeLineList"][0]["bpm"]), offset=float(d["offset"]),
                            temperature=args.temperature, top_p=args.top_p, seed=args.seed,
                            skeleton_ticks=skel, transcriber=transcriber,
-                           onset_threshold=args.onset_threshold, raw_output=args.raw_output)
+                           onset_threshold=args.onset_threshold, raw_output=args.raw_output,
+                           free_min_gap=args.free_min_gap)
         return
     bpm, offset = args.bpm, args.offset
     if args.ref_chart:
@@ -195,7 +201,7 @@ def main() -> None:
                    offset=offset, temperature=args.temperature, top_p=args.top_p, seed=args.seed,
                    skeleton_ticks=skeleton_from_chart(args.skeleton_json, bpm, offset) if args.skeleton_json else None,
                    transcriber=transcriber, onset_threshold=args.onset_threshold,
-                   raw_output=args.raw_output)
+                   raw_output=args.raw_output, free_min_gap=args.free_min_gap)
 
 
 if __name__ == "__main__":

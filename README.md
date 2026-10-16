@@ -36,6 +36,25 @@
 修复后同轨长条重叠为 0，无 Hold 转 Tap；音符起点与轨道完全不变。
 这项修复不解决模型 Hold 生成比例偏低的问题。
 
+free-x 默认在同一时刻的音符之间保留至少 0.04 屏宽间距（`--free-min-gap`），
+以最小平方位移调整位置并保持左右次序，再在邻近下一音符前收尾 Hold。
+不删除音符；若极端和弦无法满足间距，明确报错，可缩小间距或使用 `--raw-output`。
+这仅适用于当前生成的静态单线谱，不代表已经解决手数、连续手速或多线演出。
+
+timing_v1 的 30 首 free-x 验证输出中，104/32,618 个音符被移动（最大屏宽
+0.01984），335 条 Hold 截短，0 条转 Tap。距离 <0.03 的近距离和弦 31→0、
+Hold 期间邻近音符 627→0；位置 F1 @92.9ms/0.05 从 0.18958 到 0.18965。
+起点和音符数保留，onset F1 不变。可复用旧生成结果做 CPU 修复，无须再次采样：
+
+```bash
+.venv/bin/python -m script.repair_generated_charts --mode freex \
+  --gen-dir checkpoints/timing_v1/eval_decoder_freex --list data/val.txt \
+  --out-dir out/playable_freex
+```
+
+4K 使用 `--mode 4k` 和对应输入目录。输出目录必须是新目录；原谱、权重保留，
+同级的 `.report.json` 记录逐曲修复和冲突计数。
+
 ---
 
 ## 4K 扩散路线的原始设计
