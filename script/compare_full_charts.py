@@ -136,10 +136,11 @@ def model_markdown(report, model):
     """Readable numeric evidence; model adoption decisions remain explicit prose."""
     data = report['models'][model]
     name = 'free-x 无轨' if model == 'decoder_freex' else '4K 定轨'
+    count, seed = report['songs'], report['config']['seed']
     labels = dict(original='原始', nms35='原模型 + NMS35', global_v2='全局 v2（0.25/25ms）')
-    lines = [f'# 30 首完整谱面对照：{name}', '',
-        '固定验证集全部 30 首、seed=42、flat top-p=0.95，AR 权重保持 timing_v1。',
-        '参数在训练曲校准后冻结；验证集用于过模型选取，结果属于开发验证，不是独立测试集。',
+    lines = [f'# {count} 首完整谱面对照：{name}', '',
+        f'固定验证集全部 {count} 首、seed={seed}、flat top-p=0.95，AR 权重保持 timing_v1。',
+        '参数在训练曲校准后冻结；该验证集参与过模型选取，结果属于开发验证，不是独立测试集。',
         'F1 沿用整谱多音符逐次最近匹配，和弦计多个音符；表中均为逐曲平均。',
         '4K 位置指标要求同轨；free-x 的位置容差为 0.05 屏宽。Hold 数量不作为目标。', '',
         '## 原始模型输出', '',
@@ -150,7 +151,7 @@ def model_markdown(report, model):
         lines.append(f'| {labels[variant]} | {r["f1_25"]:.4f} | {r["f1_50"]:.4f} | '
                      f'{r["f1_93"]:.4f} | {r["position_f1_93"]:.4f} | {r["density_ratio"]:.4f} | {r["total_notes"]:,} |')
     lines += ['', '## 逐曲配对差异', '',
-        'bootstrap 10,000 次，seed=42，区间为 95%。区间覆盖 0 时，不能声称改进稳定成立。',
+        f'bootstrap 10,000 次，seed={seed}，区间为 95%。区间覆盖 0 时，不能声称改进稳定成立。',
         '以下是单一采样种子的探索性比较，未作多重比较校正。', '',
         '| 对照 | 指标 | 平均差 | 95% 区间 | 提升/持平/下降曲数 |', '|---|---|---:|---|---|']
     for comparison, metrics in data['paired'].items():
