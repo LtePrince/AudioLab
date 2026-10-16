@@ -258,6 +258,34 @@ class ChartDecoder(nn.Module):
 # Constrained autoregressive generation
 # ─────────────────────────────────────────────────────────────────────────────
 
+def nucleus_probs(probs: Tensor, top_p: float) -> Tensor:
+    """Nucleus on the final axis, supporting zero-mass conditional groups."""
+    if not 0.0 < top_p < 1.0:
+        return probs
+    values, indices = probs.sort(descending=True, dim=-1)
+    values = values * (values.cumsum(-1) - values < top_p)
+    result = torch.zeros_like(probs).scatter(-1, indices, values)
+    return result / result.sum(-1, keepdim=True).clamp_min(1e-30)
+
+
+def type_preserving_probs(probs: Tensor, top_p: float, note_start: int, n_lanes: int) -> Tensor:
+    """Truncate positions within each type while retaining all type masses.
+
+    Non-NOTE actions form a separate conditional nucleus. No type prior or
+    boost is added; grammar-masked zeros remain zero. At p=1 this is identity.
+    """
+    if not 0.0 < top_p < 1.0:
+        return probs
+    end = note_start + 4 * n_lanes
+    notes = probs[note_start:end].reshape(n_lanes, 4).T
+    mass = notes.sum(-1, keepdim=True)
+    notes = nucleus_probs(notes / mass.clamp_min(1e-30), top_p) * mass
+    other = torch.cat([probs[:note_start], probs[end:]])
+    other_mass = other.sum()
+    other = nucleus_probs(other / other_mass.clamp_min(1e-30), top_p) * other_mass
+    return torch.cat([other[:note_start], notes.T.reshape(-1), other[note_start:]])
+
+
 @torch.no_grad()
 def generate_tokens(
     decoder:     ChartDecoder,
@@ -273,6 +301,7 @@ def generate_tokens(
     tokenizer    = None,          # ChartTokenizer instance (default: 4-lane)
     skeleton_ticks: list[int] | None = None,
     offset: float = 0.0,         # chart delay in audio seconds
+    sampling_policy: str = 'flat',  # experimental: type_preserving
 ) -> list[int]:
     """Sample a grammar-valid token sequence.
 
@@ -293,6 +322,8 @@ def generate_tokens(
         BOS, EOS, N_DTB, N_DTT, TICKS_PER_BEAT, ChartTokenizer, GrammarState,
     )
     T = tokenizer if tokenizer is not None else ChartTokenizer()
+    if sampling_policy not in ('flat', 'type_preserving'):
+        raise ValueError(f'unknown sampling policy: {sampling_policy}')
     assert T.vocab_size == decoder.lm_head.out_features, "tokenizer/decoder vocab mismatch"
     device = memory.device
     frames_per_tick = 60.0 / (32.0 * bpm) * 1000.0 / frame_ms
@@ -368,11 +399,8 @@ def generate_tokens(
             probs = torch.where(is_dt, torch.zeros_like(probs), probs)
             adv_id = int(is_dt.nonzero()[0])
             probs[adv_id] = p_adv
-        if 0.0 < top_p < 1.0:
-            sp, si = torch.sort(probs, descending=True)
-            keep = torch.cumsum(sp, 0) - sp < top_p
-            probs = torch.zeros_like(probs).scatter_(0, si[keep], sp[keep])
-            probs = probs / probs.sum()
+        probs = (type_preserving_probs(probs, top_p, T.note(0, 1), T.n_lanes)
+                 if sampling_policy == 'type_preserving' else nucleus_probs(probs, top_p))
         nxt = int(torch.multinomial(probs, 1, generator=generator).item())
 
         if skel is not None and kinds[nxt] in ("DTB", "DTT"):

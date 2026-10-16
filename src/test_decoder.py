@@ -87,7 +87,8 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
                    sr: int = 22050, quiet: bool = False,
                    skeleton_ticks: list[int] | None = None,
                    transcriber=None, onset_threshold: float = 0.5,
-                   raw_output: bool = False, free_min_gap: float = 0.04) -> int:
+                   raw_output: bool = False, free_min_gap: float = 0.04,
+                   sampling_policy: str = 'flat') -> int:
     t0 = time.time()
     frame_ms = hop_length / sr / 4 * 8 * 1000
     mpf = enc.mel_per_frame
@@ -108,7 +109,7 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     tk = ChartTokenizer(n_lanes=dec.n_lanes)
     out = generate_tokens(dec, memory, valid, bpm, frame_ms, audio_seconds * 1000 / frame_ms,
                           temperature=temperature, top_p=top_p, generator=gen, tokenizer=tk,
-                          skeleton_ticks=skeleton_ticks, offset=offset)
+                          skeleton_ticks=skeleton_ticks, offset=offset, sampling_policy=sampling_policy)
     if dec.offset_head is not None:                      # free-x: (tokens, offsets)
         tokens, pos_offsets = out
         notes = tk.decode_tokens(tokens, strict=True)
@@ -142,6 +143,8 @@ def main() -> None:
     p.add_argument("--bpm", type=float, default=120.0); p.add_argument("--offset", type=float, default=0.0)
     p.add_argument("--temperature", type=float, default=1.0)
     p.add_argument("--top-p", type=float, default=0.95)
+    p.add_argument("--sampling-policy", choices=['flat', 'type_preserving'], default='flat',
+                   help="experimental type_preserving truncates positions within each note type")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--raw-output", action="store_true",
                    help="export model output without static-line playability repairs")
@@ -190,7 +193,7 @@ def main() -> None:
                            temperature=args.temperature, top_p=args.top_p, seed=args.seed,
                            skeleton_ticks=skel, transcriber=transcriber,
                            onset_threshold=args.onset_threshold, raw_output=args.raw_output,
-                           free_min_gap=args.free_min_gap)
+                           free_min_gap=args.free_min_gap, sampling_policy=args.sampling_policy)
         return
     bpm, offset = args.bpm, args.offset
     if args.ref_chart:
@@ -201,7 +204,8 @@ def main() -> None:
                    offset=offset, temperature=args.temperature, top_p=args.top_p, seed=args.seed,
                    skeleton_ticks=skeleton_from_chart(args.skeleton_json, bpm, offset) if args.skeleton_json else None,
                    transcriber=transcriber, onset_threshold=args.onset_threshold,
-                   raw_output=args.raw_output, free_min_gap=args.free_min_gap)
+                   raw_output=args.raw_output, free_min_gap=args.free_min_gap,
+                   sampling_policy=args.sampling_policy)
 
 
 if __name__ == "__main__":

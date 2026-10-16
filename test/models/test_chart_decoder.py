@@ -181,3 +181,34 @@ def test_token_budget_closes_pending_hold(lanes):
                              tokenizer=tk, skeleton_ticks=[0], max_tokens=1)
     assert tk.decode_tokens(tokens, strict=True) == [TokenNote(0, 0, 3, 1)]
     assert tokens == [BOS, tk.note(0, 3), tk.durt(1), EOS]
+
+
+@pytest.mark.parametrize('lanes', [4, 64])
+def test_type_preserving_nucleus_keeps_rare_hold_and_grammar_zeros(lanes):
+    from src.models.chart_decoder import nucleus_probs, type_preserving_probs
+    tk = ChartTokenizer(n_lanes=lanes)
+    p = torch.zeros(tk.vocab_size)
+    p[tk.note(0, 1)] = 0.96
+    p[tk.note(1, 3)] = 0.02
+    p[tk.dtb(1)] = 0.02
+    assert nucleus_probs(p, 0.95)[tk.note(1, 3)] == 0
+    q = type_preserving_probs(p, 0.95, tk.note(0, 1), lanes)
+    assert q[tk.note(1, 3)] == pytest.approx(0.02)
+    assert q[tk.dtb(1)] == pytest.approx(0.02)
+    assert torch.equal(q[p == 0], p[p == 0])
+    assert q.sum() == pytest.approx(1)
+
+
+@pytest.mark.parametrize('lanes', [4, 64])
+def test_type_preserving_nucleus_group_masses_and_identity(lanes):
+    from src.models.chart_decoder import type_preserving_probs
+    tk = ChartTokenizer(n_lanes=lanes)
+    torch.manual_seed(3)
+    p = torch.rand(tk.vocab_size)
+    p[tk.note(0, 1):tk.note(0, 1) + 4 * lanes:4] = 0  # an entirely masked type
+    p /= p.sum()
+    first = tk.note(0, 1); end = first + 4 * lanes
+    q = type_preserving_probs(p, 0.5, first, lanes)
+    assert torch.isfinite(q).all() and q.sum() == pytest.approx(1)
+    assert torch.allclose(p[first:end].reshape(-1, 4).sum(0), q[first:end].reshape(-1, 4).sum(0))
+    assert torch.equal(type_preserving_probs(p, 1, first, lanes), p)

@@ -109,6 +109,7 @@ def main():
     p.add_argument('--output', default='out/decoder_diagnostics')
     p.add_argument('--top-ps', default='0.95,1.0')
     p.add_argument('--teacher-only', action='store_true')
+    p.add_argument('--sampling-policy', choices=['flat', 'type_preserving'], default='flat')
     p.add_argument('--skeleton-source', choices=['transcriber', 'reference'], default='transcriber',
                    help='reference is an oracle diagnostic, never an audio-only quality score')
     p.add_argument('--snap-ticks', type=int, default=0,
@@ -169,7 +170,8 @@ def main():
                     path.parent.mkdir(parents=True, exist_ok=True)
                     generated = generate_tokens(dec, memory, valid, bpm, frame_ms, n_frames,
                         top_p=top_p, generator=torch.Generator(device=device).manual_seed(args.seed),
-                        tokenizer=tk, skeleton_ticks=skeleton, offset=offset)
+                        tokenizer=tk, skeleton_ticks=skeleton, offset=offset,
+                        sampling_policy=args.sampling_policy)
                     if free:
                         tokens, position_offsets = generated
                         ticks = tk.ticks_per_position(tokens)
