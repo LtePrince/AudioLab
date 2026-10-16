@@ -28,6 +28,7 @@ import torch
 from src.data.timing import check_checkpoint_timing
 from src.data.audio2mel import AudioGPUprocessor
 from src.data.chart2array import save_phigros_notes
+from src.data.chart_constraints import constrain_4k_notes
 from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.models.chart_decoder import ChartDecoder, generate_tokens
 from src.models.transcriber import TranscriberNet
@@ -85,12 +86,16 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
                    seed: int | None = None, hop_length: int = 512, n_mels: int = 128,
                    sr: int = 22050, quiet: bool = False,
                    skeleton_ticks: list[int] | None = None,
-                   transcriber=None, onset_threshold: float = 0.5) -> int:
+                   transcriber=None, onset_threshold: float = 0.5,
+                   raw_output: bool = False) -> int:
     t0 = time.time()
     frame_ms = hop_length / sr / 4 * 8 * 1000
     mpf = enc.mel_per_frame
     proc = AudioGPUprocessor(sr=sr, n_fft=2048, hop_length=hop_length, n_mels=n_mels, device=str(device))
-    mel = proc.forward(proc.load_from_path(audio_path)).squeeze(0)
+    waveform = proc.load_from_path(audio_path)
+    audio_seconds = waveform.shape[-1] / sr
+    mel = proc.forward(waveform).squeeze(0)
+    del waveform
     n_frames = max(1, math.ceil(mel.shape[-1] / mpf))
     mel = pad_or_trim(mel, n_frames * mpf).unsqueeze(0).to(device)
     memory = dec.prepare_memory(enc.features(mel))
@@ -101,7 +106,7 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     gen = torch.Generator(device=device)
     if seed is not None: gen.manual_seed(seed)
     tk = ChartTokenizer(n_lanes=dec.n_lanes)
-    out = generate_tokens(dec, memory, valid, bpm, frame_ms, n_frames,
+    out = generate_tokens(dec, memory, valid, bpm, frame_ms, audio_seconds * 1000 / frame_ms,
                           temperature=temperature, top_p=top_p, generator=gen, tokenizer=tk,
                           skeleton_ticks=skeleton_ticks, offset=offset)
     if dec.offset_head is not None:                      # free-x: (tokens, offsets)
@@ -114,10 +119,14 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
         tokens = out
         notes = tk.decode_tokens(tokens, strict=True)
         pnotes = tk.to_phigros_notes(notes, bpm)
+    repairs = {}
+    if not raw_output and dec.n_lanes == 4:
+        end_tick = (audio_seconds - offset) / tick_seconds(1, bpm)
+        pnotes, repairs = constrain_4k_notes(pnotes, end_tick)
     save_phigros_notes(pnotes, bpm, output_path, offset=offset)
     if not quiet:
         print(f"[dec] {Path(audio_path).name}: {n_frames} frames, {len(tokens)} tokens, "
-              f"{len(notes)} notes → {output_path} ({time.time()-t0:.1f}s)")
+              f"{len(notes)} notes → {output_path} ({time.time()-t0:.1f}s), repairs={repairs}")
     return len(notes)
 
 
@@ -131,6 +140,8 @@ def main() -> None:
     p.add_argument("--temperature", type=float, default=1.0)
     p.add_argument("--top-p", type=float, default=0.95)
     p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--raw-output", action="store_true",
+                   help="export model output without static-line playability repairs")
     p.add_argument("--device", default=None)
     p.add_argument("--skeleton-json", default=None,
                    help="hybrid mode: chart JSON whose onset times force the time structure")
@@ -173,7 +184,7 @@ def main() -> None:
                            bpm=float(d["judgeLineList"][0]["bpm"]), offset=float(d["offset"]),
                            temperature=args.temperature, top_p=args.top_p, seed=args.seed,
                            skeleton_ticks=skel, transcriber=transcriber,
-                           onset_threshold=args.onset_threshold)
+                           onset_threshold=args.onset_threshold, raw_output=args.raw_output)
         return
     bpm, offset = args.bpm, args.offset
     if args.ref_chart:
@@ -183,7 +194,8 @@ def main() -> None:
     generate_chart(args.audio, args.output, enc=enc, dec=dec, device=device, bpm=bpm,
                    offset=offset, temperature=args.temperature, top_p=args.top_p, seed=args.seed,
                    skeleton_ticks=skeleton_from_chart(args.skeleton_json, bpm, offset) if args.skeleton_json else None,
-                   transcriber=transcriber, onset_threshold=args.onset_threshold)
+                   transcriber=transcriber, onset_threshold=args.onset_threshold,
+                   raw_output=args.raw_output)
 
 
 if __name__ == "__main__":
