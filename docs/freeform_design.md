@@ -184,3 +184,34 @@ AR 可通过 `--encoder-ckpt` 迁移旧编码器，再开始新的训练。旧�
 记录训练和评估输出。模型子目录的 `metrics.jsonl` 也包含内存、磁盘和显存峰值。
 AR 的 `train_nll/val_nll` 已修正为纯 next-token CE 的 bits/token，辅助转录和位置
 损失计入 `train_loss/val_loss`，因此不能与旧版混合损失的 NLL 数值直接比较。
+
+## 8. timing_v1 基线与生成诊断
+
+本轮训练已完成：转录器 early stop 于 epoch 9（最佳 epoch 1，val F1=0.4359），
+4K/free-x 解码器均完成 30 epoch，最佳纯 CE 分别为 2.0305/3.2425 bits/token。
+默认混合生成（转录阈值 0.7、top-p=0.95、seed=42）的 30 首验证结果：
+
+| 模式 | onset F1 @25ms | @50ms | @92.9ms | Hold 占比 | 参考 Hold 占比 |
+|---|---:|---:|---:|---:|---:|
+| 4K | 0.592 | 0.631 | 0.678 | 0.4% | 11.9% |
+| free-x | 0.585 | 0.623 | 0.672 | 4.0% | 11.7% |
+
+free-x 位置 F1（92.9ms、屏宽容差 0.05）为 0.190。当前能导出合法单线谱，
+但 Hold 缺失和位置质量尚不满足稳定发布；这些权重仍是开发基线。
+
+诊断入口（固定抽取训练集样本，避免在验证集调参）：
+
+```bash
+.venv/bin/python -m script.train_models --worker script.diagnose_decoder -- \
+  --samples 6 --output out/decoder_diagnostics
+```
+
+脚本对比真实上下文中的键型概率与实际生成，保存 top-p=0.95/1.0 的输出和
+JSON 报告。`--teacher-only` 只做概率诊断；`--skeleton-source reference` 是真实
+节奏骨架的 oracle 对照，不能当成音频生成成绩；`--snap-ticks 4` 是转录骨架的
+实验性网格校准，默认关闭。Hold 概率是给定 NOTE 的条件分布，未施加语法 mask，
+不可直接当成实际生成的键型比例。
+
+报告另计静态线的近距离和弦及 Hold 期间同位置音符（屏宽距离 <0.03）；
+这是输出冲突提示，尚不等价于完整人体工学或移动判定线可玩性评价。
+诊断只写小型谱面/报告，复用现有数据与权重，遵守同样的资源预留阈值。
