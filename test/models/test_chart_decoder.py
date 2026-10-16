@@ -42,8 +42,8 @@ def test_ticks_per_position():
     toks = tk.encode_notes([TokenNote(128, 0, 1), TokenNote(128, 3, 3, 25), TokenNote(160, 0, 4)])
     ticks = tk.ticks_per_position(toks)
     names = [tk.token_name(t) for t in toks]
-    # BOS@0, DTB_4@0, NOTE@128, NOTE@128, DURT@128, DTB_1@128, NOTE@160, EOS@160
-    assert ticks == [0, 0, 128, 128, 128, 128, 160, 160], list(zip(names, ticks))
+    # Each input token has been consumed: DT advances now, DUR never advances.
+    assert ticks == [0, 128, 128, 128, 128, 160, 160, 160], list(zip(names, ticks))
     print("[T2] ticks_per_position ✓")
 
 
@@ -132,9 +132,9 @@ def test_skeleton_forced_generation():
     tk = ChartTokenizer()
     torch.manual_seed(5)
     d = ChartDecoder(**CFG).eval()
-    mem = d.prepare_memory(torch.randn(1, 200, 48)); valid = torch.ones(1, 200, dtype=torch.bool)
+    mem = d.prepare_memory(torch.randn(1, 400, 48)); valid = torch.ones(1, 400, dtype=torch.bool)
     for skel in ([0, 16, 48, 96, 160, 400], [32, 33, 64, 1000], [5]):
-        toks = generate_tokens(d, mem, valid, bpm=120.0, frame_ms=46.44, audio_frames=200,
+        toks = generate_tokens(d, mem, valid, bpm=120.0, frame_ms=46.44, audio_frames=400,
                                temperature=1.5, top_p=1.0, max_tokens=400,
                                generator=torch.Generator().manual_seed(9), skeleton_ticks=skel)
         notes = tk.decode_tokens(toks, strict=True)

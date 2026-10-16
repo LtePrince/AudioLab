@@ -62,7 +62,7 @@ def load_notes(path: str) -> tuple[list[dict], float, float]:
     for line in d["judgeLineList"]:
         lbpm = float(line["bpm"])
         for n in line["notesAbove"] + line["notesBelow"]:
-            t   = n["time"] / 32.0 * 60.0 / lbpm
+            t   = n["time"] / 32.0 * 60.0 / lbpm + float(d.get("offset", 0.0))
             dur = n["holdTime"] / 32.0 * 60.0 / lbpm
             lane = min(max(round((n["positionX"] + 3.75) / 2.5), 0), NUM_LANES - 1)
             out.append({"t": t, "dur": dur, "lane": lane, "type": int(n["type"])})
@@ -122,6 +122,8 @@ def plot_chart(
     ref_label:   str = "真实",
 ) -> None:
     notes, bpm, dur = load_notes(main_path)
+    with open(main_path, encoding="utf-8") as fh:
+        beat_offset = float(json.load(fh).get("offset", 0.0))
     ref_notes = None
     if ref_path:
         ref_notes, _, ref_dur = load_notes(ref_path)
@@ -159,8 +161,8 @@ def plot_chart(
             ax.add_patch(Rectangle((NUM_LANES, t0), gap, row_seconds,
                                    facecolor=DIVIDER, zorder=1))
 
-        for b in range(math.ceil(t0 / beat), int(t1 / beat) + 1):   # beat grid
-            y = b * beat
+        for b in range(math.ceil((t0 - beat_offset) / beat), math.floor((t1 - beat_offset) / beat) + 1):
+            y = b * beat + beat_offset
             major = (b % 4 == 0)
             for x_base, _ in halves:
                 ax.plot([x_base, x_base + NUM_LANES], [y, y],

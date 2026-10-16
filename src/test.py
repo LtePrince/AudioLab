@@ -64,6 +64,7 @@ import torch
 import torch.nn.functional as F
 
 from src.condition.wave import AudioWaveEncoder, DEFAULT_WAVE_CONFIG
+from src.data.timing import check_checkpoint_timing
 from src.data.audio2mel import AudioGPUprocessor, chart_frames_to_mel_frames
 from src.data.chart2array import Phigros4kConvertor
 from src.diffusion.sampler import DDIMSampler
@@ -118,6 +119,7 @@ def _build_dit(ckpt_path: Optional[str], device: torch.device) -> RhythmDiT:
     config = dict(DEFAULT_DIT_CONFIG)
     if ckpt_path:
         ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=True)
+        check_checkpoint_timing(ckpt)
         if isinstance(ckpt, dict) and "dit_config" in ckpt:
             config.update(ckpt["dit_config"])
             print(f"[gen] DiT config from checkpoint: "

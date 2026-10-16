@@ -54,6 +54,7 @@ automatically disabled whenever ``chart_cache_dir`` is active.
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import random
 import warnings
@@ -64,6 +65,7 @@ import cv2
 import numpy as np
 import torch
 from torch.utils.data import Dataset
+from src.data.timing import TIMING_SCHEMA
 
 from src.data.chart2array import (
     NUM_CHANNELS,
@@ -328,7 +330,10 @@ class PhigrosDataset(Dataset):
             rel = str(Path(json_path).relative_to(self._list_dir))
         except ValueError:
             rel = json_path
-        key  = f"{rel}|fms{self._frame_ms:.6f}|mf{self._max_frame}|{self._CACHE_SCHEMA}"
+        digest = hashlib.sha256(Path(json_path).read_bytes()).hexdigest()
+        key = (f"{rel}|{digest}|fms{self._frame_ms!r}|mf{self._max_frame}"
+               f"|offset{self._offset_ms!r}|rate{self._base_rate!r}"
+               f"|mirror{self._base_mirror}|{TIMING_SCHEMA}")
         h    = hashlib.sha1(key.encode()).hexdigest()[:8]
         stem = Path(json_path).parent.name or Path(json_path).stem
         return self._chart_cache_dir / f"{stem}_{h}.npz"
@@ -497,13 +502,13 @@ class PhigrosDataset(Dataset):
         note       = torch.from_numpy(note_array).float()       # (NUM_CHANNELS, max_frame)
         valid_flag = torch.from_numpy(valid_flag_arr).float()   # (max_frame,)
 
-        # Build minimal meta from JSON path (bpm/offset not available without parsing
-        # when chart cache is active; use 0.0 as placeholder)
+        with open(json_path, encoding="utf-8") as fh:
+            chart_meta = json.load(fh)
         meta = {
             "json_path":  json_path,
             "audio_path": audio_path,
-            "bpm":        0.0,
-            "offset":     0.0,
+            "bpm":        float(chart_meta["judgeLineList"][0]["bpm"]),
+            "offset":     float(chart_meta.get("offset", 0.0)),
             "version":    version,
         }
 

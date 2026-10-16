@@ -75,6 +75,7 @@ from torch.utils.data import DataLoader
 from src.condition.wave import AudioWaveEncoder, DEFAULT_WAVE_CONFIG
 from src.data.audio2mel import chart_frames_to_mel_frames
 from src.data.dataset import PhigrosDataset
+from src.data.timing import TIMING_SCHEMA, check_checkpoint_timing
 from src.diffusion.schedule import DEFAULT_SCHEDULE_CONFIG, NoiseSchedule
 from src.encoder.encoder import ChartVAE, DEFAULT_VAE_CONFIG
 from src.models.dit import DEFAULT_DIT_CONFIG, RhythmDiT
@@ -224,6 +225,7 @@ def _save_ckpt(
     wave:         Optional[AudioWaveEncoder] = None,
 ) -> None:
     payload = {
+        "timing_schema": TIMING_SCHEMA,
         "epoch": epoch, "step": step,
         "dit":          dit.state_dict(),
         "ema":          ema.state_dict(),
@@ -252,6 +254,7 @@ def _load_ckpt(
     wave:         Optional[AudioWaveEncoder] = None,
 ) -> tuple[int, int]:
     ckpt = torch.load(path, map_location="cpu", weights_only=True)
+    check_checkpoint_timing(ckpt, resume=True)
     dit.load_state_dict(ckpt["dit"])
     if wave is not None and "wave" in ckpt:
         wave.load_state_dict(ckpt["wave"])
@@ -683,7 +686,7 @@ def main() -> None:
             record["val_cond_gain"] = cond_gain
             is_best = stopper.update(val_loss, epoch + 1)
             if is_best:
-                best_payload = {"dit": ema.state_dict(), "dit_config": dit_config,
+                best_payload = {"timing_schema": TIMING_SCHEMA, "dit": ema.state_dict(), "dit_config": dit_config,
                                 "epoch": epoch + 1, "val_loss": val_loss}
                 if args.train_wave:
                     best_payload["wave"] = wave.state_dict()
@@ -713,6 +716,7 @@ def main() -> None:
     # ── training complete: save final weights (EMA preferred at inference) ─
     final_path = ckpt_dir / "dit_final.pt"
     final_payload = {
+        "timing_schema": TIMING_SCHEMA,
         "dit": dit.state_dict(), "ema": ema.state_dict(), "ema_step": ema.step,
         "dit_config": dit_config, "epoch": final_epoch, "step": global_step,
     }

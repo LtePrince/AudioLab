@@ -38,6 +38,8 @@ from torch.utils.data import DataLoader
 
 from src.data.audio2mel import chart_frames_to_mel_frames
 from src.data.dataset import PhigrosDataset
+from src.data.timing import TIMING_SCHEMA, check_checkpoint_timing
+from src.resource_budget import ResourceBudget, add_resource_args
 from src.models.transcriber import (
     DEFAULT_TRANSCRIBER_CONFIG,
     TranscriberNet,
@@ -101,6 +103,7 @@ def _validate(
     loss_fn:    TranscriptionLoss,
     val_loader: DataLoader,
     device:     torch.device,
+    budget:     ResourceBudget | None = None,
 ) -> tuple[float, float, float, float]:
     """Full-length deterministic validation.
 
@@ -111,6 +114,8 @@ def _validate(
     loss_sum, n = 0.0, 0
     tp_agg = []
     for batch in val_loader:
+        if budget is not None:
+            budget.check()
         note = batch["note"].to(device)
         flag = batch["valid_flag"].to(device)
         mel  = batch["audio"].to(device)
@@ -155,6 +160,7 @@ def _build_parser() -> argparse.ArgumentParser:
     g = p.add_argument_group("checkpoint")
     g.add_argument("--ckpt-dir",   default="checkpoints")
     g.add_argument("--resume",     default=None, help="checkpoint to resume from")
+    g.add_argument("--init-ckpt", default=None, help="transfer weights only; reset optimizer and metrics")
     g.add_argument("--save-every", type=int, default=20)
 
     g = p.add_argument_group("model")
@@ -166,6 +172,7 @@ def _build_parser() -> argparse.ArgumentParser:
     g = p.add_argument_group("training")
     g.add_argument("--epochs",     type=int,   default=500)
     g.add_argument("--batch-size", type=int,   default=16)
+    g.add_argument("--val-batch-size", type=int, default=1)
     g.add_argument("--lr",         type=float, default=2e-4)
     g.add_argument("--min-lr",     type=float, default=1e-6)
     g.add_argument("--weight-decay", type=float, default=1e-2)
@@ -185,6 +192,7 @@ def _build_parser() -> argparse.ArgumentParser:
     g.add_argument("--seed",      type=int, default=42)
     g.add_argument("--device",    default=None)
     g.add_argument("--log-every", type=int, default=50)
+    add_resource_args(p)
     return p
 
 
@@ -201,6 +209,11 @@ def main() -> None:
 
     ckpt_dir = Path(args.ckpt_dir) / "transcriber"
     ckpt_dir.mkdir(parents=True, exist_ok=True)
+    budget = ResourceBudget(args, device, ckpt_dir)
+    if args.resume and args.init_ckpt:
+        raise ValueError('Use either --init-ckpt or --resume')
+    if args.grad_accum < 1:
+        raise ValueError('grad-accum must be positive')
 
     mel_per_frame = round(args.frame_ms / (args.hop_length / args.sr * 1000))
     assert mel_per_frame >= 1
@@ -231,7 +244,7 @@ def main() -> None:
     if args.val_list:
         val_set = make_dataset(args.val_list, augment=False)
         val_loader = DataLoader(
-            val_set, batch_size=4, shuffle=False, num_workers=args.num_workers,
+            val_set, batch_size=args.val_batch_size, shuffle=False, num_workers=args.num_workers,
             collate_fn=partial(_collate_full, max_frame=args.max_frame,
                                mel_per_frame=mel_per_frame),
             pin_memory=(device.type == "cuda"), drop_last=False,
@@ -248,6 +261,12 @@ def main() -> None:
         mel_per_frame=mel_per_frame,
     )
     model = TranscriberNet(**config).to(device)
+    if args.init_ckpt:
+        initial = torch.load(args.init_ckpt, map_location='cpu', weights_only=True)
+        check_checkpoint_timing(initial)
+        model.load_state_dict(initial.get('ema', initial['model']))
+        del initial
+        print(f'[tsc] transferred weights from {args.init_ckpt}; fresh optimizer/metrics')
     model.train()
     type_w = (None if args.type_weights.strip().lower() == "none"
               else tuple(float(x) for x in args.type_weights.split(",")))
@@ -276,6 +295,7 @@ def main() -> None:
     global_step = 0
     if args.resume:
         ckpt = torch.load(args.resume, map_location="cpu", weights_only=True)
+        check_checkpoint_timing(ckpt, resume=True)
         model.load_state_dict(ckpt["model"])
         if "ema" in ckpt:
             ema.load_state_dict(ckpt["ema"], step=ckpt.get("ema_step", 0))
@@ -318,13 +338,15 @@ def main() -> None:
         pending_grads = False
 
         for batch_idx, batch in enumerate(loader):
+            budget.check()
             note = batch["note"].to(device)
             flag = batch["valid_flag"].to(device)
             mel  = batch["audio"].to(device)
 
             pred = model(mel)
             loss, log = loss_fn(pred, note, flag)
-            (loss / args.grad_accum).backward()
+            group_size = min(args.grad_accum, len(loader) - (batch_idx // args.grad_accum) * args.grad_accum)
+            (loss / group_size).backward()
             pending_grads = True
 
             loss_sum += loss.item(); loss_count += 1
@@ -353,23 +375,24 @@ def main() -> None:
         }
         if val_loader is not None:
             with ema.swapped_into(model):
-                val_loss, f1, prec, rec = _validate(model, loss_fn, val_loader, device)
+                val_loss, f1, prec, rec = _validate(model, loss_fn, val_loader, device, budget)
             record.update(val_loss=val_loss, val_f1=f1,
                           val_precision=prec, val_recall=rec)
             is_best = stopper.update(1.0 - f1, epoch + 1)
             if is_best:
-                torch.save({"model": ema.state_dict(), "config": config,
+                budget.save({"timing_schema": TIMING_SCHEMA, "model": ema.state_dict(), "config": config,
                             "epoch": epoch + 1, "val_f1": f1},
                            ckpt_dir / "transcriber_best.pt")
             print(f"[tsc] epoch {epoch + 1:>4d}  "
                   f"train {record['train_loss']:.5f}  val {val_loss:.5f}  "
                   f"F1 {f1:.4f} (P {prec:.3f} R {rec:.3f})"
                   f"{'  *best*' if is_best else ''}")
-        metrics.log(**record)
+        metrics.log(**record, **budget.log_state())
 
         if (epoch + 1) % args.save_every == 0:
             path = ckpt_dir / f"tsc_e{epoch + 1:04d}_s{global_step:07d}.pt"
-            torch.save({
+            budget.save({
+                "timing_schema": TIMING_SCHEMA,
                 "model": model.state_dict(), "ema": ema.state_dict(),
                 "ema_step": ema.step, "optimizer": optimizer.state_dict(),
                 "lr_scheduler": lr_scheduler.state_dict(), "config": config,
@@ -377,7 +400,7 @@ def main() -> None:
                             "bad_epochs": stopper.bad_epochs},
                 "epoch": epoch + 1, "step": global_step,
             }, path)
-            rotate_checkpoints(ckpt_dir, "tsc_e*.pt", keep=2)
+            rotate_checkpoints(ckpt_dir, "tsc_e*.pt", keep=args.keep_checkpoints)
             print(f"[tsc] saved → {path}")
 
         if stopper.should_stop:
@@ -385,7 +408,7 @@ def main() -> None:
                   f"(best F1 {1.0 - stopper.best:.4f} @ epoch {stopper.best_epoch})")
             break
 
-    torch.save({"model": model.state_dict(), "ema": ema.state_dict(),
+    budget.save({"timing_schema": TIMING_SCHEMA, "model": model.state_dict(), "ema": ema.state_dict(),
                 "ema_step": ema.step, "config": config,
                 "epoch": final_epoch, "step": global_step},
                ckpt_dir / "transcriber_final.pt")

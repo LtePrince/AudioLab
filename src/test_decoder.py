@@ -25,25 +25,31 @@ from pathlib import Path
 
 import torch
 
+from src.data.timing import check_checkpoint_timing
 from src.data.audio2mel import AudioGPUprocessor
 from src.data.chart2array import save_phigros_notes
 from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.models.chart_decoder import ChartDecoder, generate_tokens
 from src.models.transcriber import TranscriberNet
 from src.train_utils import pad_or_trim
+from src.data.timing import tick_seconds
 
 
-def skeleton_from_chart(path: str) -> list[int]:
+def skeleton_from_chart(path: str, bpm: float | None = None, offset: float | None = None) -> list[int]:
     """Onset ticks of every note in a chart JSON (e.g. a transcriber output) —
     the rhythm skeleton for listen-then-write decoding."""
     d = json.load(open(path, encoding="utf-8"))
-    return sorted({int(round(n["time"])) for l in d["judgeLineList"]
-                   for n in l["notesAbove"] + l["notesBelow"]})
+    bpm = float(d["judgeLineList"][0]["bpm"]) if bpm is None else bpm
+    source_offset = float(d.get("offset", 0.0))
+    offset = source_offset if offset is None else offset
+    seconds = [tick_seconds(n["time"], float(l["bpm"])) + source_offset - offset
+               for l in d["judgeLineList"] for n in l["notesAbove"] + l["notesBelow"]]
+    return sorted({round(t / tick_seconds(1, bpm)) for t in seconds if t >= 0})
 
 
 @torch.no_grad()
 def skeleton_from_transcriber(mel: torch.Tensor, transcriber, bpm: float, frame_ms: float,
-                              threshold: float = 0.5) -> list[int]:
+                              threshold: float = 0.5, offset: float = 0.0) -> list[int]:
     """Rhythm skeleton straight from transcriber logits (no lane collapse):
     a frame is an onset if ANY lane fires, p_any = 1 - Π(1 - p_lane) ≥ threshold;
     sub-frame start offsets refine the tick.  Returns sorted unique ticks."""
@@ -57,12 +63,15 @@ def skeleton_from_transcriber(mel: torch.Tensor, transcriber, bpm: float, frame_
     ticks = set()
     for f in frames.tolist():
         lane = int(p_lane[:, f].argmax())
-        ticks.add(int(round((f + float(off[lane, f])) * ticks_per_frame)))
+        chart_frame = f + float(off[lane, f]) - offset * 1000.0 / frame_ms
+        if chart_frame >= 0:
+            ticks.add(int(round(chart_frame * ticks_per_frame)))
     return sorted(ticks)
 
 
 def load_models(ckpt_path: str, device: torch.device):
     ck = torch.load(ckpt_path, map_location="cpu", weights_only=True)
+    check_checkpoint_timing(ck)
     enc = TranscriberNet(**ck["enc_config"]); dec = ChartDecoder(**ck["dec_config"])
     state = ck["model"]
     enc.load_state_dict({k[len("encoder."):]: v for k, v in state.items() if k.startswith("encoder.")})
@@ -87,13 +96,14 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     memory = dec.prepare_memory(enc.features(mel))
     valid = torch.ones(1, n_frames, dtype=torch.bool, device=device)
     if transcriber is not None and skeleton_ticks is None:
-        skeleton_ticks = skeleton_from_transcriber(mel, transcriber, bpm, frame_ms, onset_threshold)
+        skeleton_ticks = skeleton_from_transcriber(mel, transcriber, bpm, frame_ms,
+                                                    onset_threshold, offset=offset)
     gen = torch.Generator(device=device)
     if seed is not None: gen.manual_seed(seed)
     tk = ChartTokenizer(n_lanes=dec.n_lanes)
     out = generate_tokens(dec, memory, valid, bpm, frame_ms, n_frames,
                           temperature=temperature, top_p=top_p, generator=gen, tokenizer=tk,
-                          skeleton_ticks=skeleton_ticks)
+                          skeleton_ticks=skeleton_ticks, offset=offset)
     if dec.offset_head is not None:                      # free-x: (tokens, offsets)
         tokens, pos_offsets = out
         notes = tk.decode_tokens(tokens, strict=True)
@@ -137,6 +147,7 @@ def main() -> None:
     transcriber = None
     if args.skeleton_ckpt:
         tck = torch.load(args.skeleton_ckpt, map_location="cpu", weights_only=True)
+        check_checkpoint_timing(tck)
         transcriber = TranscriberNet(**tck["config"]).to(device).eval()
         transcriber.load_state_dict(tck.get("ema", tck["model"]))
         print(f"[dec] skeleton from transcriber {args.skeleton_ckpt} @ p_any ≥ {args.onset_threshold}")
@@ -155,7 +166,8 @@ def main() -> None:
                 sp = Path(args.skeleton_dir) / f"{song}.json"
                 if not sp.exists():
                     print(f"[dec] skeleton missing for {song}, skipped"); continue
-                skel = skeleton_from_chart(str(sp))
+                skel = skeleton_from_chart(str(sp), float(d["judgeLineList"][0]["bpm"]),
+                                           float(d["offset"]))
             generate_chart(str(base / a), str(Path(args.out_dir) / f"{song}.json"),
                            enc=enc, dec=dec, device=device,
                            bpm=float(d["judgeLineList"][0]["bpm"]), offset=float(d["offset"]),
@@ -170,7 +182,7 @@ def main() -> None:
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     generate_chart(args.audio, args.output, enc=enc, dec=dec, device=device, bpm=bpm,
                    offset=offset, temperature=args.temperature, top_p=args.top_p, seed=args.seed,
-                   skeleton_ticks=skeleton_from_chart(args.skeleton_json) if args.skeleton_json else None,
+                   skeleton_ticks=skeleton_from_chart(args.skeleton_json, bpm, offset) if args.skeleton_json else None,
                    transcriber=transcriber, onset_threshold=args.onset_threshold)
 
 

@@ -36,6 +36,7 @@ from __future__ import annotations
 import json
 import os
 import bisect
+import math
 from dataclasses import dataclass
 from typing import Optional
 
@@ -435,7 +436,7 @@ class Phigros4kConvertor:
         If ``True``, flip lanes left <-> right (lane 0 <-> 3, lane 1 <-> 2).
     rate:
         Playback speed multiplier for data augmentation.
-        Applied as: ``adjusted_ms = original_ms / rate + offset_ms``.
+        Applied as: ``adjusted_ms = (chart_ms + chart.offset * 1000) / rate + offset_ms``.
     offset_ms:
         Additional time shift in milliseconds added after rate adjustment.
     from_logits:
@@ -468,7 +469,7 @@ class Phigros4kConvertor:
     # ------------------------------------------------------------------
 
     def _tick_to_frame(
-        self, tick: float, bpm: float
+        self, tick: float, bpm: float, chart_offset: float = 0.0
     ) -> tuple[float, int, float]:
         """Convert a Phigros tick to a note-array frame index.
 
@@ -479,17 +480,17 @@ class Phigros4kConvertor:
         sub_offset:   Fractional position within the frame, in [0, 1).
         """
         raw_ms = tick / 32.0 * (60_000.0 / bpm)
-        adj_ms = raw_ms / self.rate + self.offset_ms
-        frame  = int(adj_ms / self.frame_ms)
+        adj_ms = (raw_ms + chart_offset * 1000.0) / self.rate + self.offset_ms
+        frame  = math.floor(adj_ms / self.frame_ms)
         sub    = adj_ms / self.frame_ms - frame
         return adj_ms, frame, sub
 
     def _frame_to_tick(
-        self, frame_idx: int, sub_offset: float, bpm: float
+        self, frame_idx: int, sub_offset: float, bpm: float, chart_offset: float = 0.0
     ) -> int:
         """Inverse of ``_tick_to_frame``: frame index -> Phigros tick."""
         adj_ms = (frame_idx + sub_offset) * self.frame_ms
-        raw_ms = (adj_ms - self.offset_ms) * self.rate
+        raw_ms = (adj_ms - self.offset_ms) * self.rate - chart_offset * 1000.0
         return int(round(raw_ms * 32.0 * bpm / 60_000.0))
 
     # ------------------------------------------------------------------
@@ -518,7 +519,7 @@ class Phigros4kConvertor:
     # ------------------------------------------------------------------
 
     def _encode_flat_notes(
-        self, flat: list[FlatNote]
+        self, flat: list[FlatNote], chart_offset: float = 0.0
     ) -> tuple[np.ndarray, np.ndarray]:
         """Encode a time-sorted flat note list into ``(note_array, valid_flag)``.
 
@@ -538,7 +539,9 @@ class Phigros4kConvertor:
             note = fn.note
             bpm  = fn.bpm
 
-            _, start_idx, start_off = self._tick_to_frame(note["time"], bpm)
+            _, start_idx, start_off = self._tick_to_frame(note["time"], bpm, chart_offset)
+            if start_idx < 0:  # outside the audio, never wrap into the last frames
+                continue
             if start_idx >= self.max_frame:
                 n_overflow += 1
                 continue
@@ -558,7 +561,7 @@ class Phigros4kConvertor:
             # Hold body / tail channels (vectorised slice, avoids Python loop)
             if note["type"] == NOTE_HOLD and note["holdTime"] > 0:
                 end_tick            = note["time"] + note["holdTime"]
-                _, end_idx, end_off = self._tick_to_frame(end_tick, bpm)
+                _, end_idx, end_off = self._tick_to_frame(end_tick, bpm, chart_offset)
                 end_idx             = min(end_idx, self.max_frame - 1)
 
                 array[lane + CH_IS_HOLDING, start_idx + 1 : end_idx + 1] = 1.0
@@ -612,7 +615,7 @@ class Phigros4kConvertor:
                 flat.append(FlatNote(note=note, bpm=bpm, above=False, line_idx=line_idx))
         flat.sort(key=lambda fn: fn.time_ms)
 
-        note_array, valid_flag = self._encode_flat_notes(flat)
+        note_array, valid_flag = self._encode_flat_notes(flat, chart.offset)
 
         return PhigrosFlatChart(
             flat_notes = flat,
@@ -660,6 +663,7 @@ class Phigros4kConvertor:
         self,
         note_array: np.ndarray,
         bpm:        float,
+        offset:     float = 0.0,
     ) -> list[Note]:
         """Decode a ``note_array`` back into a list of Phigros :class:`Note` dicts.
 
@@ -667,6 +671,7 @@ class Phigros4kConvertor:
         ----------
         note_array:  Float32 ndarray of shape ``(NUM_CHANNELS, T)``.
         bpm:         BPM used for frame -> tick conversion.
+        offset:      Output chart delay in seconds; removed from audio frame times.
 
         Returns
         -------
@@ -689,7 +694,9 @@ class Phigros4kConvertor:
 
             for sidx in onset_frames:
                 s_off      = float(np.clip(start_off_ch[sidx], 0.0, 1.0))
-                start_tick = self._frame_to_tick(int(sidx), s_off, bpm)
+                start_tick = self._frame_to_tick(int(sidx), s_off, bpm, offset)
+                if start_tick < 0:  # chart format cannot represent pre-chart predictions
+                    continue
                 raw_type   = self._decode_type(float(note_type_ch[sidx]))
                 hold_time  = 0
 
@@ -707,7 +714,7 @@ class Phigros4kConvertor:
 
                     if eidx > int(sidx):
                         e_off     = float(np.clip(end_offset_ch[eidx], 0.0, 1.0))
-                        end_tick  = self._frame_to_tick(eidx, e_off, bpm)
+                        end_tick  = self._frame_to_tick(eidx, e_off, bpm, offset)
                         hold_time = max(0, end_tick - start_tick)
 
                 # floorPosition base formula (speed_value = 1.0):
@@ -815,7 +822,7 @@ class Phigros4kConvertor:
                          timing exact:
                          ``floorPosition = speed_value * tick * 60 / (32 * bpm)``
         """
-        notes = self.array_to_notes(note_array, bpm)
+        notes = self.array_to_notes(note_array, bpm, offset=offset)
         save_phigros_notes(notes, bpm, output_path, offset=offset,
                            format_version=format_version, line_y=line_y,
                            speed_value=speed_value)

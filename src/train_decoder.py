@@ -40,6 +40,8 @@ from src.data.chart_tokenizer import (
     EOS, FREE_BINS, PAD, ChartTokenizer, TokenNote, encode_gameplay,
 )
 from src.data.gameplay_miner import GameplayNote, load_jsonl
+from src.data.timing import TIMING_SCHEMA, check_checkpoint_timing
+from src.resource_budget import ResourceBudget, add_resource_args
 from src.data.dataset import PhigrosDataset
 from src.models.chart_decoder import DEFAULT_DECODER_CONFIG, ChartDecoder
 from src.models.transcriber import TranscriberNet, TranscriptionLoss
@@ -68,32 +70,35 @@ class TokenChartDataset(Dataset):
         self.gameplay_dir = Path(gameplay_dir) if gameplay_dir else None
         self.tk = ChartTokenizer(n_lanes=FREE_BINS if self.freeform else 4)
         self.frame_ms, self.max_frame, self.mirror_prob = frame_ms, max_frame, mirror_prob
-        self._cache: dict[int, tuple[list, float]] = {}
+        self._cache: dict[int, tuple[list, float, float]] = {}
 
     def __len__(self) -> int:
         return len(self.base)
 
-    def _notes(self, i: int) -> tuple[list, float]:
+    def _notes(self, i: int) -> tuple[list, float, float]:
         if i not in self._cache:
             json_path = self.base._entries[i][0]
             d = json.load(open(json_path, encoding="utf-8"))
             bpm = float(d["judgeLineList"][0]["bpm"])
+            offset = float(d.get("offset", 0.0))
             if self.freeform:
                 song = Path(json_path).parent.name
-                notes = load_jsonl(self.gameplay_dir / f"{song}.jsonl")   # GameplayNote list
+                notes = load_jsonl(self.gameplay_dir / f"{song}.jsonl",
+                                   expected_timing=(bpm, offset))
             else:
                 notes = self.tk.decode_tokens(self.tk.encode_chart(json_path), strict=False)
-            self._cache[i] = (notes, bpm)
+            self._cache[i] = (notes, bpm, offset)
         return self._cache[i]
 
     def __getitem__(self, i: int) -> dict:
         json_path, audio_path, _ = self.base._entries[i]
         base_item = self.base[i]                                      # mel + 4k note array
         mel = base_item["audio"]                                      # (n_mels, T)
-        notes, bpm = self._notes(i)
+        notes, bpm, offset = self._notes(i)
         mirror = self.mirror_prob > 0 and random.random() < self.mirror_prob
         frames_per_tick = 60.0 / (32.0 * bpm) * 1000.0 / self.frame_ms
-        horizon = lambda tick: tick * frames_per_tick < self.max_frame   # noqa: E731
+        offset_frames = offset * 1000.0 / self.frame_ms
+        horizon = lambda tick: 0 <= tick * frames_per_tick + offset_frames < self.max_frame  # noqa: E731
         if self.freeform:
             if mirror:
                 notes = [GameplayNote(**{**n.__dict__, "hit_x": 1.0 - n.hit_x}) for n in notes]
@@ -105,7 +110,7 @@ class TokenChartDataset(Dataset):
             notes = [n for n in notes if horizon(n.tick)]
             tokens = self.tk.encode_notes(notes)
             offs, omask = [0.0] * len(tokens), [False] * len(tokens)
-        frames = [t * frames_per_tick for t in self.tk.ticks_per_position(tokens)]
+        frames = [t * frames_per_tick + offset_frames for t in self.tk.ticks_per_position(tokens)]
         note_arr, vflag = base_item["note"], base_item["valid_flag"]
         if mirror:                                                    # keep aux targets consistent
             from src.data.dataset import _MIRROR_PERM
@@ -160,7 +165,7 @@ AUX_LOSS_WEIGHT    = 1.0     # auxiliary transcription loss on encoder features
 _aux_loss_fn: TranscriptionLoss | None = None
 
 
-def _step_loss(model, batch, device) -> tuple[torch.Tensor, torch.Tensor, int]:
+def _step_loss(model, batch, device, *, return_parts=False):
     global _aux_loss_fn
     mel    = batch["mel"].to(device)
     tokens = batch["tokens"].to(device)
@@ -180,8 +185,8 @@ def _step_loss(model, batch, device) -> tuple[torch.Tensor, torch.Tensor, int]:
     else:
         aux = torch.zeros((), device=device)
     target = tokens[:, 1:]
-    loss = F.cross_entropy(logits.reshape(-1, logits.shape[-1]), target.reshape(-1),
-                           ignore_index=PAD) + AUX_LOSS_WEIGHT * aux
+    ce = F.cross_entropy(logits.reshape(-1, logits.shape[-1]), target.reshape(-1), ignore_index=PAD)
+    loss = ce + AUX_LOSS_WEIGHT * aux
     if has_offset:
         # offset of the NOTE token at input position t is predicted from h_t
         omask = batch["offset_mask"][:, :-1].to(device)
@@ -192,18 +197,21 @@ def _step_loss(model, batch, device) -> tuple[torch.Tensor, torch.Tensor, int]:
     with torch.no_grad():
         m = target != PAD
         correct = ((logits.argmax(-1) == target) & m).sum()
-    return loss, correct, int(m.sum())
+    result = (loss, correct, int(m.sum()))
+    return (*result, ce.detach()) if return_parts else result
 
 
 @torch.no_grad()
-def _validate(model, loader, device) -> tuple[float, float]:
+def _validate(model, loader, device, budget=None) -> tuple[float, float, float]:
     was = model.training; model.eval()
-    nll, correct, count = 0.0, 0, 0
+    nll, total, correct, count = 0.0, 0.0, 0, 0
     for batch in loader:
-        loss, c, n = _step_loss(model, batch, device)
-        nll += loss.item() * n; correct += int(c); count += n
+        if budget is not None:
+            budget.check()
+        loss, c, n, ce = _step_loss(model, batch, device, return_parts=True)
+        nll += ce.item() * n; total += loss.item() * n; correct += int(c); count += n
     if was: model.train()
-    return nll / max(count, 1) / math.log(2), correct / max(count, 1)
+    return nll / max(count, 1) / math.log(2), correct / max(count, 1), total / max(count, 1)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -242,10 +250,12 @@ def _build_parser():
     g = p.add_argument_group("checkpoint")
     g.add_argument("--ckpt-dir",  default="checkpoints")
     g.add_argument("--resume",    default=None)
+    g.add_argument("--init-ckpt", default=None, help="transfer decoder weights only; keep --encoder-ckpt encoder")
     g.add_argument("--save-every", type=int, default=10)
     g = p.add_argument_group("training")
     g.add_argument("--epochs",     type=int, default=300)
     g.add_argument("--batch-size", type=int, default=6)
+    g.add_argument("--grad-accum", type=int, default=1)
     g.add_argument("--lr",         type=float, default=3e-4)
     g.add_argument("--encoder-lr", type=float, default=5e-5)
     g.add_argument("--min-lr",     type=float, default=1e-6)
@@ -256,6 +266,7 @@ def _build_parser():
     g.add_argument("--seed",       type=int, default=42)
     g.add_argument("--device",     default=None)
     g.add_argument("--log-every",  type=int, default=20)
+    add_resource_args(p)
     return p
 
 
@@ -265,6 +276,11 @@ def main() -> None:
     torch.manual_seed(args.seed); random.seed(args.seed)
     ckpt_dir = Path(args.ckpt_dir) / ("decoder_freex" if args.gameplay_dir else "decoder")
     ckpt_dir.mkdir(parents=True, exist_ok=True)
+    budget = ResourceBudget(args, device, ckpt_dir)
+    if args.resume and args.init_ckpt:
+        raise ValueError('Use either --init-ckpt or --resume')
+    if args.grad_accum < 1:
+        raise ValueError('grad-accum must be positive')
     print(f"[dec] device={device} seed={args.seed}")
 
     mel_per_frame = round(args.frame_ms / (args.hop_length / args.sr * 1000))
@@ -288,6 +304,7 @@ def main() -> None:
 
     # ── models ───────────────────────────────────────────────────────────
     enc_ckpt = torch.load(args.encoder_ckpt, map_location="cpu", weights_only=True)
+    check_checkpoint_timing(enc_ckpt)
     encoder = TranscriberNet(**enc_ckpt["config"])
     encoder.load_state_dict(enc_ckpt.get("ema", enc_ckpt["model"]))
     dec_config = dict(DEFAULT_DECODER_CONFIG)
@@ -304,6 +321,13 @@ def main() -> None:
         print(f"[dec] FREE-X mode: vocab {dec_config['vocab_size']}, 64 position bins, "
               f"factorized NOTE embeddings + offset head")
     decoder = ChartDecoder(**dec_config)
+    if args.init_ckpt:
+        initial = torch.load(args.init_ckpt, map_location='cpu', weights_only=True)
+        check_checkpoint_timing(initial)
+        state = initial.get('ema', initial['model'])
+        decoder.load_state_dict({k[len('decoder.'):]: v for k, v in state.items() if k.startswith('decoder.')})
+        del initial, state
+        print(f'[dec] transferred decoder weights from {args.init_ckpt}; fresh optimizer/metrics')
     model = ARChartModel(encoder, decoder).to(device)
     if args.freeze_encoder:
         for p_ in encoder.parameters(): p_.requires_grad_(False)
@@ -316,7 +340,7 @@ def main() -> None:
         groups.append({"params": list(encoder.parameters()), "lr": args.encoder_lr})
     trainable = [p_ for g_ in groups for p_ in g_["params"]]
     optimizer = torch.optim.AdamW(groups, lr=args.lr, weight_decay=args.weight_decay)
-    total_steps = args.epochs * max(1, len(loader))
+    total_steps = args.epochs * max(1, math.ceil(len(loader) / args.grad_accum))
     lr_sched = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=total_steps, eta_min=args.min_lr)
     ema = EMA(model, decay=args.ema_decay)
     stopper = EarlyStopper(patience=args.patience)
@@ -325,6 +349,7 @@ def main() -> None:
     start_epoch, step = 0, 0
     if args.resume:
         ck = torch.load(args.resume, map_location="cpu", weights_only=True)
+        check_checkpoint_timing(ck, resume=True)
         model.load_state_dict(ck["model"])
         ema.load_state_dict(ck.get("ema", model.state_dict()), step=ck.get("ema_step", 0))
         if "optimizer" in ck: optimizer.load_state_dict(ck["optimizer"])
@@ -339,44 +364,51 @@ def main() -> None:
     for epoch in range(start_epoch, args.epochs):
         model.train()
         if args.freeze_encoder: encoder.eval()
-        e_loss, e_n = 0.0, 0
-        for batch in loader:
-            loss, _, n = _step_loss(model, batch, device)
-            optimizer.zero_grad(); loss.backward()
-            nn.utils.clip_grad_norm_(trainable, args.clip_grad)
-            optimizer.step(); lr_sched.step(); ema.update(model); step += 1
-            e_loss += loss.item() * n; e_n += n
-            if step % args.log_every == 0:
+        e_loss, e_ce, e_n = 0.0, 0.0, 0
+        optimizer.zero_grad(set_to_none=True)
+        for batch_idx, batch in enumerate(loader):
+            budget.check()
+            loss, _, n, ce = _step_loss(model, batch, device, return_parts=True)
+            group_size = min(args.grad_accum, len(loader) - (batch_idx // args.grad_accum) * args.grad_accum)
+            (loss / group_size).backward()
+            update = (batch_idx + 1) % args.grad_accum == 0 or batch_idx + 1 == len(loader)
+            if update:
+                nn.utils.clip_grad_norm_(trainable, args.clip_grad)
+                optimizer.step(); lr_sched.step(); ema.update(model); step += 1
+                optimizer.zero_grad(set_to_none=True)
+            e_loss += loss.item() * n; e_ce += ce.item() * n; e_n += n
+            if update and step % args.log_every == 0:
                 print(f"[dec] ep {epoch+1:>4d} step {step:>6d} loss {loss.item():.4f} "
                       f"lr {optimizer.param_groups[0]['lr']:.2e} t {time.time()-t0:.0f}s")
         final_epoch = epoch + 1
-        rec = {"epoch": epoch + 1, "step": step, "train_nll": e_loss / max(e_n, 1) / math.log(2),
+        rec = {"epoch": epoch + 1, "step": step, "train_nll": e_ce / max(e_n, 1) / math.log(2),
+               "train_loss": e_loss / max(e_n, 1),
                "lr": optimizer.param_groups[0]["lr"]}
         if val_loader is not None:
             with ema.swapped_into(model):
-                v_nll, v_acc = _validate(model, val_loader, device)
-            rec.update(val_nll=v_nll, val_acc=v_acc)
+                v_nll, v_acc, v_loss = _validate(model, val_loader, device, budget)
+            rec.update(val_nll=v_nll, val_acc=v_acc, val_loss=v_loss)
             best = stopper.update(v_nll, epoch + 1)
             if best:
-                torch.save({"model": ema.state_dict(), "dec_config": dec_config,
+                budget.save({"timing_schema": TIMING_SCHEMA, "model": ema.state_dict(), "dec_config": dec_config,
                             "enc_config": enc_ckpt["config"], "epoch": epoch + 1, "val_nll": v_nll},
                            ckpt_dir / "decoder_best.pt")
             print(f"[dec] epoch {epoch+1:>4d}  train {rec['train_nll']:.4f} bits  "
                   f"val {v_nll:.4f} bits  acc {v_acc:.3f}{'  *best*' if best else ''}")
-        metrics.log(**rec)
+        metrics.log(**rec, **budget.log_state())
         if (epoch + 1) % args.save_every == 0:
-            torch.save({"model": model.state_dict(), "ema": ema.state_dict(), "ema_step": ema.step,
+            budget.save({"timing_schema": TIMING_SCHEMA, "model": model.state_dict(), "ema": ema.state_dict(), "ema_step": ema.step,
                         "optimizer": optimizer.state_dict(), "lr_scheduler": lr_sched.state_dict(),
                         "stopper": {"best": stopper.best, "best_epoch": stopper.best_epoch,
                                     "bad_epochs": stopper.bad_epochs},
                         "dec_config": dec_config, "enc_config": enc_ckpt["config"],
                         "epoch": epoch + 1, "step": step},
                        ckpt_dir / f"dec_e{epoch+1:04d}.pt")
-            rotate_checkpoints(ckpt_dir, "dec_e*.pt", keep=2)
+            rotate_checkpoints(ckpt_dir, "dec_e*.pt", keep=args.keep_checkpoints)
         if stopper.should_stop:
             print(f"[dec] early stop at epoch {epoch+1} (best val {stopper.best:.4f} @ {stopper.best_epoch})")
             break
-    torch.save({"model": ema.state_dict(), "dec_config": dec_config, "enc_config": enc_ckpt["config"],
+    budget.save({"timing_schema": TIMING_SCHEMA, "model": ema.state_dict(), "dec_config": dec_config, "enc_config": enc_ckpt["config"],
                 "epoch": final_epoch}, ckpt_dir / "decoder_final.pt")
     print(f"[dec] done. best val {stopper.best:.4f} bits @ {stopper.best_epoch} → {ckpt_dir/'decoder_best.pt'}")
 

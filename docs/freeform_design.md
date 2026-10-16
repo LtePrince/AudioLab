@@ -80,8 +80,8 @@
 
 | 资产 | 无轨复用方式 |
 |---|---|
-| 转录编码器 / AR decoder 计划 | 原样；词表 +32 位置 token |
-| chart_tokenizer + GrammarState | 扩展 POS 对与间距规则 |
+| 转录编码器 / AR decoder | 复用编码器；64 位置 bin × 4 键型，369 token 词表，位置残差头 |
+| chart_tokenizer + GrammarState | 已支持融合 NOTE token；人体工学间距规则待补 |
 | 官谱 writer / 4k_verify | writer 现成；verify 换约束集 |
 | plot_chart | 轨道带 → 连续 x 轴，半天 |
 | 30 首 F1 评估 | onset 部分不变，加位置指标 |
@@ -100,3 +100,87 @@
 `script/mine_gameplay.py`：官谱 → 玩法谱 JSONL
 （tick/type/hit_x/hit_y/θ/线id/dur），全 300 首 + 分布报告
 ——它同时是 P1 的训练数据源和 P3 的监督源。
+
+## 6. 时间约定与数据修复（2026-10-16）
+
+定轨和无轨共用 `src/data/timing.py` 的版本
+`audio-offset-post-token-v1`：
+
+- 谱面 tick 是局部时间，32 tick = 1 拍；合并多判定线时统一到第一条线的 BPM。
+- 模型使用音频时间：`audio_seconds = tick * 60 / (32 * bpm) + offset`。
+  4K 数组、AR 的 cross-attention 帧位置、评估与可视化均遵守这个约定。
+- AR 输入位置的时钟是**消费该 token 之后**的时钟：DT 当场推进；NOTE 和
+  DUR 不推进。训练和逐步 KV-cache 推理一致。
+- 线移动/旋转事件在原线的原始浮点 tick 上求值，包括 Hold 尾部；随后统一
+  BPM，并分别量化 onset/end，duration = end - onset，offset 不改变持续时长。
+- 转录骨架从音频帧转换成谱面 tick 时减去 offset；4K 导出也减去 offset，
+  JSON 保留该 offset，避免播放时重复加延迟。音频外的骨架点会被滤掉。
+
+本次重挖 300 首、269,639 个音符，0 失败。7 首含多线 BPM，9 首 offset 非零，
+7 首玩法 JSONL 的时间发生改变。300 份单线玩法参考谱已重建，300 份 4K 音频
+标签缓存已生成。4K token 往返校验 300/300 通过。原谱与已有 checkpoint 保留。
+
+逐音符核对全部 300 首，统一 BPM 后的 onset/end 量化误差均不超过半个目标 tick，
+全库最大 7.103 ms。多 BPM 的旧错误会达到分钟级，例如 `月下缭乱_IN` 的 onset
+最大偏差约 276.343 秒。原谱坐标和原生时刻仍用于几何求值。
+free-x 的 64-bin 编码保留 264,872 个音符，4,767 个（约 1.77%）被同 tick/bin
+去重；这属于位置表示损失，仍需后续设计处理。详细核对结果存于
+`out/timing_audit.json`；104 项测试通过。
+
+每份 `data/gameplay/<song>.jsonl` 带 `.meta.json`，记录时间版本、目标 BPM、
+offset、原谱与 JSONL 的 SHA-256。free-x 训练会拒绝缺失或不匹配的元数据，
+原谱仍在记录路径时也校验原谱 hash。全库统计在 `data/gameplay/manifest.json`。
+4K chart cache 的键包含时间版本、谱面内容 hash 和转换参数；旧 mel cache 可复用。
+
+重新挖掘、验证：
+
+```bash
+.venv/bin/python script/mine_gameplay.py
+.venv/bin/python script/verify_tokenizer.py --data-list data/data.txt
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 MPLCONFIGDIR=/tmp/audiolab-mpl \
+  .venv/bin/python -m pytest test -q -p no:cacheprovider
+```
+
+新转录器、DiT 和 AR checkpoint 都记录时间版本。旧权重允许加载用于迁移或对照，
+会提示时间约定差异；`--resume` 拒绝跨版本恢复优化器和旧 best/patience。
+AR 可通过 `--encoder-ckpt` 迁移旧编码器，再开始新的训练。旧生成结果的分数应当
+与其当时的参考谱一起保留；修正后 free-x 参考谱与旧版本不能混着比较。
+
+接下来先训练共用转录器，再分别训练 4K 和 free-x 解码器。评估同时报告严格时间
+容差下的 onset F1、位置/轨道、键型、Hold 与密度；free-x 的位置碰撞和人体工学
+约束仍需推进。多判定线演出仍属于 P2，当前修复不会自动产生演出模型的新权重。
+
+## 7. 有资源限制的双路线训练
+
+`script/train_models.py` 串行执行：转录器 → 4K 解码器 → free-x 解码器 →
+两套 30 首验证谱面生成 → 25/50/92.9 ms 容差评估。GPU 默认使用物理编号 1；
+在设备受限的沙箱内看不到 GPU 时，需在获得授权后于沙箱外运行。
+
+```bash
+.venv/bin/python -m script.train_models --preflight
+.venv/bin/python -u -m script.train_models
+# 仅在队列已停止时恢复；同一 run 的 epoch 配置须保持一致
+.venv/bin/python -u -m script.train_models --resume-run
+```
+
+输出默认在 `checkpoints/timing_v1/`，旧的 `checkpoints/transcriber`、`decoder`、
+`decoder_freex` 作为迁移初始化来源。转录器最多 20 epoch，两个解码器各最多
+30 epoch，patience=8；`--init-ckpt` 只迁移权重，重新建立优化器、EMA 和验证记录。
+解码器仅迁移 decoder，encoder 使用本轮转录器的最佳权重。
+
+资源限制：
+
+- 只运行一个训练/生成 worker，`num_workers=0`；转录器 batch=2、累积 8 次，
+  解码器 batch=1、累积 6 次。转录验证 batch=1。
+- PyTorch 显存分配上限为单卡总量的 65%（24 GiB 卡约 15.6 GiB，不含驱动等开销）。
+- 磁盘至少保留 8 GiB、系统可用 RAM 至少保留 8 GiB，worker RSS 上限 10 GiB。
+  训练每 5 秒检查，外层监督器每 10 秒检查。RAM 是监测阈值，并非操作系统硬隔离；
+  达阈值会停止队列，已写好的 checkpoint 保留。
+- 每 epoch 保存一个可续训 checkpoint，成功写完再删除本轮多余中间 checkpoint，
+  每个模型保留最新一个以及 best/final。采用临时文件加原子替换，写入前预留整个
+  临时文件所需空间，防止写盘失败破坏已有权重。
+
+`run.json` 记录阶段、进程与命令；`resources.jsonl` 记录资源采样；各阶段的 `.log`
+记录训练和评估输出。模型子目录的 `metrics.jsonl` 也包含内存、磁盘和显存峰值。
+AR 的 `train_nll/val_nll` 已修正为纯 next-token CE 的 bits/token，辅助转录和位置
+损失计入 `train_loss/val_loss`，因此不能与旧版混合损失的 NLL 数值直接比较。

@@ -174,7 +174,7 @@ class ChartTokenizer:
             key = (n.tick, n.lane)
             if key in canon:
                 n_dup += 1
-                continue                       # first note wins (matches array codec)
+                continue                       # first note wins in token space
             canon[key] = n
         if n_dup:
             warnings.warn(f"encode_notes: {n_dup} duplicate (tick,lane) notes dropped",
@@ -201,15 +201,19 @@ class ChartTokenizer:
 
     def encode_chart(self, json_path: str) -> list[int]:
         """Encode a Phigros chart JSON (4k-converted or raw; lanes quantised)."""
+        from src.data.timing import normalized_span
         d = json.load(open(json_path, encoding="utf-8"))
+        bpm = float(d["judgeLineList"][0]["bpm"])
         notes: list[TokenNote] = []
         for line in d["judgeLineList"]:
             for n in line["notesAbove"] + line["notesBelow"]:
+                tick, dur = normalized_span(n["time"], n["holdTime"] if int(n["type"]) == 3 else 0,
+                                            float(line["bpm"]), bpm)
                 notes.append(TokenNote(
-                    tick=int(round(n["time"])),
+                    tick=tick,
                     lane=Phigros4kConvertor._lane_from_x(n["positionX"]),
                     type=int(n["type"]),
-                    dur=int(round(n["holdTime"])) if int(n["type"]) == 3 else 0,
+                    dur=dur,
                 ))
         return self.encode_notes(notes)
 
@@ -262,16 +266,19 @@ class ChartTokenizer:
 
     # ── per-position musical time (for decoder time-embedding injection) ─
     def ticks_per_position(self, tokens: list[int]) -> list[int]:
-        """Tick reached BEFORE emitting each token (time of the event the
-        token belongs to).  DTB/DTT advance the clock for later positions."""
+        """Clock AFTER consuming each input token, used to predict the next.
+
+        DTB/DTT advance the clock at their own position. Duration tokens do
+        not advance it. NOTE positions therefore still carry their onset.
+        """
         out, cur = [], 0
         for tok in tokens:
-            out.append(cur)
             k = self.kind(tok)
             if k == "DTB":
                 cur += self.value(tok) * TICKS_PER_BEAT
             elif k == "DTT":
                 cur += self.value(tok)
+            out.append(cur)
         return out
 
     # ── convenience: decoded notes → Phigros Note dicts ─────────────────

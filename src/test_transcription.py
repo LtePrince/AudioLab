@@ -25,6 +25,7 @@ from pathlib import Path
 
 import torch
 
+from src.data.timing import check_checkpoint_timing
 from src.data.audio2mel import AudioGPUprocessor
 from src.data.chart2array import Phigros4kConvertor
 from src.models.transcriber import TranscriberNet, to_note_array
@@ -110,6 +111,7 @@ def main() -> None:
         print(f"[tsc] bpm={bpm} offset={offset} (from {args.ref_chart})")
 
     ckpt  = torch.load(args.ckpt, map_location="cpu", weights_only=True)
+    check_checkpoint_timing(ckpt)
     model = TranscriberNet(**ckpt["config"]).to(device).eval()
     model.load_state_dict(ckpt.get("ema", ckpt["model"])
                           if isinstance(ckpt, dict) and ("ema" in ckpt or "model" in ckpt)

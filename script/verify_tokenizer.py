@@ -5,7 +5,7 @@ For every chart in a data list:
   (tick, lane, type, hold-ticks) against the canonicalised source.
 
 "Canonicalised" = sorted by (tick, lane), duplicate (tick, lane) dropped
-(first wins — the same convention as the training array codec) and lane
+(first wins in token space) and lane
 quantised from positionX.  Any mismatch is a hard failure.
 
 Also reports token-sequence statistics (the AR decoder's context budget).
@@ -40,12 +40,13 @@ def source_notes(json_path: str) -> list[TokenNote]:
     canon: dict[tuple[int, int], TokenNote] = {}
     for line in d["judgeLineList"]:
         for n in line["notesAbove"] + line["notesBelow"]:
-            tick = int(round(n["time"]))
+            scale = float(d["judgeLineList"][0]["bpm"]) / float(line["bpm"])
+            tick = round(n["time"] * scale)
             lane = Phigros4kConvertor._lane_from_x(n["positionX"])
             if (tick, lane) in canon:
                 continue
             type_ = int(n["type"])
-            dur   = int(round(n["holdTime"])) if type_ == 3 else 0
+            dur = max(0, round((n["time"] + n["holdTime"]) * scale) - tick) if type_ == 3 else 0
             if type_ == 3 and dur < 1:
                 type_, dur = 1, 0
             canon[(tick, lane)] = TokenNote(tick, lane, type_, dur)

@@ -36,7 +36,7 @@ def onsets(path: str, shift_ms: float = 0.0) -> list[tuple[float, int, int, floa
     for l in d["judgeLineList"]:
         bpm = float(l["bpm"])
         for n in l["notesAbove"] + l["notesBelow"]:
-            t = n["time"] / 32.0 * 60000.0 / bpm + shift_ms
+            t = n["time"] / 32.0 * 60000.0 / bpm + float(d.get("offset", 0.0)) * 1000.0 + shift_ms
             lane = min(max(round((n["positionX"] + 3.75) / 2.5), 0), 3)
             out.append((t, lane, int(n["type"]), 0.5 + n["positionX"] * X_UNIT_W))
     return sorted(out)

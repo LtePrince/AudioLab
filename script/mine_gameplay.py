@@ -14,6 +14,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -25,6 +26,7 @@ import numpy as np
 
 from src.data.chart2array import save_phigros_notes
 from src.data.gameplay_miner import X_UNIT_W, mine_chart, save_jsonl
+from src.data.timing import TIMING_SCHEMA
 
 
 def gameplay_to_chart_json(notes, bpm: float, out_path: Path, offset: float = 0.0) -> None:
@@ -67,6 +69,7 @@ def main() -> None:
 
     dirs = sorted(d for d in Path(args.data_dir).iterdir() if d.is_dir())
     all_notes, n_fail = [], 0
+    records = []
     per_song_offscreen = []
 
     for d in dirs:
@@ -82,10 +85,16 @@ def main() -> None:
         except Exception as exc:
             n_fail += 1; print(f"[FAIL] {d.name}: {type(exc).__name__}: {exc}")
             continue
-        save_jsonl(notes, Path(args.out_dir) / f"{d.name}.jsonl")
+        target = Path(args.out_dir) / f"{d.name}.jsonl"
+        old_bytes = target.read_bytes() if target.exists() else None
+        save_jsonl(notes, target, source_path=src)
+        src_d = json.loads(src.read_text(encoding="utf-8"))
+        bpms = sorted({float(l["bpm"]) for l in src_d["judgeLineList"]})
+        records.append({"song": d.name, "notes": len(notes), "line_bpms": bpms,
+                        "bpm": float(src_d["judgeLineList"][0]["bpm"]),
+                        "offset": float(src_d.get("offset", 0.0)),
+                        "changed": old_bytes != target.read_bytes()})
         if args.chart_dir:
-            import json as _json
-            src_d = _json.load(open(src, encoding="utf-8"))
             gameplay_to_chart_json(notes, float(src_d["judgeLineList"][0]["bpm"]),
                                    Path(args.chart_dir) / f"{d.name}.json",
                                    offset=float(src_d.get("offset", 0.0)))
@@ -93,6 +102,17 @@ def main() -> None:
         off = np.mean([not (0 <= g.hit_x <= 1 and 0 <= g.hit_y <= 1) for g in notes])
         per_song_offscreen.append((off, d.name))
 
+    report = {"timing_schema": TIMING_SCHEMA, "songs": len(records), "failed": n_fail,
+              "notes": len(all_notes), "multi_bpm_songs": sum(len(r["line_bpms"]) > 1 for r in records),
+              "nonzero_offset_songs": sum(r["offset"] != 0 for r in records),
+              "changed_songs": sum(r["changed"] for r in records), "charts": records}
+    Path(args.out_dir).mkdir(parents=True, exist_ok=True)
+    Path(args.out_dir, "manifest.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"Timing: {report['multi_bpm_songs']} multi-BPM, "
+          f"{report['nonzero_offset_songs']} nonzero-offset, {report['changed_songs']} changed")
+    if not all_notes:
+        raise SystemExit("No gameplay notes mined; inspect manifest.json")
     N = all_notes
     hx = np.array([g.hit_x for g in N]); hy = np.array([g.hit_y for g in N])
     th = np.array([abs(g.theta) for g in N])

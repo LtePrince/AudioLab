@@ -30,9 +30,12 @@ Coordinate conventions
 from __future__ import annotations
 
 import json
+import hashlib
 import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
+
+from src.data.timing import TIMING_SCHEMA, normalized_span
 
 __all__ = ["GameplayNote", "mine_chart", "X_UNIT_W", "X_UNIT_H"]
 
@@ -42,7 +45,10 @@ X_UNIT_H = 0.05625 * 16 / 9  # …and in screen-height fraction (= 0.1)
 
 @dataclass
 class GameplayNote:
-    """One mined note: gameplay target + presentation attributes for P3."""
+    """Gameplay + presentation attributes; tick/dur use the FIRST line's BPM.
+
+    Chart offset stays in the companion metadata, never in tick or dur.
+    """
     tick:    int
     type:    int     # 1 Tap / 2 Drag / 3 Hold / 4 Flick
     dur:     int     # hold duration in ticks (0 otherwise)
@@ -124,6 +130,7 @@ def mine_chart(json_path: str | Path) -> list[GameplayNote]:
     """Mine one original chart into its gameplay-layer note list."""
     d = json.load(open(json_path, encoding="utf-8"))
     fmt = int(d.get("formatVersion", 3))
+    target_bpm = float(d["judgeLineList"][0]["bpm"])
     out: list[GameplayNote] = []
 
     for line_id, line in enumerate(d["judgeLineList"]):
@@ -131,14 +138,15 @@ def mine_chart(json_path: str | Path) -> list[GameplayNote]:
         for above, notes in ((True, line["notesAbove"]), (False, line["notesBelow"])):
             for n in notes:
                 t     = float(n["time"])
-                dur   = int(round(n["holdTime"])) if int(n["type"]) == 3 else 0
+                native_dur = float(n["holdTime"]) if int(n["type"]) == 3 else 0.0
+                tick, dur = normalized_span(t, native_dur, float(line["bpm"]), target_bpm)
                 lx, ly, moving   = _eval_xy(mv, t, fmt)
                 theta, rotating  = _eval_scalar(rot, t, 0.0)
                 theta = ((theta + 180.0) % 360.0) - 180.0
                 hx, hy = _hit_point(lx, ly, theta, n["positionX"])
 
-                if dur > 0:                       # hold tail follows the line
-                    t2 = t + dur
+                if native_dur > 0:                # interpolate BEFORE tick quantization
+                    t2 = t + native_dur
                     lx2, ly2, _ = _eval_xy(mv, t2, fmt)
                     th2, _      = _eval_scalar(rot, t2, 0.0)
                     tx, ty = _hit_point(lx2, ly2, th2, n["positionX"])
@@ -146,7 +154,7 @@ def mine_chart(json_path: str | Path) -> list[GameplayNote]:
                     tx, ty = hx, hy
 
                 out.append(GameplayNote(
-                    tick=int(round(t)), type=int(n["type"]), dur=dur,
+                    tick=tick, type=int(n["type"]), dur=dur,
                     pos_x=float(n["positionX"]),
                     hit_x=hx, hit_y=hy, theta=theta,
                     line_id=line_id, above=above,
@@ -158,13 +166,41 @@ def mine_chart(json_path: str | Path) -> list[GameplayNote]:
     return out
 
 
-def save_jsonl(notes: list[GameplayNote], path: str | Path) -> None:
+def save_jsonl(notes: list[GameplayNote], path: str | Path,
+               source_path: str | Path | None = None) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as fh:
         for g in notes:
             fh.write(json.dumps(asdict(g), ensure_ascii=False) + "\n")
+    if source_path is not None:
+        source = Path(source_path).read_bytes()
+        chart = json.loads(source)
+        meta = {"timing_schema": TIMING_SCHEMA,
+                "bpm": float(chart["judgeLineList"][0]["bpm"]),
+                "offset": float(chart.get("offset", 0.0)),
+                "source_path": str(Path(source_path).resolve()),
+                "source_sha256": hashlib.sha256(source).hexdigest(),
+                "jsonl_sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest(),
+                "notes": len(notes)}
+        Path(path).with_suffix(".meta.json").write_text(
+            json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def load_jsonl(path: str | Path) -> list[GameplayNote]:
+def load_jsonl(path: str | Path, *, expected_timing: tuple[float, float] | None = None
+               ) -> list[GameplayNote]:
+    if expected_timing is not None:
+        meta_path = Path(path).with_suffix(".meta.json")
+        if not meta_path.exists():
+            raise ValueError(f"Missing mining metadata for {path}; run script/mine_gameplay.py")
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        bpm, offset = expected_timing
+        if (meta.get("timing_schema") != TIMING_SCHEMA
+                or not math.isclose(meta["bpm"], bpm)
+                or not math.isclose(meta["offset"], offset, abs_tol=1e-9)
+                or meta.get("jsonl_sha256") != hashlib.sha256(Path(path).read_bytes()).hexdigest()):
+            raise ValueError(f"Stale or mismatched gameplay data: {path}; run script/mine_gameplay.py")
+        source = Path(meta["source_path"])
+        if source.is_file() and hashlib.sha256(source.read_bytes()).hexdigest() != meta["source_sha256"]:
+            raise ValueError(f"Source chart changed for {path}; run script/mine_gameplay.py")
     return [GameplayNote(**json.loads(l))
             for l in open(path, encoding="utf-8") if l.strip()]

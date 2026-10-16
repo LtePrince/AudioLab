@@ -272,6 +272,7 @@ def generate_tokens(
     generator:   torch.Generator | None = None,
     tokenizer    = None,          # ChartTokenizer instance (default: 4-lane)
     skeleton_ticks: list[int] | None = None,
+    offset: float = 0.0,         # chart delay in audio seconds
 ) -> list[int]:
     """Sample a grammar-valid token sequence.
 
@@ -298,7 +299,8 @@ def generate_tokens(
     kinds = [T.kind(i) for i in range(decoder.lm_head.out_features)]
     values = [T.value(i) for i in range(decoder.lm_head.out_features)]
 
-    tokens, frames = [BOS], [0.0]
+    offset_frames = offset * 1000.0 / frame_ms
+    tokens, frames = [BOS], [offset_frames]
     offsets: dict[int, float] = {}       # token position → sub-bin offset (free-x)
     gs = GrammarState(T); gs.step(BOS)
     cur_tick = 0
@@ -307,7 +309,9 @@ def generate_tokens(
     is_dt   = torch.tensor([k in ("DTB", "DTT") for k in kinds], device=device)
     is_note = torch.tensor([k == "NOTE" for k in kinds], device=device)
     is_eos  = torch.tensor([k == "EOS" for k in kinds], device=device)
-    skel = sorted(set(int(x) for x in skeleton_ticks)) if skeleton_ticks is not None else None
+    skel = (sorted({int(x) for x in skeleton_ticks
+                    if x >= 0 and 0 <= int(x) * frames_per_tick + offset_frames < audio_frames})
+            if skeleton_ticks is not None else None)
     skel_i, notes_here = 0, 0            # next skeleton onset index; notes placed at cur_tick
     if skel and skel[0] == 0:            # an onset at tick 0: we already stand on it
         skel_i = 1
@@ -320,7 +324,7 @@ def generate_tokens(
             cur_tick += values[tok] * TICKS_PER_BEAT
         elif kinds[tok] == "DTT":
             cur_tick += values[tok]
-        frames.append(cur_tick * frames_per_tick)
+        frames.append(cur_tick * frames_per_tick + offset_frames)
 
     for _ in range(max_tokens):
         pos = len(tokens) - 1
@@ -333,7 +337,7 @@ def generate_tokens(
             offsets[pos] = float(decoder.predict_offset(hidden[:, None])[0, 0])
 
         allowed = torch.tensor([gs.is_allowed(i) for i in range(len(kinds))], device=device)
-        past_end = cur_tick * frames_per_tick >= audio_frames
+        past_end = cur_tick * frames_per_tick + offset_frames >= audio_frames
         if skel is not None and not gs.in_dur:
             at_onset = skel_i > 0 and cur_tick == skel[skel_i - 1]
             more = skel_i < len(skel)
