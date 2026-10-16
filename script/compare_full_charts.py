@@ -132,6 +132,65 @@ def aggregate(rows, variant, stage):
     return result
 
 
+def model_markdown(report, model):
+    """Readable numeric evidence; model adoption decisions remain explicit prose."""
+    data = report['models'][model]
+    name = 'free-x 无轨' if model == 'decoder_freex' else '4K 定轨'
+    labels = dict(original='原始', nms35='原模型 + NMS35', global_v2='全局 v2（0.25/25ms）')
+    lines = [f'# 30 首完整谱面对照：{name}', '',
+        '固定验证集全部 30 首、seed=42、flat top-p=0.95，AR 权重保持 timing_v1。',
+        '参数在训练曲校准后冻结；验证集用于过模型选取，结果属于开发验证，不是独立测试集。',
+        'F1 沿用整谱多音符逐次最近匹配，和弦计多个音符；表中均为逐曲平均。',
+        '4K 位置指标要求同轨；free-x 的位置容差为 0.05 屏宽。Hold 数量不作为目标。', '',
+        '## 原始模型输出', '',
+        '| 骨架 | F1@25ms | @50ms | @92.9ms | 轨道/位置 F1 | 密度/参考 | 总音符 |',
+        '|---|---:|---:|---:|---:|---:|---:|']
+    for variant in VARIANTS:
+        r = data['summary'][variant]['raw']
+        lines.append(f'| {labels[variant]} | {r["f1_25"]:.4f} | {r["f1_50"]:.4f} | '
+                     f'{r["f1_93"]:.4f} | {r["position_f1_93"]:.4f} | {r["density_ratio"]:.4f} | {r["total_notes"]:,} |')
+    lines += ['', '## 逐曲配对差异', '',
+        'bootstrap 10,000 次，seed=42，区间为 95%。区间覆盖 0 时，不能声称改进稳定成立。',
+        '以下是单一采样种子的探索性比较，未作多重比较校正。', '',
+        '| 对照 | 指标 | 平均差 | 95% 区间 | 提升/持平/下降曲数 |', '|---|---|---:|---|---|']
+    for comparison, metrics in data['paired'].items():
+        for metric in ['f1_25', 'f1_93', 'position_f1_93']:
+            r = metrics[metric]
+            lines.append(f'| {comparison} | {metric} | {r["mean_delta"]:+.4f} | '
+                f'[{r["ci95"][0]:+.4f}, {r["ci95"][1]:+.4f}] | {r["wins"]}/{r["ties"]}/{r["losses"]} |')
+    lines += ['', '## 相同后处理的修复结果', '',
+        '起点及音符数逐谱核对保持不变，因此时间 F1 不受后处理影响。冲突按当前静态线',
+        '规则计算（屏宽距离 <0.03）；不能据此断言已通过双手可达性或人工试玩。', '',
+        '| 骨架 | Hold 冲突 前→后 | 近距和弦 前→后 | 截短 Hold | 移动音符 | Hold→Tap | 修复后轨道/位置 F1 |',
+        '|---|---:|---:|---:|---:|---:|---:|']
+    for variant in VARIANTS:
+        raw, fixed = (data['summary'][variant][stage] for stage in ['raw', 'playable'])
+        changes = {key: sum(row['variants'][variant]['repairs'].get(key, 0) for row in data['songs'])
+                   for key in ['shortened_holds', 'moved_notes', 'holds_to_taps']}
+        lines.append(f'| {labels[variant]} | {raw["total_hold_conflicts"]}→{fixed["total_hold_conflicts"]} | '
+            f'{raw["total_close_chords"]}→{fixed["total_close_chords"]} | {changes["shortened_holds"]} | '
+            f'{changes["moved_notes"]} | {changes["holds_to_taps"]} | {fixed["position_f1_93"]:.4f} |')
+        errors = {k: fixed[k] for k in ['onsets_outside_audio', 'hold_ends_outside_audio',
+                                      'invalid_positions', 'invalid_durations']}
+        if any(errors.values()):
+            lines.append(f'\n{labels[variant]} 修复后仍有检查异常：`{json.dumps(errors)}`。\n')
+    lines += ['', '## 逐曲时间 F1@25ms', '',
+        '| 曲目 | 原始 | NMS35 | 全局 v2 | 全局−NMS35 | 全局密度/参考 |',
+        '|---|---:|---:|---:|---:|---:|']
+    for row in data['songs']:
+        a, b, c = [row['variants'][v]['raw'] for v in VARIANTS]
+        song = row['song'].replace('|', r'\|')
+        lines.append(f'| {song} | {a["f1_25"]:.4f} | {b["f1_25"]:.4f} | {c["f1_25"]:.4f} | '
+                     f'{c["f1_25"]-b["f1_25"]:+.4f} | {c["density_ratio"]:.4f} |')
+    lines += ['', '## 文件与复现', '',
+        f'完整原始报告：`{report["config"]["output"]}/report.json`。',
+        f'修复后谱面：`{report["config"]["output"]}/playable/<variant>/{model}/`。',
+        '使用 `python -m script.compare_full_charts` 重算，生成步骤见 README「完整验证集对照」。',
+        '新报告记录权重、谱面与列表 SHA-256；复用的旧报告缺少历史指纹，只能核对配置及权重修改时间。',
+        '数据、权重和谱面保留本地；该文档只保存数值结果。', '']
+    return '\n'.join(lines)
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--list', default='data/val.txt')
@@ -199,7 +258,8 @@ def main():
         provenance=dict(data_list_sha256=sha256_file(args.list),
             original_manifest_sha256=sha256_file(original_manifest),
             original_verification='legacy_manifest_and_checkpoint_mtime',
-            generation_reports={name:dict(config=r['config'], fingerprints=r['fingerprints'], reuse=r['reuse'])
+            generation_reports={name:dict(config=r['config'], fingerprints=r['fingerprints'], reuse=r['reuse'],
+                resources=r['resources'], elapsed_seconds=r['finished']-r['started'], reused_songs=r['reused_songs'])
                                 for name, r in reports.items()}))
     for model in MODELS:
         free = model == 'decoder_freex'
@@ -241,6 +301,8 @@ def main():
             for candidate, baseline in [('nms35', 'original'), ('global_v2', 'original'), ('global_v2', 'nms35')]}
     result['complete'] = True
     write_json(output / 'report.json', result)
+    for model in MODELS:
+        (output / f'{model}.md').write_text(model_markdown(result, model))
     print(json.dumps({model: r['summary'] for model, r in result['models'].items()}), flush=True)
 
 
