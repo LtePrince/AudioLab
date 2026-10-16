@@ -160,3 +160,24 @@ def test_skeleton_from_transcriber_monotone():
         counts.append(len(sk))
     assert counts == sorted(counts, reverse=True), f"阈值升高 onset 应单调减少: {counts}"
     print("[T10] 转录骨架提取 ✓")
+
+
+@pytest.mark.parametrize('lanes', [4, 64])
+def test_token_budget_closes_pending_hold(lanes):
+    """A token limit directly after HOLD must still produce a valid chart."""
+    from types import SimpleNamespace
+    tk = ChartTokenizer(n_lanes=lanes)
+    class HoldOnly:
+        lm_head = SimpleNamespace(out_features=tk.vocab_size)
+        offset_head = None
+        def init_cache(self, memory):
+            return []
+        def step(self, token, frame, pos, caches, T_mem, mem_valid):
+            logits = torch.full((1, tk.vocab_size), -100.0)
+            logits[0, tk.note(0, 3)] = 100
+            return logits, torch.zeros(1, 1)
+    tokens = generate_tokens(HoldOnly(), torch.zeros(1, 10, 1), None,
+                             bpm=120, frame_ms=46.44, audio_frames=9.5,
+                             tokenizer=tk, skeleton_ticks=[0], max_tokens=1)
+    assert tk.decode_tokens(tokens, strict=True) == [TokenNote(0, 0, 3, 1)]
+    assert tokens == [BOS, tk.note(0, 3), tk.durt(1), EOS]

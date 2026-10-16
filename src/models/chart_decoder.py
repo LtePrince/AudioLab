@@ -265,7 +265,7 @@ def generate_tokens(
     mem_valid:   Tensor,          # (1, T) bool
     bpm:         float,
     frame_ms:    float,
-    audio_frames: int,            # real audio length in chart frames (time cutoff)
+    audio_frames: float,          # real audio length in chart frames (time cutoff)
     temperature: float = 1.0,
     top_p:       float = 0.95,
     max_tokens:  int   = 6000,
@@ -394,7 +394,11 @@ def generate_tokens(
         if nxt == EOS:
             break
     if tokens[-1] != EOS:
-        tokens.append(EOS)
+        # The budget may end immediately after a Hold. Its mandatory duration
+        # must precede EOS even when this takes up to two extra closing tokens.
+        if gs.in_dur:
+            feed(T.durt(1))
+        feed(EOS)
     if decoder.offset_head is not None:
         return tokens, offsets
     return tokens
