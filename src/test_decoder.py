@@ -30,6 +30,7 @@ from src.data.audio2mel import AudioGPUprocessor
 from src.data.chart2array import save_phigros_notes
 from src.data.chart_constraints import constrain_4k_notes, constrain_free_notes
 from src.data.free_contacts import constrain_free_contacts
+from src.data.fourkey_contacts import constrain_4k_contacts
 from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.models.chart_decoder import ChartDecoder, generate_tokens
 from src.models.transcriber import TranscriberNet
@@ -88,10 +89,11 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
         raise ValueError('unknown playability profile')
     if raw_output and playability_profile != 'legacy':
         raise ValueError('raw-output cannot be combined with contacts-v1')
-    if playability_profile == 'contacts-v1' and dec.n_lanes != 64:
-        raise ValueError('contacts-v1 currently requires free-x')
-    if playability_profile == 'contacts-v1' and (type(max_contacts) is not int or not 1 <= max_contacts <= 10):
+    if playability_profile == 'contacts-v1' and dec.n_lanes == 64 and (
+            type(max_contacts) is not int or not 1 <= max_contacts <= 10):
         raise ValueError('free-x contacts-v1 requires explicit max_contacts in [1, 10]')
+    if dec.n_lanes == 4 and max_contacts is not None:
+        raise ValueError('4K has four fixed keys; max_contacts is for free-x')
     if playability_profile == 'legacy' and max_contacts is not None:
         raise ValueError('max_contacts requires contacts-v1')
     t0 = time.time()
@@ -130,7 +132,9 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     repairs = {}
     if not raw_output:
         end_tick = (audio_seconds - offset) / tick_seconds(1, bpm)
-        if playability_profile == 'contacts-v1':
+        if playability_profile == 'contacts-v1' and dec.n_lanes == 4:
+            pnotes, repairs = constrain_4k_contacts(pnotes, end_tick, bpm)
+        elif playability_profile == 'contacts-v1':
             pnotes, repairs = constrain_free_contacts(pnotes, end_tick, bpm, max_contacts=max_contacts)
         elif dec.n_lanes == 4:
             pnotes, repairs = constrain_4k_notes(pnotes, end_tick)
