@@ -48,6 +48,7 @@ def generation_settings(config):
         result[key] = str(Path(config[key]).resolve())
     result['skeleton_ckpt'] = str(Path(config.get('skeleton_ckpt') or
         Path(config['checkpoint_root']) / 'transcriber/transcriber_best.pt').resolve())
+    result['max_chord_size'] = config.get('max_chord_size')
     return result
 
 
@@ -175,6 +176,7 @@ def main():
     p.add_argument('--top-ps', default='0.95,1.0')
     p.add_argument('--teacher-only', action='store_true')
     p.add_argument('--sampling-policy', choices=['flat', 'type_preserving'], default='flat')
+    p.add_argument('--max-chord-size', type=int, default=None)
     p.add_argument('--onset-threshold', type=float, default=None)
     p.add_argument('--onset-min-interval-ms', type=float, default=None)
     p.add_argument('--skeleton-source', choices=['transcriber', 'reference'], default='transcriber',
@@ -273,7 +275,7 @@ def main():
                     generated = generate_tokens(dec, memory, valid, bpm, frame_ms, n_frames,
                         top_p=top_p, generator=torch.Generator(device=device).manual_seed(args.seed),
                         tokenizer=tk, skeleton_ticks=skeleton, offset=offset,
-                        sampling_policy=args.sampling_policy)
+                        sampling_policy=args.sampling_policy, max_chord_size=args.max_chord_size)
                     if free:
                         tokens, position_offsets = generated
                         ticks = tk.ticks_per_position(tokens)

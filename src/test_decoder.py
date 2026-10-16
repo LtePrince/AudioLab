@@ -29,6 +29,7 @@ from src.data.timing import check_checkpoint_timing
 from src.data.audio2mel import AudioGPUprocessor
 from src.data.chart2array import save_phigros_notes
 from src.data.chart_constraints import constrain_4k_notes, constrain_free_notes
+from src.data.free_contacts import constrain_free_contacts
 from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.models.chart_decoder import ChartDecoder, generate_tokens
 from src.models.transcriber import TranscriberNet
@@ -81,7 +82,18 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
                    skeleton_ticks: list[int] | None = None,
                    transcriber=None, onset_threshold: float = 0.5,
                    raw_output: bool = False, free_min_gap: float = 0.04,
-                   sampling_policy: str = 'flat', onset_min_interval_ms: float = 0.0) -> int:
+                   sampling_policy: str = 'flat', onset_min_interval_ms: float = 0.0,
+                   playability_profile: str = 'legacy', max_contacts: int | None = None) -> int:
+    if playability_profile not in ('legacy', 'contacts-v1'):
+        raise ValueError('unknown playability profile')
+    if raw_output and playability_profile != 'legacy':
+        raise ValueError('raw-output cannot be combined with contacts-v1')
+    if playability_profile == 'contacts-v1' and dec.n_lanes != 64:
+        raise ValueError('contacts-v1 currently requires free-x')
+    if playability_profile == 'contacts-v1' and (type(max_contacts) is not int or not 1 <= max_contacts <= 10):
+        raise ValueError('free-x contacts-v1 requires explicit max_contacts in [1, 10]')
+    if playability_profile == 'legacy' and max_contacts is not None:
+        raise ValueError('max_contacts requires contacts-v1')
     t0 = time.time()
     frame_ms = hop_length / sr / 4 * 8 * 1000
     mpf = enc.mel_per_frame
@@ -103,7 +115,8 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     tk = ChartTokenizer(n_lanes=dec.n_lanes)
     out = generate_tokens(dec, memory, valid, bpm, frame_ms, audio_seconds * 1000 / frame_ms,
                           temperature=temperature, top_p=top_p, generator=gen, tokenizer=tk,
-                          skeleton_ticks=skeleton_ticks, offset=offset, sampling_policy=sampling_policy)
+                          skeleton_ticks=skeleton_ticks, offset=offset, sampling_policy=sampling_policy,
+                          max_chord_size=max_contacts if playability_profile == 'contacts-v1' else None)
     if dec.offset_head is not None:                      # free-x: (tokens, offsets)
         tokens, pos_offsets = out
         notes = tk.decode_tokens(tokens, strict=True)
@@ -117,15 +130,22 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     repairs = {}
     if not raw_output:
         end_tick = (audio_seconds - offset) / tick_seconds(1, bpm)
-        if dec.n_lanes == 4:
+        if playability_profile == 'contacts-v1':
+            pnotes, repairs = constrain_free_contacts(pnotes, end_tick, bpm, max_contacts=max_contacts)
+        elif dec.n_lanes == 4:
             pnotes, repairs = constrain_4k_notes(pnotes, end_tick)
         else:
             pnotes, repairs = constrain_free_notes(pnotes, end_tick, free_min_gap)
     save_phigros_notes(pnotes, bpm, output_path, offset=offset)
+    if playability_profile == 'contacts-v1':
+        Path(output_path).with_suffix('.contacts.json').write_text(
+            json.dumps(repairs, ensure_ascii=False, indent=2), encoding='utf-8')
     if not quiet:
+        summary = {k: v for k, v in repairs.items()
+                   if k not in ('source_indices', 'contacts', 'dropped_source_indices')}
         print(f"[dec] {Path(audio_path).name}: {n_frames} frames, {len(tokens)} tokens, "
-              f"{len(notes)} notes → {output_path} ({time.time()-t0:.1f}s), repairs={repairs}")
-    return len(notes)
+              f"{len(pnotes)} notes → {output_path} ({time.time()-t0:.1f}s), repairs={summary}")
+    return len(pnotes)
 
 
 def main() -> None:
@@ -142,6 +162,8 @@ def main() -> None:
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--raw-output", action="store_true",
                    help="export model output without static-line playability repairs")
+    p.add_argument('--playability-profile', choices=['legacy', 'contacts-v1'], default='legacy')
+    p.add_argument('--max-contacts', type=int, help='explicit free-x contact budget; no default two-finger cap')
     p.add_argument("--free-min-gap", type=float, default=0.04,
                    help="free-x static-line chord/Hold clearance as screen width (default: 0.04)")
     p.add_argument("--device", default=None)
@@ -198,7 +220,8 @@ def main() -> None:
                            skeleton_ticks=skel, transcriber=transcriber,
                            onset_threshold=args.onset_threshold, raw_output=args.raw_output,
                            free_min_gap=args.free_min_gap, sampling_policy=args.sampling_policy,
-                           onset_min_interval_ms=args.onset_min_interval_ms)
+                           onset_min_interval_ms=args.onset_min_interval_ms,
+                           playability_profile=args.playability_profile, max_contacts=args.max_contacts)
         return
     bpm, offset = args.bpm, args.offset
     if args.ref_chart:
@@ -210,7 +233,8 @@ def main() -> None:
                    skeleton_ticks=skeleton_from_chart(args.skeleton_json, bpm, offset) if args.skeleton_json else None,
                    transcriber=transcriber, onset_threshold=args.onset_threshold,
                    raw_output=args.raw_output, free_min_gap=args.free_min_gap,
-                   sampling_policy=args.sampling_policy, onset_min_interval_ms=args.onset_min_interval_ms)
+                   sampling_policy=args.sampling_policy, onset_min_interval_ms=args.onset_min_interval_ms,
+                   playability_profile=args.playability_profile, max_contacts=args.max_contacts)
 
 
 if __name__ == "__main__":

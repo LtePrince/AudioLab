@@ -9,7 +9,7 @@ def note(t, x=0, kind=1, dur=0):
 
 def test_detects_simultaneous_contacts_and_held_finger_teleport():
     notes = [note(0, -4, 3, 64), note(64, 4), note(64, 0)]
-    report = audit_contacts(notes, [0, 0, 0], 120, 'freex')
+    report = audit_contacts(notes, [0, 0, 0], 120, 'freex', max_contacts=4)
     assert report['repeat_violations'] == 1
     assert report['release_violations'] == 2
     assert report['movement_violations'] == 2

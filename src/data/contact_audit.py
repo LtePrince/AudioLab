@@ -14,12 +14,14 @@ FREE_GAP = 0.04
 LANES = (-3.75, -1.25, 1.25, 3.75)
 
 
-def audit_contacts(notes, contacts, bpm, mode):
+def audit_contacts(notes, contacts, bpm, mode, *, max_contacts=None):
     if mode not in ('4k', 'freex') or not math.isfinite(bpm) or bpm <= 0:
         raise ValueError('invalid mode or bpm')
     if len(notes) != len(contacts):
         raise ValueError('one contact required for every note')
-    count = 4 if mode == '4k' else 2
+    count = 4 if mode == '4k' else max_contacts
+    if type(count) is not int or not 1 <= count <= 10:
+        raise ValueError('free-x requires an explicit max_contacts in [1, 10]')
     sec = 60 / (32 * bpm)
     result = dict(invalid_contacts=0, repeat_violations=0, release_violations=0,
                   movement_violations=0, chord_gap_violations=0)
@@ -58,7 +60,7 @@ def shorten_to(note, end_tick):
         note['type'], note['speed'] = 1, 1.0
 
 
-def changes_report(original, result, source_indices, contacts, bpm, mode):
+def changes_report(original, result, source_indices, contacts, bpm, mode, *, max_contacts=None):
     kept = set(source_indices)
     starts, remaining = {n['time'] for n in original}, {n['time'] for n in result}
     moved = shortened = converted = 0
@@ -72,10 +74,13 @@ def changes_report(original, result, source_indices, contacts, bpm, mode):
         converted += source['type'] == 3 and note['type'] != 3
         if note['time'] != source['time']:
             raise AssertionError('contact projection must not shift onsets')
-    audit = audit_contacts(result, contacts, bpm, mode)
+    audit = audit_contacts(result, contacts, bpm, mode, max_contacts=max_contacts)
     if any(audit.values()):
         raise AssertionError(f'contact projection produced invalid witness: {audit}')
-    return dict(profile=mode + '-contacts-v1', input_notes=len(original), output_notes=len(result),
+    return dict(profile=mode + '-contacts-v1', max_contacts=4 if mode == '4k' else max_contacts,
+                min_interval_s=MIN_INTERVAL_S, release_s=RELEASE_S,
+                max_speed_screen_per_s=FREE_SPEED if mode == 'freex' else None,
+                input_notes=len(original), output_notes=len(result),
                 dropped_notes=len(original)-len(kept), dropped_source_indices=sorted(set(range(len(original)))-kept),
                 source_indices=source_indices, contacts=contacts, moved_notes=moved,
                 max_displacement=displacement, shortened_holds=shortened, holds_to_taps=converted,

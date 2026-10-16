@@ -302,6 +302,7 @@ def generate_tokens(
     skeleton_ticks: list[int] | None = None,
     offset: float = 0.0,         # chart delay in audio seconds
     sampling_policy: str = 'flat',  # experimental: type_preserving
+    max_chord_size: int | None = None,
 ) -> list[int]:
     """Sample a grammar-valid token sequence.
 
@@ -324,6 +325,9 @@ def generate_tokens(
     T = tokenizer if tokenizer is not None else ChartTokenizer()
     if sampling_policy not in ('flat', 'type_preserving'):
         raise ValueError(f'unknown sampling policy: {sampling_policy}')
+    if max_chord_size is not None and (type(max_chord_size) is not int or
+                                      not 1 <= max_chord_size <= T.n_lanes):
+        raise ValueError('max_chord_size must be an integer in [1, n_lanes]')
     assert T.vocab_size == decoder.lm_head.out_features, "tokenizer/decoder vocab mismatch"
     device = memory.device
     frames_per_tick = 60.0 / (32.0 * bpm) * 1000.0 / frame_ms
@@ -368,6 +372,10 @@ def generate_tokens(
             offsets[pos] = float(decoder.predict_offset(hidden[:, None])[0, 0])
 
         allowed = torch.tensor([gs.is_allowed(i) for i in range(len(kinds))], device=device)
+        # used_lanes resets on every DT, including forced skeleton chains. Mask
+        # only NOTE; a capped chord must still close a pending Hold duration.
+        if max_chord_size is not None and len(gs.used_lanes) >= max_chord_size:
+            allowed = allowed & ~is_note
         past_end = cur_tick * frames_per_tick + offset_frames >= audio_frames
         if skel is not None and not gs.in_dur:
             at_onset = skel_i > 0 and cur_tick == skel[skel_i - 1]

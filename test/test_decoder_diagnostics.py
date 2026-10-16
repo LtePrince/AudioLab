@@ -50,6 +50,8 @@ def test_reuse_checks_settings_hashes_and_completion(tmp_path):
     assert provenance['verification'] == 'sha256'
     with pytest.raises(ValueError, match='settings differ'):
         reuse_records(path, {**config, 'seed': 7}, [], fingerprints)
+    with pytest.raises(ValueError, match='settings differ'):
+        reuse_records(path, {**config, 'max_chord_size': 4}, [], fingerprints)
     with pytest.raises(ValueError, match='fingerprint differs'):
         reuse_records(path, config, [], {'weights.pt': 'changed'})
     report.pop('finished')

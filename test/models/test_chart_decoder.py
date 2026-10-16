@@ -183,6 +183,33 @@ def test_token_budget_closes_pending_hold(lanes):
     assert tokens == [BOS, tk.note(0, 3), tk.durt(1), EOS]
 
 
+@pytest.mark.parametrize('cap', [2, 4, None])
+def test_optional_chord_cap_preserves_skeleton_and_hold_grammar(cap):
+    from types import SimpleNamespace
+    from collections import Counter
+    tk = ChartTokenizer(n_lanes=64)
+    class ChordLoving:
+        lm_head = SimpleNamespace(out_features=tk.vocab_size)
+        offset_head = None
+        def init_cache(self, memory):
+            return []
+        def step(self, *args):
+            logits = torch.full((1, tk.vocab_size), -100.0)
+            for lane in range(6):
+                logits[0, tk.note(lane, 3)] = 100-lane
+            logits[0, tk.durt(1)] = 110
+            logits[0, tk.dtb(1)] = 10
+            logits[0, EOS] = 20
+            return logits, torch.zeros(1, 1)
+    tokens = generate_tokens(ChordLoving(), torch.zeros(1, 10, 1), None,
+        bpm=120, frame_ms=46.44, audio_frames=1000, tokenizer=tk,
+        skeleton_ticks=[0, 100, 777], max_tokens=100, max_chord_size=cap,
+        generator=torch.Generator().manual_seed(42))
+    notes = tk.decode_tokens(tokens, strict=True)
+    assert Counter(n.tick for n in notes) == {0: cap or 6, 100: cap or 6, 777: cap or 6}
+    assert all(n.type == 3 and n.dur == 1 for n in notes)
+
+
 @pytest.mark.parametrize('lanes', [4, 64])
 def test_type_preserving_nucleus_keeps_rare_hold_and_grammar_zeros(lanes):
     from src.models.chart_decoder import nucleus_probs, type_preserving_probs
