@@ -7,7 +7,7 @@
   "branch": "chore/product-pipeline",
   "base_commit": "2965310",
   "reviewed_product_commit": "2b66f8a",
-  "scope": "Prior N1/F4a/C2/R1 engineering evidence retained. User has selected Phira phone/tablet touch and static 4K/free-x first release; current review covers complete Phira package, source-clock semantics and failure status. Real-device import, touch and model quality remain unverified.",
+  "scope": "N1/F4a/C2/R1 and PH1–PH3 engineering accepted within recorded evidence. Phira phone/tablet touch and static 4K/free-x first release confirmed. PH4 real-device import/touch and model quality remain unverified; learned dynamic performance follows later.",
   "findings": [
     {
       "id": "P1",
@@ -43,6 +43,27 @@
       "requested_change": "上传/启动错误与响应断连分离；worker仍活着时不能释放槽位或删除输入，取消必须等待退出再释放。增加真实Handler回归，浏览器上传取消另验。",
       "implementation_response": "开发报告已拆分错误阶段；fail拒绝释放活worker，取消由monitor等待回收。待固定提交及独立复验。",
       "verification": "固定ea963c9的入口/管线34项测试由设计agent独立通过，含真实Handler注入响应断连与live worker保护。另用真实LocalJobs和真实短时子进程（模拟生成，不加载模型）验证取消期间保留槽位/输入、第二提交拒绝、wait退出后释放并允许重试；真实浏览器与模型链路由主会话继续验收。"
+    },
+    {
+      "id": "P4",
+      "severity": "medium",
+      "status": "resolved_verified_in_f2e362f",
+      "gate": "PH1",
+      "file": "src/product/phira.py:chart_contract",
+      "issue": "草稿只检查speedEvents首段；追加乱序/重叠速度段仍声称通过静态PGR加载条件，而Phira读取全部速度事件。",
+      "reproduction": "合法校准谱的两段speedEvents后追加start=64/end=128/value=-1，草稿仍返回hard_checks=passed。",
+      "requested_change": "限定为生成器恒正速覆盖全部头尾加末哨兵的窄profile，拒绝额外、重叠和乱序段；不扩成动态速度解析器。",
+      "verification": "f2e362f严格检查两段速度和静态线事件模板；额外段/反序拒绝回归、真实合法两模式和校准包均通过独立检查。"
+    },
+    {
+      "id": "P5",
+      "severity": "low",
+      "status": "resolved_verified_in_f2e362f",
+      "gate": "PH1",
+      "file": "src/product/phira.py:chart_contract",
+      "issue": "草稿只排除顶层META，但固定Phira源码在原文任何位置检测带引号的META并推断为RPE，嵌套扩展字段会误分类。",
+      "requested_change": "按固定源码拒绝原字节META标记，继续只接受现有PGR导出；不更改谱字节。",
+      "verification": "f2e362f按原字节检查；nested_meta拒绝夹具独立通过。"
     }
   ],
   "independent_checks": [
@@ -117,15 +138,39 @@
       "browser_evidence": "已读主会话out/browser_review/hold-review-v1.json：索引点击A/B精确seek到163.702040816秒，167.258412698秒同一时刻Canvas中A该Hold头0像素、B108像素；真实播放与切模式保持时钟、事件/导出一致，无脚本错误。不是听觉或触摸试玩。",
       "observation": "4K15源Hold中2个变化，B比A保留2.024176秒；free-x258源Hold中63个变化，保留34.098897秒；本批曲末裁剪0。空间处理相同，真实type/speed无派生改变，亚tick转Tap由夹具覆盖。65次启发式变化不等于模型非法动作或B更可玩。",
       "resources": "CPU重放1.081s、峰RSS0.04772GiB、输出7742386bytes；音频软链接复用，无模型推理。"
+    },
+    {
+      "id": "C12",
+      "result": "passed_f2e362f_phira_package_and_source_scope",
+      "scope": "PH1/PH2及PH3管线失败语义；源码/文件检查，非真实Phira执行",
+      "evidence": "固定f2e362f独立Phira专项与产品管线41 passed/9.48s，含两模式/四键型/.375非零offset、WAV/OGG、来源消失后包仍可读、成员错误/取消/资源拒绝/写入与读回失败/第二模式包装失败无完成标记。固定Phira v0.8.2 c830dee5e07a2b8f06104576f30d8045e0859aa7的7份源码及3份文档缓存哈希/大小全部一致；源码加载路径、PGR键型映射、chart+info+device offset核对通过。",
+      "artifacts": "out/product_coordination/phira_package_artifact_review.json：既有manual song-0两谱735/783音与合成校准25音共1543个事件逐项回算头尾/type/位置，15个ZIP成员CRC/哈希/元数据引用/PNG可读均一致，音频与谱面和源产物逐字节相同；0.124s/峰RSS52MiB。模型包SHA712c62939da87c91ef1499012cac14d761716671cd7d42a086282f159776d072与4a69f0d42bec1dca236f4fe039fdc049e31575ab5db5fd158659b4f763a79f26。",
+      "calibration": "24秒/25音符的合成包SHA55c6825cc1873143ce98dfff7dd59b6745f52ed3ecc28b7e2959aac056ad7a99；25个schedule精确匹配、chart.offset=.375且info.offset=0，首个WAV非零样点为2秒后1采样。source.kind/charter/intro均区分合成非模型，建议四指练习不代表最少手数。不得计入模型生成或质量分母。",
+      "remaining": "Phira真机导入/触屏、音乐质量和人工偏好未执行。"
+    },
+    {
+      "id": "C13",
+      "result": "passed_c3ef29a_implicit_cuda_budget_fix",
+      "scope": "共享资源预算设备参数兼容；CPU模拟验证",
+      "evidence": "主会话真实UI首轮传device=cuda在PyTorch allocator接口失败且任务保持failed。c3ef29a仅在无index时解析当前可见CUDA设备，显式cuda:N与CPU不查询/改选设备，cap与峰值统计保持同设备。设计agent独立test_resource_budget.py 11 passed/4.71s；未调用GPU，主会话随后以同一裸cuda配置完成真实双模式生成与下载。"
+    },
+    {
+      "id": "C14",
+      "result": "passed_parent_c3ef29a_phira_ui_and_integration",
+      "scope": "PH3实际浏览器完整ZIP下载与最终集成；非移动设备游玩",
+      "evidence": "设计agent已读out/browser_review/phira-workflow-v2.json和out/product_coordination/phira_browser_download_review.json：c3ef29a clean、裸cuda、102.770秒音频不填BPM生成双模式31.8806秒，4K566/free-x839音且四键型保留；Firefox真实保存的两个ZIP与完成报告SHA/大小一致，Range206、预览模式下载链接、历史刷新和390px视口通过。主会话独立核对全部1405个事件及原chart/audio字节、完整音频解码、PNG。首次device=cuda的失败记录另保留在phira-workflow-v1.json；未把修复后成功追填首次结果。",
+      "artifacts": "下载ZIP SHA256=4ce385ca883be7befa623db351140f23fb32d551a1c6502b517e2854554f002f / eecbbbd429acc5355375ddf66e003beebc36d0cd3b8ea3aa138997c73cb998fb。",
+      "integration": "develop3f973de由主会话完整回归359 passed/9 warnings/42.18s。",
+      "limits": "单首重复使用的开发样例，不是质量/速度统计；源码、浏览器和ZIP检查不替代Phira实际导入与触屏，PH4未执行。"
     }
   ],
   "remaining": [
-    "PH1–PH3: 固定Phira v0.8.2发布源码核对包加载、chart/info offset，完整ZIP与本机下载；两种玩法独立保持四键型/ID/头尾/位置，包装失败不误报成功。",
+    "PH1–PH3包装/源码时钟/管线失败/真实浏览器下载工程已通过；不扩大审计。下一步PH4实际设备导入校准包与两种整谱，记录同步和操作反馈。",
     "PH4: 将完整包传到手机/平板，记录实际Phira版本、设备与时差设置，真实导入、完整播放、Hold/Drag/Flick及多指操作；源码与Canvas不替代真机。",
     "K2/F2: 声学/音乐对应、键型持续、位置和真实手感仍待改善；Hold无配额，多指保留；R1未自动更改产品默认。",
     "声学标注/阈值校准、固定质量测试与真人反馈尚缺；合成click校准包不计模型质量，候选数值未因范围确认获批。",
     "F4a首批工程验收已完成；F4b/F5动态演出及编辑保留为后续路线，非首版阻塞项。",
-    "develop5e995b8已验证集成N1/共享mask/F4a/C2/R1；首版质量未验收，不合main。"
+    "develop3f973de包含N1/共享修复/F4a/C2/R1/Phira包装，主会话359项完整回归通过；首版音乐质量与真机未验收，不合main。"
   ],
   "product_decisions": {
     "confirmed_at": "2026-10-17",
@@ -147,5 +192,16 @@
     "keyboard_mapping": "not in this release",
     "dynamic_performance": "F4b/F5 follow-up, not first-release gate",
     "delivery": "self-contained ZIP downloaded from existing local loopback UI/CLI and transferred to device; no LAN deployment this round"
+  },
+  "latest_delivery_review": {
+    "worktree": "../AudioLab-phira-delivery",
+    "branch": "chore/phira-delivery",
+    "package_commit": "f2e362f0f0d69a03b38581a8965ac0cc9a24e9d6",
+    "shared_cuda_fix": "c3ef29aa7744e1d56eae289be075c67f84e5615d",
+    "target": "Phira v0.8.2 source c830dee5e07a2b8f06104576f30d8045e0859aa7",
+    "ph1_ph2": "passed bounded source/package scope",
+    "ph3": "passed pipeline failure contracts and parent real Firefox download/readback",
+    "ph4": "not_executed",
+    "integration": "develop3f973de; 359 passed by root"
   }
 }
