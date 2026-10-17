@@ -1,13 +1,13 @@
 {
   "schema": "audiolab-product-review-v1",
-  "updated_at": "2026-10-17 03:26:32 UTC",
+  "updated_at": "2026-10-17",
   "reviewer": "/root/product_design",
   "implementation_agent": "/root/product_development",
   "worktree": "/home/ziyaowang/Alvin/Audio/AudioLab-product-development",
   "branch": "chore/product-pipeline",
   "base_commit": "2965310",
-  "reviewed_product_commit": "f9c49c9",
-  "scope": "First fixed product commit and three-song functional evidence reviewed. Layout encoder default is being changed back to historical full attention; that final default requires its own regression. Product quality acceptance remains open.",
+  "reviewed_product_commit": "cdb881c",
+  "scope": "CLI engineering milestone verified on cdb881c and independently integrated into develop with 221 passing tests. N1 automatic tempo/local entry review is active. Acoustic, musical and player quality acceptance remains open.",
   "findings": [
     {
       "id": "P1",
@@ -24,12 +24,24 @@
     {
       "id": "P2",
       "severity": "medium",
-      "status": "distribution_change_verified_default_revision_in_progress",
+      "status": "resolved_engineering_verified_in_cdb881c",
       "gate": "E7",
       "file": "src/product/pipeline.py:decode_notes",
       "issue": "布局encoder由历史整曲attention改为1024+128分块，既有decoder条件分布也会改变。候选覆盖完整不能证明布局质量无回归。",
       "requested_change": "保留共享候选与布局encoder分块参数及未校准状态；产品布局默认恢复历史整曲attention，在前置资源预估通过时运行，不足则明确失败，分块仅显式实验，不能静默fallback。重做三首默认双模式回归与资源测量。",
-      "verification": "已读固定f9c49c9的out/product_smoke_v1/audit.json。首曲同候选547个、同seed42，4K full735→chunk680音符、Hold5→0；free-x full783→chunk703、Tap633→349、Drag93→325。三首chunk4K均无Hold，只作分布变化诊断，不设Hold配额、不据此证明full更好玩。开发主动提出恢复默认，设计和主会话同意。"
+      "verification": "已读固定f9c49c9的out/product_smoke_v1/audit.json。首曲同候选547个、同seed42，4K full735→chunk680音符、Hold5→0；free-x full783→chunk703、Tap633→349、Drag93→325。三首chunk4K均无Hold，只作分布变化诊断，不设Hold配额、不据此证明full更好玩。开发主动提出恢复默认，设计和主会话同意。 cdb881c三首最终默认双模式重新运行，完整覆盖与硬检查通过；根线程逐文件核对六谱产物SHA均一致，新默认首曲浏览器及两模式真实Hold中段seek通过。",
+      "implementation_response": "cdb881c restores historical full-attention layout by default with explicit CPU/GPU preflight; chunked layout is an opt-in experiment, never a silent memory fallback. Shared candidate encoding remains its declared baseline."
+    },
+    {
+      "id": "P3",
+      "severity": "high",
+      "status": "fix_reported_reverification_pending",
+      "gate": "N1g/N1h",
+      "file": "src/product/server.py:Handler.do_POST; LocalJobs.fail",
+      "issue": "HTTP上传已启动worker后，202响应BrokenPipe错误进入fail，释放active且删除上传，但worker仍存活；下一请求可能并发启动第二worker。",
+      "reproduction": "主会话使用真实Handler+mock存活worker注入响应写失败，得到active=false、worker_alive=true、fail_called=true。out/product_coordination/upload_disconnect_probe.json记录草稿源SHA。",
+      "requested_change": "上传/启动错误与响应断连分离；worker仍活着时不能释放槽位或删除输入，取消必须等待退出再释放。增加真实Handler回归，浏览器上传取消另验。",
+      "implementation_response": "开发报告已拆分错误阶段；fail拒绝释放活worker，取消由monitor等待回收。待固定提交及独立复验。"
     }
   ],
   "independent_checks": [
@@ -56,11 +68,18 @@
       "result": "passed_f9c49c9_chunked_engineering_smoke",
       "scope": "三首完整开发曲的两模式生成与浏览器预览；分块布局实验快照",
       "evidence": "102.770/144.127/178.807秒三曲均完成；两模式合计耗时28.639/32.994/59.077秒；每曲均保留其547/714/1135个候选tick并自然EOS，时间/位置/时长硬检查通过。进程累计峰RSS2.151GiB，生成阶段GPU reserved峰0.176GiB。已读主会话三个whole-song浏览器报告，第三曲另检真实free-x Hold中段seek可见。仅为固定样例功能证据，不能推广速度门槛或音乐质量，整曲默认即将改变。"
+    },
+    {
+      "id": "C5",
+      "result": "passed_cdb881c_full_default_engineering_smoke",
+      "scope": "最终默认整曲布局三曲双模式、全产物哈希及集成回归",
+      "evidence": "主会话独立记录out/product_coordination/full_default_artifact_review.json：两模式31.794/38.049/62.225秒，4K735/993/1711音符，free-x783/993/1782；进程累计峰RSS2.135GiB，PyTorch reserved峰0.168GiB。全部自然EOS、时间/位置/持续/候选覆盖硬检查及文件SHA通过。新默认第一曲Firefox10类检查含两模式真实Hold中段seek，通过；不是三首新默认浏览器全复验。develop集成88750c8独立全套221 passed/9 warnings/38.20秒，首次因新工作区缺未跟踪样例的19项失败在补齐只读源夹具后消失。三个开发样例不代表冻结测试或可玩率。"
     }
   ],
   "remaining": [
-    "历史整曲布局成为新默认后的资源预检及三首双模式回归",
-    "新增默认产物的哈希、浏览器媒体/时间/导出回归",
-    "工程通过后继续自动BPM/时基、模型质量、真实试玩与动态演出，不能宣告全产品完成"
+    "N1自动候选的半/倍速歧义与可控样例、三曲自动/提供时基布局对照",
+    "N1本地入口浏览器与上传/取消/失败/重试的worker生命周期独立验收，包含P3",
+    "声学标注与阈值校准、固定质量对照、目标播放器与真人试玩",
+    "F4/F5原始动态表示及学习演出基线；模板或动态格式工程不代表演出模型完成"
   ]
 }
