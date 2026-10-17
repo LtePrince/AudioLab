@@ -53,7 +53,11 @@ class ResourceBudget:
         if args.keep_checkpoints < 1:
             raise ValueError('keep-checkpoints must be at least 1 for recovery')
         if device.type == 'cuda':
-            torch.cuda.set_per_process_memory_fraction(args.gpu_memory_fraction, device)
+            # PyTorch's allocator limit requires an explicit CUDA index, unlike
+            # tensor.to('cuda'). Resolve the current visible device, not GPU 0.
+            if device.index is None:
+                self.device = torch.device('cuda', torch.cuda.current_device())
+            torch.cuda.set_per_process_memory_fraction(args.gpu_memory_fraction, self.device)
         self.check(force=True)
 
     def check(self, *, force: bool = False, extra_bytes: int = 0) -> dict | None:

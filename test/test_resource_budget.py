@@ -25,6 +25,42 @@ def test_resource_limits_stop_before_work(monkeypatch, tmp_path, resource):
         rb.ResourceBudget(args(), torch.device('cpu'), tmp_path)
 
 
+@pytest.mark.parametrize('device_name,expected_index', [('cuda', 2), ('cuda:1', 1), ('cpu', None)])
+def test_budget_resolves_current_cuda_device_without_changing_explicit_selection(monkeypatch, tmp_path, device_name, expected_index):
+    snapshot(monkeypatch)
+    applied = []
+    observed = []
+
+    def current_device():
+        assert device_name == 'cuda', 'CPU and explicit indices must not query the current GPU'
+        return 2
+
+    def set_fraction(fraction, device):
+        # PyTorch 2.10 rejects a CUDA torch.device with no index here.
+        if device.index is None:
+            raise ValueError('Expected a torch.device with a specified index')
+        applied.append((fraction, device.index))
+
+    def peak_memory(device):
+        observed.append(device.index)
+        return rb.GIB
+
+    monkeypatch.setattr(torch.cuda, 'current_device', current_device)
+    monkeypatch.setattr(torch.cuda, 'set_per_process_memory_fraction', set_fraction)
+    monkeypatch.setattr(torch.cuda, 'max_memory_allocated', peak_memory)
+    monkeypatch.setattr(torch.cuda, 'max_memory_reserved', peak_memory)
+    guard = rb.ResourceBudget(args(), torch.device(device_name), tmp_path)
+    state = guard.log_state()
+    assert guard.device.index == expected_index
+    if expected_index is None:
+        assert applied == [] and observed == []
+        assert 'gpu_peak_reserved_gib' not in state
+    else:
+        assert applied == [(0.65, expected_index)]
+        assert observed == [expected_index, expected_index]
+        assert state['gpu_peak_reserved_gib'] == 1
+
+
 def test_checkpoint_space_accounts_for_full_temporary_file(monkeypatch, tmp_path):
     snapshot(monkeypatch, disk=8.01)
     guard = rb.ResourceBudget(args(), torch.device('cpu'), tmp_path)
