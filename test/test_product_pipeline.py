@@ -18,6 +18,12 @@ from src.product.artifacts import chart_document, repair_log, validate_chart, wr
 from src.product.pipeline import JobCancelled, run_job, quantize_candidates
 
 
+@pytest.fixture(autouse=True)
+def controlled_package_budget(monkeypatch):
+    from src.product import phira
+    monkeypatch.setattr(phira,'check_resources',lambda *a,**k:None)
+
+
 @pytest.fixture
 def inputs(tmp_path):
     torch.set_num_threads(2)
@@ -78,12 +84,18 @@ def test_real_small_models_complete_both_routes_and_record_identity(tmp_path, in
     assert json.loads((root/'job.json').read_text())['status'] == 'completed'
     assert (root/'audio.wav').read_bytes() == inputs[0].read_bytes()
     assert 'audio_events.npz' in report['artifacts']
+    from src.product.phira import verify_package
+    assert set(report['packages'])=={'4k','freex'}
+    for mode,package in report['packages'].items():
+        assert verify_package(root/package['file'])['status']=='passed'
+        assert report['routes'][mode]['package_file']==package['file']
+        assert report['artifacts'][package['file']]['sha256']==package['sha256']
     with pytest.raises(FileExistsError):
         run_job(args)
     assert json.loads((root/'manifest.json').read_text())['status'] == 'completed'
 
 
-@pytest.mark.parametrize('failure', ['empty', 'token_limit', 'cancel', 'timeout', 'resource', 'second_route'])
+@pytest.mark.parametrize('failure', ['empty', 'token_limit', 'cancel', 'timeout', 'resource', 'second_route','package'])
 def test_failures_never_mark_partial_job_complete(tmp_path, inputs, monkeypatch, failure):
     from src.product import pipeline
     args = arguments(tmp_path, inputs)
@@ -109,6 +121,12 @@ def test_failures_never_mark_partial_job_complete(tmp_path, inputs, monkeypatch,
                 raise RuntimeError('second route failed')
             return original(*a, **k)
         monkeypatch.setattr(pipeline, 'decode_notes', fail_second)
+    elif failure=='package':
+        original=pipeline.build_phira_package
+        def fail_package(*a,**k):
+            if k['mode']=='freex':raise RuntimeError('second Phira package failed')
+            return original(*a,**k)
+        monkeypatch.setattr(pipeline,'build_phira_package',fail_package)
     with pytest.raises((ValueError, RuntimeError, TimeoutError, JobCancelled)):
         run_job(args)
     root = Path(args.output)
@@ -116,6 +134,7 @@ def test_failures_never_mark_partial_job_complete(tmp_path, inputs, monkeypatch,
     assert state['status'] == ('cancelled' if failure == 'cancel' else 'failed')
     assert not (root/'manifest.json').exists()
     assert not (root/'preview.html').exists()
+    assert not list(root.glob('*.phira.zip'))
 
 
 def test_offset_four_types_tail_and_repair_ids(tmp_path):

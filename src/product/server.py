@@ -86,7 +86,9 @@ class LocalJobs:
             raise ValueError('invalid request token')
         with self.lock:
             if self.active is not None:raise BusyError('a generation job is still active')
-            if shutil.disk_usage(self.root).free < MIN_DISK+2*size+32*1024**2:
+            # Upload + immutable audio snapshot + one complete package per mode.
+            copies=4 if mode=='both' else 3
+            if shutil.disk_usage(self.root).free < MIN_DISK+copies*size+64*1024**2:
                 raise ValueError('insufficient disk reserve for upload and generation')
             identifier=uuid.uuid4().hex
             record=dict(id=identifier,name=name,mode=mode,bpm=bpm,status='uploading',created=time.time(),request_token=request_token)
@@ -170,6 +172,10 @@ class LocalJobs:
         if record['status']=='completed':
             record['preview']=f'/jobs/{identifier}/preview.html'
             record['report']=f'/jobs/{identifier}/manifest.json'
+            manifest=json.loads((self.root/'jobs'/identifier/'manifest.json').read_text())
+            record['packages']={mode:dict(url=f'/jobs/{identifier}/{package["file"]}',
+                                         sha256=package['sha256'],bytes=package['bytes'])
+                                for mode,package in manifest.get('packages',{}).items()}
         return record
 
     def cancel(self,identifier):
@@ -229,6 +235,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Content-Type',mimetypes.guess_type(path.name)[0] or 'application/octet-stream')
         self.send_header('Content-Length',str(end-start+1));self.send_header('Accept-Ranges','bytes')
         self.send_header('X-Content-Type-Options','nosniff')
+        if path.suffix=='.zip':self.send_header('Content-Disposition',f'attachment; filename="{path.name}"')
         if partial:self.send_header('Content-Range',f'bytes {start}-{end}/{size}')
         self.end_headers()
         with path.open('rb') as stream:

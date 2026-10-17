@@ -24,6 +24,7 @@ from src.test_decoder import load_models
 from . import JOB_SCHEMA
 from .artifacts import chart_document, repair_log, validate_chart, write_json, write_preview
 from .tempo import estimate_tempo, provided_tempo, TempoRequired
+from .phira import build_phira_package
 
 
 class JobCancelled(Exception):
@@ -311,6 +312,19 @@ def run_job(args):
             gc.collect()
             if device.type == 'cuda':
                 torch.cuda.empty_cache()
+        control.update('packages',progress=None)
+        report['packages']={}
+        for mode in modes:
+            package=build_phira_package(directory/report['routes'][mode]['chart_file'],audio_path,
+                directory/f'{mode}.phira.zip',mode=mode,title=source.stem,duration_seconds=duration,
+                source=dict(kind='model_generated',generation_commit=report['implementation']['git_commit'],
+                            model_sha256=report['model_sha256'][mode],
+                            audio_checkpoint_sha256=metadata['checkpoint_sha256'],
+                            timebase_source=tempo['source'],seed=args.seed,repair_profile='static-v1'),
+                check=control.check)
+            report['packages'][mode]=package
+            report['routes'][mode]['package_file']=package['file']
+            routes[mode]['package_file']=package['file']
         control.update('preview', progress=None)
         budget.check(force=True, extra_bytes=16*1024**2)
         write_preview(directory/'preview.html', title=source.stem, audio_name=audio_path.name,
@@ -326,6 +340,8 @@ def run_job(args):
         return report
     except BaseException as error:
         (directory/'manifest.json').unlink(missing_ok=True)
+        for mode in ('4k','freex'):
+            (directory/f'{mode}.phira.zip').unlink(missing_ok=True)
         status = ('cancelled' if isinstance(error, (KeyboardInterrupt, JobCancelled)) else
                   'needs_tempo' if isinstance(error,TempoRequired) else 'failed')
         message = str(error) or type(error).__name__

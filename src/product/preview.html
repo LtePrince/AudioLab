@@ -15,16 +15,16 @@ audio{flex:1;min-width:220px;width:100%}.legend span{margin-right:16px;white-spa
 </style>
 <h1>AudioLab <span id="mode-title"></span></h1>
 <p id="song"></p>
-<p class="muted">音频同步视觉预览 · 基线谱面。此页面不提供击打判定；请导出后到目标播放器检查实际手感。</p>
+<p class="muted">音频同步视觉预览 · 基线谱面。下载完整谱包，转到手机或平板后在 Phira 本地导入并检查同步与手感。此页面不提供击打判定。</p>
 <p id="tempo" class="muted"></p>
 <div class="row"><label for="mode">玩法</label><select id="mode"></select><span id="count" class="muted"></span></div>
 <canvas id="chart" aria-label="谱面音符随音频时间移动的预览"></canvas>
 <div class="row"><audio id="audio" controls preload="metadata"></audio><button id="restart">回到开头</button></div>
 <div class="row"><span id="time">0.00 秒</span><label for="rate">播放速度</label><select id="rate"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option selected value="1">1×</option></select></div>
 <div class="legend row"><span class="tap">━ Tap 单击</span><span class="drag">◆ Drag 接触</span><span class="hold">▰ Hold 持续</span><span class="flick">⌃ Flick 滑动</span></div>
-<div class="row"><a id="export" class="download" download>导出谱面 JSON</a><a id="events" class="download" download>下载事件记录</a><a class="download" href="manifest.json" download>下载生成报告</a></div>
+<div class="row"><a id="phira-package" class="download" download hidden>下载 Phira 谱包 ZIP</a><a id="export" class="download" download>导出谱面 JSON</a><a id="events" class="download" download>下载事件记录</a><a class="download" href="manifest.json" download>下载生成报告</a></div>
 <p id="message" role="status"></p>
-<footer class="muted">4K 使用四个固定位置；free-x 使用静态单判定线自由布局。两个模式均保留四种键型。</footer>
+<footer class="muted">4K 使用四个固定触屏位置；free-x 使用静态单判定线自由布局。两个模式均保留四种键型与多指。谱包尚未完成手机／平板真机验证，难度未定级。</footer>
 <script id="data" type="application/json">__AUDIOLAB_DATA__</script>
 <script>
 'use strict';
@@ -48,6 +48,8 @@ function changeMode() {
   document.getElementById('count').textContent = route.events.length+' 个音符 · 基线谱';
   document.getElementById('export').href = route.chart_file;
   document.getElementById('events').href = route.events_file;
+  const packageLink=document.getElementById('phira-package');packageLink.hidden=!route.package_file;
+  if(route.package_file){packageLink.href=route.package_file;packageLink.dataset.mode=select.value;}else packageLink.removeAttribute('href');
   render();
 }
 function render() {
