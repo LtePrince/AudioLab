@@ -12,6 +12,21 @@ from src.models.transcriber import TranscriberNet
 from src.test_decoder import generate_chart
 
 
+def test_contact_batch_refuses_unverified_existing_output(tmp_path, monkeypatch):
+    import sys
+    from src import test_decoder
+    source = tmp_path/'song'/'chart.json'; source.parent.mkdir()
+    source.write_text(json.dumps({'offset': 0, 'judgeLineList': [{'bpm': 120}]}))
+    listing = tmp_path/'list.txt'; listing.write_text(f'{source},unused.wav,IN\n')
+    output = tmp_path/'output'; output.mkdir(); (output/'song.json').write_text('{}')
+    monkeypatch.setattr(test_decoder, 'load_models', lambda *args: (None, None))
+    monkeypatch.setattr(sys, 'argv', ['test_decoder', '--ckpt', 'unused.pt', '--device', 'cpu',
+        '--list', str(listing), '--out-dir', str(output),
+        '--playability-profile', 'contacts-v1', '--max-contacts', '4'])
+    with pytest.raises(ValueError, match='fresh output paths'):
+        test_decoder.main()
+
+
 @pytest.mark.parametrize('lanes', [4, 64])
 @pytest.mark.parametrize('policy', ['flat', 'type_preserving'])
 def test_export_repairs_hold_overlap_and_uses_waveform_end(tmp_path, lanes, policy):
