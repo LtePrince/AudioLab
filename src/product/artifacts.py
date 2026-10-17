@@ -111,9 +111,9 @@ def repair_log(raw, final):
     return changes
 
 
-def write_preview(path, *, title, audio_name, routes, duration):
+def write_preview(path, *, title, audio_name, routes, duration, tempo=None):
     """Embed chart data, not executable user text; requires no HTTP/CDN/fetch."""
-    payload = json.dumps(dict(title=title, audio=audio_name, duration=duration, routes=routes),
+    payload = json.dumps(dict(title=title, audio=audio_name, duration=duration, routes=routes,tempo=tempo),
                          ensure_ascii=False, allow_nan=False).replace('<', '\\u003c').replace('>', '\\u003e')
     template = Path(__file__).with_name('preview.html').read_text(encoding='utf-8')
     Path(path).write_text(template.replace('__AUDIOLAB_DATA__', payload), encoding='utf-8')

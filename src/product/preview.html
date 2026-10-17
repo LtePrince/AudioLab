@@ -16,6 +16,7 @@ audio{flex:1;min-width:220px;width:100%}.legend span{margin-right:16px;white-spa
 <h1>AudioLab <span id="mode-title"></span></h1>
 <p id="song"></p>
 <p class="muted">音频同步视觉预览 · 基线谱面。此页面不提供击打判定；请导出后到目标播放器检查实际手感。</p>
+<p id="tempo" class="muted"></p>
 <div class="row"><label for="mode">玩法</label><select id="mode"></select><span id="count" class="muted"></span></div>
 <canvas id="chart" aria-label="谱面音符随音频时间移动的预览"></canvas>
 <div class="row"><audio id="audio" controls preload="metadata"></audio><button id="restart">回到开头</button></div>
@@ -36,6 +37,7 @@ const colors = {tap:'#8cd8ff',drag:'#ffd97c',hold:'#be9cff',flick:'#ff92b8'};
 const labels = {'4k':'定轨 4K','freex':'无轨 free-x'};
 let route;
 document.getElementById('song').textContent = data.title;
+if(data.tempo){document.getElementById('tempo').textContent='速度设置：'+data.tempo.timebase_bpm.toFixed(1)+' BPM · '+(data.tempo.source==='provided'?'手动设置':'自动估计，尚未确认；可在新任务中手动调整。');}
 audio.src = data.audio;
 for (const mode of Object.keys(data.routes)) {
   const option = document.createElement('option'); option.value=mode; option.textContent=labels[mode]; select.appendChild(option);

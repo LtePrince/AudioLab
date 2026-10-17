@@ -195,3 +195,16 @@ def test_final_sub_tick_candidate_is_retained_and_reported():
     assert report['quantization_clamped_events'] == 2
     assert report['quantization_merged_events'] == 1
     assert report['max_quantization_error_ms'] < 15.625
+
+
+def test_layout_memory_guard_runs_before_encoder_attention(tmp_path,inputs,monkeypatch):
+    from types import SimpleNamespace
+    from src.product import pipeline
+    monkeypatch.setattr(pipeline,'resource_snapshot',lambda path:dict(rss_gib=1.,ram_available_gib=64.))
+    def must_not_run(*a,**k):raise AssertionError('attention ran before budget guard')
+    monkeypatch.setattr(TranscriberNet,'features',must_not_run)
+    budget=SimpleNamespace(args=SimpleNamespace(max_rss_gib=2,min_available_ram_gib=8,gpu_memory_fraction=.65))
+    control=SimpleNamespace(directory=tmp_path,budget=budget)
+    with pytest.raises(RuntimeError,match='layout estimate exceeds RAM'):
+        pipeline.decode_notes(torch.zeros(128,20000),400,[0],inputs[1]/'decoder/decoder_best.pt',
+                              '4k',120,0,42,torch.device('cpu'),control)

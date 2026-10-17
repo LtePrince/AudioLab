@@ -21,7 +21,8 @@ WORKERS = ['src.train_transcription', 'src.train_decoder', 'src.test_decoder',
            'src.test_transcription', 'script.eval_onset_f1', 'script.diagnose_decoder',
            'script.audit_audio_conditioning', 'script.calibrate_skeleton', 'src.train_rhythm',
            'src.train_audio_understanding', 'script.understand_audio', 'script.evaluate_audio_understanding',
-           'src.train_chord_count', 'script.generate_product', 'script.audit_product_pipeline']
+           'src.train_chord_count', 'script.generate_product', 'script.audit_product_pipeline',
+           'script.serve_product','script.audit_product_tempo']
 
 
 def write_json(path: Path, data: dict) -> None:
