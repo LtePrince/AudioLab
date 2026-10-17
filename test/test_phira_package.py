@@ -177,9 +177,9 @@ def test_build_failures_never_leave_a_downloadable_partial_package(tmp_path,monk
         monkeypatch.setattr(phira,'verify_package',verify)
     else:
         original=phira.check_resources
-        def budget(directory,extra_bytes=0):
+        def budget(directory,extra_bytes=0,**kwargs):
             if temporary.exists():raise RuntimeError('Resource budget: simulated refusal')
-            return original(directory,extra_bytes)
+            return original(directory,extra_bytes,**kwargs)
         monkeypatch.setattr(phira,'check_resources',budget)
     with pytest.raises((InterruptedError,OSError,ValueError,RuntimeError)):
         phira.build_phira_package(chart,audio,output,mode='4k',title='sample',duration_seconds=duration,check=check)

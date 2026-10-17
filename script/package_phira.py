@@ -8,9 +8,13 @@ from pathlib import Path
 
 from src.product.artifacts import write_json
 from src.product.phira import build_phira_package, check_resources, sha256, PHIRA_VERSION, PHIRA_COMMIT
+from src.product.limits import (DEFAULT_MIN_AVAILABLE_RAM_GIB, ram_reserve_argument,
+                                validate_ram_reserve)
 
 
-def package_job(job_directory, output_directory, mode='both'):
+def package_job(job_directory, output_directory, mode='both', *,
+                min_available_ram_gib=DEFAULT_MIN_AVAILABLE_RAM_GIB):
+    min_available_ram_gib=validate_ram_reserve(min_available_ram_gib)
     job=Path(job_directory).resolve();output=Path(output_directory).resolve()
     if output==job or job in output.parents:
         raise ValueError('package existing jobs into a separate directory')
@@ -32,9 +36,11 @@ def package_job(job_directory, output_directory, mode='both'):
     output.mkdir(parents=True,exist_ok=False)
     report=dict(schema='audiolab-phira-delivery-v1',status='running',packages={},
                 source_manifest_sha256=manifest_hash,target_version=PHIRA_VERSION,target_commit=PHIRA_COMMIT,
+                resource_limits=dict(min_available_ram_gib=min_available_ram_gib),
                 model_inference_performed=False,target_player_run='not_executed',touch_playtest='not_executed')
     try:
-        check_resources(output,(len(modes)*audio.stat().st_size)+32*1024**2)
+        check_resources(output,(len(modes)*audio.stat().st_size)+32*1024**2,
+                        min_available_ram_gib=min_available_ram_gib)
         for selected in modes:
             chart=source_file(manifest['routes'][selected]['chart_file'])
             source=dict(kind='model_generated',generation_manifest_sha256=manifest_hash,
@@ -43,7 +49,8 @@ def package_job(job_directory, output_directory, mode='both'):
                         timebase_source=manifest['config']['timing_source'],
                         seed=manifest['config']['seed'],repair_profile='static-v1')
             report['packages'][selected]=build_phira_package(chart,audio,output/f'{selected}.phira.zip',
-                mode=selected,title=manifest['title'],duration_seconds=manifest['audio']['duration_seconds'],source=source)
+                mode=selected,title=manifest['title'],duration_seconds=manifest['audio']['duration_seconds'],source=source,
+                min_available_ram_gib=min_available_ram_gib)
         if sha256(manifest_path)!=manifest_hash:raise ValueError('source manifest changed during packaging')
         links=''.join(f'<p><a download data-mode="{m}" href="{p["file"]}">下载 Phira {html.escape(m)} 谱包</a></p>'
                       for m,p in report['packages'].items())
@@ -56,7 +63,7 @@ def package_job(job_directory, output_directory, mode='both'):
             '<p><a download href="packages.json">下载来源与包校验报告</a></p></html>',encoding='utf-8')
         report['status']='completed';write_json(output/'packages.json',report)
         if json.loads((output/'packages.json').read_text())!=report:raise ValueError('package report readback differs')
-        check_resources(output)
+        check_resources(output,min_available_ram_gib=min_available_ram_gib)
         return report
     except BaseException as error:
         for name in ['packages.json','index.html',*[f'{m}.phira.zip' for m in modes]]:
@@ -71,11 +78,12 @@ def parser():
     result.add_argument('--job',required=True,help='existing completed generation directory')
     result.add_argument('--output',required=True,help='new separate package directory')
     result.add_argument('--mode',choices=['both','4k','freex'],default='both')
+    result.add_argument('--min-available-ram-gib',type=ram_reserve_argument,default=DEFAULT_MIN_AVAILABLE_RAM_GIB)
     return result
 
 
 if __name__=='__main__':
     args=parser().parse_args()
-    report=package_job(args.job,args.output,args.mode)
+    report=package_job(args.job,args.output,args.mode,min_available_ram_gib=args.min_available_ram_gib)
     print(json.dumps(dict(status=report['status'],packages={m:dict(file=p['file'],sha256=p['sha256'],bytes=p['bytes'])
                                                           for m,p in report['packages'].items()})))

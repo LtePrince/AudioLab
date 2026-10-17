@@ -19,6 +19,8 @@ from urllib.parse import parse_qs, unquote, urlsplit
 import uuid
 
 from src.product.artifacts import write_json
+from .limits import (DEFAULT_MIN_AVAILABLE_RAM_GIB, ram_reserve_argument,
+                     validate_ram_reserve)
 
 MAX_UPLOAD = 128*1024**2
 MIN_DISK = 8*1024**3
@@ -54,7 +56,8 @@ def parse_range(header, size):
 
 
 class LocalJobs:
-    def __init__(self, root, model_root, device):
+    def __init__(self, root, model_root, device, min_available_ram_gib=DEFAULT_MIN_AVAILABLE_RAM_GIB):
+        self.min_available_ram_gib=validate_ram_reserve(min_available_ram_gib)
         self.root=Path(root).resolve();self.root.mkdir(parents=True,exist_ok=True)
         self.model_root=str(Path(model_root).resolve());self.device=device
         for part in ['jobs','uploads','cancel','records','logs']:(self.root/part).mkdir(exist_ok=True)
@@ -91,7 +94,8 @@ class LocalJobs:
             if shutil.disk_usage(self.root).free < MIN_DISK+copies*size+64*1024**2:
                 raise ValueError('insufficient disk reserve for upload and generation')
             identifier=uuid.uuid4().hex
-            record=dict(id=identifier,name=name,mode=mode,bpm=bpm,status='uploading',created=time.time(),request_token=request_token)
+            record=dict(id=identifier,name=name,mode=mode,bpm=bpm,status='uploading',created=time.time(),request_token=request_token,
+                        resource_limits=dict(min_available_ram_gib=self.min_available_ram_gib))
             folder=self.root/'uploads'/identifier;folder.mkdir()
             self.save(record)
             self.records[identifier]=record;self.active=identifier
@@ -126,7 +130,8 @@ class LocalJobs:
             output=self.root/'jobs'/identifier
             command=[sys.executable,'-m','script.generate_product','--audio',str(audio),
                      '--mode',record['mode'],'--model-root',self.model_root,'--output',str(output),
-                     '--device',self.device,'--cancel-file',str(self.root/'cancel'/identifier)]
+                     '--device',self.device,'--cancel-file',str(self.root/'cancel'/identifier),
+                     '--min-available-ram-gib',str(self.min_available_ram_gib)]
             if record['bpm'] is not None:command+=['--bpm',str(record['bpm'])]
             with (self.root/'logs'/f'{identifier}.log').open('wb') as log:
                 process=subprocess.Popen(command,cwd=Path(__file__).resolve().parents[2],stdout=log,stderr=log)
@@ -298,12 +303,17 @@ class Handler(BaseHTTPRequestHandler):
             except OSError:self.close_connection=True
 
 
-def main():
+def parser():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--model-root',required=True);p.add_argument('--output',default='out/local-product')
     p.add_argument('--device',default='cpu');p.add_argument('--port',type=int,default=7860)
-    args=p.parse_args()
-    jobs=LocalJobs(args.output,args.model_root,args.device)
+    p.add_argument('--min-available-ram-gib',type=ram_reserve_argument,default=DEFAULT_MIN_AVAILABLE_RAM_GIB)
+    return p
+
+
+def main():
+    args=parser().parse_args()
+    jobs=LocalJobs(args.output,args.model_root,args.device,args.min_available_ram_gib)
     server=ThreadingHTTPServer(('127.0.0.1',args.port),Handler);server.jobs=jobs
     def stop(_signal,_frame):raise KeyboardInterrupt()
     signal.signal(signal.SIGTERM,stop)

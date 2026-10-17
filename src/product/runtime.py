@@ -17,6 +17,9 @@ import tempfile
 import time
 import warnings
 
+from .limits import (DEFAULT_MIN_AVAILABLE_RAM_GIB, ram_reserve_argument,
+                     validate_ram_reserve)
+
 SCHEMA = 'audiolab-linux-runtime-v1'
 REPO_ROOT = Path(__file__).resolve().parents[2]
 GIB = 1024 ** 3
@@ -25,7 +28,7 @@ MODEL_FILES = {
     '4k': 'decoder/decoder_best.pt',
     'freex': 'decoder_freex/decoder_best.pt',
 }
-MIN_DISK_GIB = MIN_RAM_GIB = 8
+MIN_DISK_GIB = 8
 MAX_RSS_GIB = 4
 GPU_FRACTION = 0.65
 
@@ -85,19 +88,20 @@ def resource_state(path):
                 ram_available_gib=memory['MemAvailable']/GIB, rss_gib=rss/GIB)
 
 
-def check_resources(path):
+def check_resources(path, min_available_ram_gib=DEFAULT_MIN_AVAILABLE_RAM_GIB):
+    min_available_ram_gib = validate_ram_reserve(min_available_ram_gib)
     state = resource_state(path)
     # Reserve room for the preflight report, small media fixtures, and service state.
     if state['disk_free_gib'] < MIN_DISK_GIB + 64*1024**2/GIB:
         fail('disk_reserve', '可用磁盘不足，需保留 8 GiB 并留出运行空间。',
              '清理自己的旧输出或用 --output 指定容量充足的磁盘；不要删除正在运行的任务。')
-    if state['ram_available_gib'] < MIN_RAM_GIB or state['rss_gib'] > MAX_RSS_GIB:
-        fail('ram_reserve', '当前可用内存／进程内存超过运行预算。',
-             '关闭占用内存的程序后重试；可用 RAM 至少 8 GiB，工作进程 RSS 上限 4 GiB。')
+    if state['ram_available_gib'] < min_available_ram_gib or state['rss_gib'] > MAX_RSS_GIB:
+        fail('ram_reserve', f'当前可用内存／进程内存超过运行预算：{state}',
+             f'关闭占用内存的程序后重试；可用 RAM 至少 {min_available_ram_gib:g} GiB，工作进程 RSS 上限 4 GiB。')
     return state
 
 
-def basic_environment(output, port):
+def basic_environment(output, port, min_available_ram_gib=DEFAULT_MIN_AVAILABLE_RAM_GIB):
     if platform.system() != 'Linux':
         fail('platform', '此运行入口面向 Linux。', '请在 Linux PC 中运行，其他系统尚未验证。')
     if sys.version_info < (3, 13):
@@ -108,7 +112,7 @@ def basic_environment(output, port):
     ancestor = output
     while not ancestor.exists():
         ancestor = ancestor.parent
-    check_resources(ancestor)
+    check_resources(ancestor, min_available_ram_gib)
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryFile(dir=output) as stream:
         stream.write(b'AudioLab preflight\n')
@@ -194,14 +198,14 @@ def probe_media(output):
     return result
 
 
-def probe_models(model_root, output):
+def probe_models(model_root, output, min_available_ram_gib=DEFAULT_MIN_AVAILABLE_RAM_GIB):
     import torch
     from src.audio_understanding.inference import load_model
     from src.test_decoder import load_models
 
     result = {}
     for role, relative in MODEL_FILES.items():
-        check_resources(output)
+        check_resources(output, min_available_ram_gib)
         # Legacy checkpoints are still loadable by research tools; this runtime
         # baseline refuses them rather than silently mixing timing conventions.
         with warnings.catch_warnings():
@@ -218,7 +222,7 @@ def probe_models(model_root, output):
                 result[role] = dict(status='loaded', decoder_positions=decoder.n_lanes)
                 del encoder, decoder
         gc.collect()
-        check_resources(output)
+        check_resources(output, min_available_ram_gib)
     return result
 
 
@@ -255,7 +259,7 @@ def probe_device(requested):
     return result
 
 
-def preflight(model_root, output, device, port):
+def preflight(model_root, output, device, port, min_available_ram_gib=DEFAULT_MIN_AVAILABLE_RAM_GIB):
     start = time.monotonic()
     report = dict(schema=SCHEMA, status='checking', python=platform.python_version(),
                   system=platform.platform(), model_root=str(model_root), output=str(output),
@@ -263,8 +267,11 @@ def preflight(model_root, output, device, port):
                   limitations=['预检不是整曲生成、质量或目标 PC 实测认证。'])
     phase = 'environment'
     try:
-        basic_environment(output, port)
-        report['checks']['resources_before'] = check_resources(output)
+        min_available_ram_gib = validate_ram_reserve(min_available_ram_gib)
+        report['resource_limits'] = dict(min_available_ram_gib=min_available_ram_gib,
+            min_free_disk_gib=MIN_DISK_GIB, max_rss_gib=MAX_RSS_GIB, gpu_memory_fraction=GPU_FRACTION)
+        basic_environment(output, port, min_available_ram_gib)
+        report['checks']['resources_before'] = check_resources(output, min_available_ram_gib)
         phase = 'dependencies'
         report['checks']['dependencies'] = dependency_versions(REPO_ROOT/'requirements/runtime.txt')
         if any(not value['matches_baseline'] for value in report['checks']['dependencies'].values()):
@@ -278,14 +285,14 @@ def preflight(model_root, output, device, port):
         import torch
         torch.set_num_threads(2)
         import src.product.pipeline  # actual runtime import closure, no dataset/cache loading
-        check_resources(output)
+        check_resources(output, min_available_ram_gib)
         phase = 'media'
         report['checks']['media'] = probe_media(output)
         phase = 'models'
-        report['checks']['models'] = probe_models(model_root, output)
+        report['checks']['models'] = probe_models(model_root, output, min_available_ram_gib)
         phase = 'device'
         report['checks']['device'] = probe_device(device)
-        report['checks']['resources_after'] = check_resources(output)
+        report['checks']['resources_after'] = check_resources(output, min_available_ram_gib)
         report['status'] = 'ready'
     except Exception as error:
         actions = dict(imports='按 docs/linux_runtime.md 安装配套依赖与 FFmpeg 共享库，再运行预检。',
@@ -299,9 +306,11 @@ def preflight(model_root, output, device, port):
     return report
 
 
-def server_command(model_root, output, device, port):
+def server_command(model_root, output, device, port, min_available_ram_gib=DEFAULT_MIN_AVAILABLE_RAM_GIB):
+    min_available_ram_gib = validate_ram_reserve(min_available_ram_gib)
     return [sys.executable, '-m', 'script.serve_product', '--model-root', str(model_root),
-            '--output', str(output), '--device', device, '--port', str(port)]
+            '--output', str(output), '--device', device, '--port', str(port),
+            '--min-available-ram-gib', str(min_available_ram_gib)]
 
 
 def main(argv=None):
@@ -311,6 +320,9 @@ def main(argv=None):
     parser.add_argument('--output', type=Path, default=Path('out/local-service'))
     parser.add_argument('--device', default='cuda', help='cuda (default), cuda:N, or explicit cpu')
     parser.add_argument('--port', type=int, default=7860)
+    parser.add_argument('--min-available-ram-gib', type=ram_reserve_argument,
+                        default=DEFAULT_MIN_AVAILABLE_RAM_GIB,
+                        help='system available RAM reserve; default 8 GiB, minimum 1 GiB')
     args = parser.parse_args(argv)
     if not re.fullmatch(r'cpu|cuda(?::\d+)?', args.device):
         parser.error('--device must be cpu, cuda, or cuda:N')
@@ -323,7 +335,7 @@ def main(argv=None):
     os.environ.setdefault('OMP_NUM_THREADS', '2')
     os.environ.setdefault('MKL_NUM_THREADS', '2')
     try:
-        report = preflight(model_root, output, args.device, args.port)
+        report = preflight(model_root, output, args.device, args.port, args.min_available_ram_gib)
     except KeyboardInterrupt:
         return 130
     print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)
@@ -332,7 +344,8 @@ def main(argv=None):
     if args.check:
         return 0
     # Reuse the exact visible device that passed the probe in this environment.
-    command = server_command(model_root, output, report['checks']['device']['resolved'], args.port)
+    command = server_command(model_root, output, report['checks']['device']['resolved'],
+                             args.port, args.min_available_ram_gib)
     print(f'AudioLab: http://127.0.0.1:{args.port} （Ctrl+C 停止）', flush=True)
     os.chdir(REPO_ROOT)
     # Replacing the process releases all preflight models/CUDA state before

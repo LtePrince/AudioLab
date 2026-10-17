@@ -9,6 +9,7 @@ import torch
 
 from src.product.pipeline import JobCancelled, run_job
 from src.resource_budget import add_resource_args
+from src.product.limits import validate_ram_reserve
 
 
 def parser():
@@ -34,7 +35,12 @@ def parser():
 
 
 def main():
-    args = parser().parse_args()
+    command_parser = parser()
+    args = command_parser.parse_args()
+    try:
+        args.min_available_ram_gib = validate_ram_reserve(args.min_available_ram_gib)
+    except ValueError as error:
+        command_parser.error(str(error))
     torch.set_num_threads(2)
     def cancel(_signal, _frame):
         raise JobCancelled('termination requested')
