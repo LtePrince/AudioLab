@@ -7,7 +7,7 @@
   "branch": "chore/product-pipeline",
   "base_commit": "2965310",
   "reviewed_product_commit": "2b66f8a",
-  "scope": "N1/F4a/C2/R1 and PH1–PH3 engineering accepted within recorded evidence. Phira phone/tablet touch and static 4K/free-x first release confirmed. PH4 real-device import/touch and model quality remain unverified; learned dynamic performance follows later.",
+  "scope": "N1/F4a/C2/R1 and PH1–PH3 engineering accepted within recorded evidence. Development is on the current machine; another Linux/NVIDIA PC is the confirmed generation runtime. LR0–LR4 track portable code/dependencies/model delivery separately from that actual PC's execution. Phira phone/tablet touch and static 4K/free-x first release confirmed. PH4 real-device import/touch and model quality remain unverified; learned dynamic performance follows later.",
   "findings": [
     {
       "id": "P1",
@@ -162,9 +162,27 @@
       "artifacts": "下载ZIP SHA256=4ce385ca883be7befa623db351140f23fb32d551a1c6502b517e2854554f002f / eecbbbd429acc5355375ddf66e003beebc36d0cd3b8ea3aa138997c73cb998fb。",
       "integration": "develop3f973de由主会话完整回归359 passed/9 warnings/42.18s。",
       "limits": "单首重复使用的开发样例，不是质量/速度统计；源码、浏览器和ZIP检查不替代Phira实际导入与触屏，PH4未执行。"
+    },
+    {
+      "id": "C15",
+      "result": "passed_07b5095_portable_model_bundle_scope",
+      "scope": "LR1运输工具与真实三权重ZIP；不重新推理、不视为另机运行证据",
+      "evidence": "设计agent独立模型包17项测试通过/0.21s，python3 -S帮助入口无需第三方包。真实133452353字节ZIP用标准库流式核对外层SHA、固定四成员、内置清单及三权重大小/SHA，并与原checkpoint字节指纹逐一比较，1.50s全部一致。未反序列化、复制权重或再运行模型。",
+      "artifact": "out/product_coordination/runtime_bundle_artifact_review.json；bundle SHA256=64b7e43b82564c6a400cec38431918ea8f27c240ddf884471ae2d7d981a823f4；固定交付清单bc27520的docs/runtime_model_manifest.json。",
+      "delivery": "2ee49fe将传输路径统一为Git忽略的out/runtime-models，并额外忽略根目录的audiolab-models-*.zip。无公开权重URL；运行PC需单独取得该包，代码clone不含权重。",
+      "limits": "验证文件完整性与三模型版本信息；实际依赖/解码/模型加载/CUDA由运行预检负责，个人PC实测、声学质量与Phira触屏仍待证据。"
+    },
+    {
+      "id": "C16",
+      "result": "passed_c948ca6_linux_runtime_cpu_scope",
+      "scope": "LR0/LR2预检、启动参数与资源失败专项；无新依赖安装或GPU作业",
+      "evidence": "设计agent独立执行固定c948ca6的test/test_linux_runtime.py：20 passed/9.07s。包括标准库帮助/缺依赖、torch版本族、受控磁盘/RAM拒绝、缺失权重和共用manifest校验、三模型CPU小夹具及旧时钟/错路线/损坏拒绝、真实短WAV/OGG解码/重采样/mel与tempo路径、屏蔽开发绘图依赖、CUDA不可用不退CPU、可见设备映射、端口/目录占用模拟、含空格路径、check与失败不启动服务。",
+      "review": "重用模型包verify_installed；默认checkpoints/timing_v1与out/local-service，先预检再exec服务释放探测状态，传入实际通过探测的具体CUDA设备，保留CUDA_VISIBLE_DEVICES。只在debug绘图时导入matplotlib。未调用训练调度或要求数据集/缓存。",
+      "limits": "模型测试为小型CPU夹具，CUDA和端口占用使用mock，未新建真实socket服务；短OGG padding单独记录，不表示所有编码均能导出。当前依赖环境被复用，不能写为全新安装或另一台个人PC实测。"
     }
   ],
   "remaining": [
+    "LR0–LR4: Linux/NVIDIA个人PC运行迁移工程进行中；干净代码、最小依赖、独立三权重包及预检/启动需核对。开发机localhost证据不能代替另一台PC实测。",
     "PH1–PH3包装/源码时钟/管线失败/真实浏览器下载工程已通过；不扩大审计。下一步PH4实际设备导入校准包与两种整谱，记录同步和操作反馈。",
     "PH4: 将完整包传到手机/平板，记录实际Phira版本、设备与时差设置，真实导入、完整播放、Hold/Drag/Flick及多指操作；源码与Canvas不替代真机。",
     "K2/F2: 声学/音乐对应、键型持续、位置和真实手感仍待改善；Hold无配额，多指保留；R1未自动更改产品默认。",
@@ -191,7 +209,9 @@
     "hold_quota": null,
     "keyboard_mapping": "not in this release",
     "dynamic_performance": "F4b/F5 follow-up, not first-release gate",
-    "delivery": "self-contained ZIP downloaded from existing local loopback UI/CLI and transferred to device; no LAN deployment this round"
+    "delivery": "generate and download complete ZIP on personal PC loopback UI; transfer ZIP to mobile Phira; current development localhost is not the personal-PC deployment",
+    "development_machine": "current machine for development and validation only",
+    "generation_runtime": "another user-owned Linux PC with NVIDIA GPU; clone code, install runtime dependencies and separately transferred three-checkpoint bundle, then use browser on that PC"
   },
   "latest_delivery_review": {
     "worktree": "../AudioLab-phira-delivery",
@@ -203,5 +223,19 @@
     "ph3": "passed pipeline failure contracts and parent real Firefox download/readback",
     "ph4": "not_executed",
     "integration": "develop3f973de; 359 passed by root"
+  },
+  "runtime_portability_review": {
+    "status": "in_progress",
+    "baseline": "develop be96a67",
+    "contract": "docs/product_delivery.md LR0–LR4",
+    "implementation_branch": "chore/linux-runtime",
+    "bundle_branch": "chore/model-portability",
+    "runtime_commit": "c948ca6",
+    "bundle_code_commit": "07b5095",
+    "bundle_delivery_commit": "2ee49fe",
+    "independent_cpu_tests": "17 model bundle + 20 Linux runtime passed",
+    "personal_pc_execution": "not_executed",
+    "fresh_dependency_installation": "not_executed",
+    "weight_transfer": "separate bundle required; no weights in Git and no invented public URL"
   }
 }
