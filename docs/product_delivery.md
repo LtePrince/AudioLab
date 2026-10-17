@@ -118,9 +118,9 @@ N1g 由主会话在真实 Firefox 通过：实际选择文件、不填 BPM、生
 | --- | --- |
 | 授权 | 用户已请求双 agent 协作直至完整流程；已开始实施 |
 | 音频理解 | `feature/transcription-baseline` 的 `2965310` 工程功能已推送；声学质量未验收 |
-| 产品闭环 | `cdb881c` 提供时基基线已集成，独立 221 项测试通过；`ea963c9` 自动时基与本地 UI 工程已独立验收，主会话继续集成，尚不合入 `main` |
+| 产品闭环 | `develop` 的 `f6aca4e` 已集成 `ea963c9`／`2b66f8a` 和设计 `6614f9d`，主会话独立全套 243 项测试通过；尚不合入 `main` |
 | 产品文档 | `docs/product-design-discussion` 维护需求、候选指标与独立验收 |
-| 当前下一步 | N1 工程通过后按 `feature/freeform-gameplay` 推进 F4a 原始动态表示／查询／重建；CPU 少量样例，不训练或建全库密集缓存；K2／F2 对照协议已备妥 |
+| 当前下一步 | `../AudioLab-freeform-performance`／`feature/freeform-gameplay` 已从 `f6aca4e` 开始 F4a 原始动态表示／查询／重建；CPU 少量样例、不训练、不建全库密集缓存。K2／F2 对照协议与旧条件脚本预审已备妥 |
 | 未关闭证据缺口 | 分块声学阈值校准、声学真值、冻结产品测试、目标播放器与真人试玩、动态演出模型 |
 
 演出数据清点已完成：现有 300 份 `generate.json` 是静态派生谱；同目录有 300 份原始谱（294 份 v3、6 份 v1）。训练 270 份均有动态事件，268 份多线；验证 30 份均多线且动态。F4–F5 应复用原始 ID JSON，并核查版本语义，不能从静态派生谱臆造演出监督。清点报告保存在本地 `out/product_coordination/performance_original_inventory.json`；该统计不代表演出标签审计或模型验证已完成。
