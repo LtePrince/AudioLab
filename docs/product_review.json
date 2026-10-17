@@ -7,7 +7,7 @@
   "branch": "chore/product-pipeline",
   "base_commit": "2965310",
   "reviewed_product_commit": "2b66f8a",
-  "scope": "N1 candidate-generation engineering accepted: fixed ea963c9 unit/fault checks, three-song automatic-timebase artifact controls, and real Firefox workflow. Formatter-only 2b66f8a independently checked. Continue F4a and separate K2/F2/model/music/player quality work.",
+  "scope": "N1 candidate-generation engineering accepted; shared mask fixed; F4a six-chart interpretation scope accepted in its separate review. Continue Q0–Q7 conditioning audit and separate K2/F2, player and performance-model work.",
   "findings": [
     {
       "id": "P1",
@@ -94,12 +94,18 @@
       "result": "passed_5a6877a_valid_memory_fix",
       "scope": "共享decoder空局部窗口fallback的有效memory边界",
       "evidence": "设计agent独立复现旧码允许无效key=6（valid仅0/1/2、query=6、window=1），主会话单独修复为最近有效帧并拒绝全无效输入。设计agent审查固定5a6877a对应代码并独立通过decoder25项测试/4.98s，含非前缀mask、半帧并列、4K/free-x全前向与step对无效memory扰动不变；主会话集成完整249 passed。它不解决encoder固定补零污染，也不追认旧条件审计为音乐质量证据。"
+    },
+    {
+      "id": "C9",
+      "result": "passed_646e104_f4a_six_chart_scope",
+      "scope": "原始动态表示/查询/序列化；不含演出模型",
+      "evidence": "详见docs/freeform_performance_review.json：固定33项独立测试、六份原谱全部文件/内容/输入SHA及96线/4581音符/218921事件逐项核对通过；主会话全套282项通过。参考unsupported与12532个scroll差异样点、7个原始Hold屏外样点分别保留，未当成官方兼容或玩家质量通过。"
     }
   ],
   "remaining": [
     "K2/F2: 时基歧义与布局/键型/持续时间耦合的模型质量诊断，含第三曲free-x Hold18/42截短与28.39→13.00秒",
     "声学标注与阈值校准、固定质量对照、目标播放器与真人试玩",
-    "F4a草稿21项数值/边界测试已独立通过，待固定提交、原始真实谱和Phira参考差分；随后F4b与F5学习演出，记录见docs/freeform_performance_review.json",
+    "F4a首批工程验收通过；下一项Q0–Q7共享条件诊断，再推进F4b机械契约与F5学习演出，保持独立质量/玩家证据缺口",
     "develop45319fb已集成N1、文档b176133与共享mask5a6877a；质量未验收不合main"
   ]
 }

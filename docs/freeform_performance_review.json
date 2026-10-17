@@ -6,7 +6,9 @@
   "worktree": "/home/ziyaowang/Alvin/Audio/AudioLab-freeform-performance",
   "branch": "feature/freeform-gameplay",
   "base_commit": "f6aca4e",
-  "status": "draft_numeric_review_passed_pending_fixed_commit_and_source_audit",
+  "status": "accepted_six_chart_engineering_scope",
+  "reviewed_commit": "646e104",
+  "audit_commit": "d3cbe20",
   "scope": "F4a原始事件解释、查询表示与重建审计；不含演出模型、完整渲染兼容或人类可玩性",
   "tested_draft": {
     "performance_sha256": "5cd5c277b4e2b9823961db5bbd70caee9f295366d8f8d05b3a47ebecc00f8752",
@@ -14,34 +16,119 @@
     "independent_result": "21 passed in 0.04s; CPU only",
     "coverage": "两线BPM/offset和浮点接缝、v1有符号余数、完整转圈与Hold内部越界、负速积分、零段/间隙/重叠/反向/空轨、原字段往返、线分类及积分有效性"
   },
+  "fixed_code_verification": {
+    "independent_result": "33 passed in 0.05s; clean d3cbe20; CPU only",
+    "performance_sha256": "2e58f2f6ac1dd582d65c6e4014e6dfb159e48304700cfe75fc55c79716267fb2",
+    "reference_adapter_sha256": "0860ccd3cb12f62139286de79da91c0c2fbc703af6ff24475a0b73f1e0f0334d",
+    "audit_script_sha256": "a982237b0114210a6d7f78cacc8c3f8975d5aed2fc995e0ef15c9e2b92ac2c54",
+    "tests_sha256": "7aa6f4b0bfdd5644017f763f40f1a6e1b0d0d78c632817f170f3fe22c639ad43",
+    "parent_integration_result": "282 passed / 9 warnings / 29.70s; final six-chart artifact review independently passed"
+  },
+  "pinned_reference_review": {
+    "commit": "a22ea8958410ac940adec83b54bbf4e6b293d191",
+    "evidence": "out/product_coordination/phira_reference_hash_review.json",
+    "verified_files": 8,
+    "verified_bytes": 72077,
+    "semantics": "主会话按固定Anim/Tween源码确认首key前线性外推、末key后保持；重复time适配器保守unsupported。Object旋转/aspect和alpha max(0)与声明规范一致。没有运行原播放器。"
+  },
   "findings": [
     {
       "id": "F4A-1",
-      "status": "resolved_in_draft_independently_tested",
+      "status": "resolved_verified_in_646e104",
       "issue": "右连续端点取下一段起点，可能遗漏前一段的正alpha极限，将仍有可见区间的空线判为idle。",
       "reproduction": "60 BPM，alpha在[0,32) tick从-3线性到1，随后[32,64]恒-1；0.9秒alpha=0.6，但旧分类只用边界/中点得到idle。",
       "fix_and_check": "新增边界切分区间的单侧值查询，正值区间加入见证点；返回visible_decoration_candidate，不宣称实际纹理可见。root反例与设计agent21项测试通过。"
     },
     {
       "id": "F4A-2",
-      "status": "resolved_in_draft_independently_tested",
+      "status": "resolved_verified_in_646e104",
       "issue": "Hold旋转采样若用右端点的下一段值，可能把边界前720度运动当成零变化并漏掉越界。",
       "reproduction": "60 BPM，Hold在0..1 tick、局部p=6、线心(0.5,0.5)；旋转0→720度后边界骤回0。0.125 tick的90度目标为(0.5,1.1)，旧4个样点均未发现。",
       "fix_and_check": "连续区间按左/右单侧旋转跨度细分，跳变720→0另列。root草稿复验35采样中12点越界；独立测试验证最大22.5度连续采样步长与跳变记录。采样仍不是连续可玩性证明。"
     },
     {
       "id": "F4A-3",
-      "status": "resolved_in_draft_independently_tested",
+      "status": "resolved_verified_in_646e104",
       "issue": "当前速度可读但历史有gap时，累计scroll_integral未知，原总supported仍为true，可能误接受累计落距标签。",
       "reproduction": "120 BPM，速度[0,10):1、[20,320):2，查询30/64秒；原supported=true、speed_source=2，但scroll_integral.value=null且[10,20]为unsupported_interior_gap。",
-      "fix_and_check": "分别返回current_state_supported与scroll_supported；总supported包含所请求积分，未请求积分时scroll_supported为null。新增回归包含于独立21项通过结果。"
+      "fix_and_check": "分别返回current_state_supported与scroll_supported；总supported包含所请求积分，未请求积分时scroll_supported为null。草稿独立21项及固定33项通过。"
+    },
+    {
+      "id": "F4A-4",
+      "status": "resolved_verified_in_646e104",
+      "issue": "note_outside_audio和zero_hold_duration原先一律intersects_audio=true，音频外事件被误计入有效播放域问题。",
+      "reproduction": "duration=5秒，Hold[-2,-1.5]、[6.25,6.75]、零长@6.25均不相交；[-0.5,0.5]与[4.5,5.5]才部分相交。主会话提示后设计agent独立复现。",
+      "fix_and_check": "按完整源音符区间/零长点计算相交，原始字段保留，线分类另报source/effective note count。7组全前/全后/跨界/零长回归包含在固定33项通过中。"
+    },
+    {
+      "id": "F4A-5",
+      "status": "resolved_verified_in_646e104",
+      "issue": "移植参考的全局max([0,*heads])+1额外把全部非空负native头钳到0，与固定Rust逐线max规则不同。正offset可使负native头落入有效音频，不能忽略。",
+      "reproduction": "单线120BPM、head=-128 tick、offset=3秒，音符在音频1秒；参考max_time应=-1秒。若另有空线，则空线默认0使max_time=1秒。",
+      "fix_and_check": "按每线取max、空线才默认0，再取全局max+1；两个分支均在独立固定测试中通过。所选真实谱有正头，该边界不改变它们的既有参考结果。"
     }
   ],
   "remaining": [
-    "固定实现提交与测试源码指纹，再把草稿证据绑定到交付版本",
-    "少量原始v1/v3谱按完整有效域检查边界/内部/所有Hold，并给完整分母和不支持区间，CPU串行且不生成全库密集缓存",
-    "固定Phira源码参考差分，区分手工移植参考与实际运行播放器，不支持或已知末keyframe/长Hold差异不能计为一致",
-    "原字段保留及序列化往返属于表示一致性；独立数值/参考差分分别报告，避免同实现自洽被称为正确性真值",
-    "目标播放器、动态预览、F4b机械契约、F5学习模型及人类试玩仍未验收"
-  ]
+    "F4a已通过本批工程验收；全库含间隙/重叠/反向/哨兵等额外语义，扩大标签使用前继续保留支持掩码和失败分母",
+    "目标播放器语义及实际运行差分、完整动态预览、F4b机械契约、F5学习模型与人类试玩未验收",
+    "下一项按docs/conditioning_audit_review.md的Q0–Q7实现共享条件诊断；两条布局分别报告，2–3已有开发曲，不立即训练演出"
+  ],
+  "evaluation_commit": "c963180",
+  "artifact_verification": {
+    "evidence": "out/product_coordination/f4a_artifact_review.json",
+    "audit_report": "../AudioLab-freeform-performance/out/performance_v1/audit.json",
+    "method": "独立标准库逐文件读gzip；实际文件bytes/SHA、规范内容SHA、原始谱/音频SHA；完整源字段一致，全部原生事件解码、各线时钟、音符稳定ID逐项核对。未加载模型或复制音频。",
+    "parsed_charts": 6,
+    "failed_charts": 0,
+    "versions": {
+      "v1": 2,
+      "v3": 4
+    },
+    "source_lines": 96,
+    "source_notes": 4581,
+    "source_events": 218921,
+    "source_holds": 479,
+    "line_queries": 326639,
+    "hold_samples": 20357,
+    "canonical_unsupported_at_queried_points": 0,
+    "geometry_observation": {
+      "source_holds_with_screen_outside_samples": 7,
+      "screen_outside_samples": 1846,
+      "all_hold_samples_within_audio": true,
+      "meaning": "原始几何观察，不是新模型错误、连续安全或真实玩家不可玩证明"
+    },
+    "independent_check_seconds": 7.68,
+    "independent_check_peak_rss_mib": 165.117,
+    "audit_seconds": 136.30368439108133,
+    "audit_peak_rss_gib": 0.3580665588378906,
+    "final_output_bytes": 7362361,
+    "population_limit": "训练表顺序两v1四v3工程覆盖，不能外推为300份全库标签或冻结测试"
+  },
+  "reference_difference_summary": {
+    "queries_per_quantity": 326639,
+    "unsupported": {
+      "x": 7263,
+      "y": 7263,
+      "rotation": 1130,
+      "alpha": 2152,
+      "speed": 1,
+      "scroll": 1
+    },
+    "differences_above_1e_7": {
+      "x": 0,
+      "y": 0,
+      "rotation": 0,
+      "alpha": 0,
+      "speed": 0,
+      "scroll": 12532
+    },
+    "scroll_max_sampled_abs_error_source_units": 17.348858685742357,
+    "meaning": "仅在可比较样点按float64源码移植对照；已读scroll差异示例在max_note_head+1之后。未把全部差异重新逐点归因，不将unsupported计成一致，不宣称实际或官方播放器兼容。"
+  },
+  "draft_resource_failure": {
+    "parsed_charts": 5,
+    "failed_charts": 1,
+    "reason": "第六份未压缩规范输出将超过45MiB子预算，明确拒绝",
+    "retained_evidence": "开发保留草稿摘要；清理自己的未压缩canonical副本，固定gzip版本六曲完整重验"
+  }
 }
