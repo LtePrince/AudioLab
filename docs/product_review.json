@@ -179,16 +179,26 @@
       "evidence": "设计agent独立执行固定c948ca6的test/test_linux_runtime.py：20 passed/9.07s。包括标准库帮助/缺依赖、torch版本族、受控磁盘/RAM拒绝、缺失权重和共用manifest校验、三模型CPU小夹具及旧时钟/错路线/损坏拒绝、真实短WAV/OGG解码/重采样/mel与tempo路径、屏蔽开发绘图依赖、CUDA不可用不退CPU、可见设备映射、端口/目录占用模拟、含空格路径、check与失败不启动服务。",
       "review": "重用模型包verify_installed；默认checkpoints/timing_v1与out/local-service，先预检再exec服务释放探测状态，传入实际通过探测的具体CUDA设备，保留CUDA_VISIBLE_DEVICES。只在debug绘图时导入matplotlib。未调用训练调度或要求数据集/缓存。",
       "limits": "模型测试为小型CPU夹具，CUDA和端口占用使用mock，未新建真实socket服务；短OGG padding单独记录，不表示所有编码均能导出。当前依赖环境被复用，不能写为全新安装或另一台个人PC实测。"
+    },
+    {
+      "id": "C17",
+      "result": "passed_parent_c948ca6_clean_clone_runtime_scope",
+      "scope": "LR0–LR4开发机独立本地Git clone的真实导入、预检与浏览器生成；非用户另一台PC",
+      "preflight": "已读out/runtime_delivery_v1/clean_clone_evidence.json：c948ca6独立local clone，python3 -S导入真实三权重到默认相对checkpoints/timing_v1，无data、.venv或权重symlink，复用开发机解释器。实际stdout记录6.85653s ready；三模型CPU加载、WAV/OGG/tempo及CUDA kernel通过，cuda→cuda:0，CUDA_VISIBLE_DEVICES=null、RTX3090、Python3.13.13、torch2.10.0+cu128；探测后余盘10.243GiB、可用RAM37.081GiB、RSS1.094GiB。",
+      "browser": "已读out/browser_review/linux-runtime-clone-v1.json：干净c948ca6，102.770秒开发音频自动双模式31.7307秒，4K566/free-x839音，四键型均保留。真实native音频播放、51.385秒seek、模式切换保留时钟、两个ZIP实际保存/hash与大小匹配/Range206、历史刷新与390px视口通过，无JS错误。",
+      "downloads": "4K SHA256=3da8ce26c5a6029259b10325741bbcc5f7cec2d472136642f3c7619f092b9f78/1602706B；free-x=af50da8250f282dce19cf46c76773c5421fb26287d10f87d4a7e33f7d52a67a0/1612857B。",
+      "integration": "develop502bb12由主会话完整回归396 passed/9 warnings/46.32s。",
+      "limits": "当前机本地clone和已有依赖的工程验证；没有新pip安装或另一台PC操作。单首重复使用的开发样例不构成质量、速度泛化或Phira真机通过，PH4仍未执行。"
     }
   ],
   "remaining": [
-    "LR0–LR4: Linux/NVIDIA个人PC运行迁移工程进行中；干净代码、最小依赖、独立三权重包及预检/启动需核对。开发机localhost证据不能代替另一台PC实测。",
+    "LR0–LR4开发机独立clone工程已通过；个人PC仍需按运行说明安装依赖、单独取得并导入三权重包、实际预检/生成。全新依赖安装与另一台PC实测未执行。",
     "PH1–PH3包装/源码时钟/管线失败/真实浏览器下载工程已通过；不扩大审计。下一步PH4实际设备导入校准包与两种整谱，记录同步和操作反馈。",
     "PH4: 将完整包传到手机/平板，记录实际Phira版本、设备与时差设置，真实导入、完整播放、Hold/Drag/Flick及多指操作；源码与Canvas不替代真机。",
     "K2/F2: 声学/音乐对应、键型持续、位置和真实手感仍待改善；Hold无配额，多指保留；R1未自动更改产品默认。",
     "声学标注/阈值校准、固定质量测试与真人反馈尚缺；合成click校准包不计模型质量，候选数值未因范围确认获批。",
     "F4a首批工程验收已完成；F4b/F5动态演出及编辑保留为后续路线，非首版阻塞项。",
-    "develop3f973de包含N1/共享修复/F4a/C2/R1/Phira包装，主会话359项完整回归通过；首版音乐质量与真机未验收，不合main。"
+    "develop502bb12包含N1/共享修复/F4a/C2/R1/Phira包装/Linux运行与模型包，主会话396项完整回归通过；首版音乐质量与真机未验收，不合main。"
   ],
   "product_decisions": {
     "confirmed_at": "2026-10-17",
@@ -225,7 +235,7 @@
     "integration": "develop3f973de; 359 passed by root"
   },
   "runtime_portability_review": {
-    "status": "in_progress",
+    "status": "passed_current_machine_clean_clone_engineering",
     "baseline": "develop be96a67",
     "contract": "docs/product_delivery.md LR0–LR4",
     "implementation_branch": "chore/linux-runtime",
@@ -234,6 +244,10 @@
     "bundle_code_commit": "07b5095",
     "bundle_delivery_commit": "2ee49fe",
     "independent_cpu_tests": "17 model bundle + 20 Linux runtime passed",
+    "clean_clone_evidence": "out/runtime_delivery_v1/clean_clone_evidence.json",
+    "clean_clone_browser": "out/browser_review/linux-runtime-clone-v1.json",
+    "clean_clone_environment": "current development machine; local Git clone and regular installed weights, existing Python dependencies reused",
+    "integration": "develop502bb12; 396 passed by root",
     "personal_pc_execution": "not_executed",
     "fresh_dependency_installation": "not_executed",
     "weight_transfer": "separate bundle required; no weights in Git and no invented public URL"
