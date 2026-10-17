@@ -84,7 +84,16 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
                    transcriber=None, onset_threshold: float = 0.5,
                    raw_output: bool = False, free_min_gap: float = 0.04,
                    sampling_policy: str = 'flat', onset_min_interval_ms: float = 0.0,
-                   playability_profile: str = 'legacy', max_contacts: int | None = None) -> int:
+                   playability_profile: str = 'legacy', max_contacts: int | None = None,
+                   audio_events: str | None = None) -> int:
+    if audio_events:
+        if skeleton_ticks is not None or transcriber is not None:
+            raise ValueError('audio_events cannot be combined with another skeleton')
+        from src.audio_understanding.inference import result_to_ticks, sha256
+        evidence = json.loads(Path(audio_events).read_text())
+        if evidence.get('audio_sha256') != sha256(audio_path):
+            raise ValueError('audio events belong to different audio bytes')
+        skeleton_ticks = result_to_ticks(evidence, bpm, offset)
     if playability_profile not in ('legacy', 'contacts-v1'):
         raise ValueError('unknown playability profile')
     if raw_output and playability_profile != 'legacy':
@@ -102,6 +111,8 @@ def generate_chart(audio_path: str, output_path: str, *, enc, dec, device, bpm: 
     proc = AudioGPUprocessor(sr=sr, n_fft=2048, hop_length=hop_length, n_mels=n_mels, device=str(device))
     waveform = proc.load_from_path(audio_path)
     audio_seconds = waveform.shape[-1] / sr
+    if audio_events and abs(evidence['duration_seconds'] - audio_seconds) > 1 / sr + 1e-6:
+        raise ValueError('audio events duration differs from decoded audio')
     mel = proc.forward(waveform).squeeze(0)
     del waveform
     n_frames = max(1, math.ceil(mel.shape[-1] / mpf))
@@ -177,12 +188,17 @@ def main() -> None:
                    help="hybrid batch mode: <song_dir>.json skeletons (e.g. out/eval_tsc_r2)")
     p.add_argument("--skeleton-ckpt", default=None,
                    help="hybrid mode: transcriber or global rhythm checkpoint")
+    p.add_argument('--audio-events', help='shared audio-understanding result JSON; single-song mode')
     p.add_argument("--skeleton-calibration", help="completed TRAIN fit report for this checkpoint")
     p.add_argument("--onset-threshold", type=float, default=None,
                    help="manual onset threshold (default: 0.5 without calibration)")
     p.add_argument("--onset-min-interval-ms", type=float, default=None,
                    help="optional confidence NMS on sub-frame onsets; 0 keeps all threshold crossings")
     args = p.parse_args()
+    if args.audio_events and any((args.list, args.skeleton_json, args.skeleton_dir,
+                                 args.skeleton_ckpt, args.skeleton_calibration,
+                                 args.onset_threshold is not None, args.onset_min_interval_ms is not None)):
+        p.error('--audio-events requires single-song mode and uses its saved event selection')
     try:
         args.onset_threshold, args.onset_min_interval_ms = resolve_skeleton_settings(
             args.skeleton_ckpt, args.skeleton_calibration, args.onset_threshold,
@@ -241,7 +257,8 @@ def main() -> None:
                    transcriber=transcriber, onset_threshold=args.onset_threshold,
                    raw_output=args.raw_output, free_min_gap=args.free_min_gap,
                    sampling_policy=args.sampling_policy, onset_min_interval_ms=args.onset_min_interval_ms,
-                   playability_profile=args.playability_profile, max_contacts=args.max_contacts)
+                   playability_profile=args.playability_profile, max_contacts=args.max_contacts,
+                   audio_events=args.audio_events)
 
 
 if __name__ == "__main__":
