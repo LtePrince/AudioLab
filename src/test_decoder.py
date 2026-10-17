@@ -209,6 +209,9 @@ def main() -> None:
             d = json.load(open(base / j, encoding="utf-8"))
             song = Path(j).parent.name
             if (Path(args.out_dir) / f"{song}.json").exists():
+                if args.playability_profile != 'legacy':
+                    raise ValueError('contact-profile batch requires fresh output paths; '
+                                     'existing charts may use different weights or contact settings')
                 continue                                   # resumable batch
             skel = None
             if args.skeleton_dir:
