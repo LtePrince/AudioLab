@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AudioLab · 快速成谱</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;color:#edf4ff;background:#101827}*{box-sizing:border-box}
+body{max-width:900px;margin:48px auto;padding:0 24px}h1{font-size:32px;letter-spacing:-1px;margin-bottom:10px}
+p{line-height:1.7;color:#b7c5da}form,.panel{border:1px solid #34465e;border-radius:12px;background:#19263b;padding:24px;margin:24px 0}
+label{display:block;margin:16px 0 7px}select,input,button{font:inherit}select,input[type=number]{border:1px solid #52667e;background:#101c2d;color:#eff4ff;border-radius:6px;padding:10px;max-width:100%}
+input[type=file]{max-width:100%;padding:14px 0}button,a.button{display:inline-block;padding:11px 18px;border:0;border-radius:6px;background:#93c5ff;color:#102039;text-decoration:none;font-weight:600;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}button.secondary{background:#354762;color:#edf4ff}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+small,.muted{color:#a7b8ce}details{margin-top:20px}summary{cursor:pointer}#status{font-size:18px;margin:0 0 10px}#error{color:#ffc0a7;white-space:pre-wrap}a{color:#9ecbff}
+table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:12px 8px;border-bottom:1px solid #34465e}th{font-size:13px;color:#a7b8ce}td{overflow-wrap:anywhere}
+</style>
+<h1>AudioLab <span class="muted">快速成谱</span></h1>
+<p>选择一首音乐和玩法，生成基线谱面，试听预览后导出。当前支持 WAV / OGG，单文件最多 128 MiB。</p>
+<form id="generate">
+  <label for="audio-file">音乐文件</label><input id="audio-file" type="file" accept=".wav,.ogg,audio/wav,audio/ogg" required>
+  <label for="mode">玩法</label><select id="mode"><option value="both">定轨与无轨</option value="4k">定轨 4K</option><option value="freex">无轨 free-x</option></select>
+  <p><small>定轨使用四个固定位置；无轨使用静态单判定线。两种模式都保留 Tap、Drag、Hold、Flick。</small></p>
+  <details id="settings"><summary>可选设置</summary><label for="bpm">手动速度（BPM）</label><input id="bpm" type="number" min="1" max="1000" step="any" placeholder="留空，自动估计"><p><small>自动估计尚未校准。若节奏不稳定或试听不合适，可填写已知速度后重新生成。</small></p></details>
+  <div class="actions"><button id="submit" type="submit">生成谱面</button><button id="cancel" class="secondary" type="button" disabled>取消任务</button></div>
+</form>
+<section class="panel" aria-live="polite"><p id="status">等待选择音乐</p><div id="progress" class="muted"></div><p id="error"></p><div id="result" class="actions"></div></section>
+<h2>最近任务</h2><table><thead><tr><th>音乐</th><th>状态</th><th>结果</th></tr></thead><tbody id="history"></tbody></table>
+<p><small>预览用于核对声音与谱面，不提供击打判定。实际手感和目标播放器兼容性仍需验证。</small></p>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const stageNames={preflight:'检查输入',audio_features:'读取音乐',tempo:'分析节奏',audio_understanding:'识别音乐事件',layout_4k:'生成定轨谱面',layout_freex:'生成无轨谱面',preview:'准备预览',complete:'生成完成'};
+const statusNames={uploading:'上传中',queued:'等待生成',running:'生成中',cancelling:'正在取消',completed:'生成完成',failed:'生成失败',cancelled:'已取消',needs_tempo:'需要填写速度'};
+const terminal=new Set(['completed','failed','cancelled','needs_tempo']);
+let current=null,pollTimer=null,upload=null;
+function errorText(error){if(!error)return '';const text=typeof error==='string'?error:error.message||JSON.stringify(error);if(text.includes('tempo could not'))return '暂时无法估计这首音乐的速度。请在可选设置中填写 BPM 后重试。';if(text.includes('no audio candidates'))return '没有找到可用于生成的音乐事件，请检查音频或更换文件。';if(text.includes('Resource budget')||text.includes('disk reserve'))return '可用资源不足，本次任务未完成。请换一首较短的音乐，或释放资源后重试。';return text;}
+function actionLink(label,url){const a=document.createElement('a');a.textContent=label;a.href=url;a.className='button';a.target='_blank';a.rel='noopener';return a;}
+function show(job){
+  current=job.id;const done=terminal.has(job.status);
+  $('status').textContent=job.status==='running'?(stageNames[job.stage]||'生成中'):(statusNames[job.status]||job.status);
+  $('progress').textContent=(job.elapsed_seconds?Math.floor(job.elapsed_seconds)+' 秒':'')+(job.progress&&job.progress.candidates_total?' · 已处理 '+job.progress.candidates_reached+' / '+job.progress.candidates_total+' 个事件':'');
+  $('error').textContent=errorText(job.error);$('cancel').disabled=done||job.status==='cancelling';$('submit').disabled=!done;
+  if(job.status==='needs_tempo')$('settings').open=true;
+  $('result').replaceChildren();
+  if(job.preview){$('result').append(actionLink('打开音频同步预览',job.preview),actionLink('查看生成报告',job.report));}
+  if(done){clearTimeout(pollTimer);refreshHistory();}else{pollTimer=setTimeout(poll,700);}
+}
+async function poll(){if(!current)return;try{const r=await fetch('/api/jobs/'+current);if(!r.ok)throw new Error('任务状态暂时无法读取');show(await r.json());}catch(e){$('error').textContent=e.message;pollTimer=setTimeout(poll,1500);}}
+async function refreshHistory(){
+  try{const response=await fetch('/api/jobs');const data=await response.json();$('history').replaceChildren();
+    for(const job of data.jobs){const tr=document.createElement('tr');for(const text of [job.name,statusNames[job.status]||job.status]){const td=document.createElement('td');td.textContent=text;tr.append(td);}const td=document.createElement('td');if(job.preview)td.append(actionLink('预览',job.preview));tr.append(td);$('history').append(tr);}
+    const active=data.jobs.find(j=>!terminal.has(j.status));if(active&&!upload){current=active.id;clearTimeout(pollTimer);pollTimer=setTimeout(poll,100);$('submit').disabled=true;}
+  }catch(e){$('error').textContent='本地服务暂时不可用，请确认服务仍在运行。';}
+}
+$('generate').addEventListener('submit',async event=>{
+  event.preventDefault();const file=$('audio-file').files[0];if(!file)return;
+  if(file.size>128*1024*1024){$('error').textContent='文件超过 128 MiB，请选择较小的音频。';return;}
+  clearTimeout(pollTimer);current=null;$('submit').disabled=true;$('cancel').disabled=false;$('result').replaceChildren();$('error').textContent='';$('status').textContent='上传音乐';
+  upload=new AbortController();const requestToken=crypto.randomUUID();const query=new URLSearchParams({name:file.name,mode:$('mode').value,bpm:$('bpm').value||'auto',request_token:requestToken});
+  try{const response=await fetch('/api/jobs?'+query,{method:'POST',body:file,signal:upload.signal});const result=await response.json();if(!response.ok)throw new Error(errorText(result.error));current=result.id;upload=null;await poll();}
+  catch(e){upload=null;$('submit').disabled=false;$('cancel').disabled=true;$('status').textContent=e.name==='AbortError'?'上传已取消':'未能启动任务';$('error').textContent=e.name==='AbortError'?'':e.message;if(e.name==='AbortError'){try{const response=await fetch('/api/jobs');const data=await response.json();const own=data.jobs.find(j=>j.request_token===requestToken&&!terminal.has(j.status));if(own)await fetch('/api/jobs/'+own.id+'/cancel',{method:'POST'});}catch{}}await refreshHistory();}
+});
+$('cancel').addEventListener('click',async()=>{if(upload){upload.abort();return;}if(!current)return;$('cancel').disabled=true;try{await fetch('/api/jobs/'+current+'/cancel',{method:'POST'});$('status').textContent='正在取消，等待任务释放资源';}catch(e){$('error').textContent=e.message;}});
+refreshHistory();
+</script>
+</html>

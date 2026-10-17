@@ -22,9 +22,9 @@ python -m script.train_models --gpu 1 --worker script.generate_product -- \
   --output out/song-job --device cuda:0
 ```
 
-`--bpm` 必填，当前不推断音乐速度。它会影响 AR 的节奏表示，不能把默认 120 冒充自动估计。为约束 token 时间跨度，工程入口接受 1–1000 BPM；这不是可玩难度范围。`--mode` 可选 `4k`、`freex` 或 `both`；后者顺序生成两种玩法。当前是基线谱，没有未经训练验证的难度档位。仅支持本轮已验证的 WAV／OGG 输入，工程上限 600 秒、128 MiB 文件；超过范围明确失败，不截断音频。
+`--bpm` 可选：提供时使用显式时基；留空时使用后述未校准速度估计。为约束 token 时间跨度，工程入口接受 1–1000 BPM；这不是可玩难度范围。`--mode` 可选 `4k`、`freex` 或 `both`；后者顺序生成两种玩法。当前是基线谱，没有未经训练验证的难度档位。仅支持本轮已验证的 WAV／OGG 输入，工程上限 600 秒、128 MiB 文件；超过范围明确失败，不截断音频。
 
-输出目录必须不存在，避免混合不同权重和配置的结果。参数与权重指纹记录在结果中。单任务默认 CPU 两线程、RSS 限额 4 GiB、可用 RAM／磁盘各保留 8 GiB；GPU 内存比例默认 0.65。900 秒超时是工程退出条件，不是产品速度承诺。服务化队列和多用户并发不在本入口中。
+输出目录必须不存在，避免混合不同权重和配置的结果。参数与权重指纹记录在结果中。单任务默认 CPU 两线程、RSS 限额 4 GiB、可用 RAM／磁盘各保留 8 GiB；GPU 内存比例默认 0.65。900 秒超时是工程退出条件，不是产品速度承诺。公开服务队列和多用户并发不在本入口中。
 
 ## 结果与预览
 
@@ -38,6 +38,7 @@ python -m script.train_models --gpu 1 --worker script.generate_product -- \
 | --- | --- |
 | `audio.wav`／`audio.ogg` | 本次任务的音频快照 |
 | `audio_events.json`／`.npz` | 共享候选、连续特征、未筛选概率和指纹；旧权重明确标 `chart_onset` |
+| `tempo.json` | 自动估计或人工时基的来源、参数、候选和不确定状态 |
 | `4k.raw.json`、`freex.raw.json` | 模型原始静态输出，仅作诊断，Hold 可能越过音频末尾 |
 | `4k.json`、`freex.json` | 通过格式、位置、时间及候选覆盖检查的最终 Phigros v3 JSON |
 | `*.events.json` | 稳定音符 ID、来源序号、绝对音频时间、键型和屏幕横坐标 |
@@ -61,3 +62,23 @@ python -m script.train_models --gpu 1 --worker script.generate_product -- \
 运行时创建 `OUTPUT/CANCEL` 文件可请求取消，也可 Ctrl+C／发送 SIGTERM。推理窗口之间、每 32 个解码步骤及音频复制阶段检查取消和预算。保留部分文件供诊断，但无 `manifest.json`。取消不能中断一个正在执行的 GPU kernel；完成该小步后退出。
 
 真实播放器导入、触屏判定、难度条件学习、自动节拍、独立声学标注、动态多判定线演出和后续编辑各自另行验收。现有谱面监督权重不会因为换了产品入口而变成声学真值模型。
+
+## 本地交互与自动时基（N1）
+
+```bash
+python -m script.serve_product \
+  --model-root /path/AudioLab/checkpoints/timing_v1 \
+  --output out/local-product --device cpu --port 7860
+```
+
+打开 `http://127.0.0.1:7860`，选择音频和玩法后生成；手动 BPM 位于可选设置中。支持进度、取消、失败后重试、最近任务、预览与导出。服务只绑定回环地址、检查本地来源，不提供公开网络部署或账户功能。
+
+一次最多一个上传／生成任务，忙时拒绝新任务。每个生成任务使用独立子进程，取消后等待其退出才释放槽位；重启时拒绝覆盖仍在运行的旧任务。上传按块落盘并保留 8 GiB 磁盘余量，不在内存中积累整个请求；输入最多 128 MiB。工作完成后清理上传临时副本，生成目录保留自己的音频。任务目录必须完整保留，HTTP 音频支持单段 byte range 以便跳转。仅服务完成任务清单里的产物，不支持任意文件路径。
+
+自动时基复用已提取的 22050 Hz／512 hop log-mel：`librosa.onset.onset_strength`（`center=False`）→ 8 秒自相关 tempogram → `librosa.feature.tempo`。采用该库明确记录的 120 BPM 初始先验、std=1、上限 320 BPM；120 是先验，不是无信号时返回的观测值。估计值直接作为导出和 AR 时基，不按已有谱面的 BPM 分布事后挑选，也不把音符吸附到拍点。[起音强度文档](https://librosa.org/doc/0.11.0/generated/librosa.onset.onset_strength.html)、[速度估计文档](https://librosa.org/doc/0.11.0/generated/librosa.feature.tempo.html)。
+
+log-mel 沿用权重的 2048 点居中 STFT，帧 `i` 的中心是音频绝对时间 `i×512/22050` 秒；`onset_strength(center=False)` 不再追加半窗移位。原始 WAV 点击及 1／4 秒前导静音夹具覆盖这条加载链路，未删除前导静音。居中窗会提前响应冲激，测试中 flux 峰早约 1–2 帧；这里只利用周期，不将其峰值当成模型音符的起音时间。
+
+`tempo.json` 与报告分别保存 `timebase_bpm`、未审核的 `musical_tempo_estimate`、方法／版本／参数／分析范围／音频哈希、半／倍速候选、自相关强度和局部估计分布。相关强度不是校准概率；局部跳变可能是半／倍速切换，不是经过验证的真实变速。所有自动结果标为 `estimated_unconfirmed`，预览中提示可手动调整。没有信号、少于四个显著起音峰或短于四秒时，返回 `needs_tempo`，不默默填常数；这些是版本化工程启发式，尚未按真实音乐校准。
+
+**已知可控样例限制：** 默认先验对 180 BPM 均匀点击输出约 89.10 BPM，表现为半速；在 90→180 BPM 的两段点击中，局部估计还可能一直保持约 89.10 BPM，不能据此判断没有变速。120 BPM、前导静音／弱起样例可在一个分析帧的周期误差内恢复；120→160 样例可触发局部变化提示。这些功能样例不构成真实音乐 BPM 准确率、可靠 tempo map 或学习式 beat 模型已完成的证据。

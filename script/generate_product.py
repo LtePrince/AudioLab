@@ -14,7 +14,7 @@ from src.resource_budget import add_resource_args
 def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--audio', required=True, help='WAV or OGG input')
-    p.add_argument('--bpm', required=True, type=float, help='known BPM; tempo inference is not implemented')
+    p.add_argument('--bpm', type=float, help='optional explicit timebase; omitted uses an uncalibrated tempo estimate')
     p.add_argument('--mode', choices=['4k', 'freex', 'both'], default='both')
     p.add_argument('--output', required=True, help='new job directory; existing directories are never overwritten')
     p.add_argument('--model-root', default='checkpoints/timing_v1')

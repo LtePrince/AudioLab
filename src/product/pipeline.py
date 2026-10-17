@@ -23,6 +23,7 @@ from src.resource_budget import GIB, ResourceBudget, resource_snapshot
 from src.test_decoder import load_models
 from . import JOB_SCHEMA
 from .artifacts import chart_document, repair_log, validate_chart, write_json, write_preview
+from .tempo import estimate_tempo, provided_tempo, TempoRequired
 
 
 class JobCancelled(Exception):
@@ -100,7 +101,18 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
     # Actual SDPA backends may use much less. Never silently change encoders.
     attention_bytes = 2*enc.num_heads*attention_frames**2*4
     work_bytes = attention_frames*hidden*4*16 + frames*hidden*4*4
-    cache_bytes = 2*(max_tokens+frames)*hidden*4*len(dec.blocks)
+    from src.data.chart_tokenizer import N_DTB, N_DTT
+    audit_tk=ChartTokenizer(n_lanes=dec.n_lanes)
+    extra_forced_steps=0;previous_tick=0
+    for tick in skeleton:
+        if tick > previous_tick:
+            chain=[]
+            audit_tk._emit_span(chain,tick-previous_tick,audit_tk.dtb,audit_tk.dtt,N_DTB,N_DTT)
+            extra_forced_steps+=max(0,len(chain)-1)
+        previous_tick=tick
+    decoder_hidden=dec.tok_emb.embedding_dim
+    cache_tokens=max_tokens+extra_forced_steps+3
+    cache_bytes = 2*(cache_tokens+frames)*decoder_hidden*4*len(dec.blocks)
     model_bytes = Path(checkpoint).stat().st_size
     cpu_extra = model_bytes*2 + frames*hidden*4*4
     device_extra = attention_bytes + work_bytes + cache_bytes
@@ -117,7 +129,9 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
         if device_extra > min(free,permitted):
             raise RuntimeError('Resource budget: layout attention estimate exceeds available GPU budget')
     preflight = dict(cpu_extra_gib=cpu_extra/GIB, device_extra_gib=device_extra/GIB,
-                     method='conservative-two-score-matrices-and-kv-v1')
+                     decoder_hidden=decoder_hidden,cache_token_bound=cache_tokens,
+                     extra_forced_dt_steps=extra_forced_steps,
+                     method='conservative-two-score-matrices-and-forced-dt-kv-v2')
     if encoder_mode == 'chunked':
         encoded = infer_mel(enc, mel, duration, check=control.check)
         features = torch.from_numpy(encoded['features']).unsqueeze(0).to(device)
@@ -183,7 +197,7 @@ def run_job(args):
     started = time.monotonic()
     control = None
     try:
-        if not math.isfinite(args.bpm) or not 1 <= args.bpm <= 1000:
+        if args.bpm is not None and (not math.isfinite(args.bpm) or not 1 <= args.bpm <= 1000):
             raise ValueError('BPM must be finite in [1, 1000]; it is supplied, not inferred')
         if not math.isfinite(args.offset) or args.offset < 0:
             raise ValueError('chart offset must be finite and nonnegative')
@@ -223,10 +237,25 @@ def run_job(args):
         report['implementation']['product_source_sha256'] = {
             path.name: sha256(path) for path in sorted(Path(__file__).parent.glob('*')) if path.is_file()}
         report['runtime']['device_name'] = torch.cuda.get_device_name(device) if device.type == 'cuda' else 'CPU'
-        control.update('audio_understanding', progress=None)
+        control.update('audio_features', progress=None)
         phase = time.monotonic()
         mel, duration = load_audio(audio_path, args.max_seconds, budget=budget)
         control.check()
+        report['stages']['audio_features_seconds']=time.monotonic()-phase
+        control.update('tempo',progress=None)
+        phase=time.monotonic()
+        tempo=estimate_tempo(mel,duration) if args.bpm is None else provided_tempo(args.bpm,duration)
+        tempo['audio_sha256']=source_hash
+        write_json(directory/'tempo.json',tempo)
+        if tempo['status']=='needs_tempo':
+            raise TempoRequired('tempo could not be estimated; enter BPM in optional settings and retry')
+        bpm=tempo['timebase_bpm']
+        report['tempo']=tempo
+        report['config'].update(bpm=bpm,timebase_bpm=bpm,timing_source=tempo['source'])
+        report['stages']['tempo_seconds']=time.monotonic()-phase
+        control.check()
+        control.update('audio_understanding',progress=None)
+        phase=time.monotonic()
         audio_model, metadata = load_model(audio_checkpoint, device)
         arrays = infer_mel(audio_model, mel, duration, check=control.check)
         evidence = make_result(arrays, duration, metadata)
@@ -243,7 +272,7 @@ def run_job(args):
         report['audio'].update(duration_seconds=duration, feature_schema=FEATURE_SCHEMA,
                                checkpoint_sha256=metadata['checkpoint_sha256'],
                                label_source=metadata['label_source'])
-        skeleton, quantization = quantize_candidates(evidence, args.bpm, args.offset)
+        skeleton, quantization = quantize_candidates(evidence, bpm, args.offset)
         report['audio']['candidates'] = len(evidence['events'])
         report['audio']['candidate_ticks'] = len(skeleton)
         report['audio'].update(quantization)
@@ -257,16 +286,16 @@ def run_job(args):
             budget.check(force=True, extra_bytes=16*1024**2)
             control.update('layout_'+mode, progress=None)
             raw, decoding = decode_notes(mel, duration, skeleton, checkpoints[mode], mode,
-                                         args.bpm, args.offset, args.seed, device, control,
+                                         bpm, args.offset, args.seed, device, control,
                                          max_tokens=args.max_decoder_steps, encoder_mode=args.layout_encoder)
             # Raw artifacts remain diagnostic only; an over-budget decoder may
             # contain an early EOS and must never receive a completion marker.
             raw_name, chart_name, events_name = f'{mode}.raw.json', f'{mode}.json', f'{mode}.events.json'
-            chart_document(raw, args.bpm, args.offset, directory/raw_name)
-            end_tick = (duration-args.offset)/tick_seconds(1, args.bpm)
+            chart_document(raw, bpm, args.offset, directory/raw_name)
+            end_tick = (duration-args.offset)/tick_seconds(1, bpm)
             final, repairs = (constrain_4k_notes(raw, end_tick) if mode == '4k'
                               else constrain_free_notes(raw, end_tick))
-            chart = chart_document(final, args.bpm, args.offset, directory/chart_name)
+            chart = chart_document(final, bpm, args.offset, directory/chart_name)
             events, checks = validate_chart(chart, mode, duration, skeleton)
             events['source_audio_sha256'] = source_hash
             write_json(directory/events_name, events)
@@ -285,7 +314,7 @@ def run_job(args):
         control.update('preview', progress=None)
         budget.check(force=True, extra_bytes=16*1024**2)
         write_preview(directory/'preview.html', title=source.stem, audio_name=audio_path.name,
-                      routes=routes, duration=duration)
+                      routes=routes, duration=duration,tempo=tempo)
         control.check()
         report.update(status='completed', elapsed_seconds=time.monotonic()-started,
                       preview='preview.html', resources=budget.log_state())
@@ -297,7 +326,8 @@ def run_job(args):
         return report
     except BaseException as error:
         (directory/'manifest.json').unlink(missing_ok=True)
-        status = 'cancelled' if isinstance(error, (KeyboardInterrupt, JobCancelled)) else 'failed'
+        status = ('cancelled' if isinstance(error, (KeyboardInterrupt, JobCancelled)) else
+                  'needs_tempo' if isinstance(error,TempoRequired) else 'failed')
         message = str(error) or type(error).__name__
         if control:
             control.update(status=status, error=dict(type=type(error).__name__, message=message))
