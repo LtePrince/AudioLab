@@ -53,6 +53,19 @@ def unique_times(chart):
             for line in chart['judgeLineList'] for n in line['notesAbove']+line['notesBelow']}
 
 
+def model_inputs(report, model):
+    """Compare only this model's inputs; a baseline may include extra models."""
+    config = report['config']
+    root = Path(config['checkpoint_root'])
+    paths = [root/model/'decoder_best.pt',
+             Path(config.get('skeleton_ckpt') or root/'transcriber/transcriber_best.pt'),
+             Path(config['data_list'])]
+    try:
+        return [report['fingerprints'][str(path.resolve())] for path in paths]
+    except KeyError as error:
+        raise ValueError('missing model input fingerprint') from error
+
+
 def score(path, chart, reference, duration, free):
     return {**quality(onsets(path), reference, free), **chart_stats(path),
             'audit': audit_chart(chart, duration, free)}
@@ -82,7 +95,7 @@ def main():
                 'skeleton_source', 'snap_ticks']
     if any(generation['config'][k] != baseline['config'][k] for k in settings):
         raise ValueError('comparison requires the same skeleton and sampling settings')
-    if generation['fingerprints'] != baseline['fingerprints']:
+    if model_inputs(generation, args.model) != model_inputs(baseline, args.model):
         raise ValueError('comparison requires the same weights and list')
     output = Path(args.output)
     output.mkdir(parents=True, exist_ok=False)
