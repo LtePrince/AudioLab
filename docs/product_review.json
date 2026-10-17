@@ -7,7 +7,7 @@
   "branch": "chore/product-pipeline",
   "base_commit": "2965310",
   "reviewed_product_commit": "2b66f8a",
-  "scope": "N1 candidate-generation engineering accepted; shared mask fixed; F4a six-chart interpretation scope accepted in its separate review. Continue Q0–Q7 conditioning audit and separate K2/F2, player and performance-model work.",
+  "scope": "N1 candidate-generation engineering, shared mask, F4a six-chart interpretation and Q0–Q7 conditioning diagnostic tool accepted within their evidence scopes. Continue one Hold-repair comparison, model quality, target-player validation and performance-model work.",
   "findings": [
     {
       "id": "P1",
@@ -100,12 +100,21 @@
       "result": "passed_646e104_f4a_six_chart_scope",
       "scope": "原始动态表示/查询/序列化；不含演出模型",
       "evidence": "详见docs/freeform_performance_review.json：固定33项独立测试、六份原谱全部文件/内容/输入SHA及96线/4581音符/218921事件逐项核对通过；主会话全套282项通过。参考unsupported与12532个scroll差异样点、7个原始Hold屏外样点分别保留，未当成官方兼容或玩家质量通过。"
+    },
+    {
+      "id": "C10",
+      "result": "passed_0580ab4_conditioning_v2_development_scope",
+      "scope": "完整参考条件诊断工具；不是完整生成或音乐质量通过",
+      "evidence": "干净0580ab4专项31 passed/8.42s由设计agent独立执行。主会话三曲×两布局×四条件6/6成功，report SHA256=26de0aa70abef8772ee45f15c251cf929275aa34ce7b095a53a21c38b1092114。设计agent纯标准库重建全部六行tokens/frames/offsets/mask共24个字节指纹，核对17份源码、30次文件指纹、12个特征时轴/有效mask、24个条件分母/不变项及88项加权汇总，1.20s全过。证据out/product_coordination/conditioning_v2_artifact_review.json；未另跑神经推理或重建encoder特征字节。",
+      "observation": "4K/free-x matched总体bits分别2.126521/3.231740，较各干预总体低；但free-x错曲duration与position、更低的反排offset及部分键型反向分项保留。这是重复使用的三首开发曲、真实动作历史下的条件敏感性，不是声学真值、独立泛化、稳定持续/位置理解或可玩性。",
+      "resources": "本次14.18s，峰RSS2.169GiB，PyTorch reserved峰0.227GiB，产物461088bytes；固定样例测量，不是性能承诺。"
     }
   ],
   "remaining": [
-    "K2/F2: 时基歧义与布局/键型/持续时间耦合的模型质量诊断，含第三曲free-x Hold18/42截短与28.39→13.00秒",
-    "声学标注与阈值校准、固定质量对照、目标播放器与真人试玩",
-    "F4a首批工程验收通过；下一项Q0–Q7共享条件诊断，再推进F4b机械契约与F5学习演出，保持独立质量/玩家证据缺口",
-    "develop45319fb已集成N1、文档b176133与共享mask5a6877a；质量未验收不合main"
+    "R1: 对已有12份原始输出做一次Hold邻近起点裁剪开关对照；相同空间处理与曲末边界，不推理训练、不换产品默认；65次截短只作后处理归因。",
+    "K2/F2: 条件工具已完成，音频对应、键型/持续/位置与真实手感仍待改进；Hold无配额、多指保留。",
+    "声学标注与阈值校准、固定质量对照、目标播放器/设备与真人试玩。",
+    "F4a首批工程验收通过；F4b可控演出与F5学习演出未完成，动态首版范围待用户决定。",
+    "develop2cde8ee已包含N1、共享mask及F4a；0580ab4条件工具待主会话集成回归记录。模型质量未验收，不合main。"
   ]
 }
