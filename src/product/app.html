@@ -13,26 +13,27 @@ small,.muted{color:#a7b8ce}details{margin-top:20px}summary{cursor:pointer}#statu
 table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:12px 8px;border-bottom:1px solid #34465e}th{font-size:13px;color:#a7b8ce}td{overflow-wrap:anywhere}
 </style>
 <h1>AudioLab <span class="muted">快速成谱</span></h1>
-<p>选择一首音乐和玩法，生成基线谱面，试听预览后导出。当前支持 WAV / OGG，单文件最多 128 MiB。</p>
+<p>选择一首音乐和玩法，生成基线谱面并下载 Phira 完整谱包。当前支持 WAV / OGG，单文件最多 128 MiB。</p>
 <form id="generate">
   <label for="audio-file">音乐文件</label><input id="audio-file" type="file" accept=".wav,.ogg,audio/wav,audio/ogg" required>
   <label for="mode">玩法</label><select id="mode"><option value="both">定轨与无轨</option value="4k">定轨 4K</option><option value="freex">无轨 free-x</option></select>
-  <p><small>定轨使用四个固定位置；无轨使用静态单判定线。两种模式都保留 Tap、Drag、Hold、Flick。</small></p>
+  <p><small>面向手机／平板触屏：4K 使用四个固定位置；free-x 使用静态单判定线。两种模式都保留 Tap、Drag、Hold、Flick 与多指。</small></p>
   <details id="settings"><summary>可选设置</summary><label for="bpm">手动速度（BPM）</label><input id="bpm" type="number" min="1" max="1000" step="any" placeholder="留空，自动估计"><p><small>自动估计尚未校准。若节奏不稳定或试听不合适，可填写已知速度后重新生成。</small></p></details>
   <div class="actions"><button id="submit" type="submit">生成谱面</button><button id="cancel" class="secondary" type="button" disabled>取消任务</button></div>
 </form>
 <section class="panel" aria-live="polite"><p id="status">等待选择音乐</p><div id="progress" class="muted"></div><p id="error"></p><div id="result" class="actions"></div></section>
 <h2>最近任务</h2><table><thead><tr><th>音乐</th><th>状态</th><th>结果</th></tr></thead><tbody id="history"></tbody></table>
-<p><small>预览用于核对声音与谱面，不提供击打判定。实际手感和目标播放器兼容性仍需验证。</small></p>
+<p><small>下载 ZIP 后传到手机或平板，在 Phira 的本地谱面中导入。基线谱尚未定级，真机导入与手感仍需确认；网页预览不提供击打判定。</small></p>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
-const stageNames={preflight:'检查输入',audio_features:'读取音乐',tempo:'分析节奏',audio_understanding:'识别音乐事件',layout_4k:'生成定轨谱面',layout_freex:'生成无轨谱面',preview:'准备预览',complete:'生成完成'};
+const stageNames={preflight:'检查输入',audio_features:'读取音乐',tempo:'分析节奏',audio_understanding:'识别音乐事件',layout_4k:'生成定轨谱面',layout_freex:'生成无轨谱面',packages:'准备 Phira 谱包',preview:'准备预览',complete:'生成完成'};
 const statusNames={uploading:'上传中',queued:'等待生成',running:'生成中',cancelling:'正在取消',completed:'生成完成',failed:'生成失败',cancelled:'已取消',needs_tempo:'需要填写速度'};
 const terminal=new Set(['completed','failed','cancelled','needs_tempo']);
 let current=null,pollTimer=null,upload=null;
 function errorText(error){if(!error)return '';const text=typeof error==='string'?error:error.message||JSON.stringify(error);if(error.type==='LibsndfileError'||text.includes('Error opening '))return '无法读取这个音频文件。请确认它是可播放的 WAV / OGG，或重新导出后重试。';if(text.includes('tempo could not'))return '暂时无法估计这首音乐的速度。请在可选设置中填写 BPM 后重试。';if(text.includes('no audio candidates'))return '没有找到可用于生成的音乐事件，请检查音频或更换文件。';if(text.includes('Resource budget')||text.includes('disk reserve'))return '可用资源不足，本次任务未完成。请换一首较短的音乐，或释放资源后重试。';return text;}
 function actionLink(label,url){const a=document.createElement('a');a.textContent=label;a.href=url;a.className='button';a.target='_blank';a.rel='noopener';return a;}
+function packageLinks(job,primary=false){return Object.entries(job.packages||{}).map(([mode,pkg])=>{const a=actionLink('下载 Phira '+(mode==='4k'?'4K':'free-x')+' 谱包',pkg.url);a.removeAttribute('target');a.download='';a.dataset.mode=mode;if(primary)a.id='download-'+mode;return a;});}
 function show(job){
   current=job.id;const done=terminal.has(job.status);
   $('status').textContent=job.status==='running'?(stageNames[job.stage]||'生成中'):(statusNames[job.status]||job.status);
@@ -40,13 +41,13 @@ function show(job){
   $('error').textContent=errorText(job.error);$('cancel').disabled=done||job.status==='cancelling';$('submit').disabled=!done;
   if(job.status==='needs_tempo')$('settings').open=true;
   $('result').replaceChildren();
-  if(job.preview){$('result').append(actionLink('打开音频同步预览',job.preview),actionLink('查看生成报告',job.report));}
+  if(job.preview){$('result').append(...packageLinks(job,true),actionLink('打开音频同步预览',job.preview),actionLink('查看生成报告',job.report));}
   if(done){clearTimeout(pollTimer);refreshHistory();}else{pollTimer=setTimeout(poll,700);}
 }
 async function poll(){if(!current)return;try{const r=await fetch('/api/jobs/'+current);if(!r.ok)throw new Error('任务状态暂时无法读取');show(await r.json());}catch(e){$('error').textContent=e.message;pollTimer=setTimeout(poll,1500);}}
 async function refreshHistory(){
   try{const response=await fetch('/api/jobs');const data=await response.json();$('history').replaceChildren();
-    for(const job of data.jobs){const tr=document.createElement('tr');for(const text of [job.name,statusNames[job.status]||job.status]){const td=document.createElement('td');td.textContent=text;tr.append(td);}const td=document.createElement('td');if(job.preview)td.append(actionLink('预览',job.preview));tr.append(td);$('history').append(tr);}
+    for(const job of data.jobs){const tr=document.createElement('tr');for(const text of [job.name,statusNames[job.status]||job.status]){const td=document.createElement('td');td.textContent=text;tr.append(td);}const td=document.createElement('td');if(job.preview)td.append(...packageLinks(job),actionLink('预览',job.preview));tr.append(td);$('history').append(tr);}
     const active=data.jobs.find(j=>!terminal.has(j.status));if(active&&!upload){current=active.id;clearTimeout(pollTimer);pollTimer=setTimeout(poll,100);$('submit').disabled=true;}
   }catch(e){$('error').textContent='本地服务暂时不可用，请确认服务仍在运行。';}
 }
