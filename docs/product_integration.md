@@ -135,7 +135,7 @@ C2 工具与这批开发诊断完成。后续优先固定原始模型输出，�
 
 主线程在真实 Firefox 分别验证本地文件与本地HTTP入口：从索引点击A/B链接均准确跳到163.702040816秒；在167.258413秒，`freex-note-001249` 的A版已结束，B版仍在Canvas正确显示长按头，导出与事件时间相同。原生音频播放、模式切换、稳定ID和链接均通过，没有脚本错误或外部网络请求。证据位于主工作区 `out/browser_review/hold-review-v1.json` 与 `hold-review-http-v1.json`；独立文件核对位于 `out/product_coordination/hold_replay_artifact_review.json`。
 
-当前本机入口：
+R1 交付时的本机入口（后续 Phira 完整谱包入口见末节）：
 
 - 快速成谱：`http://127.0.0.1:7860`，沿用产品工作区的本地服务。
 - Hold A/B试听：`http://127.0.0.1:7861`，只提供 `AudioLab-hold-review/out/hold_repair_v1`；来源音频目录需保留。
@@ -165,3 +165,49 @@ cd /home/ziyaowang/Alvin/Audio/AudioLab-product-development
 首版继续采用“音频 → 快速整谱 → 同步预览 → 导出 → Phira 本地导入试玩”的流程。首个交付缺口是自含音频、谱面、封面与元数据的完整谱包；本机网页提供下载，用户将文件传到手机／平板导入。本轮沿用 loopback 服务，不以公网部署或局域网访问为前提。编辑工作流与学习式动态演出保留在后续路线，F4a 已有成果继续保留，F4b／F5 不作为首版的阻塞项。
 
 设计 agent 维护需求、导入契约与独立验收；开发 agent 实现完整包及下载；主会话验证真实浏览器和集成回归。源码格式核对、自动检查与浏览器下载分别留证。**Phira 真机导入、触屏四键型操作、整谱同步与主观音乐体验须由实际设备验证**，不以工程测试冒充。已有 Hold A/B 保持对照性质，不改产品默认。
+
+## 2026-10-17：Phira 完整谱包与触屏试玩材料
+
+`chore/phira-delivery` 的 `f2e362f` 增加完整谱包和网页下载，参考官方 Phira v0.8.2 的 `c830dee5e07a2b8f06104576f30d8045e0859aa7`；固定源码／文档及哈希见 [引用记录](phira_package_reference.json)，使用方式见 [打包说明](phira_packages.md)。这与 F4a 的较早开发源码参考分别记录。
+
+每种模式导出一个独立 ZIP，包含 `info.yml`、原字节 `chart.json`、原字节 WAV／OGG、默认封面和可移植来源说明。元数据 `offset=0`，保留谱面自己的偏移；音符类型、位置、起止时间与修复策略不因打包改变。包读回、媒体完整读取与哈希验证通过后才发布任务完成状态。已有冻结结果也能在独立目录补包，无需重新推理。高采样率音频的时长核对允许最多一个 22050 Hz 分析样本的重采样取整差；独立打包入口保留音频与资源上限。
+
+设计 agent 在固定代码独立执行包／管线 **41 项测试通过**，核对 7 个官方源码与 3 个官方文档的哈希。另逐字节检查两份既有手动时基整谱包（735／783 音符）与一份合成校准包（25 音符），共 1543 个音符的头尾时间、类型与位置一致；成员 CRC、元数据路径、音频与图片解码通过。该检查未运行 Phira 客户端。
+
+主线程首次真实浏览器任务 `47a8db820f5b4258a17296786291e8a5` 在预检失败：PyTorch 的显存预算接口不接受未带索引的 `torch.device('cuda')`。`fix/cuda-budget-device` 的 `c3ef29a` 将裸 `cuda` 解析到当前可见设备；显式设备与 CPU 保持原选择，显存限制和统计使用同一设备。回归在修前重现 1 失败／2 通过，修后资源与管线 25 项通过，设计 agent 再独立通过 11 项资源测试。失败任务及浏览器报告保留，没有成功下载标记。
+
+共享修复进入 `develop` 的 `3f973de` 后，完整回归为 **359 passed、9 warnings、42.18 秒**。警告属于既有依赖弃用、数据定轨量化碰撞及缓存增强说明。后续仅文档或展示材料变更不重复整个测试集；实际浏览器修后验证另记。
+
+合成校准材料位于 `AudioLab-integration/out/phira_calibration_v1`：24 秒、25 音符，覆盖四键型、四位置、双／四押与 Hold 组合。`chart.offset=0.375`、`info.offset=0`，首个音符对应音频第 2 秒；包标题与来源明确标为合成校准，不能计入模型质量。`calibration-4k.phira.zip` 为 52,891 字节，SHA-256 为 `55c6825cc1873143ce98dfff7dd59b6745f52ed3ecc28b7e2959aac056ad7a99`。制作包耗时 0.211 秒、峰值 RSS 38.06 MiB；合成预览已在真实 Firefox 检查播放、非零偏移、Hold 中段定位和自然结束。建议四指练习的片段不表示已推导真实最少手指数。
+
+独立证据分别位于主工作区 `out/product_coordination/phira_package_artifact_review.json`、`out/browser_review/phira-calibration-v1.json` 和 `out/browser_review/phira-workflow-v1.json`（首轮失败）。
+
+修后真实浏览器使用同一个 `--device cuda` 配置通过完整流程：新 worker 固定于干净的 `c3ef29a`，任务为 `6afaf9a4ddb34a88bd200b6b962e2dfa`。原 7862 父服务在没有活动 worker 时保留；该次合入没有改变 `server.py` 或入口代码，新子进程读取修复后的资源管理模块。没有依赖额外的进程管理授权，也没有中断生成任务。
+
+| 实际交付检查 | 结果 |
+| --- | --- |
+| 浏览器上传与生成 | 102.770068 秒真实 OGG，自动时基，双模式完整生成及打包 31.8806 秒 |
+| 定轨 4K | 566 音符，含全部四键型；ZIP 1,602,705 字节，SHA-256 `4ce385ca883be7befa623db351140f23fb32d551a1c6502b517e2854554f002f` |
+| 静态 free-x | 839 音符，含全部四键型；ZIP 1,612,853 字节，SHA-256 `eecbbbd429acc5355375ddf66e003beebc36d0cd3b8ea3aa138997c73cb998fb` |
+| 实际下载与网页 | Firefox 实际保存两 ZIP，大小／哈希与完成记录一致；Range 206、预览玩法与包链接同步、刷新后历史下载保留、390 px 窄屏检查通过 |
+| 独立读回 | 未调用打包器自检，另解读浏览器文件；成员 CRC／来源哈希、原音频与谱面字节、音频完整解码、PNG 和 1405 音符的时间／类型／位置全部一致 |
+| 资源与耗时边界 | 整批生成产物 8,182,429 字节；记录峰值 RSS 约 1.93 GiB，PyTorch 峰值 allocated／reserved 为 0.100／0.111 GiB；结束时磁盘余量约 11.67 GiB。显存数值不是整卡／进程全部 CUDA 占用，单曲耗时也不是产品 P95 承诺 |
+
+完整浏览器与独立下载报告保存在主工作区 `out/browser_review/phira-workflow-v2.json` 和 `out/product_coordination/phira_browser_download_review.json`。未更换模型权重、采样策略或 Hold 默认修复。PH1–PH3 的包／工程下载交付通过，PH4 的 **Phira 真机导入与触屏操作尚未执行**；音乐性、声学质量与真实可玩性继续单独验收。
+
+当前新增的 Phira 完整谱包入口为 `http://127.0.0.1:7862`。可直接打开此次结果：
+
+- 预览：`http://127.0.0.1:7862/jobs/6afaf9a4ddb34a88bd200b6b962e2dfa/preview.html`
+- 定轨包：`http://127.0.0.1:7862/jobs/6afaf9a4ddb34a88bd200b6b962e2dfa/4k.phira.zip`
+- 静态无轨包：`http://127.0.0.1:7862/jobs/6afaf9a4ddb34a88bd200b6b962e2dfa/freex.phira.zip`
+
+7860 保留上一批无完整包的产品服务，7861 保留 Hold A/B；均为本机服务。7862 如已停止，可在没有其他实例占用该输出目录时恢复：
+
+```bash
+cd /home/ziyaowang/Alvin/Audio/AudioLab-phira-delivery
+.venv/bin/python -u -m script.train_models --gpu 1 --worker script.serve_product -- \
+  --model-root /home/ziyaowang/Alvin/Audio/AudioLab/checkpoints/timing_v1 \
+  --output out/local-service-phira-v1 --device cuda --port 7862
+```
+
+下一次人工交接为校准包＋同曲两种模型谱包：传到手机／平板，在 Phira 本地导入，记录实际版本、设备和时差设置，再反馈完整播放、四键型操作及具体不合适片段。合成校准不算模型质量样本；动态表演继续保留为后续阶段。本阶段保持在 `develop`，不据工程检查自动发布为 `main` 稳定版。
