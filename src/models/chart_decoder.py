@@ -217,25 +217,37 @@ class ChartDecoder(nn.Module):
         return self.lm_head(h)[:, 0], h[:, 0]
 
     def cross_mask(self, tok_frames: Tensor, T: int, mem_valid: Tensor | None):
-        """Boolean cross-attention mask (B,1,L,T): valid memory ∧ local window."""
+        """Valid memory ∧ local window; empty windows use the nearest valid key.
+
+        Equal-distance fallback keys resolve to the earlier frame. Invalid
+        memory never becomes visible, including before/after the audio.
+        """
+        if T < 1:
+            raise ValueError('cross-attention requires nonempty audio memory')
         if mem_valid is None and self.cross_window is None:
             return None
         B = tok_frames.shape[0]
         mask = torch.ones(B, 1, 1, T, dtype=torch.bool, device=tok_frames.device)
         if mem_valid is not None:
+            if mem_valid.shape != (B, T) or mem_valid.dtype != torch.bool:
+                raise ValueError('mem_valid must be a boolean (batch, memory_frames) mask')
             mask = mask & mem_valid[:, None, None, :]
         if self.cross_window is not None:
             fidx = torch.arange(T, device=tok_frames.device).float()
-            local = (tok_frames[:, None, :, None] - fidx[None, None, None, :]).abs() <= self.cross_window
-            mask = mask & local                                # (B,1,L,T)
-            # a token whose window falls entirely off the valid memory (e.g. past
-            # the audio end) must keep at least one key → allow the nearest frame
+            distance = (tok_frames[:, None, :, None] - fidx[None, None, None, :]).abs()
+            mask = mask & (distance <= self.cross_window)      # (B,1,L,T)
             empty = ~mask.any(dim=-1, keepdim=True)            # (B,1,L,1)
             if empty.any():
-                nearest = tok_frames.clamp(0, T - 1).round().long()  # (B,L)
+                if mem_valid is not None:
+                    if not mem_valid.any(dim=-1).all():
+                        raise ValueError('each sample needs at least one valid audio frame')
+                    distance.masked_fill_(~mem_valid[:, None, None, :], float('inf'))
+                nearest = distance.argmin(dim=-1, keepdim=True)
                 fallback = torch.zeros_like(mask)
-                fallback.scatter_(-1, nearest[:, None, :, None], True)
+                fallback.scatter_(-1, nearest, True)
                 mask = mask | (fallback & empty)
+        elif mem_valid is not None and not mem_valid.any(dim=-1).all():
+            raise ValueError('each sample needs at least one valid audio frame')
         return mask
 
     def embed(self, tokens: Tensor) -> Tensor:
