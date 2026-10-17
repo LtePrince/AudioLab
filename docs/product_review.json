@@ -1,0 +1,52 @@
+{
+  "schema": "audiolab-product-review-v1",
+  "updated_at": "2026-10-17 03:18:37 UTC",
+  "reviewer": "/root/product_design",
+  "implementation_agent": "/root/product_development",
+  "worktree": "/home/ziyaowang/Alvin/Audio/AudioLab-product-development",
+  "branch": "chore/product-pipeline",
+  "base_commit": "2965310",
+  "scope": "Draft implementation observations. A fixed product commit and end-to-end acceptance are still required.",
+  "findings": [
+    {
+      "id": "P1",
+      "severity": "medium",
+      "status": "acknowledged_fix_in_progress",
+      "gate": "E2",
+      "file": "src/product/pipeline.py; src/models/chart_decoder.py",
+      "issue": "候选起点覆盖完整，仍可能是 decoder 预算耗尽后强补 EOS；不能据此标记完整成谱。",
+      "reproduction": "小型真实4K decoder，强制NOTE(0,Tap)，skeleton=[0]、max_tokens=1：tokens=[BOS,NOTE,EOS]；EOS未被自然采样，而validate_chart的complete_candidate_coverage=True。末多押或Hold可能同样被截断。",
+      "requested_change": "产品入口要求显式自然终止；预算耗尽则失败或声明partial，不能标completed。历史生成默认行为可保留。增加所有候选已覆盖但未自然EOS的回归。",
+      "implementation_response": "开发agent认可，计划新增默认关闭的require_complete，产品入口固定开启。尚待独立复验。"
+    },
+    {
+      "id": "P2",
+      "severity": "medium",
+      "status": "evidence_requested",
+      "gate": "E7",
+      "file": "src/product/pipeline.py:decode_notes",
+      "issue": "布局encoder由历史整曲attention改为1024+128分块，既有decoder条件分布也会改变。候选覆盖完整不能证明布局质量无回归。",
+      "requested_change": "分别记录共享候选与布局encoder的分块参数及质量未校准状态；至少一首同权重、同候选、同seed整曲与分块布局对照，保留原始/最终音符与键型、位置、Hold、修复差异。对照差异不直接等于人类质量高低。"
+    }
+  ],
+  "independent_checks": [
+    {
+      "id": "C1",
+      "result": "passed_draft_snapshot",
+      "scope": "最终job.json写入异常时的完成标记",
+      "evidence": "用轻量依赖mock走真实run_job/导出/校验/预览路径，在最终job.json(status=completed)写入处注入OSError。异常处理删除manifest.json，未留下伪完成标记。不是实际磁盘耗尽试验。"
+    },
+    {
+      "id": "C2",
+      "result": "passed_real_weight_single_fixture",
+      "scope": "全静音输入候选输出",
+      "evidence": "真实timing_v1/transcriber权重，CPU两线程，2秒22050Hz全零WAV；音频理解返回status=no_candidates、events=0。仅支持这个样例的空候选行为，不是声学质量测量。"
+    }
+  ],
+  "remaining": [
+    "固定产品提交的两模式完整运行与产品测试复验",
+    "实际浏览器play/pause/seek/restart、四键型和非零offset/Hold预览",
+    "至少3首完整真实歌曲分别两种模式的产物与资源报告",
+    "工程通过后继续自动BPM/时基、模型质量、真实试玩与动态演出，不能宣告全产品完成"
+  ]
+}
