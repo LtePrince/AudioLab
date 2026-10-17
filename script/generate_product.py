@@ -25,6 +25,8 @@ def parser():
     p.add_argument('--max-seconds', type=float, default=600)
     p.add_argument('--timeout-seconds', type=float, default=900, help='engineering timeout, not a speed promise')
     p.add_argument('--max-decoder-steps', type=int, default=12000)
+    p.add_argument('--layout-encoder', choices=['full','chunked'], default='full',
+                   help='full retains historical layout conditioning; chunked is an uncalibrated experiment')
     p.add_argument('--cancel-file', help='touch this path to cancel; defaults to OUTPUT/CANCEL')
     add_resource_args(p)
     p.set_defaults(max_rss_gib=4)

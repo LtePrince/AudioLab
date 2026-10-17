@@ -32,6 +32,8 @@ def main():
     p.add_argument('--model-root', required=True)
     p.add_argument('--output', required=True)
     p.add_argument('--device', default='cpu')
+    p.add_argument('--layout-encoder', choices=['full','chunked'], default='full')
+    p.add_argument('--skip-window-control', action='store_true')
     args = p.parse_args()
     torch.set_num_threads(2)
     output = Path(args.output).resolve(); output.mkdir(parents=True, exist_ok=False)
@@ -56,17 +58,23 @@ def main():
     for index, song in enumerate(selected):
         job = job_parser().parse_args(['--audio', song['audio'], '--bpm', str(song['bpm']),
                                       '--model-root', args.model_root, '--output', str(output/f'song-{index}'),
-                                      '--device', args.device])
+                                      '--device', args.device, '--layout-encoder', args.layout_encoder])
         result = run_job(job)
         report['results'].append(dict(song=song, job=f'song-{index}/manifest.json',
                                        elapsed_seconds=result['elapsed_seconds'], routes=result['routes'],
                                        resources=result['resources']))
         write_json(output/'audit.in_progress.json', report)
         print(json.dumps(dict(completed_song=index, elapsed_seconds=result['elapsed_seconds']),ensure_ascii=False), flush=True)
+    if args.skip_window_control:
+        report.update(status='engineering_smoke_completed', quality_acceptance='unverified')
+        write_json(output/'audit.json', report)
+        print(json.dumps(dict(status=report['status'],output=str(output))),flush=True)
+        return
     # Same first-song mel, candidates, seed and weights: only encoder attention
     # differs. Raw and static-repaired outcomes are kept separately.
     song = selected[0]; completed = output/'song-0'
-    control_dir = output/'full_encoder_control'; control_dir.mkdir()
+    control_dir = output/'layout_encoder_control'; control_dir.mkdir()
+    variant = 'chunked' if args.layout_encoder == 'full' else 'full'
     job.output = str(control_dir)
     device = torch.device(args.device)
     budget = ResourceBudget(job, device, control_dir)
@@ -78,7 +86,7 @@ def main():
         start = time.monotonic()
         checkpoint = Path(args.model_root)/folder/'decoder_best.pt'
         raw, decoding = decode_notes(mel,duration,skeleton,checkpoint,mode,song['bpm'],0,42,
-                                     device,control,max_tokens=12000,encoder_mode='full')
+                                     device,control,max_tokens=12000,encoder_mode=variant)
         raw_chart = chart_document(raw,song['bpm'],0,control_dir/f'{mode}.raw.json')
         end_tick = duration/tick_seconds(1,song['bpm'])
         final, repairs = (constrain_4k_notes(raw,end_tick) if mode=='4k' else constrain_free_notes(raw,end_tick))
@@ -86,18 +94,22 @@ def main():
         _, checks = validate_chart(final_chart,mode,duration,skeleton)
         comparison = dict(mode=mode,audio_sha256=evidence['audio_sha256'],
                           checkpoint_sha256=sha256(checkpoint),seed=42,decoding=decoding,
-                          full=dict(raw=notes_summary(raw_chart),final=notes_summary(final_chart),repairs=repairs),
-                          chunked={},same_note_multiset={},elapsed_seconds=time.monotonic()-start,checks=checks)
+                          baseline_encoder=args.layout_encoder,control_encoder=variant,
+                          same_note_multiset={},elapsed_seconds=time.monotonic()-start,checks=checks)
+        comparison[variant] = dict(raw=notes_summary(raw_chart),final=notes_summary(final_chart),repairs=repairs)
+        comparison[args.layout_encoder] = {}
         for kind, suffix, full in [('raw','.raw.json',raw_chart),('final','.json',final_chart)]:
             chunked = json.loads((completed/f'{mode}{suffix}').read_text())
-            comparison['chunked'][kind] = notes_summary(chunked)
+            comparison[args.layout_encoder][kind] = notes_summary(chunked)
             def signature(chart):
                 return Counter((n['time'],n['type'],round(n['positionX'],7),n['holdTime'])
                                for n in chart['judgeLineList'][0]['notesAbove'])
             a,b = signature(full),signature(chunked)
+            if variant == 'chunked':
+                a,b=b,a
             comparison['same_note_multiset'][kind] = dict(common=sum((a&b).values()),
                     full_only=sum((a-b).values()),chunked_only=sum((b-a).values()))
-        comparison['chunked']['repairs'] = report['results'][0]['routes'][mode]['repairs']
+        comparison[args.layout_encoder]['repairs'] = report['results'][0]['routes'][mode]['repairs']
         report['window_controls'].append(comparison)
         write_json(output/'audit.in_progress.json', report)
     report['status'] = 'engineering_smoke_completed'

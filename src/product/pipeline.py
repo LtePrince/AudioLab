@@ -19,7 +19,7 @@ from src.data.chart_constraints import constrain_4k_notes, constrain_free_notes
 from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.data.timing import TIMING_SCHEMA, tick_seconds
 from src.models.chart_decoder import generate_tokens
-from src.resource_budget import GIB, ResourceBudget
+from src.resource_budget import GIB, ResourceBudget, resource_snapshot
 from src.test_decoder import load_models
 from . import JOB_SCHEMA
 from .artifacts import chart_document, repair_log, validate_chart, write_json, write_preview
@@ -81,7 +81,7 @@ class JobControl:
 
 @torch.no_grad()
 def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, device, control,
-                 max_tokens=6000, encoder_mode='chunked'):
+                 max_tokens=6000, encoder_mode='full'):
     """Keep the AR state for the entire song; bound only encoder attention.
 
     Encoder windows are explicitly versioned and require quality calibration.
@@ -92,6 +92,32 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
     expected_lanes = 4 if mode == '4k' else 64
     if dec.n_lanes != expected_lanes:
         raise ValueError(f'{mode} requires a {expected_lanes}-position decoder checkpoint')
+    frames = math.ceil(mel.shape[-1]/enc.mel_per_frame)
+    attention_frames = frames if encoder_mode == 'full' else min(frames,640)
+    hidden = enc.conv_in.out_channels
+    # Conservative math-attention fallback bound: two score matrices in one
+    # layer, plus feature/MLP workspaces and the complete decoder KV cache.
+    # Actual SDPA backends may use much less. Never silently change encoders.
+    attention_bytes = 2*enc.num_heads*attention_frames**2*4
+    work_bytes = attention_frames*hidden*4*16 + frames*hidden*4*4
+    cache_bytes = 2*(max_tokens+frames)*hidden*4*len(dec.blocks)
+    model_bytes = Path(checkpoint).stat().st_size
+    cpu_extra = model_bytes*2 + frames*hidden*4*4
+    device_extra = attention_bytes + work_bytes + cache_bytes
+    if device.type == 'cpu':
+        cpu_extra += device_extra
+    snapshot = resource_snapshot(control.directory)
+    if snapshot['rss_gib']+cpu_extra/GIB > control.budget.args.max_rss_gib or \
+            snapshot['ram_available_gib']-cpu_extra/GIB < control.budget.args.min_available_ram_gib:
+        raise RuntimeError('Resource budget: full-song layout estimate exceeds RAM reserve/RSS; '
+                           'use a shorter input or explicitly test the experimental chunked encoder')
+    if device.type == 'cuda':
+        free, total = torch.cuda.mem_get_info(device)
+        permitted = total*control.budget.args.gpu_memory_fraction-torch.cuda.memory_allocated(device)
+        if device_extra > min(free,permitted):
+            raise RuntimeError('Resource budget: layout attention estimate exceeds available GPU budget')
+    preflight = dict(cpu_extra_gib=cpu_extra/GIB, device_extra_gib=device_extra/GIB,
+                     method='conservative-two-score-matrices-and-kv-v1')
     if encoder_mode == 'chunked':
         encoded = infer_mel(enc, mel, duration, check=control.check)
         features = torch.from_numpy(encoded['features']).unsqueeze(0).to(device)
@@ -128,6 +154,7 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
     return notes, dict(token_count=len(tokens), max_decoder_steps=max_tokens,
                        model_load_and_encoding_seconds=encoding_seconds,
                        encoded_frames=memory.shape[1],
+                       encoding_preflight=preflight,
                        decoding_seconds=time.monotonic()-started,
                        encoder='disjoint-core-with-context-v1' if encoder_mode == 'chunked' else 'full-attention-v1',
                        chunk_frames=1024 if encoder_mode == 'chunked' else None,
@@ -189,6 +216,7 @@ def run_job(args):
                       device=str(device), threads=torch.get_num_threads()),
                       config=dict(bpm=args.bpm, timing_source='provided', offset=args.offset,
                                   timing_schema=TIMING_SCHEMA, difficulty='baseline', seed=args.seed,
+                                  layout_encoder=args.layout_encoder,
                                   max_seconds=args.max_seconds, timeout_seconds=args.timeout_seconds),
                       model_sha256={mode: sha256(checkpoints[mode]) for mode in modes},
                       stages={}, routes={})
@@ -230,7 +258,7 @@ def run_job(args):
             control.update('layout_'+mode, progress=None)
             raw, decoding = decode_notes(mel, duration, skeleton, checkpoints[mode], mode,
                                          args.bpm, args.offset, args.seed, device, control,
-                                         max_tokens=args.max_decoder_steps)
+                                         max_tokens=args.max_decoder_steps, encoder_mode=args.layout_encoder)
             # Raw artifacts remain diagnostic only; an over-budget decoder may
             # contain an early EOS and must never receive a completion marker.
             raw_name, chart_name, events_name = f'{mode}.raw.json', f'{mode}.json', f'{mode}.events.json'
