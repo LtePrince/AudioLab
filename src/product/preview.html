@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AudioLab · 音频同步预览</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#111725;color:#eef3ff}
+*{box-sizing:border-box}body{max-width:1120px;margin:32px auto;padding:0 24px}h1{margin-bottom:6px;font-size:28px}
+.muted{color:#aebcd2;font-size:14px;line-height:1.6}.row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:18px 0}
+button,select,a.download{font:inherit;border:1px solid #425474;background:#22314c;color:#eef3ff;padding:9px 14px;border-radius:6px;text-decoration:none}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #81b9ff}button{cursor:pointer}
+canvas{display:block;width:100%;height:480px;border:1px solid #35435d;background:#121d30;border-radius:10px}
+audio{flex:1;min-width:220px;width:100%}.legend span{margin-right:16px;white-space:nowrap}.tap{color:#8cd8ff}.drag{color:#ffd97c}.hold{color:#be9cff}.flick{color:#ff92b8}
+#message{color:#ffb291;min-height:1.5em}#time{font-variant-numeric:tabular-nums}footer{margin-top:24px}
+</style>
+<h1>AudioLab <span id="mode-title"></span></h1>
+<p id="song"></p>
+<p class="muted">音频同步视觉预览 · 基线谱面。此页面不提供击打判定；请导出后到目标播放器检查实际手感。</p>
+<div class="row"><label for="mode">玩法</label><select id="mode"></select><span id="count" class="muted"></span></div>
+<canvas id="chart" aria-label="谱面音符随音频时间移动的预览"></canvas>
+<div class="row"><audio id="audio" controls preload="metadata"></audio><button id="restart">回到开头</button></div>
+<div class="row"><span id="time">0.00 秒</span><label for="rate">播放速度</label><select id="rate"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option selected value="1">1×</option></select></div>
+<div class="legend row"><span class="tap">━ Tap 单击</span><span class="drag">◆ Drag 接触</span><span class="hold">▰ Hold 持续</span><span class="flick">⌃ Flick 滑动</span></div>
+<div class="row"><a id="export" class="download" download>导出谱面 JSON</a><a id="events" class="download" download>下载事件记录</a><a class="download" href="manifest.json" download>下载生成报告</a></div>
+<p id="message" role="status"></p>
+<footer class="muted">4K 使用四个固定位置；free-x 使用静态单判定线自由布局。两个模式均保留四种键型。</footer>
+<script id="data" type="application/json">__AUDIOLAB_DATA__</script>
+<script>
+'use strict';
+const data = JSON.parse(document.getElementById('data').textContent);
+const audio = document.getElementById('audio');
+const select = document.getElementById('mode');
+const canvas = document.getElementById('chart');
+const ctx = canvas.getContext('2d');
+const colors = {tap:'#8cd8ff',drag:'#ffd97c',hold:'#be9cff',flick:'#ff92b8'};
+const labels = {'4k':'定轨 4K','freex':'无轨 free-x'};
+let route;
+document.getElementById('song').textContent = data.title;
+audio.src = data.audio;
+for (const mode of Object.keys(data.routes)) {
+  const option = document.createElement('option'); option.value=mode; option.textContent=labels[mode]; select.appendChild(option);
+}
+function changeMode() {
+  route = data.routes[select.value];
+  document.getElementById('mode-title').textContent = '· '+labels[select.value];
+  document.getElementById('count').textContent = route.events.length+' 个音符 · 基线谱';
+  document.getElementById('export').href = route.chart_file;
+  document.getElementById('events').href = route.events_file;
+  render();
+}
+function render() {
+  if (!route) return;
+  const ratio=window.devicePixelRatio||1, w=canvas.clientWidth, h=canvas.clientHeight;
+  if (canvas.width!==Math.round(w*ratio)||canvas.height!==Math.round(h*ratio)) {
+    canvas.width=Math.round(w*ratio); canvas.height=Math.round(h*ratio);
+  }
+  ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,w,h);
+  const now=audio.currentTime, line=h*.83, pixelsPerSecond=h*.55;
+  const yAt=t=>line-(t-now)*pixelsPerSecond;
+  ctx.strokeStyle='#5a718f';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(w*.03,line);ctx.lineTo(w*.97,line);ctx.stroke();
+  if (select.value==='4k') for(const x of [.2890625,.4296875,.5703125,.7109375]) {
+    ctx.strokeStyle='#293e5c';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x*w,0);ctx.lineTo(x*w,h);ctx.stroke();
+  }
+  for(const n of route.events) {
+    if(n.time_seconds>now+2||n.end_seconds<now-.12)continue;
+    const x=n.screen_x*w, head=yAt(n.time_seconds), width=Math.max(13,w*.027);
+    ctx.fillStyle=colors[n.type];ctx.strokeStyle=colors[n.type];ctx.lineWidth=3;
+    if(n.type==='hold') {
+      const tail=Math.max(-12,yAt(n.end_seconds));const front=Math.min(line,head);
+      ctx.globalAlpha=.5;ctx.fillRect(x-width*.4,tail,width*.8,Math.max(0,front-tail));ctx.globalAlpha=1;
+      ctx.fillRect(x-width/2,front-4,width,8);
+    } else if(n.type==='drag') {
+      ctx.beginPath();ctx.moveTo(x,head-7);ctx.lineTo(x+width/2,head);ctx.lineTo(x,head+7);ctx.lineTo(x-width/2,head);ctx.closePath();ctx.fill();
+    } else if(n.type==='flick') {
+      ctx.beginPath();ctx.moveTo(x-width/2,head+5);ctx.lineTo(x,head-6);ctx.lineTo(x+width/2,head+5);ctx.stroke();
+      ctx.fillRect(x-width/2,head+9,width,3);
+    } else {ctx.fillRect(x-width/2,head-4,width,8);}
+  }
+  document.getElementById('time').textContent=now.toFixed(2)+' / '+data.duration.toFixed(2)+' 秒';
+}
+select.addEventListener('change',changeMode);
+document.getElementById('restart').addEventListener('click',()=>{audio.currentTime=0;render();});
+document.getElementById('rate').addEventListener('change',event=>{audio.playbackRate=Number(event.target.value);});
+audio.addEventListener('error',()=>{document.getElementById('message').textContent='音频无法读取。请保留整个生成目录，并确认浏览器支持该音频格式。';});
+for(const event of ['seeked','pause','play','timeupdate','loadedmetadata','ended'])audio.addEventListener(event,render);
+window.addEventListener('resize',render);
+function frame(){render();requestAnimationFrame(frame);}changeMode();requestAnimationFrame(frame);
+</script>
+</html>

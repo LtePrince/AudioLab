@@ -303,6 +303,8 @@ def generate_tokens(
     offset: float = 0.0,         # chart delay in audio seconds
     sampling_policy: str = 'flat',  # experimental: type_preserving
     max_chord_size: int | None = None,
+    progress_callback = None,   # optional cancellation/resource checks; no sampling changes
+    require_complete: bool = False,  # product jobs reject budget-forced finalization
 ) -> list[int]:
     """Sample a grammar-valid token sequence.
 
@@ -361,7 +363,9 @@ def generate_tokens(
             cur_tick += values[tok]
         frames.append(cur_tick * frames_per_tick + offset_frames)
 
-    for _ in range(max_tokens):
+    for step_index in range(max_tokens):
+        if progress_callback is not None and step_index % 32 == 0:
+            progress_callback(step_index, skel_i, len(skel) if skel is not None else None)
         pos = len(tokens) - 1
         logits, hidden = decoder.step(
             torch.tensor([tokens[-1]], device=device),
@@ -430,6 +434,8 @@ def generate_tokens(
         if nxt == EOS:
             break
     if tokens[-1] != EOS:
+        if require_complete:
+            raise RuntimeError('decoder exhausted step budget before natural EOS; chart is incomplete')
         # The budget may end immediately after a Hold. Its mandatory duration
         # must precede EOS even when this takes up to two extra closing tokens.
         if gs.in_dur:
