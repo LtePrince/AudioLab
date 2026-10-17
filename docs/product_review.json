@@ -1,0 +1,66 @@
+{
+  "schema": "audiolab-product-review-v1",
+  "updated_at": "2026-10-17 03:26:32 UTC",
+  "reviewer": "/root/product_design",
+  "implementation_agent": "/root/product_development",
+  "worktree": "/home/ziyaowang/Alvin/Audio/AudioLab-product-development",
+  "branch": "chore/product-pipeline",
+  "base_commit": "2965310",
+  "reviewed_product_commit": "f9c49c9",
+  "scope": "First fixed product commit and three-song functional evidence reviewed. Layout encoder default is being changed back to historical full attention; that final default requires its own regression. Product quality acceptance remains open.",
+  "findings": [
+    {
+      "id": "P1",
+      "severity": "medium",
+      "status": "resolved_verified_in_f9c49c9",
+      "gate": "E2",
+      "file": "src/product/pipeline.py; src/models/chart_decoder.py",
+      "issue": "候选起点覆盖完整，仍可能是 decoder 预算耗尽后强补 EOS；不能据此标记完整成谱。",
+      "reproduction": "小型真实4K decoder，强制NOTE(0,Tap)，skeleton=[0]、max_tokens=1：tokens=[BOS,NOTE,EOS]；EOS未被自然采样，而validate_chart的complete_candidate_coverage=True。末多押或Hold可能同样被截断。",
+      "requested_change": "产品入口要求显式自然终止；预算耗尽则失败或声明partial，不能标completed。历史生成默认行为可保留。增加所有候选已覆盖但未自然EOS的回归。",
+      "implementation_response": "已新增默认关闭的require_complete，产品入口固定开启；未自然采样EOS时抛错，历史默认保留。",
+      "verification": "独立运行test/test_product_pipeline.py：11 passed in4.47s，包括全部候选覆盖但预算强补EOS的反例和旧默认仍可返回的对照。固定f9c49c9包含该修复；新增末尾tick测试另独立通过1项（11 deselected，2.05s）。"
+    },
+    {
+      "id": "P2",
+      "severity": "medium",
+      "status": "distribution_change_verified_default_revision_in_progress",
+      "gate": "E7",
+      "file": "src/product/pipeline.py:decode_notes",
+      "issue": "布局encoder由历史整曲attention改为1024+128分块，既有decoder条件分布也会改变。候选覆盖完整不能证明布局质量无回归。",
+      "requested_change": "保留共享候选与布局encoder分块参数及未校准状态；产品布局默认恢复历史整曲attention，在前置资源预估通过时运行，不足则明确失败，分块仅显式实验，不能静默fallback。重做三首默认双模式回归与资源测量。",
+      "verification": "已读固定f9c49c9的out/product_smoke_v1/audit.json。首曲同候选547个、同seed42，4K full735→chunk680音符、Hold5→0；free-x full783→chunk703、Tap633→349、Drag93→325。三首chunk4K均无Hold，只作分布变化诊断，不设Hold配额、不据此证明full更好玩。开发主动提出恢复默认，设计和主会话同意。"
+    }
+  ],
+  "independent_checks": [
+    {
+      "id": "C1",
+      "result": "passed_draft_snapshot",
+      "scope": "最终job.json写入异常时的完成标记",
+      "evidence": "用轻量依赖mock走真实run_job/导出/校验/预览路径，在最终job.json(status=completed)写入处注入OSError。异常处理删除manifest.json，未留下伪完成标记。不是实际磁盘耗尽试验。"
+    },
+    {
+      "id": "C2",
+      "result": "passed_real_weight_single_fixture",
+      "scope": "全静音输入候选输出",
+      "evidence": "真实timing_v1/transcriber权重，CPU两线程，2秒22050Hz全零WAV；音频理解返回status=no_candidates、events=0。仅支持这个样例的空候选行为，不是声学质量测量。"
+    },
+    {
+      "id": "C3",
+      "result": "passed_parent_independent_browser_review",
+      "scope": "真实Firefox中的合成四键型、offset和Hold预览",
+      "evidence": "主会话使用Firefox157/Puppeteer，9类检查通过：本地媒体时长、四键型颜色、播放暂停、seek进入Hold、两模式切换与导出一致且offset只用一次、变速与重播、自然曲末、无脚本/媒体错误及外部网络请求。已读取out/browser_review/contract.json。合成3秒夹具不等于真实播放器判定或人类手感。"
+    },
+    {
+      "id": "C4",
+      "result": "passed_f9c49c9_chunked_engineering_smoke",
+      "scope": "三首完整开发曲的两模式生成与浏览器预览；分块布局实验快照",
+      "evidence": "102.770/144.127/178.807秒三曲均完成；两模式合计耗时28.639/32.994/59.077秒；每曲均保留其547/714/1135个候选tick并自然EOS，时间/位置/时长硬检查通过。进程累计峰RSS2.151GiB，生成阶段GPU reserved峰0.176GiB。已读主会话三个whole-song浏览器报告，第三曲另检真实free-x Hold中段seek可见。仅为固定样例功能证据，不能推广速度门槛或音乐质量，整曲默认即将改变。"
+    }
+  ],
+  "remaining": [
+    "历史整曲布局成为新默认后的资源预检及三首双模式回归",
+    "新增默认产物的哈希、浏览器媒体/时间/导出回归",
+    "工程通过后继续自动BPM/时基、模型质量、真实试玩与动态演出，不能宣告全产品完成"
+  ]
+}
