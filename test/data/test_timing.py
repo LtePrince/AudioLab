@@ -57,6 +57,9 @@ def test_hold_geometry_uses_unrounded_native_tail(tmp_path):
 def test_array_audio_offset_rate_and_export_roundtrip(source, tmp_path, rate):
     conv = Phigros4kConvertor(frame_ms=10, max_frame=200, rate=rate, offset_ms=7)
     flat = conv.flatten(parse_phigros_file(str(source)))
+    direct, direct_valid = conv.chart_to_array(parse_phigros_file(str(source)))
+    assert np.array_equal(direct, flat.note_array)
+    assert np.array_equal(direct_valid, flat.valid_flag)
     lane, frame = np.where(flat.note_array[:4] > 0.5)
     times_ms = (frame + flat.note_array[lane + 4, frame]) * 10
     assert times_ms == pytest.approx([750 / rate + 7] * 2, abs=1e-4)

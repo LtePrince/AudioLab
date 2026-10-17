@@ -653,7 +653,7 @@ class Phigros4kConvertor:
             for note in line["notesBelow"]:
                 flat.append(FlatNote(note=note, bpm=bpm, above=False, line_idx=line_idx))
         flat.sort(key=lambda fn: fn.time_ms)
-        return self._encode_flat_notes(flat)
+        return self._encode_flat_notes(flat, chart.offset)
 
     # ------------------------------------------------------------------
     # Public: array_to_notes
