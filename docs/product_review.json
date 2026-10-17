@@ -7,7 +7,7 @@
   "branch": "chore/product-pipeline",
   "base_commit": "2965310",
   "reviewed_product_commit": "2b66f8a",
-  "scope": "N1 candidate-generation engineering, shared mask, F4a six-chart interpretation and Q0–Q7 conditioning diagnostic tool accepted within their evidence scopes. Continue one Hold-repair comparison, model quality, target-player validation and performance-model work.",
+  "scope": "N1 candidate-generation engineering, shared mask, F4a six-chart interpretation, Q0–Q7 conditioning diagnostic tool and R1 one-factor Hold replay accepted within their evidence scopes. Target-player/inputs, human quality and performance release scope remain open.",
   "findings": [
     {
       "id": "P1",
@@ -108,13 +108,22 @@
       "evidence": "干净0580ab4专项31 passed/8.42s由设计agent独立执行。主会话三曲×两布局×四条件6/6成功，report SHA256=26de0aa70abef8772ee45f15c251cf929275aa34ce7b095a53a21c38b1092114。设计agent纯标准库重建全部六行tokens/frames/offsets/mask共24个字节指纹，核对17份源码、30次文件指纹、12个特征时轴/有效mask、24个条件分母/不变项及88项加权汇总，1.20s全过。证据out/product_coordination/conditioning_v2_artifact_review.json；未另跑神经推理或重建encoder特征字节。",
       "observation": "4K/free-x matched总体bits分别2.126521/3.231740，较各干预总体低；但free-x错曲duration与position、更低的反排offset及部分键型反向分项保留。这是重复使用的三首开发曲、真实动作历史下的条件敏感性，不是声学真值、独立泛化、稳定持续/位置理解或可玩性。",
       "resources": "本次14.18s，峰RSS2.169GiB，PyTorch reserved峰0.227GiB，产物461088bytes；固定样例测量，不是性能承诺。"
+    },
+    {
+      "id": "C11",
+      "result": "passed_2d88cde_hold_replay_engineering",
+      "scope": "既有12份冻结产物的单因素Hold规则重放与A/B预览；不修改模型/产品默认",
+      "evidence": "固定2d88cde专项由设计agent独立通过15 passed/0.55s。纯标准库独立核对108次文件指纹、12836音符的头/位置/ID/floor、A精确复现旧最终字典、B仅声明派生持续字段、273源Hold分量及65触发归因、16路线汇总与2音频软链接；0.50s全部一致。报告SHA256=5e79c3d4d91edea158d3745f47fb0f5b8d4d7d8ea7e3fdc2022a907a69c5b1fe，证据out/product_coordination/hold_replay_artifact_review.json。",
+      "browser_evidence": "已读主会话out/browser_review/hold-review-v1.json：索引点击A/B精确seek到163.702040816秒，167.258412698秒同一时刻Canvas中A该Hold头0像素、B108像素；真实播放与切模式保持时钟、事件/导出一致，无脚本错误。不是听觉或触摸试玩。",
+      "observation": "4K15源Hold中2个变化，B比A保留2.024176秒；free-x258源Hold中63个变化，保留34.098897秒；本批曲末裁剪0。空间处理相同，真实type/speed无派生改变，亚tick转Tap由夹具覆盖。65次启发式变化不等于模型非法动作或B更可玩。",
+      "resources": "CPU重放1.081s、峰RSS0.04772GiB、输出7742386bytes；音频软链接复用，无模型推理。"
     }
   ],
   "remaining": [
-    "R1: 对已有12份原始输出做一次Hold邻近起点裁剪开关对照；相同空间处理与曲末边界，不推理训练、不换产品默认；65次截短只作后处理归因。",
-    "K2/F2: 条件工具已完成，音频对应、键型/持续/位置与真实手感仍待改进；Hold无配额、多指保留。",
-    "声学标注与阈值校准、固定质量对照、目标播放器/设备与真人试玩。",
+    "R1单因素工程已完成；下一步明确目标播放器/设备，再导入候选并获取听觉/真实操作反馈，产品默认保持。",
+    "K2/F2: 工程与诊断工具已完成，音频对应、键型/持续/位置与真实手感仍待改进；Hold无配额、多指保留。",
+    "声学标注与阈值校准、固定质量对照与真人完整试玩尚缺；不得填造人类评价。",
     "F4a首批工程验收通过；F4b可控演出与F5学习演出未完成，动态首版范围待用户决定。",
-    "develop2cde8ee已包含N1、共享mask及F4a；0580ab4条件工具待主会话集成回归记录。模型质量未验收，不合main。"
+    "develop已包含N1、共享mask、F4a与C2，主会话C2集成313项通过；R1由主会话继续集成记录。模型质量未验收，不合main。"
   ]
 }
