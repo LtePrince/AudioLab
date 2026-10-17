@@ -147,4 +147,13 @@ python3 -m http.server 7861 --bind 127.0.0.1 \
   --directory /home/ziyaowang/Alvin/Audio/AudioLab-hold-review/out/hold_repair_v1
 ```
 
+交付前发现原成谱服务已退出，主线程在固定产品工作区恢复服务，核对GPU可用、`/api/jobs`返回200、已有完成／取消／失败记录保留且没有活动作业。成谱服务的恢复命令为：
+
+```bash
+cd /home/ziyaowang/Alvin/Audio/AudioLab-product-development
+.venv/bin/python -u -m script.train_models --gpu 1 --worker script.serve_product -- \
+  --model-root /home/ziyaowang/Alvin/Audio/AudioLab/checkpoints/timing_v1 \
+  --output out/product_ui_smoke_v1 --device cuda:0 --port 7860
+```
+
 本批快速成谱与可听看对照的工程交付完成；声音理解准确性、音乐性、多指实际操作和学习式动态演出尚未验收。下一步需要确定首个播放器／设备（Phira触屏，或用户指定目标；键盘定轨须另定Drag／Flick映射）及动态演出是否为首版必选，再使用固定候选做导入和实际体验。保留更多Hold不自动构成质量改善，也不据此更换默认或合入`main`。两个agent的实现／独立审查结果已持久化到文档；会话结束不代表后台会自动继续执行。
