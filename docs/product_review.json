@@ -7,7 +7,7 @@
   "branch": "chore/product-pipeline",
   "base_commit": "2965310",
   "reviewed_product_commit": "2b66f8a",
-  "scope": "N1 candidate-generation engineering, shared mask, F4a six-chart interpretation, Q0–Q7 conditioning diagnostic tool and R1 one-factor Hold replay accepted within their evidence scopes. Target-player/inputs, human quality and performance release scope remain open.",
+  "scope": "Prior N1/F4a/C2/R1 engineering evidence retained. User has selected Phira phone/tablet touch and static 4K/free-x first release; current review covers complete Phira package, source-clock semantics and failure status. Real-device import, touch and model quality remain unverified.",
   "findings": [
     {
       "id": "P1",
@@ -120,10 +120,32 @@
     }
   ],
   "remaining": [
-    "R1单因素工程已完成；下一步明确目标播放器/设备，再导入候选并获取听觉/真实操作反馈，产品默认保持。",
-    "K2/F2: 工程与诊断工具已完成，音频对应、键型/持续/位置与真实手感仍待改进；Hold无配额、多指保留。",
-    "声学标注与阈值校准、固定质量对照与真人完整试玩尚缺；不得填造人类评价。",
-    "F4a首批工程验收通过；F4b可控演出与F5学习演出未完成，动态首版范围待用户决定。",
-    "develop已包含N1、共享mask、F4a与C2，主会话C2集成313项通过；R1由主会话继续集成记录。模型质量未验收，不合main。"
-  ]
+    "PH1–PH3: 固定Phira v0.8.2发布源码核对包加载、chart/info offset，完整ZIP与本机下载；两种玩法独立保持四键型/ID/头尾/位置，包装失败不误报成功。",
+    "PH4: 将完整包传到手机/平板，记录实际Phira版本、设备与时差设置，真实导入、完整播放、Hold/Drag/Flick及多指操作；源码与Canvas不替代真机。",
+    "K2/F2: 声学/音乐对应、键型持续、位置和真实手感仍待改善；Hold无配额，多指保留；R1未自动更改产品默认。",
+    "声学标注/阈值校准、固定质量测试与真人反馈尚缺；合成click校准包不计模型质量，候选数值未因范围确认获批。",
+    "F4a首批工程验收已完成；F4b/F5动态演出及编辑保留为后续路线，非首版阻塞项。",
+    "develop5e995b8已验证集成N1/共享mask/F4a/C2/R1；首版质量未验收，不合main。"
+  ],
+  "product_decisions": {
+    "confirmed_at": "2026-10-17",
+    "source": "explicit user confirmation relayed by root",
+    "first_player": "Phira",
+    "play_device": "phone/tablet touchscreen",
+    "first_release_modes": [
+      "4k fixed touchscreen positions",
+      "static free-x"
+    ],
+    "note_types": [
+      "Tap",
+      "Drag",
+      "Hold",
+      "Flick"
+    ],
+    "multi_finger": "retained; no universal two-finger cap",
+    "hold_quota": null,
+    "keyboard_mapping": "not in this release",
+    "dynamic_performance": "F4b/F5 follow-up, not first-release gate",
+    "delivery": "self-contained ZIP downloaded from existing local loopback UI/CLI and transferred to device; no LAN deployment this round"
+  }
 }

@@ -88,5 +88,12 @@
     "duration_hours": 6,
     "automatic_semantic_review": false,
     "notes": "旧轮询已停止；活动会话中由产品设计与开发agent直接协作，并在docs/product_delivery.md保存验收与恢复状态。会话结束后不承诺自动唤醒。"
+  },
+  "current_product_context": {
+    "confirmed_at": "2026-10-17",
+    "first_player_device": "Phira phone/tablet touchscreen",
+    "first_release": "4K fixed touchscreen positions and static free-x; all four note types, multi-finger, no Hold quota",
+    "later": "learned dynamic performance F4b/F5",
+    "scope_note": "This file preserves the 2965310 audio-engineering review. Product package and real-device acceptance continue in docs/product_review.json and docs/phira_delivery_contract.md; selecting a player does not validate acoustic quality."
   }
 }

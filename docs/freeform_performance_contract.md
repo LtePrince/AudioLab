@@ -1,6 +1,6 @@
 # 无轨动态演出：最小表示、学习基线与验收
 
-状态：2026-10-17，F4a 的 `646e104`／审计基点 `d3cbe20` 已完成首批工程验收：33 项独立数值／边界测试、六份原谱查询与实际 gzip JSON 往返、全部源字段／时钟／ID／哈希核对通过。归属 `feature/freeform-gameplay`；小样本与参考差异见 [F4a 评审](freeform_performance_review.json)，不外推为全库标签或播放器兼容验收。本文件细化 README 的 F4–F5；静态 free-x、动态格式链路、学习式演出和真实试玩分开验收。动态是否为首版发布必选仍待用户决定，不阻塞当前快速成谱入口。
+状态：2026-10-17，F4a 的 `646e104`／审计基点 `d3cbe20` 已完成首批工程验收：33 项独立数值／边界测试、六份原谱查询与实际 gzip JSON 往返、全部源字段／时钟／ID／哈希核对通过。归属 `feature/freeform-gameplay`；小样本与参考差异见 [F4a 评审](freeform_performance_review.json)，不外推为全库标签或播放器兼容验收。用户已确认首版为Phira移动触屏的定轨四位置与静态free-x，学习式动态表演后续；F4b／F5不作为首版发布必要项。本文件保留后续路线，静态玩法、动态格式链路、学习式演出和真实试玩分别验收。
 
 ## 数据能提供什么
 
@@ -25,7 +25,7 @@
 | Hold | 保留头尾时间与整段几何目标轨迹；采样包含全部相关事件边界与内部检查点，支持跨窗口持续状态 |
 | 屏幕 | 首轮用明确的 16:9 规范视口，左下为 (0,0)；渲染可留边适配。不能把屏宽单位直接当成屏高单位 |
 
-差分解释参考固定为 Phira 提交 `a22ea8958410ac940adec83b54bbf4e6b293d191`，不使用可变的 main 内容。[PGR 解析器](https://github.com/TeamFlos/phira/blob/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/parse/pgr.rs)的 SHA-256 为 `7a3ca75e40c3756adfde21ecac86f1c1888a659aac8b596844c7d057d8254c22`；解析、插值、坐标变换与音符呈现所用 8 个小文件的固定 URL、大小及哈希见 [参考清单](phira_reference.json)。只读源码参考不等于选定产品播放器，也不证明与官方游戏语义完全一致。
+F4a差分解释参考固定为 Phira 开发提交 `a22ea8958410ac940adec83b54bbf4e6b293d191`，不使用可变的 main 内容。[PGR 解析器](https://github.com/TeamFlos/phira/blob/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/parse/pgr.rs)的 SHA-256 为 `7a3ca75e40c3756adfde21ecac86f1c1888a659aac8b596844c7d057d8254c22`；解析、插值、坐标变换与音符呈现所用8个小文件的固定 URL、大小及哈希见[参考清单](phira_reference.json)。此历史参考与首版[Phira发布版交付依据](phira_delivery_contract.md)分别记录；用户选定Phira不追认旧参考已经完成发布版或真机兼容验收。
 
 差分样例特别覆盖 v1 负余数、旋转方向与规范坐标、Hold speed 以及源 floorPosition 和积分重建的差别。该参考会修改速度首段起点、丢掉部分曲线的末 keyframe，并用最晚音符头加一秒作为高度积分末端；因此单段非哨兵事件、末尾长 Hold 等边界需要单独审计。参考自身行为、规范分段曲线和最终目标播放器实测应分别报告，不能把移植参考后的自洽结果当作官方真值。
 
