@@ -31,7 +31,7 @@ const stageNames={preflight:'检查输入',audio_features:'读取音乐',tempo:'
 const statusNames={uploading:'上传中',queued:'等待生成',running:'生成中',cancelling:'正在取消',completed:'生成完成',failed:'生成失败',cancelled:'已取消',needs_tempo:'需要填写速度'};
 const terminal=new Set(['completed','failed','cancelled','needs_tempo']);
 let current=null,pollTimer=null,upload=null;
-function errorText(error){if(!error)return '';const text=typeof error==='string'?error:error.message||JSON.stringify(error);if(text.includes('tempo could not'))return '暂时无法估计这首音乐的速度。请在可选设置中填写 BPM 后重试。';if(text.includes('no audio candidates'))return '没有找到可用于生成的音乐事件，请检查音频或更换文件。';if(text.includes('Resource budget')||text.includes('disk reserve'))return '可用资源不足，本次任务未完成。请换一首较短的音乐，或释放资源后重试。';return text;}
+function errorText(error){if(!error)return '';const text=typeof error==='string'?error:error.message||JSON.stringify(error);if(error.type==='LibsndfileError'||text.includes('Error opening '))return '无法读取这个音频文件。请确认它是可播放的 WAV / OGG，或重新导出后重试。';if(text.includes('tempo could not'))return '暂时无法估计这首音乐的速度。请在可选设置中填写 BPM 后重试。';if(text.includes('no audio candidates'))return '没有找到可用于生成的音乐事件，请检查音频或更换文件。';if(text.includes('Resource budget')||text.includes('disk reserve'))return '可用资源不足，本次任务未完成。请换一首较短的音乐，或释放资源后重试。';return text;}
 function actionLink(label,url){const a=document.createElement('a');a.textContent=label;a.href=url;a.className='button';a.target='_blank';a.rel='noopener';return a;}
 function show(job){
   current=job.id;const done=terminal.has(job.status);
