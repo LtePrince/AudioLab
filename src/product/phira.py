@@ -21,6 +21,7 @@ import soundfile as sf
 
 from src.audio_understanding import SAMPLE_RATE
 from .artifacts import validate_chart
+from .limits import DEFAULT_MIN_AVAILABLE_RAM_GIB, validate_ram_reserve
 
 PHIRA_VERSION = '0.8.2'
 PHIRA_COMMIT = 'c830dee5e07a2b8f06104576f30d8045e0859aa7'
@@ -45,14 +46,25 @@ def encoded(value):
     return (json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False)+'\n').encode('utf-8')
 
 
-def check_resources(directory, extra_bytes=0):
+def resource_state(directory):
     memory = {line.split(':')[0]: int(line.split()[1])*1024
               for line in Path('/proc/meminfo').read_text().splitlines()}
     rss = next(int(line.split()[1])*1024 for line in Path('/proc/self/status').read_text().splitlines()
                if line.startswith('VmRSS:'))
-    if (shutil.disk_usage(directory).free < 8*GIB+extra_bytes
-            or memory['MemAvailable'] < 8*GIB or rss > 4*GIB):
-        raise RuntimeError('Resource budget: insufficient reserve for Phira package')
+    return dict(disk_free_gib=shutil.disk_usage(directory).free/GIB,
+                ram_available_gib=memory['MemAvailable']/GIB,rss_gib=rss/GIB)
+
+
+def check_resources(directory, extra_bytes=0, *, min_available_ram_gib=DEFAULT_MIN_AVAILABLE_RAM_GIB):
+    min_available_ram_gib=validate_ram_reserve(min_available_ram_gib)
+    state=resource_state(directory)
+    if state['disk_free_gib'] < 8+extra_bytes/GIB:
+        raise RuntimeError(f'Resource budget: insufficient disk reserve for Phira package: {state}')
+    if state['ram_available_gib'] < min_available_ram_gib:
+        raise RuntimeError('Resource budget: insufficient available RAM for Phira package: '
+                           f'min_available_ram_gib={min_available_ram_gib:g}, {state}')
+    if state['rss_gib'] > 4:
+        raise RuntimeError(f'Resource budget: process RSS limit exceeded for Phira package: {state}')
 
 
 @lru_cache(maxsize=1)
@@ -229,12 +241,14 @@ def verify_package(path, *, check=lambda: None):
 
 
 def build_phira_package(chart_path, audio_path, output_path, *, mode, title,
-                        duration_seconds, source=None, check=None):
+                        duration_seconds, source=None, check=None,
+                        min_available_ram_gib=DEFAULT_MIN_AVAILABLE_RAM_GIB):
     """Create a new package atomically. `check` is an optional cancellation hook.
 
     Audio and chart are read-only, streamed and fingerprinted before/after.
     `source` should contain portable generation hashes/config, never local paths.
     """
+    min_available_ram_gib=validate_ram_reserve(min_available_ram_gib)
     chart_path,audio_path,output=map(Path,(chart_path,audio_path,output_path))
     if mode not in MODES:raise ValueError('invalid package mode')
     if output.exists():raise FileExistsError(output)
@@ -243,9 +257,9 @@ def build_phira_package(chart_path, audio_path, output_path, *, mode, title,
             or audio_path.suffix.lower() not in ('.wav','.ogg')):
         raise ValueError('package requires bounded WAV/OGG audio and static chart JSON')
     additional=audio_path.stat().st_size+chart_path.stat().st_size+2*MIB
-    check_resources(output.parent,additional)
+    check_resources(output.parent,additional,min_available_ram_gib=min_available_ram_gib)
     def progress():
-        check_resources(output.parent)
+        check_resources(output.parent,min_available_ram_gib=min_available_ram_gib)
         if check:check()
     progress()
     inputs={name:dict(path=path,sha256=sha256(path),bytes=path.stat().st_size)
@@ -286,7 +300,8 @@ def build_phira_package(chart_path, audio_path, output_path, *, mode, title,
         # Hard-link installation is atomic and refuses an existing destination.
         os.link(temporary,output);installed=True
         return dict(file=output.name,sha256=sha256(output),bytes=output.stat().st_size,
-                    target_version=PHIRA_VERSION,target_commit=PHIRA_COMMIT,verification=verified)
+                    target_version=PHIRA_VERSION,target_commit=PHIRA_COMMIT,verification=verified,
+                    resource_limits=dict(min_available_ram_gib=min_available_ram_gib))
     except BaseException:
         if installed:output.unlink(missing_ok=True)
         raise

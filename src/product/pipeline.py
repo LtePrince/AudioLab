@@ -25,6 +25,7 @@ from . import JOB_SCHEMA
 from .artifacts import chart_document, repair_log, validate_chart, write_json, write_preview
 from .tempo import estimate_tempo, provided_tempo, TempoRequired
 from .phira import build_phira_package
+from .limits import validate_ram_reserve
 
 
 class JobCancelled(Exception):
@@ -197,7 +198,12 @@ def run_job(args):
     directory.mkdir(parents=True, exist_ok=False)
     started = time.monotonic()
     control = None
+    resource_limits = None
     try:
+        args.min_available_ram_gib = validate_ram_reserve(args.min_available_ram_gib)
+        resource_limits = dict(min_available_ram_gib=args.min_available_ram_gib,
+                               min_free_disk_gib=args.min_free_disk_gib,
+                               max_rss_gib=args.max_rss_gib,gpu_memory_fraction=args.gpu_memory_fraction)
         if args.bpm is not None and (not math.isfinite(args.bpm) or not 1 <= args.bpm <= 1000):
             raise ValueError('BPM must be finite in [1, 1000]; it is supplied, not inferred')
         if not math.isfinite(args.offset) or args.offset < 0:
@@ -220,7 +226,7 @@ def run_job(args):
         device = torch.device(args.device)
         budget = ResourceBudget(args, device, directory)
         control = JobControl(directory, budget, args.timeout_seconds, args.cancel_file)
-        control.update()
+        control.update(resource_limits=resource_limits)
         control.check()
         audio_path = directory / ('audio'+source.suffix.lower())
         _copy_audio(source, audio_path, control)
@@ -232,6 +238,7 @@ def run_job(args):
                       config=dict(bpm=args.bpm, timing_source='provided', offset=args.offset,
                                   timing_schema=TIMING_SCHEMA, difficulty='baseline', seed=args.seed,
                                   layout_encoder=args.layout_encoder,
+                                  resource_limits=resource_limits,
                                   max_seconds=args.max_seconds, timeout_seconds=args.timeout_seconds),
                       model_sha256={mode: sha256(checkpoints[mode]) for mode in modes},
                       stages={}, routes={})
@@ -321,7 +328,7 @@ def run_job(args):
                             model_sha256=report['model_sha256'][mode],
                             audio_checkpoint_sha256=metadata['checkpoint_sha256'],
                             timebase_source=tempo['source'],seed=args.seed,repair_profile='static-v1'),
-                check=control.check)
+                check=control.check,min_available_ram_gib=args.min_available_ram_gib)
             report['packages'][mode]=package
             report['routes'][mode]['package_file']=package['file']
             routes[mode]['package_file']=package['file']
@@ -349,5 +356,6 @@ def run_job(args):
             control.update(status=status, error=dict(type=type(error).__name__, message=message))
         else:
             write_json(directory/'job.json', dict(schema=JOB_SCHEMA, status=status,
-                       stage='preflight', error=dict(type=type(error).__name__, message=message)))
+                       stage='preflight', resource_limits=resource_limits,
+                       error=dict(type=type(error).__name__, message=message)))
         raise

@@ -22,6 +22,12 @@ from src.product.pipeline import JobCancelled, run_job, quantize_candidates
 def controlled_package_budget(monkeypatch):
     from src.product import phira
     monkeypatch.setattr(phira,'check_resources',lambda *a,**k:None)
+    from src import resource_budget
+    from src.product import pipeline
+    from src.audio_understanding import inference
+    state=lambda path:dict(disk_free_gib=20,ram_available_gib=20,rss_gib=.1)
+    for module in (resource_budget,pipeline,inference):
+        monkeypatch.setattr(module,'resource_snapshot',state)
 
 
 @pytest.fixture
@@ -60,7 +66,7 @@ def arguments(tmp_path, inputs, **overrides):
     audio, models = inputs
     args = parser().parse_args(['--audio', str(audio), '--model-root', str(models), '--bpm', '120',
                                '--output', str(tmp_path/'job'), '--min-free-disk-gib', '0',
-                               '--min-available-ram-gib', '0', '--max-rss-gib', '64'])
+                               '--min-available-ram-gib', '1', '--max-rss-gib', '64'])
     for key, value in overrides.items():
         setattr(args, key, value)
     return args
