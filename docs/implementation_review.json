@@ -1,0 +1,90 @@
+{
+  "schema": "audiolab-implementation-review-v1",
+  "reviewer": "product-review-session",
+  "updated_at": "2026-10-17T14:00:00+11:00",
+  "implementation_worktree": "/home/ziyaowang/Alvin/Audio/AudioLab-audio-understanding",
+  "observed_head": "7061a0a",
+  "scope": "In-progress working tree; findings are snapshot-specific, not a final release verdict.",
+  "instructions_for_implementer": "用户已要求本会话持续审查并指导实现。请读取此反馈，优先修正 confirmed 项；不要覆盖本文件。修正后可将说明写入 IMPLEMENTATION_REVIEW_RESPONSE.json，由审查会话复验。此文件由审查会话维护，不与实现代码混合提交。",
+  "delivery": "Shared-file handoff only. No cross-conversation messaging API; acknowledgement not yet observed.",
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "high",
+      "status": "resolved_verified",
+      "file": "src/audio_understanding/evaluation.py",
+      "symbol": "aggregate",
+      "issue": "按 source_group 直接平均各 record 的 F1，使歌曲得分随标注切片变化。",
+      "reproduction": "同一首 10 秒歌曲，参考起点 0.5,1.5,...9.5，只预测 0.5。单条记录 F1@50ms=0.181818；拆成 coverage [0,1) 和 [1,10) 两条同组记录后 F1=0.5。",
+      "requested_change": "同歌曲先汇总不重叠评估区域的 TP/FP/FN 与有效秒数，再计算歌曲 P/R/F1/FP-per-minute，最后对歌曲宏平均与 bootstrap；重叠区域需拒绝或合并去重，不重复计权。增加整首与等价切片不变性回归验证。",
+      "verification": "独立复现：整首与切片 F1@50ms 均为 0.181818；实现已合并源时间轴后匹配，拒绝重叠，并新增回归测试。"
+    },
+    {
+      "id": "R2",
+      "severity": "medium",
+      "status": "resolved_verified",
+      "file": "src/audio_understanding/annotations.py",
+      "symbol": "event_targets",
+      "issue": "ends 中 duration 默认 float32，而 starts 是 float64，导致部分完整标注尾帧被误屏蔽。",
+      "reproduction": "duration=0.1/0.3/1.1，coverage=[[0,duration]]，event=duration-1e-5，frames=ceil(duration/FRAME_SECONDS)：tail_valid=False，target_count=0；2.3 秒则正常。",
+      "requested_change": "统一边界计算为 float64（duration 与 starts 同 dtype/device），保留严格覆盖语义；用多个非整数时长及真实部分覆盖尾帧验证，不通过放宽容差吞掉未标注区域。",
+      "verification": "独立复现：0.1、0.3、1.1、2.3 秒的完整审核尾帧均 valid=True 且 target_count=1；新增部分审核尾帧仍屏蔽的回归。"
+    },
+    {
+      "id": "R3",
+      "severity": "medium",
+      "status": "verification_pending",
+      "file": "src/audio_understanding/inference.py",
+      "symbol": "infer_mel/make_result",
+      "issue": "分块双向注意力改变模型上下文，历史全曲阈值与 F1 不能直接沿用。",
+      "requested_change": "CLI 已保存 core/context 与模型哈希，设置追踪已实现；尚需分块/全曲小规模质量对照、接缝与尾部误差报告。新头阈值单独校准并明确手动阈值，不将默认 0.7 视为已校准。"
+    },
+    {
+      "id": "R4",
+      "severity": "medium",
+      "status": "implementation_observed_validation_pending",
+      "file": "src/train_audio_understanding.py",
+      "symbol": "AcousticDataset/load_audio",
+      "issue": "每个训练 batch 的资源检查发生在 DataLoader 取样之后；单曲缓存配合全局窗口 shuffle 可能频繁解码整曲。",
+      "requested_change": "在放大训练前测实际音频解码/重采样峰值、每 epoch I/O 和采样分布；前置估算解码内存、有限缓存或按歌曲组织窗口，不复制全量数据。",
+      "verification": "已观察到解码前 RAM/RSS 工作集估算与 SongWindowSampler 按歌曲分组；真实峰值与大曲 I/O 尚未验证。"
+    },
+    {
+      "id": "R5",
+      "severity": "low",
+      "status": "resolved_verified",
+      "file": "test/test_audio_understanding.py",
+      "symbol": "test_coverage_uncertainty_collisions_and_loss_gradient",
+      "issue": "非零梯度断言使用预测恰好等于目标的样本，当前测试失败。",
+      "reproduction": "logits=0 → sigmoid=0.5，事件 0.65 / frame 0.1 的帧内偏移也是 0.5，MSE 对该预测的梯度应为 0。pytest: 21 passed, 1 failed。",
+      "requested_change": "构造非零误差样本（例如事件 0.63 或不同 logits）来验证有效位置具有梯度；保留未审核区与同帧碰撞零梯度断言。此项是测试数据问题，不应通过改坏 loss 消除失败。",
+      "verification": "事件改为 0.66，目标不再等于初始预测，原零梯度保护断言保留；27 项新模块测试通过。"
+    }
+  ],
+  "positive_observations": [
+    "独立 worktree 和正确模型分支",
+    "声学/伪标签/谱面标签显式区分",
+    "未实现能力显式 unavailable",
+    "未审核区域被 mask",
+    "重复事件同帧冲突有计数，不强制平均时间"
+  ],
+  "next_checks": [
+    "R3：在真实音频上比较分块与全曲输出，检查接缝/尾部及冻结阈值",
+    "R4：模拟内存不足时解码前退出、按歌曲采样完整性，并记录小规模真实资源测量",
+    "真实声学审核标注/冻结评估尚未建立时，只能称工程基础设施完成，不能称声学指标达标",
+    "双路线接入已有合成测试，仍需分别做真实整谱回归"
+  ],
+  "acknowledgement_status": "matching_fixes_observed; explicit response file not yet present",
+  "test_run": {
+    "command": "OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/ziyaowang/Alvin/Audio/AudioLab/.venv/bin/python -m pytest -q test/test_audio_understanding.py",
+    "result": "27 passed in 8.30s; independent R1/R2 reproductions also pass",
+    "scope": "Small CPU synthetic tests; not a real acoustic quality evaluation"
+  },
+  "monitor": {
+    "state_file": "/home/ziyaowang/Alvin/Audio/AudioLab/out/implementation_watch/state.json",
+    "interval_seconds": 30,
+    "duration_hours": 6,
+    "automatic_semantic_review": false,
+    "notes": "只记录版本及小文件变化，不读取训练数据、不启动训练，不可自动唤醒本审查会话。"
+  }
+}
