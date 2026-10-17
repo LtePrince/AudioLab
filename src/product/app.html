@@ -10,6 +10,7 @@ label{display:block;margin:16px 0 7px}select,input,button{font:inherit}select,in
 input[type=file]{max-width:100%;padding:14px 0}button,a.button{display:inline-block;padding:11px 18px;border:0;border-radius:6px;background:#93c5ff;color:#102039;text-decoration:none;font-weight:600;cursor:pointer}
 button:disabled{opacity:.5;cursor:default}button.secondary{background:#354762;color:#edf4ff}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
 small,.muted{color:#a7b8ce}details{margin-top:20px}summary{cursor:pointer}#status{font-size:18px;margin:0 0 10px}#error{color:#ffc0a7;white-space:pre-wrap}a{color:#9ecbff}
+#error-raw{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;color:#b7c5da}
 table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:12px 8px;border-bottom:1px solid #34465e}th{font-size:13px;color:#a7b8ce}td{overflow-wrap:anywhere}
 </style>
 <h1>AudioLab <span class="muted">快速成谱</span></h1>
@@ -21,7 +22,7 @@ table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:12px 8px
   <details id="settings"><summary>可选设置</summary><label for="bpm">手动速度（BPM）</label><input id="bpm" type="number" min="1" max="1000" step="any" placeholder="留空，自动估计"><p><small>自动估计尚未校准。若节奏不稳定或试听不合适，可填写已知速度后重新生成。</small></p></details>
   <div class="actions"><button id="submit" type="submit">生成谱面</button><button id="cancel" class="secondary" type="button" disabled>取消任务</button></div>
 </form>
-<section class="panel" aria-live="polite"><p id="status">等待选择音乐</p><div id="progress" class="muted"></div><p id="error"></p><div id="result" class="actions"></div></section>
+<section class="panel" aria-live="polite"><p id="status">等待选择音乐</p><div id="progress" class="muted"></div><p id="error"></p><details id="error-details" hidden><summary>查看原始错误</summary><pre id="error-raw"></pre></details><div id="result" class="actions"></div></section>
 <h2>最近任务</h2><table><thead><tr><th>音乐</th><th>状态</th><th>结果</th></tr></thead><tbody id="history"></tbody></table>
 <p><small>下载 ZIP 后传到手机或平板，在 Phira 的本地谱面中导入。基线谱尚未定级，真机导入与手感仍需确认；网页预览不提供击打判定。</small></p>
 <script>
@@ -31,35 +32,60 @@ const stageNames={preflight:'检查输入',audio_features:'读取音乐',tempo:'
 const statusNames={uploading:'上传中',queued:'等待生成',running:'生成中',cancelling:'正在取消',completed:'生成完成',failed:'生成失败',cancelled:'已取消',needs_tempo:'需要填写速度'};
 const terminal=new Set(['completed','failed','cancelled','needs_tempo']);
 let current=null,pollTimer=null,upload=null;
-function errorText(error){if(!error)return '';const text=typeof error==='string'?error:error.message||JSON.stringify(error);if(error.type==='LibsndfileError'||text.includes('Error opening '))return '无法读取这个音频文件。请确认它是可播放的 WAV / OGG，或重新导出后重试。';if(text.includes('tempo could not'))return '暂时无法估计这首音乐的速度。请在可选设置中填写 BPM 后重试。';if(text.includes('no audio candidates'))return '没有找到可用于生成的音乐事件，请检查音频或更换文件。';if(text.includes('Resource budget')||text.includes('disk reserve'))return '可用资源不足，本次任务未完成。请换一首较短的音乐，或释放资源后重试。';return text;}
+function errorMessage(error){return !error?'':typeof error==='string'?error:error.message||JSON.stringify(error);}
+function errorText(error){
+  const text=errorMessage(error);if(!text)return '';
+  if(error.type==='LibsndfileError'||text.includes('Error opening '))return '无法读取这个音频文件。请确认它是可播放的 WAV / OGG，或重新导出后重试。';
+  if(text.includes('tempo could not'))return '暂时无法估计这首音乐的速度。请在可选设置中填写 BPM 后重试。';
+  if(text.includes('no audio candidates'))return '没有找到可用于生成的音乐事件，请检查音频或更换文件。';
+  if(text.includes('insufficient available RAM')){
+    const available=text.match(/['"]ram_available_gib['"]\s*:\s*([0-9]+(?:\.[0-9]+)?)/);
+    return '系统可用内存不足'+(available?'（当前约 '+Number(available[1]).toFixed(2)+' GiB）':'')+'。请关闭其他占用内存的程序，或调整启动服务时的内存保留量后重试。';
+  }
+  if(text.includes('process RSS limit exceeded'))return '生成进程已达到内存上限。请缩短音乐后重试，原始错误中保留具体用量。';
+  if(text.includes('RAM reserve/RSS'))return '这首音乐预计需要的系统内存超出预算。请缩短音乐，或释放系统内存后重试。';
+  if(text.includes('GPU budget'))return '这首音乐预计需要的显存超出可用预算。请关闭其他占用显卡的程序，或缩短音乐后重试。';
+  if(text.includes('CUDA out of memory'))return '显存分配失败。请关闭其他占用显卡的程序，或缩短音乐后重试；具体显存用量见原始错误。';
+  if(text.includes('disk reserve'))return '输出目录的空闲磁盘不足。请清理自己的旧生成结果，或将输出目录改到空间充足的磁盘。';
+  if(text.includes('Resource budget'))return '本次任务超出资源预算。请展开原始错误，查看具体阶段与原因。';
+  return text;
+}
+function setError(error,job=null){
+  $('error').textContent=errorText(error);
+  const details=$('error-details');details.hidden=!error;
+  $('error-raw').textContent=error?[(job&&job.id?'任务：'+job.id:''),(job&&job.stage?'阶段：'+(stageNames[job.stage]||job.stage):''),typeof error==='string'?error:JSON.stringify(error,null,2)].filter(Boolean).join('\n'):'';
+  if(!error)details.open=false;
+}
 function actionLink(label,url){const a=document.createElement('a');a.textContent=label;a.href=url;a.className='button';a.target='_blank';a.rel='noopener';return a;}
 function packageLinks(job,primary=false){return Object.entries(job.packages||{}).map(([mode,pkg])=>{const a=actionLink('下载 Phira '+(mode==='4k'?'4K':'free-x')+' 谱包',pkg.url);a.removeAttribute('target');a.download='';a.dataset.mode=mode;if(primary)a.id='download-'+mode;return a;});}
 function show(job){
   current=job.id;const done=terminal.has(job.status);
   $('status').textContent=job.status==='running'?(stageNames[job.stage]||'生成中'):(statusNames[job.status]||job.status);
   $('progress').textContent=(job.elapsed_seconds?Math.floor(job.elapsed_seconds)+' 秒':'')+(job.progress&&job.progress.candidates_total?' · 已处理 '+job.progress.candidates_reached+' / '+job.progress.candidates_total+' 个事件':'');
-  $('error').textContent=errorText(job.error);$('cancel').disabled=done||job.status==='cancelling';$('submit').disabled=!done;
+  setError(job.error,job);$('cancel').disabled=done||job.status==='cancelling';$('submit').disabled=!done||Boolean(job.busy);
   if(job.status==='needs_tempo')$('settings').open=true;
   $('result').replaceChildren();
   if(job.preview){$('result').append(...packageLinks(job,true),actionLink('打开音频同步预览',job.preview),actionLink('查看生成报告',job.report));}
   if(done){clearTimeout(pollTimer);refreshHistory();}else{pollTimer=setTimeout(poll,700);}
 }
-async function poll(){if(!current)return;try{const r=await fetch('/api/jobs/'+current);if(!r.ok)throw new Error('任务状态暂时无法读取');show(await r.json());}catch(e){$('error').textContent=e.message;pollTimer=setTimeout(poll,1500);}}
+async function poll(){if(!current)return;try{const r=await fetch('/api/jobs/'+current);if(!r.ok)throw new Error('任务状态暂时无法读取');show(await r.json());}catch(e){setError(e.message);pollTimer=setTimeout(poll,1500);}}
 async function refreshHistory(){
   try{const response=await fetch('/api/jobs');const data=await response.json();$('history').replaceChildren();
-    for(const job of data.jobs){const tr=document.createElement('tr');for(const text of [job.name,statusNames[job.status]||job.status]){const td=document.createElement('td');td.textContent=text;tr.append(td);}const td=document.createElement('td');if(job.preview)td.append(...packageLinks(job),actionLink('预览',job.preview));tr.append(td);$('history').append(tr);}
+    for(const job of data.jobs){const tr=document.createElement('tr');for(const text of [job.name,statusNames[job.status]||job.status]){const td=document.createElement('td');td.textContent=text;tr.append(td);}const td=document.createElement('td');if(job.preview)td.append(...packageLinks(job),actionLink('预览',job.preview));
+      if(job.error&&terminal.has(job.status)){const button=document.createElement('button');button.type='button';button.className='secondary';button.textContent='查看失败原因';button.addEventListener('click',async()=>{try{const response=await fetch('/api/jobs/'+job.id);if(!response.ok)throw new Error('任务状态暂时无法读取');show(await response.json());}catch(e){setError(e.message);}});td.append(button);}
+      tr.append(td);$('history').append(tr);}
     const active=data.jobs.find(j=>!terminal.has(j.status));if(active&&!upload){current=active.id;clearTimeout(pollTimer);pollTimer=setTimeout(poll,100);$('submit').disabled=true;}
-  }catch(e){$('error').textContent='本地服务暂时不可用，请确认服务仍在运行。';}
+  }catch(e){setError('本地服务暂时不可用，请确认服务仍在运行。');}
 }
 $('generate').addEventListener('submit',async event=>{
   event.preventDefault();const file=$('audio-file').files[0];if(!file)return;
-  if(file.size>128*1024*1024){$('error').textContent='文件超过 128 MiB，请选择较小的音频。';return;}
-  clearTimeout(pollTimer);current=null;$('submit').disabled=true;$('cancel').disabled=false;$('result').replaceChildren();$('error').textContent='';$('status').textContent='上传音乐';
+  if(file.size>128*1024*1024){setError('文件超过 128 MiB，请选择较小的音频。');return;}
+  clearTimeout(pollTimer);current=null;$('submit').disabled=true;$('cancel').disabled=false;$('result').replaceChildren();setError(null);$('status').textContent='上传音乐';
   upload=new AbortController();const requestToken=crypto.randomUUID();const query=new URLSearchParams({name:file.name,mode:$('mode').value,bpm:$('bpm').value||'auto',request_token:requestToken});
-  try{const response=await fetch('/api/jobs?'+query,{method:'POST',body:file,signal:upload.signal});const result=await response.json();if(!response.ok)throw new Error(errorText(result.error));current=result.id;upload=null;await poll();}
-  catch(e){upload=null;$('submit').disabled=false;$('cancel').disabled=true;$('status').textContent=e.name==='AbortError'?'上传已取消':'未能启动任务';$('error').textContent=e.name==='AbortError'?'':e.message;if(e.name==='AbortError'){try{const response=await fetch('/api/jobs');const data=await response.json();const own=data.jobs.find(j=>j.request_token===requestToken&&!terminal.has(j.status));if(own)await fetch('/api/jobs/'+own.id+'/cancel',{method:'POST'});}catch{}}await refreshHistory();}
+  try{const response=await fetch('/api/jobs?'+query,{method:'POST',body:file,signal:upload.signal});const result=await response.json();if(!response.ok){const rejected=new Error('任务提交失败');rejected.originalError=result.error;rejected.jobId=result.id;throw rejected;}current=result.id;upload=null;await poll();}
+  catch(e){upload=null;$('submit').disabled=false;$('cancel').disabled=true;$('status').textContent=e.name==='AbortError'?'上传已取消':'未能启动任务';setError(e.name==='AbortError'?null:e.originalError||e.message,{id:e.jobId});if(e.name==='AbortError'){try{const response=await fetch('/api/jobs');const data=await response.json();const own=data.jobs.find(j=>j.request_token===requestToken&&!terminal.has(j.status));if(own)await fetch('/api/jobs/'+own.id+'/cancel',{method:'POST'});}catch{}}await refreshHistory();}
 });
-$('cancel').addEventListener('click',async()=>{if(upload){upload.abort();return;}if(!current)return;$('cancel').disabled=true;try{await fetch('/api/jobs/'+current+'/cancel',{method:'POST'});$('status').textContent='正在取消，等待任务释放资源';}catch(e){$('error').textContent=e.message;}});
+$('cancel').addEventListener('click',async()=>{if(upload){upload.abort();return;}if(!current)return;$('cancel').disabled=true;try{await fetch('/api/jobs/'+current+'/cancel',{method:'POST'});$('status').textContent='正在取消，等待任务释放资源';}catch(e){setError(e.message);}});
 refreshHistory();
 </script>
 </html>
