@@ -18,15 +18,16 @@ SHA-256：
 
 ## 运行 PC 导入
 
-在仓库根目录执行，下面命令假设 ZIP 已复制到该目录。这些工具只依赖 Python 标准库，
-可以先导入权重，再安装推理依赖。
+在仓库根目录创建 `out/runtime-models/`，将 ZIP 复制到该目录后执行下面命令。
+该目录被 Git 忽略，避免将大包误提交或使生成报告误记代码有改动。这些工具只依赖
+Python 标准库，可以先导入权重，再安装推理依赖。
 
 ```bash
 python3 -m script.model_bundle verify \
-  --bundle audiolab-models-timing-v1-20261017.zip \
+  --bundle out/runtime-models/audiolab-models-timing-v1-20261017.zip \
   --sha256 64b7e43b82564c6a400cec38431918ea8f27c240ddf884471ae2d7d981a823f4
 python3 -m script.model_bundle install \
-  --bundle audiolab-models-timing-v1-20261017.zip \
+  --bundle out/runtime-models/audiolab-models-timing-v1-20261017.zip \
   --model-root checkpoints/timing_v1 \
   --sha256 64b7e43b82564c6a400cec38431918ea8f27c240ddf884471ae2d7d981a823f4
 ```
