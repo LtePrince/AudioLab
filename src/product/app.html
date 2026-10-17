@@ -53,7 +53,7 @@ function errorText(error){
 function setError(error,job=null){
   $('error').textContent=errorText(error);
   const details=$('error-details');details.hidden=!error;
-  $('error-raw').textContent=error?[(job&&job.id?'任务：'+job.id:''),(job&&job.stage?'阶段：'+(stageNames[job.stage]||job.stage):''),typeof error==='string'?error:JSON.stringify(error,null,2)].filter(Boolean).join('\n'):'';
+  $('error-raw').textContent=error?[(job&&job.id?'任务：'+job.id:''),(job&&job.stage?'阶段：'+(stageNames[job.stage]||job.stage):''),(job&&job.resource_limits?'资源预算：'+JSON.stringify(job.resource_limits):''),typeof error==='string'?error:JSON.stringify(error,null,2)].filter(Boolean).join('\n'):'';
   if(!error)details.open=false;
 }
 function actionLink(label,url){const a=document.createElement('a');a.textContent=label;a.href=url;a.className='button';a.target='_blank';a.rel='noopener';return a;}
