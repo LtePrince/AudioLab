@@ -94,8 +94,69 @@ def test_cross_window_mask():
     m = d.cross_mask(frames, 10, valid)[0, 0]          # (L, T)
     assert m[0].nonzero().flatten().tolist() == [0, 1, 2]
     assert m[1].nonzero().flatten().tolist() == [3, 4, 5, 6, 7]
-    assert m[2].sum() == 1 and m[2, 9]                  # 回退:最近帧(钳位到 T-1)
+    assert m[2].sum() == 1 and m[2, 7]                  # 回退只能选最近的有效音频帧
     print("[T6] 局部交叉注意力窗 ✓")
+
+
+def test_cross_window_fallback_respects_each_samples_valid_frames():
+    d = ChartDecoder(**{**CFG, "cross_window": 0})
+    frames = torch.tensor([[-3., 0., 1.5, 4., 8., 99.]]).expand(2, -1)
+    valid = torch.zeros(2, 10, dtype=torch.bool)
+    valid[0, [1, 2, 6]] = True
+    valid[1, [0, 4, 9]] = True
+    mask = d.cross_mask(frames, 10, valid)[:, 0]
+    assert not (mask & ~valid[:, None, :]).any()
+    assert (mask.sum(-1) == 1).all()
+    # Before/after the audio, internal holes and fractional ties; ties go earlier.
+    assert mask.long().argmax(-1).tolist() == [[1, 1, 1, 2, 6, 6], [0, 0, 0, 4, 9, 9]]
+
+
+def test_cross_window_without_valid_mask_uses_all_frames():
+    frames = torch.tensor([[-1., 1.5, 50.]])
+    d = ChartDecoder(**{**CFG, "cross_window": 0})
+    mask = d.cross_mask(frames, 5, None)[0, 0]
+    assert mask.long().argmax(-1).tolist() == [0, 1, 4]
+    assert (mask.sum(-1) == 1).all()
+    assert ChartDecoder(**CFG).cross_mask(frames, 5, None) is None
+
+
+@pytest.mark.parametrize('window', [None, 1])
+def test_cross_attention_rejects_missing_audio_memory(window):
+    d = ChartDecoder(**{**CFG, "cross_window": window})
+    frames = torch.tensor([[0.], [3.]])
+    valid = torch.tensor([[True, True, False], [False, False, False]])
+    with pytest.raises(ValueError, match='valid audio frame'):
+        d.cross_mask(frames, 3, valid)
+    with pytest.raises(ValueError, match='nonempty'):
+        d.cross_mask(frames, 0, None)
+
+
+@pytest.mark.parametrize('lanes', [4, 64])
+def test_padded_memory_cannot_change_full_or_incremental_logits(lanes):
+    """Changing masked decoder memory must not affect either inference path."""
+    torch.manual_seed(73)
+    tk = ChartTokenizer(n_lanes=lanes)
+    d = ChartDecoder(**{**CFG, 'vocab_size': tk.vocab_size, 'n_lanes': lanes,
+                       'cross_window': 1, 'dropout': 0.}).eval()
+    memory = d.prepare_memory(torch.randn(2, 10, 48))
+    valid = torch.zeros(2, 10, dtype=torch.bool)
+    valid[0, :3] = True
+    valid[1, [0, 5, 8]] = True
+    altered = memory.clone()
+    altered[~valid] = torch.randn_like(altered[~valid]) * 100
+    tokens = torch.randint(3, 50, (2, 4))
+    frames = torch.tensor([[0., 6., 8., 12.], [-4., 3., 7., 20.]])
+    with torch.no_grad():
+        full = d(tokens, frames, memory, valid)
+        other = d(tokens, frames, altered, valid)
+        assert torch.isfinite(full).all()
+        torch.testing.assert_close(full, other, atol=1e-5, rtol=1e-5)
+        cache, changed_cache = d.init_cache(memory), d.init_cache(altered)
+        for i in range(tokens.shape[1]):
+            logits, _ = d.step(tokens[:, i], frames[:, i], i, cache, 10, valid)
+            changed, _ = d.step(tokens[:, i], frames[:, i], i, changed_cache, 10, valid)
+            torch.testing.assert_close(logits, changed, atol=1e-5, rtol=1e-5)
+            torch.testing.assert_close(logits, full[:, i], atol=1e-4, rtol=1e-4)
 
 
 def test_token_dropout_train_only():
