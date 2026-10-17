@@ -1,545 +1,217 @@
-# AudioLab
+# AudioLab：产品定义与技术方案讨论稿
 
-音频条件的 Phigros 谱面生成项目，包含 4K 扩散模型、音频转录器、4K AR / 混合生成，以及 free-x 无轨玩法生成。无轨多判定线演出仍在后续开发计划中。
+更新日期：2026-10-17。本文覆盖旧 README，作为本次讨论的持续记录及下一会话的开发交接入口。旧说明保留在 Git 历史，实验档案保留在 `docs/`。
 
-## 分支管理
+**当前处于需求讨论阶段，完整方案尚未批准。本会话只调研、讨论和更新文档；确认后在下一会话开发。** “已确认”来自用户明确要求；“建议”是候选方案；“待定”不得解释为已接受。
 
-| 分支 | 更新范围 |
+## 1. 产品开发规范
+
+### 1.1 已确认的产品方向
+
+| 项目 | 已确认要求 |
+| --- | --- |
+| 产品目标 | 定轨和无轨都产出可用模型与谱面 |
+| 首版工作流 | **先实现快速成谱，后续再实现编辑工作流** |
+| 音乐对应 | 音符应与音频特征对应，不能只追求密度或键型比例 |
+| Hold | 数量不是绝对标准；必要时可在后续专项训练中完善 |
+| 多指 | 多指属于正常玩法，不用统一双指上限定义可玩性 |
+| 分支 | 各模型分别开发；最终 `main` 稳定版包含全部模型代码 |
+| 资源与交付 | 控制存储、内存和显存；经验证的更新同步 GitHub |
+| 本次会话 | 明确产品形态、指标与技术路径，记录后再进入开发会话 |
+
+讨论暂沿用音游制谱的产品方向。钢琴转谱是算法与工程参考，尚未提出新增五线谱产品的要求。
+
+### 1.2 首版用户流程建议
+
+选择音乐 → 选择玩法与难度 → 自动生成整首谱面 → 同步音频预览／进入指定播放器试玩 → 导出。
+
+建议首版暴露玩法、难度、操作配置和重新生成；模型阈值与采样策略保留为开发参数。失败或超出支持范围时明确说明，不把空谱、截断谱或错时谱当作成功。
+
+建议以“无需逐音修改即可获得可用结果”为首版验收方向。用户目前确认的是快速成谱优先，尚未确认内置播放器、网页部署、导出格式和速度时限。
+
+后续编辑工作流再提供逐音修改、局部重生成、时间校准、难度调整和演出编辑。首版内部结构保留音符 ID、时间、配置和版本，便于衔接。
+
+### 1.3 待确定的产品边界
+
+| 决策 | 当前状态 | 影响 |
+| --- | --- | --- |
+| 4K 是键盘四键还是触屏四轨 | 待定，已提问 | 键型、标签、操作约束与导出格式 |
+| 无轨首版是基础玩法还是包含动态演出 | 待定；建议分阶段交付，保留完整演出目标 | 数据与试玩范围 |
+| 首批音乐类型 | 待定；建议先覆盖节拍相对稳定的常规混音，钢琴与自由速度单独分层评估 | 数据分布和节奏建模 |
+| 曲长与格式 | 待定；候选为 WAV/MP3、1–5 分钟整曲 | 推理预算与长序列处理 |
+| 使用端与运行端 | 待定：本地工具、网页加服务器或纯浏览器 | 部署、延迟与资源 |
+| 导入／游玩的目标程序及版本 | 待定；输出 Phigros 风格 JSON 不等于已验证兼容 | 格式适配与验收 |
+| 难度与操作配置 | 待定；建议玩法内定义难度档，手数／设备配置与难度分开 | 条件学习和玩家分组 |
+
+现有代码的“4K”是固定四个位置，仍包含 Tap / Drag / Hold / Flick；free-x 是静态单判定线自由横坐标。它们不能直接代表新产品定义，free-x 也不等于完整 Phigros 多线演出。
+
+### 1.4 开发与实验规范
+
+1. **先写验收，再做实验。** 写清用户问题、假设、对照、数据划分、预算与退出条件；训练跑通不等于产品可用。
+2. **统一时间。** 明确音频秒、节拍、tick 和 offset；导入、训练、解码、导出与播放可追溯。当前常 BPM 约定：`audio_seconds = tick * 60 / (32 * bpm) + offset`。变速需显式 tempo map，不套用单一 BPM。
+3. **保留真实标签。** 不用统一双指规则清洗所有谱面，不以 Hold 比例、官谱音符数或密度替代音乐对应。派生简化谱与原始谱分开记录。
+4. **模型与后处理分别报告。** 保留原始输出、合法解码输出、最终导出及修改原因；删音、移位、截短后的收益不归为模型学习收益。
+5. **分清规则职责。** 格式和时间合法性由校验保证；动作与音乐设计通过条件学习改善；手数与设备限制依赖明确配置。工程分配成功不等于人类觉得好玩。
+6. **按音乐来源划分数据。** 排查同曲不同难度、重编码、剪辑及近重复音频泄漏；训练、开发验证、冻结测试按曲／来源分组。已有 30 首验证集参与过开发，不是未见测试集。
+7. **保证复现。** 记录提交、权重哈希、数据清单、特征版本、随机种子、推理和后处理配置；保留逐曲结果、失败案例及按歌曲重采样的区间。
+8. **资源先核算。** 优先复用缓存、冻结编码器和小规模消融，不因调研下载完整 AMT 数据集。沿用资源保护，启动前检查磁盘／RAM／显存，有限保留检查点。当前磁盘余量约 12 GiB；8 GiB 保留线是现有运行保护，不能全部用于实验。
+9. **验证与来源。** 小样本功能检查后执行完整冻结评估；数据、缓存、权重与生成输出不进 Git。引入模型时核查代码、权重、数据来源和运行兼容性；商业产品未公开架构不写成事实。
+
+### 1.5 分支与交付
+
+| 分支 | 职责 |
 | --- | --- |
 | `main` | 全部模型的稳定集成版本 |
-| `develop` | 全部模型的开发集成版本 |
-| `feature/variable-length-inference` | 4K 扩散路线：VAE、DiT、音频条件编码器 |
-| `feature/transcription-baseline` | 音频转录器 |
-| `feature/4k-generation` | 4K AR 解码器、定轨混合生成与约束 |
-| `feature/freeform-gameplay` | free-x 无轨玩法、挖掘数据、无轨约束与演出 |
+| `develop` | 已验证变更的开发集成 |
+| `feature/variable-length-inference` | 4K 扩散路线 |
+| `feature/transcription-baseline` | 音频表示、事件检测与共享转录模块 |
+| `feature/4k-generation` | 定轨布局与生成 |
+| `feature/freeform-gameplay` | 无轨玩法与后续演出 |
+| `docs/product-design-discussion` | 本次讨论稿；文档提交不代表方案获批 |
 
-模型更新在各自分支开发、验证和推送，再合入 `develop`；完成集成测试、生成谱面
-验证及验证集质量评估后，再发布到 `main`。时间约定和训练资源管理等共用修复单独
-提交，合入 `develop` 后同步到受影响的模型分支。分支区分更新归属，工程可以保留
-全部模型代码。具体工作约定见 [AGENTS.md](AGENTS.md)。
+模型分支 → `develop` → `main`。共享修复独立提交并验证两条路线；推送不重写历史。详见 [AGENTS.md](AGENTS.md)。历史持续实验授权在本次讨论阶段不用于启动新的实现或训练。
 
-2026-10-16 整理：原有模型分支此前是逐层叠加开发的，保留已发布历史，以
-`9184b7f`（112 项测试通过的时间修复和资源受限训练实现）作为共同开发基线，
-新增 `develop` 和 `feature/4k-generation`。这次基线同步包含全部现有模型；之后
-独立模型更新分别提交。`main` 本次仍保留原稳定提交，待新一轮模型验证完成后集成。
+## 2. 产品具体指标
 
-训练流程与资源限制见 [设计文档](docs/freeform_design.md#7-有资源限制的双路线训练)。
+### 2.1 先定义“可用”
 
-## 生成输出约束
+建议定义：在声明的音乐范围、玩法、难度和设备条件下，成功导入并完整播放，主要击打对应音乐，布局可读、动作合理，无需先逐音修复才能正常体验。
 
-`src.test_decoder` 默认修复 4K 同轨长条冲突：Hold 不越过下一同轨音符或音频
-结尾，不足 1 tick 时转 Tap。起点、轨道、音符数保留，日志报告修复数量。
-`--raw-output` 保留原始采样结果，用于区分模型表现与后处理效果。
-音频截止时间使用波形实际长度，不把 mel 补齐部分计入可生成范围。
+证据分为程序可运行、工程检查通过、目标玩家认可。自动播放视频不能代替手感评估；接触点算法只证明其假设下存在分配，不能代替实际试玩。
 
-在 timing_v1 的 30 首验证输出上，30,847 个音符中有 40 条 Hold 需要截短，
-修复后同轨长条重叠为 0，无 Hold 转 Tap；音符起点与轨道完全不变。
-这项修复用于消除物理冲突；Hold 是否合适仍需结合对应音频判断，不设数量配额。
+### 2.2 首轮候选验收表——全部数值待确认
 
-free-x 默认在同一时刻的音符之间保留至少 0.04 屏宽间距（`--free-min-gap`），
-以最小平方位移调整位置并保持左右次序，再在邻近下一音符前收尾 Hold。
-不删除音符；若极端和弦无法满足间距，明确报错，可缩小间距或使用 `--raw-output`。
-这仅适用于当前生成的静态单线谱，不代表已经解决手数、连续手速或多线演出。
+以下用于讨论和试测，**不是现有成绩、论文标准或用户承诺**。先测基线和小规模试玩，再冻结验收版本。
 
-timing_v1 的 30 首 free-x 验证输出中，104/32,618 个音符被移动（最大屏宽
-0.01984），335 条 Hold 截短，0 条转 Tap。距离 <0.03 的近距离和弦 31→0、
-Hold 期间邻近音符 627→0；位置 F1 @92.9ms/0.05 从 0.18958 到 0.18965。
-起点和音符数保留，onset F1 不变。可复用旧生成结果做 CPU 修复，无须再次采样：
+| 维度 | 测量方式 | 候选目标／待定项 |
+| --- | --- | --- |
+| 成谱成功率 | 支持范围内生成、校验、导入、完整播放均成功的任务数 / 全部有效任务数；超时、崩溃计失败 | ≥95%；文件存在不算成功 |
+| 等待时间 | 接收完整文件至可预览；分别报告冷／热启动 P50、P95 及排队耗时 | 3 分钟歌曲热启动 P95 ≤60 秒；固定硬件、模式和并发后才生效 |
+| 整曲覆盖 | 核对全曲边界，检查尾段截断、拼接重复和漏段 | 静默截断为 0；允许音乐性留白，不要求全程有音符 |
+| 导出合法性 | 对所有成功输出检查目标格式与时间 | 结构、越界时间、非法时长等硬错误为 0；动作冲突按最终玩法定义 |
+| 可直接游玩率 | 每谱 3 名对应难度玩家完整试玩；至少 2 人认为无需逐音修正可正常游玩且无阻断问题 | 初期 ≥80%；报告谱面级比例、样本量和分歧 |
+| 音乐对应／手感／可读性 | 匿名随机排序，分项 1–5 分；3=能完成但问题明显，4=基本自然、偶有瑕疵，5=连贯且愿意重玩 | 三项逐曲中位分均 ≥4 的谱面占比建议 ≥80%，不以总平均掩盖差曲 |
+| 修正负担 | 记录必须删、移、改时值的音符和重做片段，可用外部工具评估 | 先收集修改音符比例、每分钟音频的修改分钟数，再定门槛 |
+| 难度可控性 | 同曲高低档盲测排序，结合 1 秒／5 秒峰值密度、连续动作、Hold 占用和视觉负担 | 候选排序一致率 ≥80%；不能仅看音符数 |
+| 资源 | 固定设备报告进程峰值 RAM、GPU 峰值、临时磁盘增量与任务后回收 | 数值待部署方案；不能发生 OOM、写满磁盘或无限排队 |
 
-```bash
-.venv/bin/python -m script.repair_generated_charts --mode freex \
-  --gen-dir checkpoints/timing_v1/eval_decoder_freex --list data/val.txt \
-  --out-dir out/playable_freex
+建议先用 10–12 首分层曲目试测量表，再让两条路线分别在至少 30 首冻结曲目上评估，覆盖曲风、密度、弱拍、长条和复杂段落。每谱 3 人仅是初期建议，不代表统计充分；按完整歌曲抽样，不只展示优选片段。正式冻结曲目须与反复使用的开发验证曲分开。
+
+### 2.3 算法诊断指标
+
+| 指标 | 定义与用途 | 解释限制 |
+| --- | --- | --- |
+| 唯一起点 P/R/F1 | 同刻事件按声明精度去重；在 ±25ms、±50ms 下分别一对一匹配 | 官谱取音不是全部声学事件，合理新编排也可能不同 |
+| 时间偏差 | 已匹配事件的有符号偏差、中位绝对误差、P95；同时报告漏检与误检 | 只看匹配部分会掩盖缺失，必须配合 P/R |
+| 整谱音符 F1 | 保留同刻多个音符，明确匹配规则与容差 | 与唯一起点 F1 不同；删多押可能涨分却损害表现 |
+| 布局／键型 | 同轨、自由位置容差、键型和时长分别评估 | 单张参考谱不是唯一合理布局 |
+| 音乐证据 | 抽样标注对应鼓点、旋律、重音或装饰，分析异常空段与密集段 | 不要求所有音乐起点都变成游戏音符 |
+| 条件有效性 | 同音频换难度／操作配置；固定条件替换或打乱音频 | 检查模型是否依赖音频，不代替体验 |
+| 修复负担 | 原始与最终输出的删音、移位、改时、Hold 截短数量和幅度 | 后处理达标不表示模型学会了约束 |
+| 演出质量 | 动态前后击打时刻、判定时位置与可见性、运动连续性、遮挡；玩家评判音乐呼应 | 动态阶段启用，不仅检查坐标范围 |
+
+候选协议采用最大数量的一对一时间匹配，固定边界和去重规则；历史脚本若使用不同实现，须版本化、重算对照，不拼接新旧分数。音频对齐与音乐性人工标注也须写清容差和判定标准。
+
+AMT 常用指标同时要求音高和起点匹配，可另加结束时间要求。`mir_eval.transcription` 默认起点容差 50ms、音高 50 cents，结束容差取参考时长的 20% 与 50ms 中较大者。这是工具默认定义，**不是音游判定窗口或产品标准**。[官方指标文档](https://mir-eval.readthedocs.io/latest/api/transcription.html)
+
+### 2.4 当前证据与缺口
+
+| 路线 | 已有证据 | 尚不能宣称 |
+| --- | --- | --- |
+| 4K AR／混合 | 30 首开发验证曲上，NMS35 基线整谱时间 F1@25ms 约 0.59899；可选接触约束后约 0.59924 | 已获玩家认可、键盘玩法适配完成、独立测试通过 |
+| free-x | 同一开发口径基线约 0.58914；可选四押解码与四接触点导出约 0.59065 | 动态多线完成、多指问题全解决、涨分即更好玩 |
+| 时间与数据 | 时间链路已修正，原始布局目标已挖掘，多指样本保留 | 标签已符合新产品定义或数据已充分 |
+| 新声学押数头 | 模型分支有局部实验代码 | 未完成训练验证，不是可用能力 |
+
+以上是开发诊断，不能解释为“正确率百分比”或可玩率。目前没有产品定义下的系统人工试玩结果。见 [4K 整谱对照](docs/evaluations/4k_contacts_v1.md)、[free-x 整谱对照](docs/evaluations/freex_contacts_v1.md)。历史 80ms 操作间隔、特定手数和修复门槛属于实验配置，不自动成为产品要求。
+
+## 3. 产品算法参考和具体开发路径
+
+### 3.1 钢琴转谱调研
+
+核查日期：2026-10-17。依据官方资料和论文；没有上传音频做商业产品横评，不提供准确率排名。
+
+| 参考 | 核实能力／原理 | 可借鉴之处与边界 |
+| --- | --- | --- |
+| Piano2Notes | 音频／链接转谱、浏览器编辑、PDF／MIDI／MusicXML 导出 | 借鉴生成、预览、修正、导出闭环；查阅资料没有足够架构细节，不能断言使用哪种开源模型，宣传不等于实测。[官网](https://piano2notes.klang.io/) |
+| Spotify Basic Pitch | 轻量复音转录；联合预测起点、多音高和音符激活，输出 MIDI | 借鉴共享特征与多任务头，可作为辅助音高特征候选；官方说明单一乐器输入效果更好，“不限定乐器”不等于任意混音可靠分轨。[论文](https://arxiv.org/abs/2203.09893)、[代码](https://github.com/spotify/basic-pitch) |
+| Onsets and Frames | 起点预测辅助逐帧音高激活，起点参与解码时的新音符触发 | 借鉴开始事件与持续状态分开学习、模型与解码合作；本身不生成游戏布局。[论文](https://arxiv.org/abs/1710.11153) |
+| ByteDance 高分辨率钢琴转录 | 回归音符起止时间并处理踏板，改善纯帧分类的时间分辨率限制 | 借鉴子帧时间估计、起止分开监督；钢琴持续与踏板不是游戏 Hold。仓库确于 **2025-12-08** 归档，作为研究基线需评估兼容性。[论文](https://arxiv.org/abs/2010.01815)、[仓库](https://github.com/bytedance/piano_transcription) |
+| Dance Dance Convolution | 音游成谱拆成难度条件下的落点时机预测和动作选择 | 更接近本项目；借鉴取音与动作编排分工。DDR 研究不直接证明适用于 Phigros 演出。[论文](https://arxiv.org/abs/1703.06891) |
+
+### 3.2 从声音到音符，再到可用谱面
+
+钢琴多音转录先从波形提取时频特征，再估计不同音高的起点、持续与结束等状态，最后组装音符事件。独立起点预测帮助区分同音重复弹奏；高分辨率估计改善帧间时间。具体设计见上述 Onsets and Frames 与高分辨率论文，并非所有商业产品使用同一架构。
+
+Audio → MIDI 关注演奏事件；可读五线谱还需节拍、时值量化、声部分配和谱表组织，之后才是排版。导出 MIDI／MusicXML 成功不说明这些推断都正确。对 AudioLab 的启发是：声学识别之后，还需独立解决取音和玩法设计。
+
+例如：钢琴同时弹六个音，简单谱可取一个重音，复杂谱可安排多押；延音可能来自踏板／混响，不必对应游戏 Hold；旋律上行可启发位置变化，但不必永远从左到右。这些是我们的设计推论，不是 AMT 模型已有的游戏能力。
+
+混音音乐不必先被完整转成准确 MIDI 才能制谱。建议以原始混音为主输入，音高、鼓点或分离声部作为可选特征，通过消融决定是否保留。音源分离增加计算和潜在误差，不作为必经步骤。
+
+### 3.3 建议技术架构
+
+```mermaid
+flowchart TD
+    A[音乐音频] --> B[共享声学表示与候选事件]
+    B --> C[音乐取音与整曲密度规划]
+    U[玩法、难度、操作配置] --> C
+    C --> D[4K 动作与轨道生成]
+    C --> E[无轨键型与空间布局]
+    U --> D
+    U --> E
+    E --> F[后续：判定线与演出生成]
+    D --> G[校验、导出与真实播放器试玩]
+    E --> G
+    F --> G
 ```
 
-4K 使用 `--mode 4k` 和对应输入目录。输出目录必须是新目录；原谱、权重保留，
-同级的 `.report.json` 记录逐曲修复和冲突计数。
+这是职责划分，不要求立刻训练六个独立大模型。首轮尽量复用现有声学编码器和两个解码器，以可检查的中间表示连接。
 
-实验性采样开关 `--sampling-policy type_preserving` 对每种键型的**位置条件分布**
-分别执行 top-p，保留模型原始的 Tap/Drag/Hold/Flick 概率质量；其他动作另成一组。
-它没有手工提高 Hold 权重，也不保证连续生成时恢复训练集的键型比例。
-默认仍为 `flat`。诊断脚本同样接受该开关，需先比较真实生成质量再考虑推广。
+| 层 | 建议职责 | 优先验证 |
+| --- | --- | --- |
+| 声学 | 时间、事件置信度、局部特征，节拍／段落及其不确定度；音高可选 | 混音、弱起、密集段的音乐对应 |
+| 取音规划 | 击打时刻、段落密度、强调程度，依赖难度 | 简单谱保留主节奏，复杂谱增加有依据的细节 |
+| 动作布局 | 键型、押数、Hold 时长、轨道／位置，参考历史动作和占用 | 音频条件有效，动作自然，修复减少 |
+| 无轨演出 | 判定线归属、运动、视觉事件；显式坐标变换保持击打语义 | 全时域可读性、位置、遮挡与音乐呼应 |
+| 导出 | 时间和格式校验、目标程序适配、变更记录 | 可导入且完整游玩 |
 
-## 操作配置与条件布局
+内部建议采用版本化事件结构，保存音频绝对时间、tempo map、玩法字段、谱面条件和来源。两种玩法共享音频理解，使用各自动作表示与输出头。网页、服务框架和部署工具在运行端确定后选型，不先增加工程栈。
 
-操作配置与条件学习的实施顺序见 [可玩版本方案](docs/playability_plan.md)。
-`--playability-profile contacts-v1` 是可选的操作约束版本：4K 分配到四个固定键，
-free-x 必须额外指定 `--max-contacts`（1–10）。**默认不设双指上限，多指是正常玩法。**
-双指仅作为简化配置，不能因为删音后 F1 更高就将它作为所有难度的统一标准。
-配置检查包含连续操作、Hold 释放和 free-x 接触点移动；所有删音、移位、Hold 修改
-写入同名 `.contacts.json`。这证明声明条件下存在操作分配，尚不等同于人工手感验收。
+### 3.4 约束是否训练进模型
 
-下面示例明确选择六指配置，生成批次请使用新目录：
+建议采用条件学习，加少量明确的合法性保障。学习音频与押数、持续、空间动作及历史上下文的关系，让原始输出逐渐减少修复。格式、时间范围及不可能的状态转移仍由校验／解码保证，训练不能保证所有输出永远合法。
 
-```bash
-.venv/bin/python -m script.train_models --worker src.test_decoder -- \
-  --ckpt checkpoints/timing_v1/decoder_freex/decoder_best.pt \
-  --list data/val.txt --out-dir out/freex_contacts6_cli \
-  --skeleton-ckpt checkpoints/timing_v1/transcriber/transcriber_best.pt \
-  --onset-threshold 0.7 --onset-min-interval-ms 35 --seed 42 \
-  --playability-profile contacts-v1 --max-contacts 6
-```
+按玩法定义条件和动作损失，可比较软约束惩罚项；先以真实谱监督建立基线，再单项消融。修复结果如用于训练，要注明具体配置下的派生目标，不能把一种简化规则推广成统一风格。
 
-4K 改用 `decoder/decoder_best.pt`、新的输出目录，并去掉 `--max-contacts`。
-保留默认多指输出则省略这两个操作配置开关。完整工程对照见
-[4K 结果](docs/evaluations/4k_contacts_v1.md) 与
-[free-x 多指结果](docs/evaluations/freex_contacts_v1.md)。
+不设固定 Hold 配额，不把音频复音数直接作为游戏押数，不把超过双指标为错误。新押数头是否继续投入，应通过正确／错误音频、仅历史上下文等对照决定，不能因已有代码就默认有效。
 
-270 首训练曲已挖掘为原始布局目标 `out/layout_targets_train_v1/`，包含音频描述、
-前组位置/间隔和 Hold 占用。free-x 的 583 组超过两押和弦（最高八押）全部保留。
-这一步尚未更新布局模型权重；后续以难度/操作配置为条件训练，不把双指规则当作统一标签。
+### 3.5 确认后的开发路径与退出条件
 
-## 音频节奏实验
+| 阶段 | 工作 | 完成证据 |
+| --- | --- | --- |
+| P0 产品冻结 | 明确玩法、目标播放器、无轨首版范围、音乐范围、难度和速度预算 | 关键待定项获用户确认，下一会话开发 |
+| P1 数据与基线 | 检查标签、时间、同曲泄漏；建立分层样本、冻结测试和试玩表，复现两条路线 | 主要失败类型可解释，标签可复用范围明确 |
+| P2 音乐事件与取音 | 复用编码器，比较时间精修、难度条件、段落规划；必要时小样本加入 AMT 特征 | 对应与覆盖改善；错误音频对照显示音频依赖；计算符合预算 |
+| P3 两种玩法布局 | 分别训练，输入音频、条件、历史占用；Hold 按证据单独推进 | 原始冲突与修复负担下降，盲测改善，不靠统一删音涨分 |
+| P4 快速成谱闭环 | 输入校验、长曲分段与边界状态、进度、取消／失败回收、预览和导出 | 按冻结协议通过速度、成功率、资源和真实试玩 |
+| P5 无轨演出 | 建立动态线／事件数据表示，比较可控模板与学习模型，检查变换和可见性 | 保持击打语义并改善演出、可读性，通过动态整谱试玩 |
+| P6 编辑流程 | 局部编辑／重生成、版本保存、难度与演出调整 | 承接内部结构，按后续产品优先级启动 |
 
-`--onset-threshold 0.7 --onset-min-interval-ms 35` 可启用按置信度去重的转录骨架。
-参数在 32 首训练曲校准，独立 30 首验证曲的唯一起点 F1 @25ms 为 0.6920
-（原始阈值模式 0.6626）。这项指标把同刻和弦计为一个事件，与整谱音符 F1 不同。
+两种玩法按分支分别迭代，导入和试玩验证尽早穿插。P5 是否进入首版仍待确认，不因阶段编号取消无轨表演目标。在范围冻结前不承诺训练完成日期。
 
-`src.train_rhythm` 可在已有音频编码器上训练独立的全局节奏头：以 mel 帧
-（约 23.2ms）为单位预测 onset 和时间偏移，训练标签不包含位置或键型配额。
-默认冻结编码器，仅训练 33,412 个参数，保留原转录器的 32 通道输出接口：
+首轮候选消融顺序：现有基线 → 时间精修 → 难度／取音 → 动作历史与占用 → 可选 AMT 特征。一次改变一项，报告收益与成本。扩散路线保留为候选，后续投入由同一产品协议下的质量、速度、资源决定。
 
-```bash
-.venv/bin/python -m script.train_models --worker src.train_rhythm -- \
-  --epochs 8 --run-dir checkpoints/rhythm_global_v1
-```
+MAESTRO 的公开划分避免同一作品跨训练／验证／测试，可借鉴防泄漏原则；钢琴音频和 MIDI 没有音游动作与演出标签，不替代谱面数据。[官方数据说明](https://magenta.tensorflow.org/datasets/maestro)
 
-输出 `rhythm_best.pt`、`rhythm_last.pt`、`rhythm_final.pt`（含完整编码器配置与
-权重），`--resume` 从 last 继续并检查实验配置。新 checkpoint 可作为生成入口的
-`--skeleton-ckpt`，但其概率需要重新校准；不能沿用四轨联合概率的 0.7 阈值。
-先用 `script.calibrate_skeleton --phase fit --ckpt ...` 在训练列表校准，再以
-相同 checkpoint、冻结的 `--calibration` 报告和独立列表执行 `--phase evaluate`。
-本实验的接受条件是音频起点和完整生成质量，不是 Hold 占比。
+### 3.6 讨论记录与交接
 
-第二阶段可从已有节奏头继续微调声学骨干，使用独立 run 目录，例如
-`--encoder-ckpt checkpoints/rhythm_global_v1/rhythm_best.pt --lr 0.0001
---encoder-lr 0.00001 --run-dir checkpoints/rhythm_global_v2`。四轨分类头保持冻结，
-该 checkpoint 应通过全局节奏骨架接口使用；不将它视为重新校准过的四轨转录器。
-默认 `--encoder-lr 0` 仍只训练节奏头，旧 checkpoint 和训练入口行为保留。
+| 日期 | 意见／结果 | 状态 |
+| --- | --- | --- |
+| 2026-10-17 | 本次先讨论产品与指标，确认后下一会话开发；覆盖 README | 已确认 |
+| 2026-10-17 | 借鉴钢琴转谱产品和 AMT | 首轮官方资料调研完成，未实测产品 |
+| 2026-10-17 | “先实现快速成谱，后续再实现编辑工作流” | 已确认 |
+| 2026-10-17 | 分层架构、候选指标和 P0–P6 路线 | 建议，待讨论 |
+| 2026-10-17 | 4K 键盘／触屏语义 | 待回答 |
 
-生成入口和诊断入口支持 `--skeleton-calibration <训练集 fit 报告>`，自动读取
-已选阈值与最小间隔，并检查报告已完成、来自 fit 阶段且 checkpoint 路径一致。
-使用它时不再同时传手工阈值/间隔，避免混用不同模型的概率标度。例如：
-
-```bash
-.venv/bin/python -m script.train_models --worker src.test_decoder -- \
-  --ckpt checkpoints/timing_v1/decoder/decoder_best.pt \
-  --skeleton-ckpt checkpoints/rhythm_global_v2/rhythm_best.pt \
-  --skeleton-calibration out/global_rhythm_v2_refined_train32/report.json \
-  --list data/val.txt --out-dir out/global_rhythm_4k --seed 42 --device cuda:0
-```
-
-free-x 使用 `decoder_freex/decoder_best.pt` 并换一个输出目录。上述仍是开发实验
-组合；详见 [节奏实验结果](docs/freeform_design.md#11-独立全局节奏模型2026-10-17)。
-校准后不要覆盖原 checkpoint；权重、校准原始报告和生成谱保留在本地，不提交 Git。
-
-### 完整验证集对照
-
-三套冻结配置为 timing_v1 原始骨架、原转录器 0.7/35ms 去重骨架，以及全局
-v2 的 0.25/25ms 骨架。固定 seed=42、flat top-p=0.95，两种 AR 权重不变。
-下面两个 GPU 任务依次执行；已完成的 6 曲子集可以复用：
-
-```bash
-.venv/bin/python -m script.train_models --worker script.diagnose_decoder -- \
-  --data-list data/val.txt --samples 30 --top-ps 0.95 \
-  --onset-threshold 0.7 --onset-min-interval-ms 35 \
-  --reuse-report out/decoder_nms35_val6/report.json --output out/decoder_nms35_val30
-
-.venv/bin/python -m script.train_models --worker script.diagnose_decoder -- \
-  --data-list data/val.txt --samples 30 --top-ps 0.95 \
-  --skeleton-ckpt checkpoints/rhythm_global_v2/rhythm_best.pt \
-  --skeleton-calibration out/global_rhythm_v2_refined_train32/report.json \
-  --reuse-report out/decoder_global_v2_refined_val6/report.json \
-  --output out/decoder_global_v2_refined_val30
-
-.venv/bin/python -m script.compare_full_charts
-```
-
-没有子集时省略 `--reuse-report`。中断恢复时保持同一参数和输出目录，将
-`--reuse-report ...` 换为 `--resume`。复用时检查生成设置、权重与文件指纹；旧版
-报告没有历史指纹，只能检查设置和 checkpoint 修改时间，此限制写入新报告。
-
-CPU 对照要求每套配置都有完整 30 曲，保留原始输出，并对三套方案应用相同的
-静态线修复。`out/full_chart_comparison_val30/report.json` 包含逐曲指标、配对
-bootstrap 区间、退化曲目、时间/格式检查与修复量；`playable/` 下保存修复后的
-三套定轨/无轨谱面。指标沿用整谱多音符匹配，不与唯一起点 F1 混用。
-
-2026-10-17 的完整 30 曲结果已经完成：定轨原始/NMS35/全局 v2 的 F1@25ms
-为 **0.5917/0.5990/0.5990**，无轨为 **0.5849/0.5891/0.5939**。新全局模型
-相对 NMS35 的配对区间跨 0，未能确认稳定额外收益。定轨后续采用 NMS35 作对照
-基线，无轨保留两个候选并优先处理位置与同刻多押；通用默认参数和 main 不变。
-全部 180 份谱面已按同一规则检查与修复，静态碰撞归零，但不代表人工可玩性验收。
-完整逐曲表、区间和退化分析见 [定轨报告](docs/evaluations/4k_val30.md) 与
-[无轨报告](docs/evaluations/freex_val30.md)。
-
----
-
-## 4K 扩散路线的原始设计
-
-- 输入：音频文件（.ogg / .mp3）
-- 输出：Phigros 格式谱面（固定 4 轨道、固定下落方向、固定判定线位置）
-- 模型架构：1D DiT（Diffusion Transformer）+ 潜空间 VAE + 多尺度音频条件编码器
-
----
-
-## 数据格式约定
-
-### Phigros note 类型映射
-
-| Phigros type | 键型    | 原始标签 | `note_type` 存储值（归一化） | 解码阈值          |
-|:------------:|:-----:|:----:|:--------------------:|:-------------:|
-| 1            | Tap   | 1    | 0.25                 | ≤ 0.375       |
-| 2            | Drag  | 2    | 0.50                 | 0.375 ~ 0.625 |
-| 3            | Hold  | 3    | 0.75                 | 0.625 ~ 0.875 |
-| 4            | Flick | 4    | 1.00                 | > 0.875       |
-
-> `note_type` 通道存储归一化值（原始标签 ÷ 4），使其与其他 [0,1] 通道量级一致；  
-> 对外接口仍使用原始标签 1/2/3/4。
-
-### `positionX` → 轨道量化
-
-以 2.5 为段宽，量化边界为 -2.5 / 0 / 2.5：
-
-| 轨道  | positionX 范围  | 重建中心值 |
-|:---:|:-------------:|:-----:|
-| 0   | `(-∞, -2.5)`  | -3.75 |
-| 1   | `[-2.5,  0)`  | -1.25 |
-| 2   | `[  0,  2.5)` | 1.25  |
-| 3   | `[ 2.5, +∞)`  | 3.75  |
-
-### `note_array` 通道布局（共 20 通道）
-
-每个轨道 k（k = 0,1,2,3）占 5 个通道：
-
-```
-[k +  0]  is_start   ∈ {0,1}        — 此帧该轨是否有音符起始
-[k +  4]  start_off  ∈ [0,1]        — 起始时刻亚帧偏移
-[k +  8]  is_holding ∈ {0,1}        — 此帧该轨是否处于 Hold 延伸中
-[k + 12]  end_offset ∈ [0,1]        — Hold 结束时刻的亚帧偏移
-[k + 16]  note_type  ∈ {0.25,0.5,0.75,1.0}  — 0.25=Tap / 0.5=Drag / 0.75=Hold / 1.0=Flick
-                                     （原始标签 1/2/3/4 ÷ 4 归一化存储，is_start=0 时填 0）
-```
-
-形状：`(20, T_note)`，`T_note = 4096`
-
-### 时序参数对齐
-
-```
-sr = 22050,  n_fft = 2048,  hop_length = 512
-mel 帧时长       = hop / sr                      ≈ 23.22 ms / 帧
-音符帧时长       = frame_ms = hop/sr/4×8×1000    ≈ 46.44 ms / 帧（= 2 个 mel 帧）
-最大音符帧数     = 4096  →  最大时长 ≈ 190 s（约 3 分 10 秒）
-最大 mel 帧数    = 8192（与谱面轴等时长；chart_frames_to_mel_frames() 换算，
-                   切勿按音符帧数填充 mel——那只覆盖半首歌且时间轴错位 2 倍）
-VAE 压缩比       = 16×  →  latent 长度 = 4096 / 16 = 256
-音频 token 数    = 8192 / 16 = 512  →  _align_time() 线性插值到 256 与 latent 对齐
-DiT token 数     = 256（无 patchify，与 latent 等长）
-Phigros tick→ms = tick / 32 × (60000 / bpm)
-```
-
----
-
-## 项目目录结构
-
-```
-AudioLab/
-├── README.md
-├── main.py
-├── pyproject.toml
-├── configs/
-│   ├── autoencoder.yaml          # VAE 超参
-│   └── chart_diffusion.yaml      # 扩散模型超参
-├── data/
-│   ├── data.txt                  # 训练集路径列表（每行一条 Phigros JSON 路径）
-│   ├── audio/                    # 音频文件 & 预计算 mel .npy
-│   ├── chart/                    # Phigros JSON 谱面文件
-│   └── json/                     # （旧）备用
-├── src/
-│   ├── data/
-│   │   ├── audio2mel.py          # ✅ 已有：CPU/GPU Mel 提取
-│   │   ├── phigros_convertor.py  # 📌 Phigros JSON ↔ note_array 转换
-│   │   └── phigros_dataset.py    # 📌 Dataset + 数据增强
-│   └── models/
-│       ├── chart_vae.py          # 📌 1D VAE（Encoder / Decoder / KL）
-│       ├── audio_encoder.py      # 📌 多尺度 Mel 条件编码器
-│       ├── dit_1d.py             # 📌 1D DiT 主干（带 Cross-Attention）
-│       └── diffusion.py          # 📌 扩散训练框架（DDPM / DDIM）
-└── scripts/
-    ├── generate.py               # 📌 推理 Pipeline
-    └── evaluate.py               # 📌 评估与可视化
-```
-
----
-
-## TODO List
-
-### Phase 0 — 数据格式设计
-
-- [ ] **P0-1** 确定 4 轨道的 `positionX` 量化策略：以 2.5 为段宽，边界为 -2.5/0/2.5，重建中心值为 -3.75/-1.25/1.25/3.75
-- [ ] **P0-2** 设计 `note_array` 的 20 通道布局（见上方"数据格式约定"）
-- [ ] **P0-3** 确定并记录时序帧参数（见上方"时序参数对齐"）
-
----
-
-### Phase 1 — 数据层（`src/data/`）
-
-**`phigros_convertor.py`**（参考 `Mug-Diffusion/mug/data/convertor.py`）
-
-- [ ] **P1-1** 定义 `PhigrosMeta` 数据类（存储 `bpm`、`audio_path`、`json_path`、`version`、原始 `judgeLineList`）
-- [ ] **P1-2** 实现 `parse_phigros_file(json_path, convertor_params)` → 合并所有 judgeLine 的 notes，返回扁平化 note 列表和 `PhigrosMeta`
-- [ ] **P1-3** 实现 `Phigros4kConvertor.read_time(tick)` → `(time_ms, frame_index, sub_frame_offset)`
-- [ ] **P1-4** 实现 `Phigros4kConvertor.objects_to_array(notes, meta)` → `(note_array: ndarray[20, T], valid_flag: ndarray[T])`
-  - positionX → lane 量化
-  - Tap(1)：填 `is_start`, `start_off`, `note_type=0.25`
-  - Drag(2)：填 `is_start`, `start_off`, `note_type=0.50`
-  - Hold(3)：填 `is_start`, `start_off`, `note_type=0.75`；逐帧填 `is_holding`；末帧填 `end_offset`
-  - Flick(4)：填 `is_start`, `start_off`, `note_type=1.00`
-- [ ] **P1-5** 实现 `Phigros4kConvertor.array_to_objects(note_array, meta)` → Phigros JSON note 列表
-  - 阈值解码 `is_start`（>0.5）、`note_type` 分类（0.375 / 0.625 / 0.875 为分界）→ 还原为原始标签 1/2/3/4
-  - 逆量化 lane → `positionX` 中心值（-3.75 / -1.25 / 1.25 / 3.75）
-  - frame_index + sub_offset → tick
-  - Hold：根据 `is_holding` 计算 `holdTime`
-- [ ] **P1-6** 实现 `save_phigros_file(meta, note_array, output_path)`：重建合法 Phigros JSON（`formatVersion`, `judgeLineList`，固定 speed/rotation events）
-
-**`phigros_dataset.py`**（参考 `Mug-Diffusion/mug/data/dataset.py`）
-
-- [ ] **P1-7** 实现 `PhigrosDataset(Dataset)`：`__getitem__` 返回 `{audio, note, valid_flag, meta}`
-  - 音频：`AudioGPUprocessor.forward()` → `(128, T_audio)` log-mel，支持磁盘 `.npy` 缓存
-  - 谱面：`parse_phigros_file` + `objects_to_array` → `(20, T_note)`
-- [ ] **P1-8** 实现数据增强：
-  - 镜像（lane 3↔0, 2↔1，同步翻转 positionX）
-  - 随机列置换（仅限 Tap/Flick，不跨 Hold 连续段）
-  - 时间 rate 变速（0.9~1.1），同步缩放 mel 和 note_array
-  - Mel 频率掩码（SpecAugment）
-- [ ] **P1-9** 编写路径扫描脚本，生成 `data/data.txt`（每行一条 Phigros JSON 路径）
-
----
-
-### Phase 2 — First Stage VAE（`src/models/chart_vae.py`）
-
-参考 `Mug-Diffusion/mug/firststage/autoencoder.py` 和 `mug/model/models.py`
-
-- [ ] **P2-1** 移植 `Encoder`（1D ResNet）：输入 `(B, 20, 4096)` → 输出 `(B, 32, 512)`（8× 时间压缩，`z_channels=16`）
-- [ ] **P2-2** 移植 `Decoder`（1D ResNet 上采样）：输入 `(B, 16, 512)` → 输出 `(B, 20, 4096)`
-- [ ] **P2-3** 实现 `DiagonalGaussianDistribution`（`.sample()`, `.mode()`, `.kl()`）
-- [ ] **P2-4** 实现 `PhigrosReconstructLoss`（参考 `ManiaReconstructLoss`）：
-  - `is_start` / `is_holding`：BCE loss
-  - `start_off` / `end_offset`：L1 loss（仅对有效位置加权）
-  - `note_type`：smooth L1 loss（仅在 `is_start=1` 的位置）
-  - `valid_flag` 用于 mask 无效尾部帧
-- [ ] **P2-5** 实现 `AutoencoderKL`（`encode`, `decode`, `forward`, Lightning `training_step`）
-- [ ] **P2-6** 编写 `configs/autoencoder.yaml`（`x_channels=20, z_channels=16, channel_mult=[1,2,4,4]`）
-- [ ] **P2-7** 训练 VAE，验证重建谱面 F1 分数（音符位置命中率达到可接受基线）
-
----
-
-### Phase 3 — 音频条件编码器（`src/models/audio_encoder.py`）
-
-参考 `Mug-Diffusion/mug/cond/wave.py` 的 `MelspectrogramScaleEncoder1D`
-
-- [ ] **P3-1** 移植 `MelspectrogramScaleEncoder1D`：输入 `(B, 128, 32768)` → 输出 10 尺度特征列表
-  - 配置：`middle_channels=128, channel_mult=[1,1,1,1,2,2,2,4,4,4]`
-- [ ] **P3-2** 确认各尺度输出形状 `(B, C_i, T_i)`，与 DiT 各层 context 对齐
-- [ ] **P3-3** 实现 `AudioContextProjector`：将多尺度列表中选定尺度的 `(B, C_i, T_i)` 插值并投影到统一 `context_dim`（如 `(B, T_ctx, 256)`）
-- [ ] **P3-4** 单元测试：随机 mel 输入，验证各尺度输出形状正确
-
----
-
-### Phase 4 — 1D DiT 主干（`src/models/dit_1d.py`）
-
-参考 `DiT/models.py` + `Mug-Diffusion/mug/model/attention.py`
-
-- [ ] **P4-1** 实现 `PatchEmbed1D`：`Conv1d(z_channels=16, hidden_size, kernel_size=4, stride=4)` → `(B, 128, D)`
-
-- [ ] **P4-2** 实现 `get_1d_sincos_pos_embed(embed_dim, length)`（改写 DiT 的 2D 版为 1D）
-
-- [ ] **P4-3** 直接复用 `TimestepEmbedder`（`DiT/models.py`）
-
-- [ ] **P4-4** 实现 `DiTBlock1D`（在 `DiTBlock` 基础上添加 Cross-Attention 分支）：
-  
-  ```
-  x → Self-Attn (adaLN-Zero) → Cross-Attn (context=audio_ctx) → FFN (adaLN-Zero)
-  ```
-  
-  Cross-Attn 参考 `mug/model/attention.py` 的 `ContextualTransformer`
-
-- [ ] **P4-5** 实现 `FinalLayer1D`：输出 `(B, 128, patch_size × z_channels)` → unpatchify → `(B, 16, 512)`
-
-- [ ] **P4-6** 实现完整 `ChartDiT1D`，`forward(z_noisy, t, audio_ctx)` → `z_pred`
-
-- [ ] **P4-7** （可选升级）参考 `Open-Sora/opensora/models/mmdit/layers.py` 的 `DoubleStreamBlock` 实现双流变体（音频 token 与谱面 token 互相 attend）
-
-- [ ] **P4-8** 单元测试：`(B=2, 16, 512)` + timestep + audio ctx → 输出 `(B, 16, 512)` ✓
-
----
-
-### Phase 5 — 扩散训练框架
-
-参考 `Mug-Diffusion/mug/diffusion/diffusion.py`
-
-- [x] **P5-1** `src/diffusion/schedule.py`：`make_beta_schedule`（linear / cosine）+ `NoiseSchedule`（含 `q_sample`、`snr`、posterior buffers）
-- [x] **P5-2** `src/train.py`：训练主循环（纯 PyTorch）
-  - 冻结 VAE + Wave encoder，只训练 DiT
-  - CFG Dropout（`--cfg-drop`，概率性将 `audio_c` 置零）
-  - AdamW + CosineAnnealingLR
-  - 梯度累积（`--grad-accum`）+ 梯度裁剪
-  - 定期 checkpoint 保存 + 续训支持（`--dit-ckpt`）
-- [ ] **P5-3** 编写 `configs/chart_diffusion.yaml`（训练超参配置文件）
-
----
-
-### Phase 6 — 推理 Pipeline（`scripts/generate.py`）
-
-参考 `Mug-Diffusion/mug/diffusion/ddim.py`
-
-- [ ] **P6-1** 移植 `DDIMSampler`（50~100 步加速采样）
-
-- [ ] **P6-2** 实现 `generate_chart(audio_path, model, cfg_scale=3.0, ddim_steps=50)`：
-  
-  ```
-  audio → mel → audio_encoder → ctx
-  z_T ~ N(0,I) → DDIM 去噪 → z_0
-  z_0 → VAE decode → note_array → array_to_objects → save_phigros_file
-  ```
-
-- [ ] **P6-3** 实现 CFG 推理：`ε_cfg = ε_uncond + scale × (ε_cond − ε_uncond)`
-
-- [ ] **P6-4** 实现后处理：阈值过滤低置信度音符（`is_start < 0.5`），同帧同轨冲突去重
-
----
-
-### Phase 7 — 验证与评估（`scripts/evaluate.py`）
-
-- [ ] **P7-1** 实现谱面 piano-roll 可视化：时间轴 × 4 列，Tap/Drag/Hold/Flick 用不同颜色
-- [ ] **P7-2** 实现对齐评估指标：
-  - **F1@10ms**：以 10 ms 窗口判断音符位置命中
-  - **音符密度–音频能量 Pearson 相关系数**（逐轨及全局）
-- [ ] **P7-3** 实现 VAE 重建基线（encode→decode，不经扩散，验证性能上界）
-- [ ] **P7-4** 音频对齐可视化：将生成谱面音符时刻叠加到 mel 图上，人工判断节拍对齐效果
-
----
-
-### 未来计划 — PyTorch Lightning 训练框架
-
-> 当前 `src/train.py` 使用纯 PyTorch 实现，逻辑透明、易于调试。
-> 随着实验规模扩大（多 GPU、混合精度、自动 checkpoint 管理），可迁移至 **PyTorch Lightning**。
-
-迁移后的架构：
-
-```
-src/
-├── lit_module.py      # LightningModule：封装冻结 VAE + Wave + 可训练 DiT
-│     training_step()  # q_sample → DiT forward → MSE loss
-│     validation_step()# DDIM 采样 → 解码 → F1 评估
-│     configure_optimizers()  # AdamW + CosineAnnealingLR
-└── lit_train.py       # Trainer 入口：多 GPU / bf16 / 自动 checkpoint
-```
-
-Lightning 相比纯 PyTorch 的优势：
-
-| 功能                      | 纯 PyTorch（当前）   | Lightning（未来）        |
-| ----------------------- |:---------------:|:--------------------:|
-| 多 GPU（DDP）              | 需手动实现           | 一行配置                 |
-| 混合精度（bf16/fp16）         | 需手动 scaler      | 自动                   |
-| Checkpoint 管理           | 手动 `torch.save` | `ModelCheckpoint` 回调 |
-| 日志（TensorBoard / WandB） | 手动              | 插件式 Logger           |
-| 验证循环                    | 需自行实现           | `validation_step`    |
-
-迁移成本低（核心数学逻辑不变），可在模型结构稳定后按需实施。
-
----
-
-### 未来计划 — Mapperatorinator 参考特性
-
-> 以下特性来自 [Mapperatorinator](https://github.com/OliBomby/Mapperatorinator)（osuT5 + osu-diffusion 双阶段管线），
-> 当前 AudioLab 尚未实现，可在模型稳定后逐步引入。
-
-#### 一、多维条件控制（Conditioning）
-
-| 特性                                    | Mapperatorinator 实现                                                   | AudioLab 现状 | 预期收益        |
-| ------------------------------------- | --------------------------------------------------------------------- | ----------- | ----------- |
-| **难度条件**                              | StarRating → 离散难度类别嵌入，独立 CFG dropout (`diff_dropout_prob=0.2`)        | ❌ 无难度控制     | 可生成指定难度谱面   |
-| **风格 / Mapper 条件**                    | mapper_id → style embedding；`num_mappers=3731`                        | ❌ 无风格控制     | 可模仿特定制作者风格  |
-| **描述符 / Tag 条件**                      | 文字描述符（"stream"/"jump"/"tech"）→ 多热编码类别嵌入                               | ❌ 无描述控制     | 可定向生成特定图型风格 |
-| **多条件独立 CFG**                         | 每个条件维度（音频 / 难度 / Mapper / 描述符）分别 dropout + 独立引导尺度                     | 仅音频 CFG     | 更细粒度的生成控制   |
-| **Hold note ratio / Scroll speed 条件** | 专用前缀 Token：`add_hold_note_ratio_token`、`add_scroll_speed_ratio_token` | ❌           | 控制长按比例与滚动速度 |
-
-实现要点：
-
-- 在 `RhythmDiT` 中新增 `CondEmbedder`，将难度 / 风格标量映射为向量，拼接到 timestep embedding 后
-- 在 `train.py` 中对每个条件独立执行 dropout，推理时每个维度有独立的 `cfg_scale`
-
-#### 二、训练改进
-
-| 特性                               | Mapperatorinator 实现                                                              | 备注                                 |
-| -------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------- |
-| **节奏权重损失**                       | `rhythm_weight=3.0`：对节奏 Token 区间 `[rhythm_token_start, rhythm_token_end]` 放大损失权重 | 强制模型优先对齐节拍，避免音符位置漂移                |
-| **Double-time 数据增强**             | `double_time_prob=0.5`：以 50% 概率将谱面 2× 加速（等价于 0.5× 时间缩放）                          | 与现有 rate stretch 互补，扩展速度分布         |
-| **结构化训练日志 (WandB)**              | `log_with='wandb'`，每 10 步记录 loss / lr / grad norm                                | 当前仅 print，无法在线监控或对比实验              |
-| **HuggingFace Accelerate 多 GPU** | 通过 `accelerate` 管理分布式训练与混合精度                                                     | 与 Lightning 方案二选一，Accelerate 侵入性更低 |
-
-#### 三、推理改进
-
-| 特性                      | Mapperatorinator 实现                                 | 备注                                 |
-| ----------------------- | --------------------------------------------------- | ---------------------------------- |
-| **滑动窗口推理**              | `lookback` / `lookahead` 控制上下文重叠窗口；跨窗口传递历史 Token    | 突破当前 4096 帧（≈190 s）上限，支持任意时长       |
-| **二阶段精化模型**             | osu-diffusion 在 osuT5 生成序列后再做坐标精化（`refine_iters` 次） | AudioLab 若后续扩展 2D 坐标输出，可考虑同样的两阶段架构 |
-| **Beat snapping Token** | `EventRange(EventType.SNAPPING, 0, 16)` 量化节拍细分信息    | 辅助模型学习节奏规律，减少非节拍帧上的噪声预测            |
-
-#### 四、评估改进
-
-| 特性                                   | Mapperatorinator 实现                                                    | 备注                    |
-| ------------------------------------ | ---------------------------------------------------------------------- | --------------------- |
-| **FID 评估**                           | 训练专用 `OsuClassifier`，用其 feature 层计算生成集与真实集的 Fréchet Inception Distance | 比 F1@10ms 更全面反映谱面分布质量 |
-| **Drain time / BPM / StarRating 统计** | `calc_fid.py` 中同时输出谱面的客观难度统计量，与真实分布做对比                                 | 辅助验证生成谱面的难度分布是否符合预期   |
-
-> **优先级建议**（从高到低）：
-> 
-> 1. 节奏权重损失 — 一行改动，立竿见影
-> 2. WandB 日志 — 实验管理必备
-> 3. 难度条件控制 — 使模型实用化的关键
-> 4. 滑动窗口推理 — 解除时长限制
-> 5. FID 评估 — 需额外训练分类器，工程量较大
-> 6. 风格 / Mapper / 描述符条件 — 需大规模数据支撑
-
----
-
-## 模块依赖关系
-
-```
-P0（格式设计）
-  └─► P1（数据层）
-        ├─► P2（VAE）─────────────────────────────┐
-        └─► P3（音频编码器）                        │
-              └─► P4（DiT 主干）                   │
-                    └─► P5（扩散训练）◄────────────┘
-                          └─► P6（推理）
-                                └─► P7（评估）
-```
-
-> **最小可运行里程碑**：P0 → P1 → P2（VAE 能重建谱面）→ P3 → P4 → P5（能完成训练），再实现 P6 进行推理验证。P4-7（MMDiT 双流）和 P7（评估脚本）为后续迭代项。
-
----
-
-## 参考项目
-
-| 项目              | 主要参考模块                                            |
-| --------------- | ------------------------------------------------- |
-| `Mug-Diffusion` | 谱面转换、Dataset、VAE、音频编码器、UNet、扩散框架                  |
-| `DiT`           | DiTBlock、TimestepEmbedder、FinalLayer、sin-cos 位置编码 |
-| `Open-Sora`     | MMDiT DoubleStreamBlock、RoPE 位置编码                 |
-| `AudioLDM2`     | CLAP 全局音频嵌入（可选）、DDIM 采样                           |
-
-```
-AudioLab/src/
-├── data/
-│   ├── audio2mel.py          ✅ 已有
-│   └── chart_convertor.py    📌 移植自 Mug-Diffusion/mug/data/convertor.py
-├── models/
-│   ├── chart_vae.py          📌 移植自 mug/firststage/autoencoder.py
-│   ├── audio_encoder.py      📌 移植自 mug/cond/wave.py (MelspectrogramScaleEncoder1D)
-│   ├── dit_1d.py             📌 改写自 DiT/models.py (1D + cross-attn)
-│   └── diffusion.py          📌 移植自 mug/diffusion/diffusion.py
-└── dataset/
-    └── mania_dataset.py      📌 移植自 mug/data/dataset.py
-```
+下一会话先读取本 README 的确认项与讨论记录，再读 [AGENTS.md](AGENTS.md)、[无轨技术设计](docs/freeform_design.md)、[AR 表示设计](docs/ar_tokenizer_design.md) 与整谱对照。[历史可玩实验计划](docs/playability_plan.md) 作为档案保留，不替代本次尚待冻结的产品规范。
