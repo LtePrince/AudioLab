@@ -42,12 +42,11 @@ def test_export_repairs_hold_overlap_and_uses_waveform_end(tmp_path, lanes, poli
     assert [n['holdTime'] for n in repaired] == [16, 16]
     assert [n['type'] for n in repaired] == [3, 3]
     assert [n['positionX'] for n in repaired] == [n['positionX'] for n in raw]
-    if lanes == 64:
-        target = tmp_path / 'contacts.json'
-        count = generate_chart(str(audio), str(target), enc=enc, dec=dec, device=torch.device('cpu'),
-            bpm=120, seed=42, skeleton_ticks=[0, 16], quiet=True,
-            playability_profile='contacts-v1', max_contacts=4)
-        exported = json.loads(target.read_text())['judgeLineList'][0]['notesAbove']
-        audit = json.loads(target.with_suffix('.contacts.json').read_text())
-        assert count == len(exported) == len(audit['contacts'])
-        assert audit['max_contacts'] == 4 and not any(audit['audit'].values())
+    target = tmp_path / 'contacts.json'
+    count = generate_chart(str(audio), str(target), enc=enc, dec=dec, device=torch.device('cpu'),
+        bpm=120, seed=42, skeleton_ticks=[0, 16], quiet=True,
+        playability_profile='contacts-v1', max_contacts=4 if lanes == 64 else None)
+    exported = json.loads(target.read_text())['judgeLineList'][0]['notesAbove']
+    audit = json.loads(target.with_suffix('.contacts.json').read_text())
+    assert count == len(exported) == len(audit['contacts'])
+    assert audit['max_contacts'] == 4 and not any(audit['audit'].values())
