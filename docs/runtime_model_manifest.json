@@ -1,0 +1,41 @@
+{
+  "schema": "audiolab-runtime-model-delivery-v1",
+  "bundle_file": "audiolab-models-timing-v1-20261017.zip",
+  "bundle_bytes": 133452353,
+  "bundle_sha256": "64b7e43b82564c6a400cec38431918ea8f27c240ddf884471ae2d7d981a823f4",
+  "bundle_manifest": {
+    "bundle_id": "timing-v1-baseline-20261017",
+    "files": {
+      "decoder/decoder_best.pt": {
+        "bytes": 52916773,
+        "role": "4k_layout",
+        "sha256": "62d6a385c3b15ec330df284b0ad1e031ee4053c310babde2f628f50bb038b7b0"
+      },
+      "decoder_freex/decoder_best.pt": {
+        "bytes": 53745049,
+        "role": "freex_static_layout",
+        "sha256": "e72c77995fa0b4710a451c77ad519017c6db188b84e60bcf858d66f3ffa30392"
+      },
+      "transcriber/transcriber_best.pt": {
+        "bytes": 26789255,
+        "role": "audio_candidates",
+        "sha256": "cdc148382f9015901ad62444db02c8c43de5e34b08fbbac34f6507b0fb66e213"
+      }
+    },
+    "schema": "audiolab-model-bundle-v1",
+    "timing_schema": "audio-offset-post-token-v1",
+    "validation": "file_integrity_only"
+  },
+  "delivery": "separate file transfer; weights are not in Git and no public model download is published",
+  "checkpoint_inspection": {
+    "weights_only": true,
+    "map_location": "cpu",
+    "all_timing_schemas": "audio-offset-post-token-v1",
+    "audio_label_source": "chart_onset",
+    "audio_schema": null,
+    "four_key_vocab_size": 129,
+    "freex_vocab_size": 369,
+    "freex_lanes": 64
+  },
+  "quality_status": "existing baseline weights; musical quality and Phira touch playtest remain pending"
+}
