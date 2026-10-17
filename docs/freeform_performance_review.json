@@ -1,0 +1,47 @@
+{
+  "schema": "audiolab-freeform-performance-review-v1",
+  "updated_at": "2026-10-17",
+  "reviewer": "/root/product_design",
+  "implementation_agent": "/root/product_development",
+  "worktree": "/home/ziyaowang/Alvin/Audio/AudioLab-freeform-performance",
+  "branch": "feature/freeform-gameplay",
+  "base_commit": "f6aca4e",
+  "status": "draft_numeric_review_passed_pending_fixed_commit_and_source_audit",
+  "scope": "F4a原始事件解释、查询表示与重建审计；不含演出模型、完整渲染兼容或人类可玩性",
+  "tested_draft": {
+    "performance_sha256": "5cd5c277b4e2b9823961db5bbd70caee9f295366d8f8d05b3a47ebecc00f8752",
+    "test_sha256": "62750169eab21ad80ef0aa79476c07cfe705563eeaba4b8464134d9b936faf3c",
+    "independent_result": "21 passed in 0.04s; CPU only",
+    "coverage": "两线BPM/offset和浮点接缝、v1有符号余数、完整转圈与Hold内部越界、负速积分、零段/间隙/重叠/反向/空轨、原字段往返、线分类及积分有效性"
+  },
+  "findings": [
+    {
+      "id": "F4A-1",
+      "status": "resolved_in_draft_independently_tested",
+      "issue": "右连续端点取下一段起点，可能遗漏前一段的正alpha极限，将仍有可见区间的空线判为idle。",
+      "reproduction": "60 BPM，alpha在[0,32) tick从-3线性到1，随后[32,64]恒-1；0.9秒alpha=0.6，但旧分类只用边界/中点得到idle。",
+      "fix_and_check": "新增边界切分区间的单侧值查询，正值区间加入见证点；返回visible_decoration_candidate，不宣称实际纹理可见。root反例与设计agent21项测试通过。"
+    },
+    {
+      "id": "F4A-2",
+      "status": "resolved_in_draft_independently_tested",
+      "issue": "Hold旋转采样若用右端点的下一段值，可能把边界前720度运动当成零变化并漏掉越界。",
+      "reproduction": "60 BPM，Hold在0..1 tick、局部p=6、线心(0.5,0.5)；旋转0→720度后边界骤回0。0.125 tick的90度目标为(0.5,1.1)，旧4个样点均未发现。",
+      "fix_and_check": "连续区间按左/右单侧旋转跨度细分，跳变720→0另列。root草稿复验35采样中12点越界；独立测试验证最大22.5度连续采样步长与跳变记录。采样仍不是连续可玩性证明。"
+    },
+    {
+      "id": "F4A-3",
+      "status": "resolved_in_draft_independently_tested",
+      "issue": "当前速度可读但历史有gap时，累计scroll_integral未知，原总supported仍为true，可能误接受累计落距标签。",
+      "reproduction": "120 BPM，速度[0,10):1、[20,320):2，查询30/64秒；原supported=true、speed_source=2，但scroll_integral.value=null且[10,20]为unsupported_interior_gap。",
+      "fix_and_check": "分别返回current_state_supported与scroll_supported；总supported包含所请求积分，未请求积分时scroll_supported为null。新增回归包含于独立21项通过结果。"
+    }
+  ],
+  "remaining": [
+    "固定实现提交与测试源码指纹，再把草稿证据绑定到交付版本",
+    "少量原始v1/v3谱按完整有效域检查边界/内部/所有Hold，并给完整分母和不支持区间，CPU串行且不生成全库密集缓存",
+    "固定Phira源码参考差分，区分手工移植参考与实际运行播放器，不支持或已知末keyframe/长Hold差异不能计为一致",
+    "原字段保留及序列化往返属于表示一致性；独立数值/参考差分分别报告，避免同实现自洽被称为正确性真值",
+    "目标播放器、动态预览、F4b机械契约、F5学习模型及人类试玩仍未验收"
+  ]
+}

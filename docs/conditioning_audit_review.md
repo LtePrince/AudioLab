@@ -21,7 +21,7 @@
 | 此历史样本是否截断 | 只读音频头与参考谱确认，六首为 127.943～168.033 秒，没有头／Hold 尾越过 190.218 秒。因此长曲问题是脚本推广限制，不能误写成这六曲已被截尾 |
 | 短曲填充 | mel 先按自身最小值补到 8192。encoder 是无 padding mask 的全局 attention，短曲特征已经吸收填充上下文；decoder 的后置 mask 不能撤销它。与当前产品仅补到步长倍数的整曲布局不同 |
 | 尾部有效长度 | `mel_frames // 2` 取整会漏掉奇数尾段；六曲中五份缓存的 mel 帧数为奇数。v2 应从真实音频秒与产品一致的特征时间轴判有效，不能把缓存形状直接当完整音频范围 |
-| mask fallback | 当前 `cross_mask` 的空局部窗口 fallback 只在 `[0,T−1]` 找最近帧，可能重新允许无效 padding。CPU 小模型已复现：valid 仅 0／1／2、token frame=6、window=1，结果允许 key=6。主会话独立修共享 mask；当前产品全有效内存路径不受该反例影响 |
+| mask fallback | 审查时的 `cross_mask` 空局部窗口 fallback 只在 `[0,T−1]` 找最近帧，可能重新允许无效 padding。CPU 小模型已复现：valid 仅 0／1／2、token frame=6、window=1，结果允许 key=6。独立修复 `5a6877a` 改为最近真实有效帧、同距取较早帧、无任何有效帧明确拒绝；当前产品全有效内存路径不受原反例影响 |
 | reversed | 反排的是编码后的、已上下文化的有效特征，不是倒放波形；仍含同曲上下文。应命名为 `encoded_feature_reverse` |
 | wrong_song | 将另一曲有效特征线性插值为目标长度，包含时间拉伸。`align_corners=False` 的源索引约为 `(j+0.5)*Lsrc/Ldst−0.5`，边缘另有取值行为；要记录长度／映射。按列表索引选另一行不能保证音频内容不同，需核对音频哈希 |
 | no_audio | 在 `prepare_memory` 前置零声学特征；后续投影偏置、memory 时间嵌入和真实 token 历史仍在。应称 `zero_acoustic_features`，不是完全无条件模型 |
@@ -41,3 +41,5 @@ teacher forcing 固定了真实动作历史，有助于降低采样分歧，但�
 5. **先验边界，再跑少量开发曲。** 合成验证奇数尾部、超过旧上限、非零 offset、跨尾 Hold、缺输入／同音频错曲、mask 空窗与全无效输入。teacher-forcing 也要预估 token self-attention 和 logits 资源；不够则明确失败，不能悄悄截 token。先做一次小规模串行运行，有结果再扩大，不重跑旧训练六曲来补不存在的版本证明。
 
 共享 mask 修复与审计 v2 分开提交；F4a 可以继续。此批完成后才开展 [K2／F2 协议](model_quality_protocol.md)中的固定候选真实生成对照，以及取音和修复分离。该 v2 是参考条件诊断，不替代玩家完整试玩。
+
+`5a6877a` 的 decoder 测试由设计 agent 独立通过 25 项（4.98 秒）：非前缀有效帧、边界／并列选择、无有效输入拒绝，以及 4K／64-bin 的全前向和增量 step 对无效 memory 的大幅扰动保持 logits 不变。主会话集成后全套 249 项通过。这仅验证 decoder 屏蔽；固定填充对 encoder 的上下文污染仍属于 v2 待修范围。

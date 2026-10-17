@@ -81,19 +81,25 @@
       "result": "passed_ea963c9_n1_unit_and_artifact_review",
       "scope": "自动时基可控样例、单worker生命周期与三首真实自动/提供时基对照",
       "evidence": "独立执行入口与管线34 passed/10.04s；含原始WAV点击时间约定、无信号needs_tempo、180 BPM半速与90→180不可见变化的已知限制回归、对照配置漂移拒绝、P3断连。独立标准库脚本核对自动三曲全部产物哈希/字节数、与提供时基相同的547/714/1135个绝对秒事件、权重/seed/offset/encoder、六谱事件时间/位置/稳定ID及全部逐音repair，均一致。自动估计123.046875/99.384014/99.384014，原编码时基188/199/200；后者不是音乐BPM真值。双模式31.973/34.050/56.708秒，三样例累计峰RSS2.344GiB，不构成性能承诺。",
-      "quality_observation": "时基变化造成明显布局/键型差异；第三曲自动free-x的42个Hold有18个被截短，原始总持续28.394秒→最终12.999秒。它说明当前表示、模型和修复需要独立质量对照，不设Hold配额，也不自动归因于速度估计错误。无真实音乐速度准确率、声学真值或玩家质量结论。"
+      "quality_observation": "时基变化造成明显布局/键型差异；第三曲自动free-x的42个Hold有18个被截短，原始总持续28.394秒→最终12.999秒。主会话定位18次均由static-v1附近后续起点规则触发（min_gap=0.04屏宽）；这是修复负担及潜在质量成本，不是已经证明的18个模型错误。该规则需与目标判定器核对，不设Hold配额，也不自动归因于速度估计错误。无真实音乐速度准确率、声学真值或玩家质量结论。"
     },
     {
       "id": "C7",
       "result": "passed_parent_real_ui_and_independent_error_formatter",
       "scope": "N1真实浏览器链路及坏音频提示",
       "evidence": "已读取主会话out/browser_review/ui-workflow-v2.json：干净ea963c9，102.770秒真实音频不填BPM生成两模式31.609秒；上传/并发拒绝/新窗预览/Range206/实际播放seek换模式/真实JSON下载通过；真实worker取消后回收、无成功产物，坏WAV失败重试、静音needs_tempo通过。初次浏览器harness因新窗viewport与音频控件坐标未滚动失败，修正harness后通过，未归为代码缺陷。2b66f8a仅改坏音频显示；设计agent用真实失败任务结构化LibsndfileError与旧消息文本执行实际app.html的errorText，两者均给中文重试指引、不显示路径；后台原始诊断保留。"
+    },
+    {
+      "id": "C8",
+      "result": "passed_5a6877a_valid_memory_fix",
+      "scope": "共享decoder空局部窗口fallback的有效memory边界",
+      "evidence": "设计agent独立复现旧码允许无效key=6（valid仅0/1/2、query=6、window=1），主会话单独修复为最近有效帧并拒绝全无效输入。设计agent审查固定5a6877a对应代码并独立通过decoder25项测试/4.98s，含非前缀mask、半帧并列、4K/free-x全前向与step对无效memory扰动不变；主会话集成完整249 passed。它不解决encoder固定补零污染，也不追认旧条件审计为音乐质量证据。"
     }
   ],
   "remaining": [
     "K2/F2: 时基歧义与布局/键型/持续时间耦合的模型质量诊断，含第三曲free-x Hold18/42截短与28.39→13.00秒",
     "声学标注与阈值校准、固定质量对照、目标播放器与真人试玩",
-    "F4a原始动态表示/查询/重建审计，随后F4b与F5学习演出；参考固定为docs/phira_reference.json",
-    "主会话集成N1和最新设计文档到develop；质量未验收不合main"
+    "F4a草稿21项数值/边界测试已独立通过，待固定提交、原始真实谱和Phira参考差分；随后F4b与F5学习演出，记录见docs/freeform_performance_review.json",
+    "develop45319fb已集成N1、文档b176133与共享mask5a6877a；质量未验收不合main"
   ]
 }
