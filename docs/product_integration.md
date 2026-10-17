@@ -272,3 +272,21 @@ SHA-256 为 `64b7e43b82564c6a400cec38431918ea8f27c240ddf884471ae2d7d981a823f4`�
 驱动／硬件／性能、Phira 真机导入与音乐质量继续分别记录实际结果。预检发现的短
 Vorbis 尾部填充差异也保留在运行说明中，没有放宽谱包时钟检查或声称任意编码皆可用。
 本轮仍交付到 `develop`，`main` 稳定发布门槛不变。
+
+## 2026-10-17：个人 PC 的 RAM 预留配置修复
+
+用户的 RTX 4060 Laptop（8188 MiB 显存）已通过 CUDA 预检，生成日志显示可用
+RAM 7.892978668 GiB 低于默认 8 GiB，未出现 CUDA OOM。共享修复
+`fix/runtime-ram-reserve@6007f84` 增加 `--min-available-ram-gib 4`，贯通启动、
+服务、生成与 Phira 打包读回；默认仍为 8，进程 RSS 4 GiB、磁盘 8 GiB 和 CUDA
+allocator 0.65 的预算保持原值。用户需停止旧服务，用新参数重启。
+
+`fix/product-resource-errors@6c9bc7c` 区分 RAM、RSS、显存和磁盘错误，允许展开
+原始错误、任务编号和有效配置，历史失败也可查看。Firefox 实际界面回放通过，
+报告为 `out/browser_review/resource-errors-v2.json`；它使用模拟任务 API，
+不是另一台 PC 的推理实测。
+
+集成点 `0dd790f` 完整回归 **412 passed，9 warnings，46.15 秒**。专项仅模拟
+用户的资源读数，保持真实资源检查、小型 CPU 模型生成和两 ZIP 完整读回：4 GiB
+设置完成，默认 8 GiB 拒绝，磁盘／RSS 限制继续生效。没有制造实际资源耗尽，
+也没有据此宣称该 PC 已完成整曲；更新后的目标机生成仍需实际运行确认。
