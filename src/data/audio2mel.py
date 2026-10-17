@@ -1,6 +1,4 @@
 import librosa
-import librosa.display
-import matplotlib.pyplot as plt
 import numpy as np
 
 import torch
@@ -57,12 +55,16 @@ class AudioCPUprocessor:
 
         # --- 可视化部分 / Visualization Section ---
         if debug_mode:
+            # Plotting is optional; product inference does not need matplotlib.
+            from librosa import display
+            import matplotlib.pyplot as plt
+
             plt.figure(figsize=(12, 8))
 
             # 子图1：原始波形 (Time Domain)
             # Subplot 1: Waveform
             plt.subplot(2, 1, 1)
-            librosa.display.waveshow(y, sr=sr, color='blue')
+            display.waveshow(y, sr=sr, color='blue')
             plt.title('Original Waveform (Time Domain)')
             plt.xlabel('Time (s)')
             plt.ylabel('Amplitude')
@@ -70,7 +72,7 @@ class AudioCPUprocessor:
             # 子图2：梅尔频谱 (Frequency Domain)
             # Subplot 2: Mel-Spectrogram
             plt.subplot(2, 1, 2)
-            img = librosa.display.specshow(log_mel_spec, sr=sr, hop_length=self.hop_length,
+            img = display.specshow(log_mel_spec, sr=sr, hop_length=self.hop_length,
                                            x_axis='time', y_axis='mel', cmap='magma')
             plt.colorbar(img, format='%+2.0f dB')
             plt.title('Log-Mel Spectrogram')

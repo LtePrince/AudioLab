@@ -1,0 +1,13 @@
+# Product inference baseline, Python 3.13. No editable install is needed.
+# First install torch/torchaudio from the appropriate official CUDA wheel index;
+# these matching pins preserve that installed build (including its +cu suffix).
+# Transitive dependencies are resolved by pip; this is not an all-platform lock.
+torch==2.10.0
+torchaudio==2.10.0
+torchcodec==0.10.0
+numpy==2.4.2
+librosa==0.11.0
+soundfile==0.13.1
+einops==0.8.2
+scipy==1.17.1
+numba==0.64.0
