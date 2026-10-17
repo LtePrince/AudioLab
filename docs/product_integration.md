@@ -182,7 +182,7 @@ cd /home/ziyaowang/Alvin/Audio/AudioLab-product-development
 
 独立证据分别位于主工作区 `out/product_coordination/phira_package_artifact_review.json`、`out/browser_review/phira-calibration-v1.json` 和 `out/browser_review/phira-workflow-v1.json`（首轮失败）。
 
-修后真实浏览器使用同一个 `--device cuda` 配置通过完整流程：新 worker 固定于干净的 `c3ef29a`，任务为 `6afaf9a4ddb34a88bd200b6b962e2dfa`。原 7862 父服务在没有活动 worker 时保留；该次合入没有改变 `server.py` 或入口代码，新子进程读取修复后的资源管理模块。没有依赖额外的进程管理授权，也没有中断生成任务。
+修后真实浏览器使用同一个 `--device cuda` 配置通过完整流程：新 worker 固定于干净的 `c3ef29a`，任务为 `6afaf9a4ddb34a88bd200b6b962e2dfa`。原 7862 父服务在没有活动 worker 时保留；该次合入没有改变 `server.py` 或入口代码，新子进程读取修复后的资源管理模块。
 
 | 实际交付检查 | 结果 |
 | --- | --- |
