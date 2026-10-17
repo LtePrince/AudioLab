@@ -103,7 +103,8 @@ def main():
         # Static format/line validation is shared with the previous comparison.
         legacy, _ = repair_chart(raw, duration, 'freex' if free else '4k')
         old, _ = repair_chart(base_raw, duration, 'freex' if free else '4k')
-        row = dict(song=song, reference_sha256=sha256_file(reference), variants={})
+        row = dict(song=song, reference_sha256=sha256_file(reference),
+                   audio_path=str(base/audio_path), audio_seconds=duration, variants={})
         row['variants']['raw'] = dict(raw=score(raw_path, raw, ref, duration, free), sha256=sha256_file(raw_path))
         original_starts, decoded_starts = unique_times(base_raw), unique_times(raw)
         row['decode_onset_retention'] = len(original_starts & decoded_starts)/max(1, len(original_starts))
@@ -156,6 +157,19 @@ def main():
             and data['mean_onset_retention_vs_baseline'] >= .95 and data['paired_f1_25']['mean_delta'] >= -.02)
     report.update(complete=True, finished=time.time(), resources=budget.log_state())
     write_json(output/'report.json', report)
+    playtests = {}
+    for count in profiles:
+        name = f'contacts{count}'
+        ordered = sorted(rows, key=lambda r: r['variants'][name]['raw']['f1_25'])
+        choices = [ordered[0], ordered[len(rows)//2], ordered[-1],
+                   max(rows, key=lambda r: r['variants'][name]['changes']['dropped_notes']),
+                   max(rows, key=lambda r: r['variants'][name]['changes']['moved_notes'])]
+        playtests[name] = [dict(song=r['song'], audio_path=r['audio_path'],
+            chart_path=r['variants'][name]['path'],
+            contact_report=str(Path(r['variants'][name]['path']).with_suffix('.contacts.json')))
+            for r in {r['song']:r for r in choices}.values()]
+    write_json(output/'playtest_manifest.json', dict(status='awaiting_human_playtest',
+        selection='lowest/median/highest time F1, most dropped notes, most moved notes', profiles=playtests))
     print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)
 
 
