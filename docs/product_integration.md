@@ -211,3 +211,64 @@ cd /home/ziyaowang/Alvin/Audio/AudioLab-phira-delivery
 ```
 
 下一次人工交接为校准包＋同曲两种模型谱包：传到手机／平板，在 Phira 本地导入，记录实际版本、设备和时差设置，再反馈完整播放、四键型操作及具体不合适片段。合成校准不算模型质量样本；动态表演继续保留为后续阶段。本阶段保持在 `develop`，不据工程检查自动发布为 `main` 稳定版。
+
+## 2026-10-17：Linux／NVIDIA 个人 PC 迁移交付（LR0–LR4）
+
+用户确认当前电脑仅开发验证，另一台 Linux＋NVIDIA 个人 PC 克隆代码后运行服务，
+在该 PC 浏览器上传音频、推理、预览和下载。手机／平板继续承担 Phira 实际游玩。
+前文 7860–7862 是开发机的历史验证入口，不是该个人 PC 已部署的证据。运行端按
+[Linux 安装与启动说明](linux_runtime.md)取得代码、依赖和单独转移的模型包。
+
+运输实现固定于 `chore/model-portability@07b5095`，交付清单与文档为 `bc27520`／
+`2ee49fe`；运行实现为 `chore/linux-runtime@c948ca6`，说明为 `ac0e459`。两个共享
+分支均从已验证的 `develop` 出发，未将共享运行改动塞入某一模型分支。产品决定和
+独立审查由 `docs/product-design-discussion` 的 `1ab5c2d`／`ea902f2` 记录。
+
+模型包为 `audiolab-models-timing-v1-20261017.zip`，133,452,353 字节（127.27 MiB），
+SHA-256 为 `64b7e43b82564c6a400cec38431918ea8f27c240ddf884471ae2d7d981a823f4`。
+原工作区 `out/runtime_delivery_v1/` 保存实际 ZIP；它不进入 Git，也没有虚构公共下载
+地址。[固定清单](runtime_model_manifest.json)记录三套原权重的大小和哈希。标准库
+工具按流式校验导出／导入，保留 8 GiB 磁盘余量，完整暂存通过后才发布，不覆盖已有
+目录。三套权重逐字节保留，标签域仍为 `chart_onset`，没有在本轮重新训练。
+
+新入口 `python -m script.run_product` 直接启动本地服务；预检实际检查依赖、媒体
+解码／重采样／mel／节奏算法、三模型结构及 CUDA 小运算，失败时不启动服务。默认
+使用当前可见 GPU，明确传递已验证的设备编号，不依赖训练入口的物理 GPU 1。运行
+依赖独立列出，绘图依赖改为调试时加载；音频特征、采样和 Hold 修复策略保持原行为。
+
+设计 agent 独立通过模型包 **17 项**及运行入口 **20 项**专项，另以标准库对实际 ZIP
+做全包／成员／原权重的独立哈希核对。主线程在集成点 `502bb12` 运行完整回归：
+**396 passed，9 warnings，46.32 秒**。完整工程测试复用原有三个数据夹具；下面的
+部署副本不包含数据集，两个检查范围分开记录。
+
+主线程建立 `/tmp/audiolab-runtime-clone-20261017` 独立 Git clone，没有 `data/`、
+缓存目录、`.venv` 或权重软链接，用 `python3 -S` 从真实包安装到默认相对目录
+`checkpoints/timing_v1`。冻结代码为干净的 `c948ca6`，运行解释器复用已有 Python
+3.13.13／Torch 2.10.0+cu128 环境；**没有在本机重新安装一套依赖，也没有执行用户
+另一台 PC 的安装**。初次沙箱端口访问明确失败；获准后在沙箱外实际启动并验证。
+
+| 检查 | 实际观察 |
+| --- | --- |
+| 启动预检 | 6.8565 秒，`ready`；三个真实模型实际加载，WAV／OGG／节奏与 CUDA 小运算通过 |
+| 设备选择 | 未设置 `CUDA_VISIBLE_DEVICES`，默认 `cuda` 解析到 `cuda:0`，RTX 3090；没有训练启动器参与 |
+| 浏览器任务 | Firefox 上传同一份 102.770068 秒 OGG，自动时基；任务 `5af2cd8ebb9f406faf4fdde236324b7f`，双模式整曲生成和打包 31.7307 秒 |
+| 谱面 | 4K 566 音符、静态 free-x 839 音符；两条路线均含四键型，候选覆盖与格式检查通过 |
+| 浏览器交互 | 原生音频实际播放、跳转至 51.385034 秒、切换模式保持时钟；两 ZIP 实际保存与哈希一致；Range 206、历史刷新、390 px 宽度通过，无脚本错误 |
+| 独立产物读回 | ZIP CRC、原音频／谱面字节、全部成员哈希、完整音频解码、PNG 和全部 1405 音符的起止时间／类型／位置一致；未调用产品打包器自检 |
+| 行为回归 | 与此前 `c3ef29a` 同曲任务对比：原音频及两模式 raw／final／events 共七个文件逐字节相同。ZIP 中来源提交变化，因此不要求整 ZIP 与旧版哈希相同 |
+| 资源 | 生成报告峰值 RSS 约 1.914 GiB，PyTorch 峰值 allocated／reserved 为 0.100／0.111 GiB；任务目录 8,198,465 字节，结束余盘约 10.197 GiB。不是整卡占用或另一台 PC 性能承诺 |
+
+浏览器实际下载的 4K ZIP 为 1,602,706 字节，SHA-256
+`3da8ce26c5a6029259b10325741bbcc5f7cec2d472136642f3c7619f092b9f78`；free-x ZIP
+为 1,612,857 字节，SHA-256
+`af50da8250f282dce19cf46c76773c5421fb26287d10f87d4a7e33f7d52a67a0`。
+证据位于原工作区 `out/browser_review/linux-runtime-clone-v1.json`，以及
+`out/runtime_delivery_v1/` 下的 `clean_clone_evidence.json`、
+`browser_download_review.json`、`baseline_parity.json`。独立模型包核对保存在
+`out/product_coordination/runtime_bundle_artifact_review.json`。
+
+本次 7863 测试服务在检查完成后以 Ctrl+C 正常退出（退出码 0），没有把开发机变为
+永久运行端。LR0–LR4 的开发机独立 clone 工程范围通过；全新依赖安装、用户 PC 的
+驱动／硬件／性能、Phira 真机导入与音乐质量继续分别记录实际结果。预检发现的短
+Vorbis 尾部填充差异也保留在运行说明中，没有放宽谱包时钟检查或声称任意编码皆可用。
+本轮仍交付到 `develop`，`main` 稳定发布门槛不变。
