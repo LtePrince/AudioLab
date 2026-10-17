@@ -1,6 +1,6 @@
 {
   "schema": "audiolab-product-review-v1",
-  "updated_at": "2026-10-17 03:18:37 UTC",
+  "updated_at": "2026-10-17 03:21:17 UTC",
   "reviewer": "/root/product_design",
   "implementation_agent": "/root/product_development",
   "worktree": "/home/ziyaowang/Alvin/Audio/AudioLab-product-development",
@@ -11,13 +11,14 @@
     {
       "id": "P1",
       "severity": "medium",
-      "status": "acknowledged_fix_in_progress",
+      "status": "resolved_verified_draft_pending_fixed_commit",
       "gate": "E2",
       "file": "src/product/pipeline.py; src/models/chart_decoder.py",
       "issue": "候选起点覆盖完整，仍可能是 decoder 预算耗尽后强补 EOS；不能据此标记完整成谱。",
       "reproduction": "小型真实4K decoder，强制NOTE(0,Tap)，skeleton=[0]、max_tokens=1：tokens=[BOS,NOTE,EOS]；EOS未被自然采样，而validate_chart的complete_candidate_coverage=True。末多押或Hold可能同样被截断。",
       "requested_change": "产品入口要求显式自然终止；预算耗尽则失败或声明partial，不能标completed。历史生成默认行为可保留。增加所有候选已覆盖但未自然EOS的回归。",
-      "implementation_response": "开发agent认可，计划新增默认关闭的require_complete，产品入口固定开启。尚待独立复验。"
+      "implementation_response": "已新增默认关闭的require_complete，产品入口固定开启；未自然采样EOS时抛错，历史默认保留。",
+      "verification": "独立运行test/test_product_pipeline.py：11 passed in4.47s，包括全部候选覆盖但预算强补EOS的反例和旧默认仍可返回的对照。尚待固定产品提交归档。"
     },
     {
       "id": "P2",
@@ -41,11 +42,17 @@
       "result": "passed_real_weight_single_fixture",
       "scope": "全静音输入候选输出",
       "evidence": "真实timing_v1/transcriber权重，CPU两线程，2秒22050Hz全零WAV；音频理解返回status=no_candidates、events=0。仅支持这个样例的空候选行为，不是声学质量测量。"
+    },
+    {
+      "id": "C3",
+      "result": "passed_parent_independent_browser_review",
+      "scope": "真实Firefox中的合成四键型、offset和Hold预览",
+      "evidence": "主会话使用Firefox157/Puppeteer，9类检查通过：本地媒体时长、四键型颜色、播放暂停、seek进入Hold、两模式切换与导出一致且offset只用一次、变速与重播、自然曲末、无脚本/媒体错误及外部网络请求。已读取out/browser_review/contract.json。合成3秒夹具不等于真实播放器判定或人类手感。"
     }
   ],
   "remaining": [
     "固定产品提交的两模式完整运行与产品测试复验",
-    "实际浏览器play/pause/seek/restart、四键型和非零offset/Hold预览",
+    "合成浏览器检查已过，真实生成歌曲仍待媒体/时间/导出浏览器回归",
     "至少3首完整真实歌曲分别两种模式的产物与资源报告",
     "工程通过后继续自动BPM/时基、模型质量、真实试玩与动态演出，不能宣告全产品完成"
   ]
