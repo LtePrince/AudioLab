@@ -100,7 +100,8 @@ def check_generation(report_path, songs, expected, seed):
     config = report['config']
     required = dict(seed=seed, top_ps='0.95', sampling_policy='flat', teacher_only=False,
                     skeleton_source='transcriber', snap_ticks=0,
-                    onset_threshold=expected[0], onset_min_interval_ms=expected[1])
+                    onset_threshold=expected[0], onset_min_interval_ms=expected[1],
+                    max_chord_size=None)
     if any(config.get(k) != v for k, v in required.items()):
         raise ValueError(f'generation settings differ from the frozen comparison: {report_path}')
     for model in MODELS:
