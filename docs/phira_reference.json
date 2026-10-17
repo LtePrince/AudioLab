@@ -1,0 +1,65 @@
+{
+  "schema": "audiolab-external-reference-v1",
+  "project": "TeamFlos/phira",
+  "commit": "a22ea8958410ac940adec83b54bbf4e6b293d191",
+  "resolved_at": "2026-10-17",
+  "scope": "Read-only source reference for F4a interpretation/differential fixtures; not final player selection or proof of official compatibility",
+  "files": [
+    {
+      "path": "prpr/src/parse/pgr.rs",
+      "sha256": "7a3ca75e40c3756adfde21ecac86f1c1888a659aac8b596844c7d057d8254c22",
+      "bytes": 9808,
+      "url": "https://github.com/TeamFlos/phira/blob/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/parse/pgr.rs",
+      "raw_url": "https://raw.githubusercontent.com/TeamFlos/phira/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/parse/pgr.rs"
+    },
+    {
+      "path": "prpr/src/core/anim.rs",
+      "sha256": "c86ee1a898d8acdbd13f829f5338fcdb6d93200be5145e2050a6c795e7bcf61e",
+      "bytes": 4609,
+      "url": "https://github.com/TeamFlos/phira/blob/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core/anim.rs",
+      "raw_url": "https://raw.githubusercontent.com/TeamFlos/phira/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core/anim.rs"
+    },
+    {
+      "path": "prpr/src/core/object.rs",
+      "sha256": "941d2926e068ab3ef70b1544697282e98338896360f7513920be2d12f92de576",
+      "bytes": 2870,
+      "url": "https://github.com/TeamFlos/phira/blob/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core/object.rs",
+      "raw_url": "https://raw.githubusercontent.com/TeamFlos/phira/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core/object.rs"
+    },
+    {
+      "path": "prpr/src/core/tween.rs",
+      "sha256": "935db695dd573e110b23106728e8555d9b371dc7d13626fd33e3fde8b2dc0488",
+      "bytes": 16062,
+      "url": "https://github.com/TeamFlos/phira/blob/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core/tween.rs",
+      "raw_url": "https://raw.githubusercontent.com/TeamFlos/phira/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core/tween.rs"
+    },
+    {
+      "path": "prpr/src/core/note.rs",
+      "sha256": "d9eb232de4c0f9ef9951ea5ace47c6bc5c236679bc63512d160616de73dd081b",
+      "bytes": 14501,
+      "url": "https://github.com/TeamFlos/phira/blob/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core/note.rs",
+      "raw_url": "https://raw.githubusercontent.com/TeamFlos/phira/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core/note.rs"
+    },
+    {
+      "path": "prpr/src/core/line.rs",
+      "sha256": "9c70ceb5b9ca64ffbcbfcfacd2b6a6930ffc19c171242b57748fec41d651adc3",
+      "bytes": 16773,
+      "url": "https://github.com/TeamFlos/phira/blob/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core/line.rs",
+      "raw_url": "https://raw.githubusercontent.com/TeamFlos/phira/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core/line.rs"
+    },
+    {
+      "path": "prpr/src/core.rs",
+      "sha256": "344d03c4644a1664feea88f0b62c79e8d94c54aabedccf55471e6c316ce3b36e",
+      "bytes": 4756,
+      "url": "https://github.com/TeamFlos/phira/blob/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core.rs",
+      "raw_url": "https://raw.githubusercontent.com/TeamFlos/phira/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/core.rs"
+    },
+    {
+      "path": "prpr/src/parse.rs",
+      "sha256": "9be115e361d05b757d04b9950a760ccb67ba6b779ff2113a6ef2aa9b98f05ec7",
+      "bytes": 2698,
+      "url": "https://github.com/TeamFlos/phira/blob/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/parse.rs",
+      "raw_url": "https://raw.githubusercontent.com/TeamFlos/phira/a22ea8958410ac940adec83b54bbf4e6b293d191/prpr/src/parse.rs"
+    }
+  ]
+}
