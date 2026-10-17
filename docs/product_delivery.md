@@ -127,9 +127,9 @@ N1g 由主会话在真实 Firefox 通过：实际选择文件、不填 BPM、生
 | --- | --- |
 | 授权 | 用户已请求双 agent 协作直至完整流程；已开始实施 |
 | 音频理解 | `feature/transcription-baseline` 的 `2965310` 工程功能已推送；声学质量未验收 |
-| 产品闭环 | `develop` 的 `45319fb` 已集成 N1、设计 `b176133` 和共享 mask 修复 `5a6877a`；主会话独立全套 249 项测试通过，设计 agent 另对 mask 模块独立通过 25 项；尚不合入 `main` |
+| 产品闭环 | `develop` 的 `2cde8ee` 已推送，包含 N1、共享 mask 修复与 F4a 首批工程验收；主会话独立全套 282 项通过，设计 agent 另完成针对性和产物检查；尚不合入 `main` |
 | 产品文档 | `docs/product-design-discussion` 维护需求、候选指标与独立验收 |
-| 当前下一步 | F4a `646e104`／审计 `d3cbe20` 已独立验收；开发 agent 完成推送后，从主会话最新 `develop` 建 `chore/audio-conditioning-audit`，实现 [Q0–Q7](conditioning_audit_review.md)。先 CPU 测试，再由主会话串行安排少量 GPU 诊断；不立即训练演出 |
+| 当前下一步 | `../AudioLab-conditioning-audit`／`chore/audio-conditioning-audit` 已从 `2cde8ee` 实现 [Q0–Q7](conditioning_audit_review.md)；六组参考与既有codec独立对照相同，CPU故障测试与固定提交待交付。先独立审查，再由主会话串行安排三曲 GPU 诊断；不立即训练演出 |
 | 未关闭证据缺口 | 分块声学阈值校准、声学真值、冻结产品测试、目标播放器与真人试玩、动态演出模型 |
 
 演出数据清点已完成：现有 300 份 `generate.json` 是静态派生谱；同目录有 300 份原始谱（294 份 v3、6 份 v1）。训练 270 份均有动态事件，268 份多线；验证 30 份均多线且动态。F4–F5 应复用原始 ID JSON，并核查版本语义，不能从静态派生谱臆造演出监督。清点报告保存在本地 `out/product_coordination/performance_original_inventory.json`；该统计不代表演出标签审计或模型验证已完成。
