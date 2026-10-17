@@ -60,6 +60,35 @@ Hold 期间邻近音符 627→0；位置 F1 @92.9ms/0.05 从 0.18958 到 0.18965
 它没有手工提高 Hold 权重，也不保证连续生成时恢复训练集的键型比例。
 默认仍为 `flat`。诊断脚本同样接受该开关，需先比较真实生成质量再考虑推广。
 
+## 操作配置与条件布局
+
+操作配置与条件学习的实施顺序见 [可玩版本方案](docs/playability_plan.md)。
+`--playability-profile contacts-v1` 是可选的操作约束版本：4K 分配到四个固定键，
+free-x 必须额外指定 `--max-contacts`（1–10）。**默认不设双指上限，多指是正常玩法。**
+双指仅作为简化配置，不能因为删音后 F1 更高就将它作为所有难度的统一标准。
+配置检查包含连续操作、Hold 释放和 free-x 接触点移动；所有删音、移位、Hold 修改
+写入同名 `.contacts.json`。这证明声明条件下存在操作分配，尚不等同于人工手感验收。
+
+下面示例明确选择六指配置，生成批次请使用新目录：
+
+```bash
+.venv/bin/python -m script.train_models --worker src.test_decoder -- \
+  --ckpt checkpoints/timing_v1/decoder_freex/decoder_best.pt \
+  --list data/val.txt --out-dir out/freex_contacts6_cli \
+  --skeleton-ckpt checkpoints/timing_v1/transcriber/transcriber_best.pt \
+  --onset-threshold 0.7 --onset-min-interval-ms 35 --seed 42 \
+  --playability-profile contacts-v1 --max-contacts 6
+```
+
+4K 改用 `decoder/decoder_best.pt`、新的输出目录，并去掉 `--max-contacts`。
+保留默认多指输出则省略这两个操作配置开关。完整工程对照见
+[4K 结果](docs/evaluations/4k_contacts_v1.md) 与
+[free-x 多指结果](docs/evaluations/freex_contacts_v1.md)。
+
+270 首训练曲已挖掘为原始布局目标 `out/layout_targets_train_v1/`，包含音频描述、
+前组位置/间隔和 Hold 占用。free-x 的 583 组超过两押和弦（最高八押）全部保留。
+这一步尚未更新布局模型权重；后续以难度/操作配置为条件训练，不把双指规则当作统一标签。
+
 ## 音频节奏实验
 
 `--onset-threshold 0.7 --onset-min-interval-ms 35` 可启用按置信度去重的转录骨架。
