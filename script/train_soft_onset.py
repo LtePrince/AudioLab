@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import math
 from pathlib import Path
 import random
 import time
@@ -33,14 +34,29 @@ from src.soft_onset import (CACHE_SCHEMA, MEMORY_SECONDS, SCHEMA, condition_inpu
 from src.test_decoder import load_models
 
 ROUTES = {'4k':'decoder','freex':'decoder_freex'}
+CACHE_STORAGE_SCHEMA = 'audiolab-frozen-soft-onset-cache-v2'
 
 
-def check_size(path, budget, maximum_mib=700):
+def check_size(path, budget, maximum_mib=None):
+    if maximum_mib is None:
+        maximum_mib = getattr(budget.args, 'max_artifact_mib', 700)
     state = budget.check(force=True)
     size = sum(p.stat().st_size for p in path.rglob('*') if p.is_file() and not p.is_symlink())
     if size > maximum_mib*1024**2:
         raise RuntimeError('experiment output exceeds explicit artifact budget')
     return dict(bytes=size, snapshot=state)
+
+
+def store_features(features, dtype):
+    """Quantize only the frozen audio encoder output, never timing/onset inputs."""
+    source = features.detach().cpu()
+    if source.dtype != torch.float32 or not torch.isfinite(source).all():
+        raise ValueError('finite float32 source audio features required')
+    stored = source.to({'float32':torch.float32, 'float16':torch.float16}[dtype])
+    if not torch.isfinite(stored).all():
+        raise ValueError('audio features overflow the selected cache dtype')
+    return stored, dict(dtype=dtype, training_dtype='float32', stored=tensor_fingerprint(stored),
+                       max_abs_roundtrip_error=float((source-stored.float()).abs().max()))
 
 
 def prepare(args, output, budget, device):
@@ -64,13 +80,16 @@ def prepare(args, output, budget, device):
         enc.requires_grad_(False); dec.requires_grad_(False)
         models[mode] = (enc,dec)
         sources[mode] = file_fingerprint(path)
-    report = dict(schema=CACHE_SCHEMA,status='running',source_manifest=file_fingerprint(args.manifest),
+    feature_dtype = args.cache_feature_dtype
+    report = dict(schema=CACHE_STORAGE_SCHEMA,status='running',source_manifest=file_fingerprint(args.manifest),
                   source_root=manifest['source_root'],models=sources,rows=[],implementation=code_version(),
                   contract=dict(onset='frozen predicted probability + subframe offset, no threshold/NMS',
                     audio_features='each route frozen legacy encoder, full attention',
                     onset_encoder='1024 mel core + 128 context, same train and inference',
                     memory_frame_seconds=MEMORY_SECONDS,condition_offset_unit='memory frames',
-                    target_used_for_acoustic_or_soft_inputs=False,freeze_frontend=True,selection='fixed before training'))
+                    target_used_for_acoustic_or_soft_inputs=False,freeze_frontend=True,selection='fixed before training',
+                    cache_feature_dtype=feature_dtype,loaded_feature_dtype='float32',
+                    condition_and_time_dtype='float32'))
     for index,row in enumerate(rows):
         budget.check(force=True)
         mel,duration = load_audio(row['audio'],max_seconds=args.max_seconds,budget=budget)
@@ -88,8 +107,10 @@ def prepare(args, output, budget, device):
             ref = references[mode]
             enforce_preflight(estimate_working_set(enc,dec,mel.shape[-1],len(ref.tokens)),budget,device)
             feats,valid,geometry = encode_audio(enc,mel,duration,device)
-            sample['routes'][mode] = dict(features=feats.cpu(),tokens=ref.tokens,frames=ref.frames,
-                offsets=ref.offsets,offset_mask=ref.offset_mask,reference=ref.metadata,geometry=geometry)
+            stored,storage = store_features(feats,feature_dtype)
+            sample['routes'][mode] = dict(features=stored,tokens=ref.tokens,frames=ref.frames,
+                offsets=ref.offsets,offset_mask=ref.offset_mask,reference=ref.metadata,geometry=geometry,
+                feature_storage=storage)
             if 'valid' in sample and not torch.equal(sample['valid'],valid.cpu()):
                 raise ValueError('two route encoders have different clocks')
             sample['valid'] = valid.cpu()
@@ -99,6 +120,7 @@ def prepare(args, output, budget, device):
         report['rows'].append(dict(id=row['id'],split=row['split'],file=path.name,sha256=sha256(path),
             audio=sample['audio'],duration=duration,
             token_counts={m:len(r['tokens']) for m,r in sample['routes'].items()},
+            feature_storage={m:r['feature_storage'] for m,r in sample['routes'].items()},
             condition=tensor_fingerprint(sample['soft_onsets']),valid=tensor_fingerprint(sample['valid'])))
         print(f'[prepare] {index+1}/{len(rows)} {row["id"]}',flush=True)
         del sample,arrays,references,mel,feats,valid
@@ -111,7 +133,7 @@ def prepare(args, output, budget, device):
 def cache_inputs(path):
     path = Path(path)
     manifest = json.loads((path/'cache.json').read_text())
-    if manifest.get('schema') != CACHE_SCHEMA or manifest.get('status') != 'completed':
+    if manifest.get('schema') not in (CACHE_SCHEMA,CACHE_STORAGE_SCHEMA) or manifest.get('status') != 'completed':
         raise ValueError('completed versioned cache required')
     for row in manifest['rows']:
         target = (path/row['file']).resolve()
@@ -121,7 +143,13 @@ def cache_inputs(path):
 
 
 def load_sample(cache,row):
-    return torch.load(Path(cache)/row['file'],map_location='cpu',weights_only=True)
+    sample = torch.load(Path(cache)/row['file'],map_location='cpu',weights_only=True)
+    for route in sample['routes'].values():
+        stored = route['features']
+        if stored.dtype not in (torch.float16,torch.float32):
+            raise ValueError('cache audio features must be float16 or float32')
+        route['features'] = stored.float()
+    return sample
 
 
 def sample_order(rows, steps, seed):
@@ -133,6 +161,47 @@ def sample_order(rows, steps, seed):
     return order[:steps]
 
 
+def training_rows(cache, args):
+    rows = [r for r in cache['rows'] if args.train_all or r['split']=='train']
+    if args.train_all:
+        if args.train_limit or args.val_limit:
+            raise ValueError('train-all requires every training and diagnostic row; sample limits forbidden')
+        if not rows or args.steps<1 or args.steps % len(rows):
+            raise ValueError('train-all requires positive whole epochs; steps must be a multiple of all rows')
+    elif args.train_limit:
+        rows = rows[:args.train_limit]
+    return rows
+
+
+def evaluation_scope(checkpoint):
+    training = checkpoint.get('training_scope','train')
+    if training not in ('train','all'):
+        raise ValueError('unknown checkpoint training scope')
+    expected = 'training_diagnostic' if training=='all' else 'development_holdout'
+    if checkpoint.get('evaluation_scope',expected) != expected:
+        raise ValueError('checkpoint training/evaluation scope mismatch')
+    return expected
+
+
+def epoch_diagnostic(decoder, rows, cache, mode, condition, budget, device):
+    """No sampling, optimization, checkpoint selection, or training RNG effects."""
+    was_training = decoder.training
+    devices = [device.index if device.index is not None else torch.cuda.current_device()] if device.type=='cuda' else []
+    scores = []
+    with torch.random.fork_rng(devices=devices), torch.no_grad():
+        try:
+            decoder.eval()
+            for row in rows:
+                budget.check(force=True)
+                sample = load_sample(cache,row)
+                training_preflight(decoder,sample,mode,budget,device)
+                _,score = forward_loss(decoder,sample,mode,condition,device,score=True)
+                scores.append(score)
+        finally:
+            decoder.train(was_training)
+    return dict(samples=len(rows),weighted=weighted_scores(scores))
+
+
 def train(args,output,budget,device):
     cache = cache_inputs(args.cache)
     source = cache['models'][args.mode]
@@ -141,15 +210,42 @@ def train(args,output,budget,device):
     decoder,config,initial = initialize_decoder(source['path'],args.seed,
         with_history=args.condition.startswith('soft_history'),with_relation_aux=args.condition=='soft_history_aux')
     decoder.to(device).train()
-    rows = [r for r in cache['rows'] if r['split']=='train']
-    if args.train_limit:
-        rows = rows[:args.train_limit]
+    decoder.gradient_checkpointing = args.gradient_checkpointing
+    rows = training_rows(cache,args)
     order = sample_order(rows,args.steps,args.seed)
     optimizer = torch.optim.AdamW(decoder.parameters(),lr=args.lr,weight_decay=.01)
     # Model constructors may consume RNG even for zero-initialized adapters.
     # Reset after construction so every arm starts the same dropout stream.
     torch.manual_seed(args.seed)
     losses = []; estimates = {}; first_gradient = None; first_history_gradient=None; started=time.monotonic()
+    scope = 'all' if args.train_all else 'train'
+    eval_scope = 'training_diagnostic' if args.train_all else 'development_holdout'
+    curves = []
+    diagnostic_rows = [r for r in cache['rows'] if r['split']=='val']
+    cache_source = file_fingerprint(Path(args.cache)/'cache.json')
+
+    def checkpoint_at(step, kind):
+        return dict(soft_onset_schema=SCHEMA,timing_schema=TIMING_SCHEMA,condition=args.condition,
+            history_schema=HISTORY_SCHEMA if decoder.history_dim else None,
+            relation_schema=RELATION_SCHEMA if decoder.relation_head is not None else None,
+            relation_weight=.1 if decoder.relation_head is not None else None,
+            model={k:v.detach().cpu() for k,v in decoder.state_dict().items()},dec_config=config,
+            mode=args.mode,steps=step,planned_steps=args.steps,seed=args.seed,lr=args.lr,initialization=initial,
+            cache_manifest=cache_source,frozen_sources=cache['models'],
+            training_order=[rows[i]['id'] for i in order[:step]],inference_contract=cache['contract'],
+            training_scope=scope,evaluation_scope=eval_scope,gradient_checkpointing=args.gradient_checkpointing,
+            checkpoint_kind=kind,recovery='model weights only; optimizer/RNG resume is not supported')
+
+    def record_epoch(step):
+        diagnostic = epoch_diagnostic(decoder,diagnostic_rows,args.cache,args.mode,args.condition,budget,device)
+        curves.append(dict(step=step,epoch=step//len(rows),**diagnostic))
+        write_json(output/'epoch_curve.json',dict(training_scope=scope,evaluation_scope=eval_scope,
+            original_val_ids=[r['id'] for r in diagnostic_rows],planned_steps=args.steps,
+            selection='fixed budget, no early stopping or best checkpoint selection',curve=curves))
+        print(f'[diagnostic {args.mode}/{args.condition}] step={step} samples={len(diagnostic_rows)}',flush=True)
+
+    if args.train_all:
+        record_epoch(0)
     for step,index in enumerate(order,1):
         row = rows[index]; sample = load_sample(args.cache,row)
         if row['id'] not in estimates:
@@ -176,15 +272,11 @@ def train(args,output,budget,device):
             print(f'[train {args.mode}/{args.condition}] {step}/{args.steps} loss={float(loss.detach()):.4f} '
                   f'seconds={time.monotonic()-started:.1f}',flush=True)
         del sample,loss
-    checkpoint = dict(soft_onset_schema=SCHEMA,timing_schema=TIMING_SCHEMA,condition=args.condition,
-                      history_schema=HISTORY_SCHEMA if decoder.history_dim else None,
-                      relation_schema=RELATION_SCHEMA if decoder.relation_head is not None else None,
-                      relation_weight=.1 if decoder.relation_head is not None else None,
-                      model={k:v.detach().cpu() for k,v in decoder.state_dict().items()},dec_config=config,
-                      mode=args.mode,steps=args.steps,seed=args.seed,lr=args.lr,initialization=initial,
-                      cache_manifest=file_fingerprint(Path(args.cache)/'cache.json'),
-                      frozen_sources=cache['models'],training_order=[rows[i]['id'] for i in order],
-                      inference_contract=cache['contract'])
+        if args.train_all and step%len(rows)==0:
+            record_epoch(step)
+            budget.save(checkpoint_at(step,'latest'),output/'decoder_latest.pt')
+            check_size(output,budget)
+    checkpoint = checkpoint_at(args.steps,'final')
     budget.save(checkpoint,output/'decoder_final.pt')
     report = dict(schema=SCHEMA,status='trained',mode=args.mode,condition=args.condition,steps=args.steps,
         seed=args.seed,lr=args.lr,optimizer='AdamW, weight_decay=.01, clip_grad_norm=1',
@@ -194,6 +286,11 @@ def train(args,output,budget,device):
         first_history_projection_gradient_norm=first_history_gradient,
         final_history_projection_norm=float(decoder.history_proj.weight.detach().norm()) if decoder.history_dim else None,
         training_order=checkpoint['training_order'],train_samples=len(rows),metrics=losses,
+        training_scope=scope,evaluation_scope=eval_scope,
+        original_split_counts={split:sum(r['split']==split for r in rows) for split in ('train','val')},
+        epochs=args.steps/len(rows),epoch_diagnostics=curves,
+        gradient_checkpointing=args.gradient_checkpointing,
+        checkpoint_policy='rolling model-only latest + final, no best selection' if args.train_all else 'final only',
         checkpoint=file_fingerprint(output/'decoder_final.pt'),cache=checkpoint['cache_manifest'],
         estimates=estimates,training_seconds=time.monotonic()-started,implementation=code_version())
     del optimizer,checkpoint,decoder
@@ -223,6 +320,7 @@ def onset_metrics(raw,reference,bpm,offset,duration):
 def evaluate(args,output,budget,device,checkpoint=None):
     checkpoint = checkpoint or args.checkpoint
     cache=cache_inputs(args.cache);decoder,ck=load_decoder(checkpoint,device)
+    scope=evaluation_scope(ck)
     if ck['cache_manifest']['sha256'] != sha256(Path(args.cache)/'cache.json'):
         raise ValueError('evaluation cache differs from the frozen training inputs')
     mode,condition=ck['mode'],ck['condition'];tk=ChartTokenizer(decoder.n_lanes)
@@ -292,9 +390,11 @@ def evaluate(args,output,budget,device,checkpoint=None):
             outputs.append(decoder(tokens[None,:-1],frames[None,:-1],mem,sample['valid'].to(device),history=history))
         sensitivity=dict(sample=rows[0]['id'],first_input_tokens=len(tokens)-1,
                          max_abs_logit_difference=float((outputs[0]-outputs[1]).abs().max()))
-    return dict(val_samples=len(rows),teacher_forcing=scores,weighted=weighted_scores(scores),
+    return dict(val_samples=len(rows),evaluation_scope=scope,teacher_forcing=scores,weighted=weighted_scores(scores),
                 free_generation=generated,soft_condition_sensitivity=sensitivity,
-                interpretation='development holdout; chart-reference similarity and unreviewed samples, not playable certification')
+                interpretation=('original val songs participated in gradients; training diagnostic, not holdout'
+                    if scope=='training_diagnostic' else 'development holdout')+
+                    '; chart-reference similarity and unreviewed samples, not playable certification')
 
 
 def main():
@@ -306,12 +406,17 @@ def main():
     parser.add_argument('--checkpoint');parser.add_argument('--steps',type=int,default=200)
     parser.add_argument('--seed',type=int,default=42);parser.add_argument('--lr',type=float,default=5e-5)
     parser.add_argument('--train-limit',type=int,default=0);parser.add_argument('--val-limit',type=int,default=0)
+    parser.add_argument('--train-all',action='store_true',help='all cached splits enter gradients; original val becomes training diagnostic')
+    parser.add_argument('--gradient-checkpointing',action='store_true',help='recompute decoder layers during backward; preserve full context')
     parser.add_argument('--generate-limit',type=int,default=2);parser.add_argument('--max-decoder-steps',type=int,default=6000)
     parser.add_argument('--max-seconds',type=float,default=240);parser.add_argument('--max-reference-tokens',type=int,default=4096)
+    parser.add_argument('--cache-feature-dtype',choices=('float32','float16'),default='float32')
+    parser.add_argument('--max-artifact-mib',type=float,default=700)
     add_resource_args(parser);parser.set_defaults(max_rss_gib=4)
     args=parser.parse_args()
     if args.steps<1 or not 0<args.lr<1 or args.max_decoder_steps<1 or args.max_reference_tokens<2 \
-            or min(args.train_limit,args.val_limit,args.generate_limit)<0:
+            or min(args.train_limit,args.val_limit,args.generate_limit)<0 \
+            or not math.isfinite(args.max_artifact_mib) or args.max_artifact_mib<=0:
         parser.error('positive steps/lr and nonnegative sample limits required')
     required={'prepare':('manifest','model_root'),'train':('cache','mode','condition'),
               'evaluate':('cache','checkpoint')}[args.action]

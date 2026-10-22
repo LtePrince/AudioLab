@@ -155,7 +155,9 @@ def training_preflight(decoder, sample, mode, budget, device):
     length, frames = len(row['tokens'])-1, row['features'].shape[1]
     depth, heads = len(decoder.blocks), decoder.blocks[0].h
     dim, vocab = decoder.tok_emb.embedding_dim, decoder.lm_head.out_features
-    parts = dict(attention_and_backward=depth*heads*(length*length+length*frames)*4*4,
+    checkpointed = getattr(decoder, 'gradient_checkpointing', False)
+    attention_layers = 1 if checkpointed else depth
+    parts = dict(attention_and_backward=attention_layers*heads*(length*length+length*frames)*4*4,
                  hidden_and_backward=depth*(length+frames)*dim*4*64,
                  masks=length*frames*12, logits=length*vocab*4*4,
                  optimizer_and_gradient=sum(p.numel()*p.element_size() for p in decoder.parameters())*4)
@@ -169,7 +171,9 @@ def training_preflight(decoder, sample, mode, budget, device):
     elif state['rss_gib']+extra/GIB > budget.args.max_rss_gib or \
             state['ram_available_gib']-extra/GIB < budget.args.min_available_ram_gib:
         raise RuntimeError('Resource budget: decoder training estimate exceeds RAM reserve/RSS')
-    return dict(method='float32-attention-forward-backward-v1', bytes=extra, parts=parts,
+    return dict(method=('float32-block-recompute-forward-backward-v1' if checkpointed
+                        else 'float32-attention-forward-backward-v1'), bytes=extra, parts=parts,
+                gradient_checkpointing=checkpointed, retained_attention_layers=attention_layers,
                 tokens=length, memory_frames=frames)
 
 
