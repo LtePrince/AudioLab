@@ -139,3 +139,32 @@ def test_free_protocol_exports_two_same_frame_groups_and_complete_hold(monkeypat
     assert result['notes'][0]['time_seconds']==result['notes'][1]['time_seconds']==a
     assert result['notes'][0]['end_seconds']-a==pytest.approx(4*60/32/120)
     assert {n['type'] for n in result['notes']}=={'tap','hold','flick'}
+
+
+@pytest.mark.parametrize('fraction,frame_index',[(0.,0),(1.,86)])
+def test_saturated_offsets_keep_first_and_last_intervals_valid(monkeypatch,fraction,frame_index):
+    m=model().eval();c=condition();tk=ChartTokenizer(4)
+    sequence=[BOS,ANCHOR,tk.note(0,1),END_GROUP]
+
+    class Stop(torch.nn.Module):
+        def forward(self,hidden):return torch.where(hidden[:,:1]>=3,40.,-40.)
+
+    def step(token,frame,pos,caches,length,valid,history):
+        logits=torch.full((1,129),-40.)
+        logits[0,sequence[min(pos+1,3)]]=40.
+        return logits,torch.full((1,32),float(pos))
+
+    def pointer(hidden,memory,allowed):
+        scores=torch.full(allowed.shape,-40.);scores[:,frame_index]=40.
+        return scores.masked_fill(~allowed,float('-inf'))
+
+    monkeypatch.setattr(m.decoder,'step',step);monkeypatch.setattr(m,'frame_logits',pointer)
+    monkeypatch.setattr(m,'fraction',lambda h,k:torch.full((len(h),),fraction))
+    m.stop_head=Stop()
+    result=generate(m,c,120,use_soft=True,greedy=True)
+    assert result['status']=='completed' and result['note_count']==1
+    assert 0<=result['onsets_seconds'][0]<c['duration']
+    if fraction==0:assert result['onsets_seconds']==[0.]
+    # An anchor selected on the final budget step is not an exported note.
+    partial=generate(m,c,120,use_soft=True,greedy=True,max_tokens=1)
+    assert partial['status']=='failed' and partial['onsets_seconds']==[]

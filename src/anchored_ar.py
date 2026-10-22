@@ -163,6 +163,18 @@ def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=1200
         probabilities=nucleus_probs(logits.float().softmax(-1),.95)
         return int(probabilities.argmax() if greedy else torch.multinomial(probabilities,1,generator=rng))
 
+    def finish(status,error=None):
+        # Derive benchmark events from exported notes, including for an
+        # explicitly failed partial rollout; never count an unused anchor.
+        actual=sorted({n['time_seconds'] for n in notes})
+        result=dict(status=status,greedy=greedy,seed=seed,seconds=time.monotonic()-started,
+            notes=notes,onsets_seconds=actual,note_count=len(notes),generated_onsets=len(actual),
+            types=dict(Counter(n['type'] for n in notes)),eos_clock_seconds=clock if status=='completed' else None,
+            last_onset_seconds=actual[-1] if actual else None,
+            termination='learned_stop' if status=='completed' else 'failed',trace=trace)
+        if error:result['error']=error
+        return result
+
     for position in range(max_tokens):
         if position%32==0:check()
         frame=clock/MEMORY_SECONDS
@@ -174,18 +186,18 @@ def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=1200
         if token in (BOS,END_GROUP):
             stop=model.stop_head(hidden).squeeze()
             if select(torch.stack([torch.zeros_like(stop),stop]))==1:
-                return dict(status='completed',greedy=greedy,seed=seed,seconds=time.monotonic()-started,
-                    notes=notes,onsets_seconds=onsets,note_count=len(notes),generated_onsets=len(onsets),
-                    types=dict(Counter(n['type'] for n in notes)),eos_clock_seconds=clock,
-                    last_onset_seconds=onsets[-1] if onsets else None,termination='learned_stop',trace=trace)
+                return finish('completed')
             lower=torch.tensor([clock+(MIN_PROGRESS_SECONDS if token==END_GROUP else 0.)],device=device,dtype=torch.float64)
             lo,hi,allowed=time_intervals(lower,memory.shape[1],duration,valid)
             if not allowed.any():
-                return dict(status='failed',error='continued with no future audio interval',trace=trace)
+                return finish('failed','continued with no future audio interval')
             scores=model.frame_logits(hidden,memory,allowed)[0]
             index=select(scores)
             fraction=float(model.fraction(hidden,memory[0,index:index+1])[0])
-            clock=float(lo[0,index])+fraction*float(hi[0,index]-lo[0,index])
+            a,b=float(lo[0,index]),float(hi[0,index])
+            # Float32 sigmoid may saturate at exactly one. Keep the selected
+            # interval half-open without moving to a different frame or grid.
+            clock=min(a+fraction*(b-a),math.nextafter(b,a))
             if not (float(lower[0])<=clock<duration):raise RuntimeError('nonfinite/out-of-bounds predicted time')
             onsets.append(clock);token=ANCHOR
             group=GrammarState(tk);group.step(BOS);pending=None
@@ -199,9 +211,9 @@ def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=1200
                 allowed[candidate]=not is_hold or clock+scale<=duration
             elif kind in ('DURB','DURT'):
                 extra=tk.value(candidate)*(32 if kind=='DURB' else 1)*scale
-                allowed[candidate]=pending is not None and notes[pending]['end_seconds']+extra<=duration+1e-7
+                allowed[candidate]=pending is not None and notes[pending]['end_seconds']+extra<=duration
         allowed[END_GROUP]=bool(group.used_lanes) and not group.in_dur
-        if not allowed.any():return dict(status='failed',error='no valid group continuation',trace=trace)
+        if not allowed.any():return finish('failed','no valid group continuation')
         token=select(logits[0].masked_fill(~allowed,float('-inf')))
         if token==END_GROUP:continue
         group.step(token);kind=tk.kind(token)
@@ -212,4 +224,4 @@ def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=1200
             pending=len(notes)-1 if index==2 else None
         else:
             notes[pending]['end_seconds']+=tk.value(token)*(32 if kind=='DURB' else 1)*scale
-    return dict(status='failed',error='anchored decoder exhausted token budget before learned stop',trace=trace)
+    return finish('failed','anchored decoder exhausted token budget before learned stop')

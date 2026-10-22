@@ -1,0 +1,3294 @@
+{
+  "schema": "audiolab-time-pointer-comparison-v1",
+  "date": "2026-10-23",
+  "scope": "4K timing; all 300 training songs; fixed probes excluded from training; one sampling seed",
+  "product_weights_changed": false,
+  "variants": {
+    "audio": {
+      "config": {
+        "schema": "audiolab-absolute-time-group-ar-v1",
+        "variant": "audio",
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "initialization": "all decoder and pointer weights from scratch; frozen original acoustic frontends",
+        "initial_state_sha256": "8a4f75f2dcd41e7950df7680f59177883bbb755ac0f8fc6dbaa5d8bc4980e041",
+        "seed": 42,
+        "epochs": 10,
+        "lr": 0.0003,
+        "parameters": 6626691,
+        "full_cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+        "pair_cache_sha256": "0c859f21b65b1142a0e3e238b1d6892978c4bc30e754430d89d9324cfc4c3955",
+        "source_sha256": {
+          "src/anchored_ar.py": "ed2ec3ce88f61a1a4baedfda8feb72cf63015795bbbd59cffae1c0f28bb01319",
+          "script/train_anchored_ar.py": "ec652ceba01c7a47348600d45cbb3122e26aa5d24d4eda00e2fb1dde99900431",
+          "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+          "src/conditional_training.py": "0aad3abd8cec25af461544d19d59131f5bcca54ffbedb22544cc59c6af4ceb7f",
+          "script/train_grounded_ar.py": "45032120b4935811ddaf4e76a6c0643f0c33d3b9fc9ebb32a9f180e1f0916741"
+        },
+        "loss": "frame CE + conditional normalized subframe MSE + .25 layout CE + .5 event-normalized stop/continue BCE; joint update denominators",
+        "policy": "global audio; pointer output chronological intervals; no grid snapping/onset threshold/type quota; continuous seconds export"
+      },
+      "curves": [
+        {
+          "epoch": 1,
+          "steps": 300,
+          "elapsed_seconds": 124.59583495929837,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 3.5608682669815006,
+          "frame_accuracy": 0.2251776461880089,
+          "conditional_offset_mae_seconds": 0.007817221305406413,
+          "subframe_mse": 0.04679205195351996,
+          "layout_ce": 2.076098153563969,
+          "stop_bce": 2.7785511229683957,
+          "continue_bce": 0.057354448118380134,
+          "false_stop_rate": 0.014511472982975573,
+          "end_stop_recall": 0.025
+        },
+        {
+          "epoch": 2,
+          "steps": 600,
+          "elapsed_seconds": 213.83296351879835,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.826578223558817,
+          "frame_accuracy": 0.4451517394522576,
+          "conditional_offset_mae_seconds": 0.007046195442426811,
+          "subframe_mse": 0.041303320325347226,
+          "layout_ce": 1.5816865647276366,
+          "stop_bce": 3.265102309646706,
+          "continue_bce": 0.00938555706835605,
+          "false_stop_rate": 5.1813471502590674e-05,
+          "end_stop_recall": 0.07833333333333334
+        },
+        {
+          "epoch": 3,
+          "steps": 900,
+          "elapsed_seconds": 306.6620169170201,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.6037590814201501,
+          "frame_accuracy": 0.5059918578830496,
+          "conditional_offset_mae_seconds": 0.006964794757068279,
+          "subframe_mse": 0.04067723109769618,
+          "layout_ce": 1.4611444391563164,
+          "stop_bce": 3.272727120829125,
+          "continue_bce": 0.006348311839546652,
+          "false_stop_rate": 5.1813471502590674e-05,
+          "end_stop_recall": 0.16916666666666666
+        },
+        {
+          "epoch": 4,
+          "steps": 1200,
+          "elapsed_seconds": 400.80216928198934,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.4769583030941749,
+          "frame_accuracy": 0.5398741672834937,
+          "conditional_offset_mae_seconds": 0.006952160950148577,
+          "subframe_mse": 0.040252483861413405,
+          "layout_ce": 1.3958937234837787,
+          "stop_bce": 3.0370684421388434,
+          "continue_bce": 0.005223630193336905,
+          "false_stop_rate": 3.700962250185048e-05,
+          "end_stop_recall": 0.23666666666666666
+        },
+        {
+          "epoch": 5,
+          "steps": 1500,
+          "elapsed_seconds": 494.1590107344091,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.3992245499973912,
+          "frame_accuracy": 0.5607846039970392,
+          "conditional_offset_mae_seconds": 0.006787765210738839,
+          "subframe_mse": 0.038947234424632306,
+          "layout_ce": 1.3360898463902957,
+          "stop_bce": 2.7474108762361964,
+          "continue_bce": 0.00462823653600553,
+          "false_stop_rate": 2.5906735751295337e-05,
+          "end_stop_recall": 0.25583333333333336
+        },
+        {
+          "epoch": 6,
+          "steps": 1800,
+          "elapsed_seconds": 589.5276167839766,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.3394596112835504,
+          "frame_accuracy": 0.576039970392302,
+          "conditional_offset_mae_seconds": 0.006708717185160828,
+          "subframe_mse": 0.038052241680914686,
+          "layout_ce": 1.3056464936122487,
+          "stop_bce": 2.5314683343609796,
+          "continue_bce": 0.004328492334888742,
+          "false_stop_rate": 7.7720207253886e-05,
+          "end_stop_recall": 0.2658333333333333
+        },
+        {
+          "epoch": 7,
+          "steps": 2100,
+          "elapsed_seconds": 684.7779237180948,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.2904699041753411,
+          "frame_accuracy": 0.590181347150259,
+          "conditional_offset_mae_seconds": 0.0066324632544160385,
+          "subframe_mse": 0.03732615098980056,
+          "layout_ce": 1.2873457232944516,
+          "stop_bce": 2.351016001018773,
+          "continue_bce": 0.004194978344537522,
+          "false_stop_rate": 0.00011102886750555144,
+          "end_stop_recall": 0.27666666666666667
+        },
+        {
+          "epoch": 8,
+          "steps": 2400,
+          "elapsed_seconds": 779.628580454737,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.2483844037185237,
+          "frame_accuracy": 0.6041302738712065,
+          "conditional_offset_mae_seconds": 0.006587977282422459,
+          "subframe_mse": 0.03693120450930362,
+          "layout_ce": 1.2760046519895656,
+          "stop_bce": 2.2126087898466116,
+          "continue_bce": 0.004138628740296551,
+          "false_stop_rate": 0.00012953367875647668,
+          "end_stop_recall": 0.285
+        },
+        {
+          "epoch": 9,
+          "steps": 2700,
+          "elapsed_seconds": 875.2837109491229,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.2134308815284802,
+          "frame_accuracy": 0.6127017024426351,
+          "conditional_offset_mae_seconds": 0.006539783882788996,
+          "subframe_mse": 0.03625076779061482,
+          "layout_ce": 1.2686405605729818,
+          "stop_bce": 2.1329736454761585,
+          "continue_bce": 0.0040343672032712745,
+          "false_stop_rate": 0.00013323464100666174,
+          "end_stop_recall": 0.2875
+        },
+        {
+          "epoch": 10,
+          "steps": 3000,
+          "elapsed_seconds": 970.0692538507283,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.1897323607474146,
+          "frame_accuracy": 0.6204145077720207,
+          "conditional_offset_mae_seconds": 0.0065002964532645795,
+          "subframe_mse": 0.03603308719943319,
+          "layout_ce": 1.2630965016331999,
+          "stop_bce": 2.0614238196903414,
+          "continue_bce": 0.004017628146312045,
+          "false_stop_rate": 0.00013323464100666174,
+          "end_stop_recall": 0.3075
+        }
+      ],
+      "training_resources": {
+        "disk_free_gib": 16.596012115478516,
+        "ram_available_gib": 35.5582389831543,
+        "rss_gib": 1.7716751098632812,
+        "gpu_peak_allocated_gib": 0.3052539825439453,
+        "gpu_peak_reserved_gib": 0.45703125
+      },
+      "evaluation_resources": {
+        "disk_free_gib": 16.58405303955078,
+        "ram_available_gib": 35.743247985839844,
+        "rss_gib": 1.7491722106933594,
+        "gpu_peak_allocated_gib": 0.1342029571533203,
+        "gpu_peak_reserved_gib": 0.224609375
+      },
+      "protocol_sha256": "5b5fb33e54aea677bca80c78889964b4904c564142f021ee587f66d9e4f4effd",
+      "sources": {
+        "model_latest.pt": {
+          "path": "out/anchored_ar_20261023/audio/model_latest.pt",
+          "sha256": "2e61bc4d799699b06eb412560c21fd0a359ea3e682772097f77fe152c0efd4b8"
+        },
+        "training.json": {
+          "path": "out/anchored_ar_20261023/audio/training.json",
+          "sha256": "7982776b78970511d969b8d6c94d3c2b3dfbe4d7945f81fc0a2c96a5b198227c"
+        },
+        "inputs.json": {
+          "path": "out/anchored_ar_20261023/audio/inputs.json",
+          "sha256": "4c8fa018fafac0d53209d5110884e1a2e7bb3614d033a804f06780270b7fddc8"
+        },
+        "report.json": {
+          "path": "out/anchored_ar_20261023/audio/report.json",
+          "sha256": "3432850658f77a9cb19df7096eede0f6bf0fc925819873a2ea24cda30398a194"
+        },
+        "diagnostics.json": {
+          "path": "out/anchored_ar_20261023/audio/diagnostics.json",
+          "sha256": "7be9cac79ac3c5bb412048b1a62bfabc2a1b09c45c45f1b51b03861b13240540"
+        }
+      },
+      "teacher": [
+        {
+          "id": "-SURREALISM-_IN",
+          "counts": {
+            "time_count": 735,
+            "layout_count": 1717,
+            "stop_count": 1,
+            "continue_count": 735
+          },
+          "components": {
+            "matched": {
+              "frame_ce": 1370.8785400390625,
+              "subframe_mse": 55.2331888062585,
+              "layout_ce": 2192.38232421875,
+              "stop_bce": 4.690389633178711,
+              "continue_bce": 0.9027323722839355,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 337.0,
+              "conditional_offset_absolute_seconds": 8.121758772707581
+            },
+            "zero_audio": {
+              "frame_ce": 1764.473876953125,
+              "subframe_mse": 59.029442828974595,
+              "layout_ce": 2199.4521484375,
+              "stop_bce": 3.399879217147827,
+              "continue_bce": 4.0686421394348145,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 167.0,
+              "conditional_offset_absolute_seconds": 8.356041181247065
+            },
+            "zero_soft": {
+              "frame_ce": 1370.8785400390625,
+              "subframe_mse": 55.2331888062585,
+              "layout_ce": 2192.38232421875,
+              "stop_bce": 4.690389633178711,
+              "continue_bce": 0.9027323722839355,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 337.0,
+              "conditional_offset_absolute_seconds": 8.121758772707581
+            }
+          }
+        },
+        {
+          "id": "ABYSS MOTION 192.333_IN",
+          "counts": {
+            "time_count": 655,
+            "layout_count": 1556,
+            "stop_count": 1,
+            "continue_count": 655
+          },
+          "components": {
+            "matched": {
+              "frame_ce": 1491.5751953125,
+              "subframe_mse": 116.18335208459109,
+              "layout_ce": 1874.27783203125,
+              "stop_bce": 4.819532871246338,
+              "continue_bce": 1.9425361156463623,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 232.0,
+              "conditional_offset_absolute_seconds": 11.279890187648508
+            },
+            "zero_audio": {
+              "frame_ce": 1360.892578125,
+              "subframe_mse": 51.626085220656535,
+              "layout_ce": 1895.0299072265625,
+              "stop_bce": 4.519275188446045,
+              "continue_bce": 5.437987327575684,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 175.0,
+              "conditional_offset_absolute_seconds": 7.386410603456782
+            },
+            "zero_soft": {
+              "frame_ce": 1491.5751953125,
+              "subframe_mse": 116.18335208459109,
+              "layout_ce": 1874.27783203125,
+              "stop_bce": 4.819532871246338,
+              "continue_bce": 1.9425361156463623,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 232.0,
+              "conditional_offset_absolute_seconds": 11.279890187648508
+            }
+          }
+        },
+        {
+          "id": "Eltaw_IN",
+          "counts": {
+            "time_count": 701,
+            "layout_count": 1596,
+            "stop_count": 1,
+            "continue_count": 701
+          },
+          "components": {
+            "matched": {
+              "frame_ce": 734.6009521484375,
+              "subframe_mse": 18.900430769086014,
+              "layout_ce": 1612.84130859375,
+              "stop_bce": 5.143441677093506,
+              "continue_bce": 1.3447849750518799,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 468.0,
+              "conditional_offset_absolute_seconds": 4.532491678685337
+            },
+            "zero_audio": {
+              "frame_ce": 1310.9031982421875,
+              "subframe_mse": 55.15339445927506,
+              "layout_ce": 1628.4775390625,
+              "stop_bce": 4.192015171051025,
+              "continue_bce": 2.552837371826172,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 253.0,
+              "conditional_offset_absolute_seconds": 7.858554799796197
+            },
+            "zero_soft": {
+              "frame_ce": 734.6009521484375,
+              "subframe_mse": 18.900430769086014,
+              "layout_ce": 1612.84130859375,
+              "stop_bce": 5.143441677093506,
+              "continue_bce": 1.3447849750518799,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 468.0,
+              "conditional_offset_absolute_seconds": 4.532491678685337
+            }
+          }
+        }
+      ],
+      "shift_pairs": [
+        {
+          "id": "-SURREALISM-_IN",
+          "view": 0,
+          "reference_first_seconds": 1.1979166666666665,
+          "generated_first_seconds": 1.5181583049886622,
+          "generation": {
+            "status": "completed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 2.3877180702984333,
+            "note_count": 81,
+            "generated_onsets": 80,
+            "types": {
+              "tap": 81
+            },
+            "eos_clock_seconds": 9.31242874802916,
+            "last_onset_seconds": 9.31242874802916,
+            "termination": "learned_stop",
+            "f1_25ms": 0.4628099173553719,
+            "f1_50ms": 0.5619834710743802,
+            "reference_onsets": 41,
+            "metric_scope": "completed_generation"
+          }
+        },
+        {
+          "id": "-SURREALISM-_IN",
+          "view": 1,
+          "reference_first_seconds": 1.9479166666666665,
+          "generated_first_seconds": 2.2660418244446214,
+          "generation": {
+            "status": "failed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 3.2884503342211246,
+            "note_count": 122,
+            "generated_onsets": 99,
+            "types": {
+              "tap": 95,
+              "drag": 27
+            },
+            "eos_clock_seconds": null,
+            "last_onset_seconds": 11.999999540268242,
+            "termination": "failed",
+            "error": "continued with no future audio interval",
+            "f1_25ms": 0.42857142857142855,
+            "f1_50ms": 0.5142857142857142,
+            "reference_onsets": 41,
+            "metric_scope": "partial_failed_generation_diagnostic_only"
+          }
+        },
+        {
+          "id": "ABYSS MOTION 192.333_IN",
+          "view": 0,
+          "reference_first_seconds": 0.2339692096520098,
+          "generated_first_seconds": 0.299222729049302,
+          "generation": {
+            "status": "failed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 4.38705887272954,
+            "note_count": 193,
+            "generated_onsets": 125,
+            "types": {
+              "tap": 153,
+              "drag": 35,
+              "flick": 5
+            },
+            "eos_clock_seconds": null,
+            "last_onset_seconds": 11.999999995599396,
+            "termination": "failed",
+            "error": "continued with no future audio interval",
+            "f1_25ms": 0.36633663366336633,
+            "f1_50ms": 0.6237623762376238,
+            "reference_onsets": 77,
+            "metric_scope": "partial_failed_generation_diagnostic_only"
+          }
+        },
+        {
+          "id": "ABYSS MOTION 192.333_IN",
+          "view": 1,
+          "reference_first_seconds": 1.35507167256789,
+          "generated_first_seconds": 1.5068948800223214,
+          "generation": {
+            "status": "failed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 4.013361692428589,
+            "note_count": 140,
+            "generated_onsets": 130,
+            "types": {
+              "tap": 140
+            },
+            "eos_clock_seconds": null,
+            "last_onset_seconds": 11.999999923844843,
+            "termination": "failed",
+            "error": "continued with no future audio interval",
+            "f1_25ms": 0.11594202898550725,
+            "f1_50ms": 0.6376811594202898,
+            "reference_onsets": 77,
+            "metric_scope": "partial_failed_generation_diagnostic_only"
+          }
+        },
+        {
+          "id": "Eltaw_IN",
+          "view": 0,
+          "reference_first_seconds": 1.330958549222798,
+          "generated_first_seconds": 3.042269472567673,
+          "generation": {
+            "status": "completed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 1.0242922194302082,
+            "note_count": 44,
+            "generated_onsets": 34,
+            "types": {
+              "tap": 43,
+              "flick": 1
+            },
+            "eos_clock_seconds": 10.018688704648525,
+            "last_onset_seconds": 10.018688704648525,
+            "termination": "learned_stop",
+            "f1_25ms": 0.6133333333333333,
+            "f1_50ms": 0.64,
+            "reference_onsets": 41,
+            "metric_scope": "completed_generation"
+          }
+        },
+        {
+          "id": "Eltaw_IN",
+          "view": 1,
+          "reference_first_seconds": 2.65220207253886,
+          "generated_first_seconds": 2.5710852770470165,
+          "generation": {
+            "status": "completed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 2.584621738642454,
+            "note_count": 84,
+            "generated_onsets": 79,
+            "types": {
+              "tap": 84
+            },
+            "eos_clock_seconds": 10.571566297743056,
+            "last_onset_seconds": 10.571566297743056,
+            "termination": "learned_stop",
+            "f1_25ms": 0.5333333333333333,
+            "f1_50ms": 0.6,
+            "reference_onsets": 41,
+            "metric_scope": "completed_generation"
+          }
+        }
+      ],
+      "runs": [
+        {
+          "id": "4k/anchored-audio/greedy",
+          "metadata": {
+            "stage": "raw_layout",
+            "mode": "4k",
+            "variant": "audio",
+            "greedy": true,
+            "seed": 42,
+            "checkpoint_sha256": "2e61bc4d799699b06eb412560c21fd0a359ea3e682772097f77fe152c0efd4b8",
+            "sources": {
+              "src/anchored_ar.py": "bb2467d0bdbdb13a3443a6cfcdd1693e09173163f39a11e2a3bd99620800a566",
+              "script/train_anchored_ar.py": "cd9cee8d7a267f39d5b113375fb233fe2f0b50c799c85b9a686bbb776c231d7e",
+              "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+              "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+              "src/conditional_training.py": "0aad3abd8cec25af461544d19d59131f5bcca54ffbedb22544cc59c6af4ceb7f",
+              "script/train_grounded_ar.py": "45032120b4935811ddaf4e76a6c0643f0c33d3b9fc9ebb32a9f180e1f0916741"
+            },
+            "repairs": "none",
+            "time_representation": "predicted continuous seconds",
+            "schema": "audiolab-absolute-time-group-ar-v1"
+          },
+          "coverage_status": "complete",
+          "contract_status": "fail",
+          "summary": [
+            {
+              "label_source": "constructed_acoustic_probe",
+              "split": "constructed_development",
+              "expected_cases": 5,
+              "scored_cases": 5,
+              "missing_or_failed": 0,
+              "positive_f1_50ms_macro": 0.05131578947368421,
+              "positive_reference_onsets": 12,
+              "empty_positive_cases": 2,
+              "failed_contracts": 4
+            },
+            {
+              "label_source": "chart_onset",
+              "split": "seen_training",
+              "expected_cases": 3,
+              "scored_cases": 0,
+              "missing_or_failed": 3,
+              "positive_f1_50ms_macro": null,
+              "positive_reference_onsets": 0,
+              "empty_positive_cases": 0,
+              "failed_contracts": 0
+            }
+          ],
+          "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+          "predictions_sha256": "ee43c6ebfd6ee568a442073220adace78cb1bb8f27fc2264f17ad447a9918fe8",
+          "rows": [
+            {
+              "id": "piano_three",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 39,
+                "generated_onsets": 37,
+                "f1_25ms": 0.1,
+                "f1_50ms": 0.1,
+                "types": {
+                  "tap": 39
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 5.2696851568589675,
+                "eos_clock_seconds": 5.2696851568589675,
+                "first_onset_seconds": 0.9986891281577736
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.998689,
+                "onset_count_ratio": 12.333333333333334,
+                "eos_clock_seconds": 5.2696851568589675,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 17
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 37,
+                "at_25ms": {
+                  "precision": 0.05405405405405406,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.1,
+                  "matched": 2,
+                  "false_positives": 35,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 210.0
+                },
+                "at_50ms": {
+                  "precision": 0.05405405405405406,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.1,
+                  "matched": 2,
+                  "false_positives": 35,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 210.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": 3.361000000000114,
+                  "median_absolute_ms": 4.6720000000000645,
+                  "p95_absolute_ms": 7.696900000000167,
+                  "unmatched_reference_fraction": 0.3333333333333333,
+                  "unmatched_prediction_fraction": 0.9459459459459459
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 39,
+                "unique_onsets": 37,
+                "type_counts": {
+                  "tap": 39
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_weak_middle",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": false,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": true
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 0,
+                "generated_onsets": 0,
+                "f1_25ms": 0.0,
+                "f1_50ms": 0.0,
+                "types": {},
+                "termination": "learned_stop",
+                "last_onset_seconds": null,
+                "eos_clock_seconds": 0.0,
+                "first_onset_seconds": null
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 1,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": null,
+                "onset_count_ratio": 0.0,
+                "eos_clock_seconds": 0.0,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 0
+              },
+              "weak_recall_50ms": 0.0,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 0,
+                "at_25ms": {
+                  "precision": 0.0,
+                  "recall": 0.0,
+                  "f1": 0.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 3,
+                  "false_positives_per_minute": 0.0
+                },
+                "at_50ms": {
+                  "precision": 0.0,
+                  "recall": 0.0,
+                  "f1": 0.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 3,
+                  "false_positives_per_minute": 0.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": null,
+                  "median_absolute_ms": null,
+                  "p95_absolute_ms": null,
+                  "unmatched_reference_fraction": 1.0,
+                  "unmatched_prediction_fraction": 0.0
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 0,
+                "unique_onsets": 0,
+                "type_counts": {},
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_repeated",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 37,
+                "generated_onsets": 35,
+                "f1_25ms": 0.10526315789473684,
+                "f1_50ms": 0.10526315789473684,
+                "types": {
+                  "tap": 37
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 5.2696211474498655,
+                "eos_clock_seconds": 5.2696211474498655,
+                "first_onset_seconds": 0.9987422162875568
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.998742,
+                "onset_count_ratio": 11.666666666666666,
+                "eos_clock_seconds": 5.2696211474498655,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 17
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 35,
+                "at_25ms": {
+                  "precision": 0.05714285714285714,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.10526315789473684,
+                  "matched": 2,
+                  "false_positives": 33,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 198.0
+                },
+                "at_50ms": {
+                  "precision": 0.05714285714285714,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.10526315789473684,
+                  "matched": 2,
+                  "false_positives": 33,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 198.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": 3.2155000000000378,
+                  "median_absolute_ms": 4.473500000000019,
+                  "p95_absolute_ms": 7.367450000000053,
+                  "unmatched_reference_fraction": 0.3333333333333333,
+                  "unmatched_prediction_fraction": 0.9428571428571428
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 37,
+                "unique_onsets": 35,
+                "type_counts": {
+                  "tap": 37
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_chunk_boundary",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": false,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": true
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 0,
+                "generated_onsets": 0,
+                "f1_25ms": 0.0,
+                "f1_50ms": 0.0,
+                "types": {},
+                "termination": "learned_stop",
+                "last_onset_seconds": null,
+                "eos_clock_seconds": 0.0,
+                "first_onset_seconds": null
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 2,
+                "empty_positive_segments": 2,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": null,
+                "onset_count_ratio": 0.0,
+                "eos_clock_seconds": 0.0,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 28.39999999999999,
+                "events": 0
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 0,
+                "at_25ms": {
+                  "precision": 0.0,
+                  "recall": 0.0,
+                  "f1": 0.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 3,
+                  "false_positives_per_minute": 0.0
+                },
+                "at_50ms": {
+                  "precision": 0.0,
+                  "recall": 0.0,
+                  "f1": 0.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 3,
+                  "false_positives_per_minute": 0.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": null,
+                  "median_absolute_ms": null,
+                  "p95_absolute_ms": null,
+                  "unmatched_reference_fraction": 1.0,
+                  "unmatched_prediction_fraction": 0.0
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 0,
+                "unique_onsets": 0,
+                "type_counts": {},
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "silence",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "silence_no_events": true,
+                "reviewed_silence_no_events": true
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 0,
+                "generated_onsets": 0,
+                "f1_25ms": 1.0,
+                "f1_50ms": 1.0,
+                "types": {},
+                "termination": "learned_stop",
+                "last_onset_seconds": null,
+                "eos_clock_seconds": 0.0,
+                "first_onset_seconds": null
+              },
+              "contract_status": "pass",
+              "coverage": {
+                "reference_nonempty_segments": 0,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": null,
+                "first_reference_seconds": null,
+                "first_prediction_seconds": null,
+                "onset_count_ratio": null,
+                "eos_clock_seconds": 0.0,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 10.0,
+                "events": 0
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 0,
+                "prediction_count": 0,
+                "at_25ms": {
+                  "precision": 1.0,
+                  "recall": 1.0,
+                  "f1": 1.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 0,
+                  "false_positives_per_minute": 0.0
+                },
+                "at_50ms": {
+                  "precision": 1.0,
+                  "recall": 1.0,
+                  "f1": 1.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 0,
+                  "false_positives_per_minute": 0.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": null,
+                  "median_absolute_ms": null,
+                  "p95_absolute_ms": null,
+                  "unmatched_reference_fraction": 0.0,
+                  "unmatched_prediction_fraction": 0.0
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 0,
+                "unique_onsets": 0,
+                "type_counts": {},
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "-SURREALISM-_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1543,
+                "generated_onsets": 1543,
+                "f1_25ms": 0.5627743634767339,
+                "f1_50ms": 0.5996488147497805,
+                "types": {
+                  "tap": 1543
+                },
+                "termination": "failed",
+                "last_onset_seconds": 153.52888872187123,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 2.6685463875491604
+              },
+              "error": "continued with no future audio interval"
+            },
+            {
+              "id": "ABYSS MOTION 192.333_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1476,
+                "generated_onsets": 1476,
+                "f1_25ms": 0.25434068512435476,
+                "f1_50ms": 0.5687470671046457,
+                "types": {
+                  "tap": 1476
+                },
+                "termination": "failed",
+                "last_onset_seconds": 126.11333272597543,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 1.2677779147954755
+              },
+              "error": "continued with no future audio interval"
+            },
+            {
+              "id": "Eltaw_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1320,
+                "generated_onsets": 1320,
+                "f1_25ms": 0.6541316180108857,
+                "f1_50ms": 0.6749134092033646,
+                "types": {
+                  "tap": 1320
+                },
+                "termination": "failed",
+                "last_onset_seconds": 135.5508382352187,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 1.2326032116948342
+              },
+              "error": "continued with no future audio interval"
+            }
+          ]
+        },
+        {
+          "id": "4k/anchored-audio/seed42",
+          "metadata": {
+            "stage": "raw_layout",
+            "mode": "4k",
+            "variant": "audio",
+            "greedy": false,
+            "seed": 42,
+            "checkpoint_sha256": "2e61bc4d799699b06eb412560c21fd0a359ea3e682772097f77fe152c0efd4b8",
+            "sources": {
+              "src/anchored_ar.py": "bb2467d0bdbdb13a3443a6cfcdd1693e09173163f39a11e2a3bd99620800a566",
+              "script/train_anchored_ar.py": "cd9cee8d7a267f39d5b113375fb233fe2f0b50c799c85b9a686bbb776c231d7e",
+              "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+              "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+              "src/conditional_training.py": "0aad3abd8cec25af461544d19d59131f5bcca54ffbedb22544cc59c6af4ceb7f",
+              "script/train_grounded_ar.py": "45032120b4935811ddaf4e76a6c0643f0c33d3b9fc9ebb32a9f180e1f0916741"
+            },
+            "repairs": "none",
+            "time_representation": "predicted continuous seconds",
+            "schema": "audiolab-absolute-time-group-ar-v1"
+          },
+          "coverage_status": "complete",
+          "contract_status": "fail",
+          "summary": [
+            {
+              "label_source": "constructed_acoustic_probe",
+              "split": "constructed_development",
+              "expected_cases": 5,
+              "scored_cases": 5,
+              "missing_or_failed": 0,
+              "positive_f1_50ms_macro": 0.11781609195402298,
+              "positive_reference_onsets": 12,
+              "empty_positive_cases": 0,
+              "failed_contracts": 4
+            },
+            {
+              "label_source": "chart_onset",
+              "split": "seen_training",
+              "expected_cases": 3,
+              "scored_cases": 0,
+              "missing_or_failed": 3,
+              "positive_f1_50ms_macro": null,
+              "positive_reference_onsets": 0,
+              "empty_positive_cases": 0,
+              "failed_contracts": 0
+            }
+          ],
+          "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+          "predictions_sha256": "3d66df774506b8d9c2f4e4bb94285835be5a7d99f104bef0e91811d25e8557c7",
+          "rows": [
+            {
+              "id": "piano_three",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 34,
+                "generated_onsets": 27,
+                "f1_25ms": 0.13333333333333333,
+                "f1_50ms": 0.13333333333333333,
+                "types": {
+                  "tap": 24,
+                  "drag": 10
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 5.3621345364317605,
+                "eos_clock_seconds": 5.3621345364317605,
+                "first_onset_seconds": 0.9986891281577736
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.998689,
+                "onset_count_ratio": 9.0,
+                "eos_clock_seconds": 5.3621345364317605,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 12
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 27,
+                "at_25ms": {
+                  "precision": 0.07407407407407407,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13333333333333333,
+                  "matched": 2,
+                  "false_positives": 25,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 150.0
+                },
+                "at_50ms": {
+                  "precision": 0.07407407407407407,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13333333333333333,
+                  "matched": 2,
+                  "false_positives": 25,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 150.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": -7.257499999999972,
+                  "median_absolute_ms": 7.257499999999972,
+                  "p95_absolute_ms": 12.60934999999999,
+                  "unmatched_reference_fraction": 0.3333333333333333,
+                  "unmatched_prediction_fraction": 0.9259259259259259
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 34,
+                "unique_onsets": 27,
+                "type_counts": {
+                  "tap": 24,
+                  "drag": 10
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_weak_middle",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 34,
+                "generated_onsets": 27,
+                "f1_25ms": 0.13333333333333333,
+                "f1_50ms": 0.13333333333333333,
+                "types": {
+                  "tap": 24,
+                  "drag": 10
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 5.362207074154532,
+                "eos_clock_seconds": 5.362207074154532,
+                "first_onset_seconds": 0.9985576686729379
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.998558,
+                "onset_count_ratio": 9.0,
+                "eos_clock_seconds": 5.362207074154532,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 12
+              },
+              "weak_recall_50ms": 1.0,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 27,
+                "at_25ms": {
+                  "precision": 0.07407407407407407,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13333333333333333,
+                  "matched": 2,
+                  "false_positives": 25,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 150.0
+                },
+                "at_50ms": {
+                  "precision": 0.07407407407407407,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13333333333333333,
+                  "matched": 2,
+                  "false_positives": 25,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 150.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": 1.5634999999999954,
+                  "median_absolute_ms": 3.00550000000005,
+                  "p95_absolute_ms": 4.4126500000000455,
+                  "unmatched_reference_fraction": 0.3333333333333333,
+                  "unmatched_prediction_fraction": 0.9259259259259259
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 34,
+                "unique_onsets": 27,
+                "type_counts": {
+                  "tap": 24,
+                  "drag": 10
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_repeated",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 32,
+                "generated_onsets": 26,
+                "f1_25ms": 0.13793103448275862,
+                "f1_50ms": 0.13793103448275862,
+                "types": {
+                  "tap": 26,
+                  "drag": 6
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 5.40802239312066,
+                "eos_clock_seconds": 5.40802239312066,
+                "first_onset_seconds": 0.9987422162875568
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.998742,
+                "onset_count_ratio": 8.666666666666666,
+                "eos_clock_seconds": 5.40802239312066,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 11
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 26,
+                "at_25ms": {
+                  "precision": 0.07692307692307693,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13793103448275862,
+                  "matched": 2,
+                  "false_positives": 24,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 144.0
+                },
+                "at_50ms": {
+                  "precision": 0.07692307692307693,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13793103448275862,
+                  "matched": 2,
+                  "false_positives": 24,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 144.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": -8.057999999999899,
+                  "median_absolute_ms": 8.057999999999899,
+                  "p95_absolute_ms": 14.177999999999823,
+                  "unmatched_reference_fraction": 0.3333333333333333,
+                  "unmatched_prediction_fraction": 0.9230769230769231
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 32,
+                "unique_onsets": 26,
+                "type_counts": {
+                  "tap": 26,
+                  "drag": 6
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_chunk_boundary",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 28,
+                "generated_onsets": 27,
+                "f1_25ms": 0.06666666666666667,
+                "f1_50ms": 0.06666666666666667,
+                "types": {
+                  "tap": 28
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 6.245423935524731,
+                "eos_clock_seconds": 6.245423935524731,
+                "first_onset_seconds": 0.997914517288035
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 2,
+                "empty_positive_segments": 1,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.997915,
+                "onset_count_ratio": 9.0,
+                "eos_clock_seconds": 6.245423935524731,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 28.39999999999999,
+                "events": 21
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 27,
+                "at_25ms": {
+                  "precision": 0.037037037037037035,
+                  "recall": 0.3333333333333333,
+                  "f1": 0.06666666666666667,
+                  "matched": 1,
+                  "false_positives": 26,
+                  "false_negatives": 2,
+                  "false_positives_per_minute": 48.75
+                },
+                "at_50ms": {
+                  "precision": 0.037037037037037035,
+                  "recall": 0.3333333333333333,
+                  "f1": 0.06666666666666667,
+                  "matched": 1,
+                  "false_positives": 26,
+                  "false_negatives": 2,
+                  "false_positives_per_minute": 48.75
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": -2.0850000000000035,
+                  "median_absolute_ms": 2.0850000000000035,
+                  "p95_absolute_ms": 2.0850000000000035,
+                  "unmatched_reference_fraction": 0.6666666666666666,
+                  "unmatched_prediction_fraction": 0.9629629629629629
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 28,
+                "unique_onsets": 27,
+                "type_counts": {
+                  "tap": 28
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "silence",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "silence_no_events": true,
+                "reviewed_silence_no_events": true
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 0,
+                "generated_onsets": 0,
+                "f1_25ms": 1.0,
+                "f1_50ms": 1.0,
+                "types": {},
+                "termination": "learned_stop",
+                "last_onset_seconds": null,
+                "eos_clock_seconds": 0.0,
+                "first_onset_seconds": null
+              },
+              "contract_status": "pass",
+              "coverage": {
+                "reference_nonempty_segments": 0,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": null,
+                "first_reference_seconds": null,
+                "first_prediction_seconds": null,
+                "onset_count_ratio": null,
+                "eos_clock_seconds": 0.0,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 10.0,
+                "events": 0
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 0,
+                "prediction_count": 0,
+                "at_25ms": {
+                  "precision": 1.0,
+                  "recall": 1.0,
+                  "f1": 1.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 0,
+                  "false_positives_per_minute": 0.0
+                },
+                "at_50ms": {
+                  "precision": 1.0,
+                  "recall": 1.0,
+                  "f1": 1.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 0,
+                  "false_positives_per_minute": 0.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": null,
+                  "median_absolute_ms": null,
+                  "p95_absolute_ms": null,
+                  "unmatched_reference_fraction": 0.0,
+                  "unmatched_prediction_fraction": 0.0
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 0,
+                "unique_onsets": 0,
+                "type_counts": {},
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "-SURREALISM-_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1034,
+                "generated_onsets": 997,
+                "f1_25ms": 0.5438799076212472,
+                "f1_50ms": 0.6016166281755196,
+                "types": {
+                  "tap": 1034
+                },
+                "termination": "failed",
+                "last_onset_seconds": 153.5288888019367,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 8.001763810830322
+              },
+              "error": "continued with no future audio interval"
+            },
+            {
+              "id": "ABYSS MOTION 192.333_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1254,
+                "generated_onsets": 962,
+                "f1_25ms": 0.30303030303030304,
+                "f1_50ms": 0.6419294990723562,
+                "types": {
+                  "tap": 1235,
+                  "flick": 7,
+                  "drag": 12
+                },
+                "termination": "failed",
+                "last_onset_seconds": 126.11333325045405,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 12.180009014103689
+              },
+              "error": "continued with no future audio interval"
+            },
+            {
+              "id": "Eltaw_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1186,
+                "generated_onsets": 1098,
+                "f1_25ms": 0.6003335186214563,
+                "f1_50ms": 0.6281267370761534,
+                "types": {
+                  "tap": 1124,
+                  "drag": 47,
+                  "flick": 7,
+                  "hold": 8
+                },
+                "termination": "failed",
+                "last_onset_seconds": 135.55083876375124,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 1.2326032116948342
+              },
+              "error": "continued with no future audio interval"
+            }
+          ]
+        }
+      ]
+    },
+    "soft": {
+      "config": {
+        "schema": "audiolab-absolute-time-group-ar-v1",
+        "variant": "soft",
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "initialization": "all decoder and pointer weights from scratch; frozen original acoustic frontends",
+        "initial_state_sha256": "8a4f75f2dcd41e7950df7680f59177883bbb755ac0f8fc6dbaa5d8bc4980e041",
+        "seed": 42,
+        "epochs": 10,
+        "lr": 0.0003,
+        "parameters": 6626691,
+        "full_cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+        "pair_cache_sha256": "0c859f21b65b1142a0e3e238b1d6892978c4bc30e754430d89d9324cfc4c3955",
+        "source_sha256": {
+          "src/anchored_ar.py": "ed2ec3ce88f61a1a4baedfda8feb72cf63015795bbbd59cffae1c0f28bb01319",
+          "script/train_anchored_ar.py": "ec652ceba01c7a47348600d45cbb3122e26aa5d24d4eda00e2fb1dde99900431",
+          "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+          "src/conditional_training.py": "0aad3abd8cec25af461544d19d59131f5bcca54ffbedb22544cc59c6af4ceb7f",
+          "script/train_grounded_ar.py": "45032120b4935811ddaf4e76a6c0643f0c33d3b9fc9ebb32a9f180e1f0916741"
+        },
+        "loss": "frame CE + conditional normalized subframe MSE + .25 layout CE + .5 event-normalized stop/continue BCE; joint update denominators",
+        "policy": "global audio; pointer output chronological intervals; no grid snapping/onset threshold/type quota; continuous seconds export"
+      },
+      "curves": [
+        {
+          "epoch": 1,
+          "steps": 300,
+          "elapsed_seconds": 127.89362183213234,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 3.560225080970832,
+          "frame_accuracy": 0.2252516654330126,
+          "conditional_offset_mae_seconds": 0.007818183581736115,
+          "subframe_mse": 0.04679971367219212,
+          "layout_ce": 2.076119134245802,
+          "stop_bce": 2.778886953145266,
+          "continue_bce": 0.05735480444573368,
+          "false_stop_rate": 0.014511472982975573,
+          "end_stop_recall": 0.024166666666666666
+        },
+        {
+          "epoch": 2,
+          "steps": 600,
+          "elapsed_seconds": 223.37244584783912,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.8268791380654785,
+          "frame_accuracy": 0.4448334566987417,
+          "conditional_offset_mae_seconds": 0.007047067064514559,
+          "subframe_mse": 0.041307947998220976,
+          "layout_ce": 1.5816064905366247,
+          "stop_bce": 3.264267258656522,
+          "continue_bce": 0.009379962264587049,
+          "false_stop_rate": 5.551443375277572e-05,
+          "end_stop_recall": 0.07916666666666666
+        },
+        {
+          "epoch": 3,
+          "steps": 900,
+          "elapsed_seconds": 321.05846977233887,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.603804346597433,
+          "frame_accuracy": 0.5059955588452998,
+          "conditional_offset_mae_seconds": 0.0069664041649997,
+          "subframe_mse": 0.04068782418732037,
+          "layout_ce": 1.4611999083617715,
+          "stop_bce": 3.272820067430536,
+          "continue_bce": 0.006349277450674821,
+          "false_stop_rate": 4.811250925240563e-05,
+          "end_stop_recall": 0.17
+        },
+        {
+          "epoch": 4,
+          "steps": 1200,
+          "elapsed_seconds": 414.65993947163224,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.4769960378091658,
+          "frame_accuracy": 0.5398334566987417,
+          "conditional_offset_mae_seconds": 0.006953357774576185,
+          "subframe_mse": 0.04025832216868642,
+          "layout_ce": 1.3959343894472556,
+          "stop_bce": 3.0397066449544705,
+          "continue_bce": 0.005226457872097798,
+          "false_stop_rate": 3.700962250185048e-05,
+          "end_stop_recall": 0.23666666666666666
+        },
+        {
+          "epoch": 5,
+          "steps": 1500,
+          "elapsed_seconds": 511.5993691086769,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.3993462811735804,
+          "frame_accuracy": 0.5608290155440414,
+          "conditional_offset_mae_seconds": 0.006789171313270136,
+          "subframe_mse": 0.03895622588843185,
+          "layout_ce": 1.336039155636541,
+          "stop_bce": 2.748497202213427,
+          "continue_bce": 0.004630278762978682,
+          "false_stop_rate": 1.850481125092524e-05,
+          "end_stop_recall": 0.25583333333333336
+        },
+        {
+          "epoch": 6,
+          "steps": 1800,
+          "elapsed_seconds": 609.2886748984456,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.3395332471078893,
+          "frame_accuracy": 0.5761213915618061,
+          "conditional_offset_mae_seconds": 0.006709596992209499,
+          "subframe_mse": 0.03805886606564128,
+          "layout_ce": 1.3056418239511067,
+          "stop_bce": 2.5319215373663853,
+          "continue_bce": 0.004326855710243667,
+          "false_stop_rate": 7.7720207253886e-05,
+          "end_stop_recall": 0.2658333333333333
+        },
+        {
+          "epoch": 7,
+          "steps": 2100,
+          "elapsed_seconds": 706.4224406182766,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.2904940610678437,
+          "frame_accuracy": 0.5901221317542561,
+          "conditional_offset_mae_seconds": 0.006633506371536123,
+          "subframe_mse": 0.03733545714633238,
+          "layout_ce": 1.2873407517087054,
+          "stop_bce": 2.3513500094937627,
+          "continue_bce": 0.004195563937230608,
+          "false_stop_rate": 0.00011102886750555144,
+          "end_stop_recall": 0.2758333333333333
+        },
+        {
+          "epoch": 8,
+          "steps": 2400,
+          "elapsed_seconds": 804.1012472324073,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.2484383203842568,
+          "frame_accuracy": 0.6041820873427091,
+          "conditional_offset_mae_seconds": 0.006588845518908102,
+          "subframe_mse": 0.03693853042141288,
+          "layout_ce": 1.2760165369868413,
+          "stop_bce": 2.2131180557366075,
+          "continue_bce": 0.004137389834151278,
+          "false_stop_rate": 0.00012583271650629165,
+          "end_stop_recall": 0.2841666666666667
+        },
+        {
+          "epoch": 9,
+          "steps": 2700,
+          "elapsed_seconds": 900.6942411512136,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.2134638806165015,
+          "frame_accuracy": 0.6127239082161362,
+          "conditional_offset_mae_seconds": 0.006540719623759487,
+          "subframe_mse": 0.03625920287867591,
+          "layout_ce": 1.268671742738748,
+          "stop_bce": 2.1332350481910787,
+          "continue_bce": 0.0040364527124373845,
+          "false_stop_rate": 0.00013693560325684677,
+          "end_stop_recall": 0.2875
+        },
+        {
+          "epoch": 10,
+          "steps": 3000,
+          "elapsed_seconds": 996.9821877069771,
+          "counts": {
+            "time_count": 270200,
+            "layout_count": 633694,
+            "stop_count": 1200,
+            "continue_count": 270200
+          },
+          "frame_ce": 1.1897801169459683,
+          "frame_accuracy": 0.6205218356772761,
+          "conditional_offset_mae_seconds": 0.0065012614428703016,
+          "subframe_mse": 0.036042513208596055,
+          "layout_ce": 1.2631254495444022,
+          "stop_bce": 2.062403875636325,
+          "continue_bce": 0.00401818647859363,
+          "false_stop_rate": 0.00013323464100666174,
+          "end_stop_recall": 0.3075
+        }
+      ],
+      "training_resources": {
+        "disk_free_gib": 16.59575653076172,
+        "ram_available_gib": 36.850982666015625,
+        "rss_gib": 1.7966384887695312,
+        "gpu_peak_allocated_gib": 0.3052539825439453,
+        "gpu_peak_reserved_gib": 0.45703125
+      },
+      "evaluation_resources": {
+        "disk_free_gib": 16.5819091796875,
+        "ram_available_gib": 37.02659225463867,
+        "rss_gib": 1.7484588623046875,
+        "gpu_peak_allocated_gib": 0.13427066802978516,
+        "gpu_peak_reserved_gib": 0.224609375
+      },
+      "protocol_sha256": "5b5fb33e54aea677bca80c78889964b4904c564142f021ee587f66d9e4f4effd",
+      "sources": {
+        "model_latest.pt": {
+          "path": "out/anchored_ar_20261023/soft/model_latest.pt",
+          "sha256": "ebf06e3a753119ac7cee8378428599cb5b75e2953887ae136a7c8243bb569adc"
+        },
+        "training.json": {
+          "path": "out/anchored_ar_20261023/soft/training.json",
+          "sha256": "db492b4393927d6b862aaf16d2ca0f50265c0cd835580f1c0c33e75f2f3a7602"
+        },
+        "inputs.json": {
+          "path": "out/anchored_ar_20261023/soft/inputs.json",
+          "sha256": "e3da7d9dd503d301f19b5a1b0855f0d80000fa7c3667b686eec4121061b7102c"
+        },
+        "report.json": {
+          "path": "out/anchored_ar_20261023/soft/report.json",
+          "sha256": "eb675d71aa6530e79a6ba903633818246a7995d8622ed4a0c7b41a14e1678ad5"
+        },
+        "diagnostics.json": {
+          "path": "out/anchored_ar_20261023/soft/diagnostics.json",
+          "sha256": "7cd41cb2205513cc1812f9db3103855b0d2df4b6bc7cee313eaae8b53ce1f1af"
+        }
+      },
+      "teacher": [
+        {
+          "id": "-SURREALISM-_IN",
+          "counts": {
+            "time_count": 735,
+            "layout_count": 1717,
+            "stop_count": 1,
+            "continue_count": 735
+          },
+          "components": {
+            "matched": {
+              "frame_ce": 1369.965087890625,
+              "subframe_mse": 55.247514478674134,
+              "layout_ce": 2192.36962890625,
+              "stop_bce": 4.668691158294678,
+              "continue_bce": 0.9146955013275146,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 335.0,
+              "conditional_offset_absolute_seconds": 8.122772190754812
+            },
+            "zero_audio": {
+              "frame_ce": 1744.209228515625,
+              "subframe_mse": 59.11280784488553,
+              "layout_ce": 2199.23681640625,
+              "stop_bce": 3.396150827407837,
+              "continue_bce": 4.036850929260254,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 177.0,
+              "conditional_offset_absolute_seconds": 8.363496051439707
+            },
+            "zero_soft": {
+              "frame_ce": 1363.6214599609375,
+              "subframe_mse": 55.110605821434035,
+              "layout_ce": 2193.28076171875,
+              "stop_bce": 4.71851110458374,
+              "continue_bce": 0.868227481842041,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 333.0,
+              "conditional_offset_absolute_seconds": 8.110368318727538
+            }
+          }
+        },
+        {
+          "id": "ABYSS MOTION 192.333_IN",
+          "counts": {
+            "time_count": 655,
+            "layout_count": 1556,
+            "stop_count": 1,
+            "continue_count": 655
+          },
+          "components": {
+            "matched": {
+              "frame_ce": 1492.175537109375,
+              "subframe_mse": 116.22892322188432,
+              "layout_ce": 1874.0723876953125,
+              "stop_bce": 4.813761234283447,
+              "continue_bce": 1.9456546306610107,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 232.0,
+              "conditional_offset_absolute_seconds": 11.281102859459658
+            },
+            "zero_audio": {
+              "frame_ce": 1358.1676025390625,
+              "subframe_mse": 51.600748743329,
+              "layout_ce": 1894.5072021484375,
+              "stop_bce": 4.531762599945068,
+              "continue_bce": 5.3176493644714355,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 175.0,
+              "conditional_offset_absolute_seconds": 7.384903106353194
+            },
+            "zero_soft": {
+              "frame_ce": 1475.203125,
+              "subframe_mse": 116.73706602018282,
+              "layout_ce": 1874.0751953125,
+              "stop_bce": 4.852802753448486,
+              "continue_bce": 1.846015214920044,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 233.0,
+              "conditional_offset_absolute_seconds": 11.307985600373405
+            }
+          }
+        },
+        {
+          "id": "Eltaw_IN",
+          "counts": {
+            "time_count": 701,
+            "layout_count": 1596,
+            "stop_count": 1,
+            "continue_count": 701
+          },
+          "components": {
+            "matched": {
+              "frame_ce": 734.49072265625,
+              "subframe_mse": 18.919889508920647,
+              "layout_ce": 1613.098876953125,
+              "stop_bce": 5.108475208282471,
+              "continue_bce": 1.359896183013916,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 468.0,
+              "conditional_offset_absolute_seconds": 4.535232841465065
+            },
+            "zero_audio": {
+              "frame_ce": 1287.208251953125,
+              "subframe_mse": 55.378024590467646,
+              "layout_ce": 1628.6376953125,
+              "stop_bce": 4.19120454788208,
+              "continue_bce": 2.5039448738098145,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 270.0,
+              "conditional_offset_absolute_seconds": 7.87651904236645
+            },
+            "zero_soft": {
+              "frame_ce": 735.760986328125,
+              "subframe_mse": 18.77910775021728,
+              "layout_ce": 1612.93017578125,
+              "stop_bce": 5.149219512939453,
+              "continue_bce": 1.2997291088104248,
+              "false_stops": 0.0,
+              "correct_stops": 0.0,
+              "frame_correct": 468.0,
+              "conditional_offset_absolute_seconds": 4.514965604966751
+            }
+          }
+        }
+      ],
+      "shift_pairs": [
+        {
+          "id": "-SURREALISM-_IN",
+          "view": 0,
+          "reference_first_seconds": 1.1979166666666665,
+          "generated_first_seconds": 1.518131466128118,
+          "generation": {
+            "status": "completed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 2.3511562272906303,
+            "note_count": 81,
+            "generated_onsets": 80,
+            "types": {
+              "tap": 81
+            },
+            "eos_clock_seconds": 9.312485863648845,
+            "last_onset_seconds": 9.312485863648845,
+            "termination": "learned_stop",
+            "f1_25ms": 0.4628099173553719,
+            "f1_50ms": 0.5619834710743802,
+            "reference_onsets": 41,
+            "metric_scope": "completed_generation"
+          }
+        },
+        {
+          "id": "-SURREALISM-_IN",
+          "view": 1,
+          "reference_first_seconds": 1.9479166666666665,
+          "generated_first_seconds": 2.2660180830144556,
+          "generation": {
+            "status": "failed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 3.246108990162611,
+            "note_count": 122,
+            "generated_onsets": 99,
+            "types": {
+              "tap": 95,
+              "drag": 27
+            },
+            "eos_clock_seconds": null,
+            "last_onset_seconds": 11.99999956010034,
+            "termination": "failed",
+            "error": "continued with no future audio interval",
+            "f1_25ms": 0.42857142857142855,
+            "f1_50ms": 0.5142857142857142,
+            "reference_onsets": 41,
+            "metric_scope": "partial_failed_generation_diagnostic_only"
+          }
+        },
+        {
+          "id": "ABYSS MOTION 192.333_IN",
+          "view": 0,
+          "reference_first_seconds": 0.2339692096520098,
+          "generated_first_seconds": 0.2992374743680024,
+          "generation": {
+            "status": "completed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 4.119441345334053,
+            "note_count": 161,
+            "generated_onsets": 129,
+            "types": {
+              "tap": 130,
+              "drag": 25,
+              "flick": 6
+            },
+            "eos_clock_seconds": 11.446905477441627,
+            "last_onset_seconds": 11.446905477441627,
+            "termination": "learned_stop",
+            "f1_25ms": 0.36893203883495146,
+            "f1_50ms": 0.6213592233009708,
+            "reference_onsets": 77,
+            "metric_scope": "completed_generation"
+          }
+        },
+        {
+          "id": "ABYSS MOTION 192.333_IN",
+          "view": 1,
+          "reference_first_seconds": 1.35507167256789,
+          "generated_first_seconds": 1.5068782565923506,
+          "generation": {
+            "status": "failed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 3.9673180505633354,
+            "note_count": 140,
+            "generated_onsets": 130,
+            "types": {
+              "tap": 140
+            },
+            "eos_clock_seconds": null,
+            "last_onset_seconds": 11.999999934759302,
+            "termination": "failed",
+            "error": "continued with no future audio interval",
+            "f1_25ms": 0.11594202898550725,
+            "f1_50ms": 0.6376811594202898,
+            "reference_onsets": 77,
+            "metric_scope": "partial_failed_generation_diagnostic_only"
+          }
+        },
+        {
+          "id": "Eltaw_IN",
+          "view": 0,
+          "reference_first_seconds": 1.330958549222798,
+          "generated_first_seconds": 3.0422635849587234,
+          "generation": {
+            "status": "completed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 1.1143493056297302,
+            "note_count": 39,
+            "generated_onsets": 38,
+            "types": {
+              "tap": 39
+            },
+            "eos_clock_seconds": 10.747380998053517,
+            "last_onset_seconds": 10.747380998053517,
+            "termination": "learned_stop",
+            "f1_25ms": 0.5569620253164557,
+            "f1_50ms": 0.5822784810126582,
+            "reference_onsets": 41,
+            "metric_scope": "completed_generation"
+          }
+        },
+        {
+          "id": "Eltaw_IN",
+          "view": 1,
+          "reference_first_seconds": 2.65220207253886,
+          "generated_first_seconds": 2.571115854137879,
+          "generation": {
+            "status": "completed",
+            "greedy": false,
+            "seed": 42,
+            "seconds": 2.448896687477827,
+            "note_count": 84,
+            "generated_onsets": 79,
+            "types": {
+              "tap": 84
+            },
+            "eos_clock_seconds": 10.571589693168935,
+            "last_onset_seconds": 10.571589693168935,
+            "termination": "learned_stop",
+            "f1_25ms": 0.5333333333333333,
+            "f1_50ms": 0.6,
+            "reference_onsets": 41,
+            "metric_scope": "completed_generation"
+          }
+        }
+      ],
+      "runs": [
+        {
+          "id": "4k/anchored-soft/greedy",
+          "metadata": {
+            "stage": "raw_layout",
+            "mode": "4k",
+            "variant": "soft",
+            "greedy": true,
+            "seed": 42,
+            "checkpoint_sha256": "ebf06e3a753119ac7cee8378428599cb5b75e2953887ae136a7c8243bb569adc",
+            "sources": {
+              "src/anchored_ar.py": "bb2467d0bdbdb13a3443a6cfcdd1693e09173163f39a11e2a3bd99620800a566",
+              "script/train_anchored_ar.py": "cd9cee8d7a267f39d5b113375fb233fe2f0b50c799c85b9a686bbb776c231d7e",
+              "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+              "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+              "src/conditional_training.py": "0aad3abd8cec25af461544d19d59131f5bcca54ffbedb22544cc59c6af4ceb7f",
+              "script/train_grounded_ar.py": "45032120b4935811ddaf4e76a6c0643f0c33d3b9fc9ebb32a9f180e1f0916741"
+            },
+            "repairs": "none",
+            "time_representation": "predicted continuous seconds",
+            "schema": "audiolab-absolute-time-group-ar-v1"
+          },
+          "coverage_status": "complete",
+          "contract_status": "fail",
+          "summary": [
+            {
+              "label_source": "constructed_acoustic_probe",
+              "split": "constructed_development",
+              "expected_cases": 5,
+              "scored_cases": 5,
+              "missing_or_failed": 0,
+              "positive_f1_50ms_macro": 0.05131578947368421,
+              "positive_reference_onsets": 12,
+              "empty_positive_cases": 2,
+              "failed_contracts": 4
+            },
+            {
+              "label_source": "chart_onset",
+              "split": "seen_training",
+              "expected_cases": 3,
+              "scored_cases": 0,
+              "missing_or_failed": 3,
+              "positive_f1_50ms_macro": null,
+              "positive_reference_onsets": 0,
+              "empty_positive_cases": 0,
+              "failed_contracts": 0
+            }
+          ],
+          "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+          "predictions_sha256": "f1f404779ba2821325de7603487b0dc7ca97d46641a6e8e0a41f23c93be68a62",
+          "rows": [
+            {
+              "id": "piano_three",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 39,
+                "generated_onsets": 37,
+                "f1_25ms": 0.1,
+                "f1_50ms": 0.1,
+                "types": {
+                  "tap": 39
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 5.269720303974454,
+                "eos_clock_seconds": 5.269720303974454,
+                "first_onset_seconds": 0.998710713289222
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.998711,
+                "onset_count_ratio": 12.333333333333334,
+                "eos_clock_seconds": 5.269720303974454,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 17
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 37,
+                "at_25ms": {
+                  "precision": 0.05405405405405406,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.1,
+                  "matched": 2,
+                  "false_positives": 35,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 210.0
+                },
+                "at_50ms": {
+                  "precision": 0.05405405405405406,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.1,
+                  "matched": 2,
+                  "false_positives": 35,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 210.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": 3.3060000000001977,
+                  "median_absolute_ms": 4.595000000000182,
+                  "p95_absolute_ms": 7.57040000000036,
+                  "unmatched_reference_fraction": 0.3333333333333333,
+                  "unmatched_prediction_fraction": 0.9459459459459459
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 39,
+                "unique_onsets": 37,
+                "type_counts": {
+                  "tap": 39
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_weak_middle",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": false,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": true
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 0,
+                "generated_onsets": 0,
+                "f1_25ms": 0.0,
+                "f1_50ms": 0.0,
+                "types": {},
+                "termination": "learned_stop",
+                "last_onset_seconds": null,
+                "eos_clock_seconds": 0.0,
+                "first_onset_seconds": null
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 1,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": null,
+                "onset_count_ratio": 0.0,
+                "eos_clock_seconds": 0.0,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 0
+              },
+              "weak_recall_50ms": 0.0,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 0,
+                "at_25ms": {
+                  "precision": 0.0,
+                  "recall": 0.0,
+                  "f1": 0.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 3,
+                  "false_positives_per_minute": 0.0
+                },
+                "at_50ms": {
+                  "precision": 0.0,
+                  "recall": 0.0,
+                  "f1": 0.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 3,
+                  "false_positives_per_minute": 0.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": null,
+                  "median_absolute_ms": null,
+                  "p95_absolute_ms": null,
+                  "unmatched_reference_fraction": 1.0,
+                  "unmatched_prediction_fraction": 0.0
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 0,
+                "unique_onsets": 0,
+                "type_counts": {},
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_repeated",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 37,
+                "generated_onsets": 35,
+                "f1_25ms": 0.10526315789473684,
+                "f1_50ms": 0.10526315789473684,
+                "types": {
+                  "tap": 37
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 5.315573097972913,
+                "eos_clock_seconds": 5.315573097972913,
+                "first_onset_seconds": 0.9987630678899164
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.998763,
+                "onset_count_ratio": 11.666666666666666,
+                "eos_clock_seconds": 5.315573097972913,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 17
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 35,
+                "at_25ms": {
+                  "precision": 0.05714285714285714,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.10526315789473684,
+                  "matched": 2,
+                  "false_positives": 33,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 198.0
+                },
+                "at_50ms": {
+                  "precision": 0.05714285714285714,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.10526315789473684,
+                  "matched": 2,
+                  "false_positives": 33,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 198.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": 2.889500000000045,
+                  "median_absolute_ms": 4.126500000000089,
+                  "p95_absolute_ms": 6.727050000000128,
+                  "unmatched_reference_fraction": 0.3333333333333333,
+                  "unmatched_prediction_fraction": 0.9428571428571428
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 37,
+                "unique_onsets": 35,
+                "type_counts": {
+                  "tap": 37
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_chunk_boundary",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": false,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": true
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 0,
+                "generated_onsets": 0,
+                "f1_25ms": 0.0,
+                "f1_50ms": 0.0,
+                "types": {},
+                "termination": "learned_stop",
+                "last_onset_seconds": null,
+                "eos_clock_seconds": 0.0,
+                "first_onset_seconds": null
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 2,
+                "empty_positive_segments": 2,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": null,
+                "onset_count_ratio": 0.0,
+                "eos_clock_seconds": 0.0,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 28.39999999999999,
+                "events": 0
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 0,
+                "at_25ms": {
+                  "precision": 0.0,
+                  "recall": 0.0,
+                  "f1": 0.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 3,
+                  "false_positives_per_minute": 0.0
+                },
+                "at_50ms": {
+                  "precision": 0.0,
+                  "recall": 0.0,
+                  "f1": 0.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 3,
+                  "false_positives_per_minute": 0.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": null,
+                  "median_absolute_ms": null,
+                  "p95_absolute_ms": null,
+                  "unmatched_reference_fraction": 1.0,
+                  "unmatched_prediction_fraction": 0.0
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 0,
+                "unique_onsets": 0,
+                "type_counts": {},
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "silence",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "silence_no_events": true,
+                "reviewed_silence_no_events": true
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 0,
+                "generated_onsets": 0,
+                "f1_25ms": 1.0,
+                "f1_50ms": 1.0,
+                "types": {},
+                "termination": "learned_stop",
+                "last_onset_seconds": null,
+                "eos_clock_seconds": 0.0,
+                "first_onset_seconds": null
+              },
+              "contract_status": "pass",
+              "coverage": {
+                "reference_nonempty_segments": 0,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": null,
+                "first_reference_seconds": null,
+                "first_prediction_seconds": null,
+                "onset_count_ratio": null,
+                "eos_clock_seconds": 0.0,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 10.0,
+                "events": 0
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 0,
+                "prediction_count": 0,
+                "at_25ms": {
+                  "precision": 1.0,
+                  "recall": 1.0,
+                  "f1": 1.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 0,
+                  "false_positives_per_minute": 0.0
+                },
+                "at_50ms": {
+                  "precision": 1.0,
+                  "recall": 1.0,
+                  "f1": 1.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 0,
+                  "false_positives_per_minute": 0.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": null,
+                  "median_absolute_ms": null,
+                  "p95_absolute_ms": null,
+                  "unmatched_reference_fraction": 0.0,
+                  "unmatched_prediction_fraction": 0.0
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 0,
+                "unique_onsets": 0,
+                "type_counts": {},
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "-SURREALISM-_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1545,
+                "generated_onsets": 1545,
+                "f1_25ms": 0.5649122807017544,
+                "f1_50ms": 0.6017543859649123,
+                "types": {
+                  "tap": 1545
+                },
+                "termination": "failed",
+                "last_onset_seconds": 153.52888872077912,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 2.668549952777335
+              },
+              "error": "continued with no future audio interval"
+            },
+            {
+              "id": "ABYSS MOTION 192.333_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1476,
+                "generated_onsets": 1476,
+                "f1_25ms": 0.25527921163772876,
+                "f1_50ms": 0.5687470671046457,
+                "types": {
+                  "tap": 1476
+                },
+                "termination": "failed",
+                "last_onset_seconds": 126.11333271542695,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 1.267744225050046
+              },
+              "error": "continued with no future audio interval"
+            },
+            {
+              "id": "Eltaw_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1320,
+                "generated_onsets": 1320,
+                "f1_25ms": 0.6551212271152894,
+                "f1_50ms": 0.6749134092033646,
+                "types": {
+                  "tap": 1320
+                },
+                "termination": "failed",
+                "last_onset_seconds": 135.55083822153063,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 1.2325639637365364
+              },
+              "error": "continued with no future audio interval"
+            }
+          ]
+        },
+        {
+          "id": "4k/anchored-soft/seed42",
+          "metadata": {
+            "stage": "raw_layout",
+            "mode": "4k",
+            "variant": "soft",
+            "greedy": false,
+            "seed": 42,
+            "checkpoint_sha256": "ebf06e3a753119ac7cee8378428599cb5b75e2953887ae136a7c8243bb569adc",
+            "sources": {
+              "src/anchored_ar.py": "bb2467d0bdbdb13a3443a6cfcdd1693e09173163f39a11e2a3bd99620800a566",
+              "script/train_anchored_ar.py": "cd9cee8d7a267f39d5b113375fb233fe2f0b50c799c85b9a686bbb776c231d7e",
+              "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+              "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+              "src/conditional_training.py": "0aad3abd8cec25af461544d19d59131f5bcca54ffbedb22544cc59c6af4ceb7f",
+              "script/train_grounded_ar.py": "45032120b4935811ddaf4e76a6c0643f0c33d3b9fc9ebb32a9f180e1f0916741"
+            },
+            "repairs": "none",
+            "time_representation": "predicted continuous seconds",
+            "schema": "audiolab-absolute-time-group-ar-v1"
+          },
+          "coverage_status": "complete",
+          "contract_status": "fail",
+          "summary": [
+            {
+              "label_source": "constructed_acoustic_probe",
+              "split": "constructed_development",
+              "expected_cases": 5,
+              "scored_cases": 5,
+              "missing_or_failed": 0,
+              "positive_f1_50ms_macro": 0.11334454723857583,
+              "positive_reference_onsets": 12,
+              "empty_positive_cases": 0,
+              "failed_contracts": 4
+            },
+            {
+              "label_source": "chart_onset",
+              "split": "seen_training",
+              "expected_cases": 3,
+              "scored_cases": 0,
+              "missing_or_failed": 3,
+              "positive_f1_50ms_macro": null,
+              "positive_reference_onsets": 0,
+              "empty_positive_cases": 0,
+              "failed_contracts": 0
+            }
+          ],
+          "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+          "predictions_sha256": "db7fa14c2fea3ea2f96f7a067c80f309b80105624c9f7f290783f9d748cf8fa2",
+          "rows": [
+            {
+              "id": "piano_three",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 34,
+                "generated_onsets": 27,
+                "f1_25ms": 0.13333333333333333,
+                "f1_50ms": 0.13333333333333333,
+                "types": {
+                  "tap": 24,
+                  "drag": 10
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 5.362145762194852,
+                "eos_clock_seconds": 5.362145762194852,
+                "first_onset_seconds": 0.998710713289222
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.998711,
+                "onset_count_ratio": 9.0,
+                "eos_clock_seconds": 5.362145762194852,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 12
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 27,
+                "at_25ms": {
+                  "precision": 0.07407407407407407,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13333333333333333,
+                  "matched": 2,
+                  "false_positives": 25,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 150.0
+                },
+                "at_50ms": {
+                  "precision": 0.07407407407407407,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13333333333333333,
+                  "matched": 2,
+                  "false_positives": 25,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 150.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": -7.227499999999997,
+                  "median_absolute_ms": 7.227499999999997,
+                  "p95_absolute_ms": 12.57215000000001,
+                  "unmatched_reference_fraction": 0.3333333333333333,
+                  "unmatched_prediction_fraction": 0.9259259259259259
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 34,
+                "unique_onsets": 27,
+                "type_counts": {
+                  "tap": 24,
+                  "drag": 10
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_weak_middle",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 34,
+                "generated_onsets": 27,
+                "f1_25ms": 0.13333333333333333,
+                "f1_50ms": 0.13333333333333333,
+                "types": {
+                  "tap": 24,
+                  "drag": 10
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 5.36222098075884,
+                "eos_clock_seconds": 5.36222098075884,
+                "first_onset_seconds": 0.9985816426179848
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.998582,
+                "onset_count_ratio": 9.0,
+                "eos_clock_seconds": 5.36222098075884,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 12
+              },
+              "weak_recall_50ms": 1.0,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 27,
+                "at_25ms": {
+                  "precision": 0.07407407407407407,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13333333333333333,
+                  "matched": 2,
+                  "false_positives": 25,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 150.0
+                },
+                "at_50ms": {
+                  "precision": 0.07407407407407407,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13333333333333333,
+                  "matched": 2,
+                  "false_positives": 25,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 150.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": 1.5499999999999958,
+                  "median_absolute_ms": 2.968000000000026,
+                  "p95_absolute_ms": 4.363000000000023,
+                  "unmatched_reference_fraction": 0.3333333333333333,
+                  "unmatched_prediction_fraction": 0.9259259259259259
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 34,
+                "unique_onsets": 27,
+                "type_counts": {
+                  "tap": 24,
+                  "drag": 10
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_repeated",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 32,
+                "generated_onsets": 26,
+                "f1_25ms": 0.13793103448275862,
+                "f1_50ms": 0.13793103448275862,
+                "types": {
+                  "tap": 26,
+                  "drag": 6
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 5.408059196904674,
+                "eos_clock_seconds": 5.408059196904674,
+                "first_onset_seconds": 0.9987630678899164
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 1,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.998763,
+                "onset_count_ratio": 8.666666666666666,
+                "eos_clock_seconds": 5.408059196904674,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 6.400000000000001,
+                "events": 11
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 26,
+                "at_25ms": {
+                  "precision": 0.07692307692307693,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13793103448275862,
+                  "matched": 2,
+                  "false_positives": 24,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 144.0
+                },
+                "at_50ms": {
+                  "precision": 0.07692307692307693,
+                  "recall": 0.6666666666666666,
+                  "f1": 0.13793103448275862,
+                  "matched": 2,
+                  "false_positives": 24,
+                  "false_negatives": 1,
+                  "false_positives_per_minute": 144.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": 3.1635000000001523,
+                  "median_absolute_ms": 4.400500000000196,
+                  "p95_absolute_ms": 7.247650000000332,
+                  "unmatched_reference_fraction": 0.3333333333333333,
+                  "unmatched_prediction_fraction": 0.9230769230769231
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 32,
+                "unique_onsets": 26,
+                "type_counts": {
+                  "tap": 26,
+                  "drag": 6
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "piano_chunk_boundary",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "nonempty_positive": true,
+                "isolated_positive_contract": false,
+                "reviewed_silence_no_events": false
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 38,
+                "generated_onsets": 38,
+                "f1_25ms": 0.04878048780487805,
+                "f1_50ms": 0.04878048780487805,
+                "types": {
+                  "tap": 36,
+                  "flick": 2
+                },
+                "termination": "learned_stop",
+                "last_onset_seconds": 7.733787019690689,
+                "eos_clock_seconds": 7.733787019690689,
+                "first_onset_seconds": 0.9979321455144559
+              },
+              "contract_status": "fail",
+              "coverage": {
+                "reference_nonempty_segments": 2,
+                "empty_positive_segments": 1,
+                "last_quarter_reference_recall_50ms": 0.0,
+                "first_reference_seconds": 1.0,
+                "first_prediction_seconds": 0.997932,
+                "onset_count_ratio": 12.666666666666666,
+                "eos_clock_seconds": 7.733787019690689,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 28.39999999999999,
+                "events": 32
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 3,
+                "prediction_count": 38,
+                "at_25ms": {
+                  "precision": 0.02631578947368421,
+                  "recall": 0.3333333333333333,
+                  "f1": 0.04878048780487805,
+                  "matched": 1,
+                  "false_positives": 37,
+                  "false_negatives": 2,
+                  "false_positives_per_minute": 69.375
+                },
+                "at_50ms": {
+                  "precision": 0.02631578947368421,
+                  "recall": 0.3333333333333333,
+                  "f1": 0.04878048780487805,
+                  "matched": 1,
+                  "false_positives": 37,
+                  "false_negatives": 2,
+                  "false_positives_per_minute": 69.375
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": -2.0679999999999588,
+                  "median_absolute_ms": 2.0679999999999588,
+                  "p95_absolute_ms": 2.0679999999999588,
+                  "unmatched_reference_fraction": 0.6666666666666666,
+                  "unmatched_prediction_fraction": 0.9736842105263158
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 38,
+                "unique_onsets": 38,
+                "type_counts": {
+                  "tap": 36,
+                  "flick": 2
+                },
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "silence",
+              "status": "scored",
+              "gates": {
+                "generation_completed": true,
+                "onset_bounds": true,
+                "note_bounds_and_types": true,
+                "silence_no_events": true,
+                "reviewed_silence_no_events": true
+              },
+              "generation": {
+                "status": "completed",
+                "error": null,
+                "metric_scope": "completed_generation",
+                "note_count": 0,
+                "generated_onsets": 0,
+                "f1_25ms": 1.0,
+                "f1_50ms": 1.0,
+                "types": {},
+                "termination": "learned_stop",
+                "last_onset_seconds": null,
+                "eos_clock_seconds": 0.0,
+                "first_onset_seconds": null
+              },
+              "contract_status": "pass",
+              "coverage": {
+                "reference_nonempty_segments": 0,
+                "empty_positive_segments": 0,
+                "last_quarter_reference_recall_50ms": null,
+                "first_reference_seconds": null,
+                "first_prediction_seconds": null,
+                "onset_count_ratio": null,
+                "eos_clock_seconds": 0.0,
+                "eos_overshoot_seconds": 0.0
+              },
+              "silence": {
+                "annotated_seconds": 10.0,
+                "events": 0
+              },
+              "weak_recall_50ms": null,
+              "events": {
+                "reference_count": 0,
+                "prediction_count": 0,
+                "at_25ms": {
+                  "precision": 1.0,
+                  "recall": 1.0,
+                  "f1": 1.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 0,
+                  "false_positives_per_minute": 0.0
+                },
+                "at_50ms": {
+                  "precision": 1.0,
+                  "recall": 1.0,
+                  "f1": 1.0,
+                  "matched": 0,
+                  "false_positives": 0,
+                  "false_negatives": 0,
+                  "false_positives_per_minute": 0.0
+                },
+                "timing_100ms": {
+                  "signed_mean_ms": null,
+                  "median_absolute_ms": null,
+                  "p95_absolute_ms": null,
+                  "unmatched_reference_fraction": 0.0,
+                  "unmatched_prediction_fraction": 0.0
+                }
+              },
+              "grid_bonus_per_onset": null,
+              "layout": {
+                "note_count": 0,
+                "unique_onsets": 0,
+                "type_counts": {},
+                "hold_touching_pairs": 0,
+                "hold_overlap_pairs": 0
+              }
+            },
+            {
+              "id": "-SURREALISM-_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1357,
+                "generated_onsets": 1207,
+                "f1_25ms": 0.5365602471678682,
+                "f1_50ms": 0.6024716786817713,
+                "types": {
+                  "tap": 1286,
+                  "flick": 2,
+                  "drag": 69
+                },
+                "termination": "failed",
+                "last_onset_seconds": 153.52888830152338,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 8.001769726119614
+              },
+              "error": "continued with no future audio interval"
+            },
+            {
+              "id": "ABYSS MOTION 192.333_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1194,
+                "generated_onsets": 876,
+                "f1_25ms": 0.3043762246897453,
+                "f1_50ms": 0.6440235140431091,
+                "types": {
+                  "tap": 1184,
+                  "flick": 10
+                },
+                "termination": "failed",
+                "last_onset_seconds": 126.11333300503931,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 12.180022711721408
+              },
+              "error": "continued with no future audio interval"
+            },
+            {
+              "id": "Eltaw_IN",
+              "status": "failed",
+              "gates": {
+                "generation_completed": false
+              },
+              "generation": {
+                "status": "failed",
+                "error": "continued with no future audio interval",
+                "metric_scope": "partial_failed_generation_diagnostic_only",
+                "note_count": 1193,
+                "generated_onsets": 1140,
+                "f1_25ms": 0.5757740358500815,
+                "f1_50ms": 0.6116241173275394,
+                "types": {
+                  "tap": 1193
+                },
+                "termination": "failed",
+                "last_onset_seconds": 135.55083839294596,
+                "eos_clock_seconds": null,
+                "first_onset_seconds": 1.2325639637365364
+              },
+              "error": "continued with no future audio interval"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "audio-only still uses a frozen acoustic encoder which may represent onsets; only explicit soft-onset channel is ablated",
+    "shared architecture and identical full initial state; both trained from scratch for 10 epochs",
+    "new transformations of three seen songs are shift diagnostics, not independent-song tests",
+    "conditional subframe MAE assumes the correct frame and is not whole-onset accuracy",
+    "note-type/context-pattern quality is deferred by user; described but not a timing gate",
+    "failed/incomplete generations stay failures in benchmark; any partial F1 is diagnostic only",
+    "compared with old DT baselines, representation, losses and data recipe also differ"
+  ],
+  "fairness_checks": "identical initialization, architecture, training sources, sample manifests, seed, budget; variant is the explicit input switch"
+}

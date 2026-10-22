@@ -126,12 +126,13 @@ def train(args,budget,device):
 def score_rollout(model,view,bpm,reference,args,budget,greedy):
     result=generate(model,view,bpm,use_soft=args.variant=='soft',greedy=greedy,check=budget.check)
     result.pop('trace',None)
-    if result['status']=='completed':
+    if 'onsets_seconds' in result:
         times=result['onsets_seconds']
         for ms in (25,50):
             count=len(match_events(reference,times,ms/1000))
             result[f'f1_{ms}ms']=2*count/(len(reference)+len(times)) if reference or times else 1.
         result['reference_onsets']=len(reference)
+        result['metric_scope']='completed_generation' if result['status']=='completed' else 'partial_failed_generation_diagnostic_only'
     return result
 
 
