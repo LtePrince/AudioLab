@@ -332,3 +332,4 @@ D 实现 `4d6a8ff` 的相关测试 **45 passed，7.39 秒**，另通过独立因
 9.779 GiB，正式运行的结束 RSS 快照为 1.677–1.746 GiB，并非峰值。
 物理 GPU 1 的 allocator 上限 0.65，RAM 预留 8 GiB、RSS 4 GiB、余盘 8 GiB
 保护保持启用。H free-x 的末段生成与 D 4K 启动曾短暂重叠，不进行吞吐对比。
+逐组分项、图案反例与试听产物位置见[本轮结果](evaluations/soft_onset_training_v1.md)。

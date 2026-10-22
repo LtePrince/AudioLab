@@ -17,10 +17,10 @@ A为音频条件；B增加完整预测起音概率/偏移；H再增加因果历�
 
 bits按token数加权：4K 10,968、free-x 11,191；free offset按5,807个NOTE加权，单位为bin内残差。起点F1采用唯一时点、50ms最优一对一匹配，参考为同曲编排，并非独立声学真值。两首为`-SURREALISM-_IN`、`NO ONE YES MAN_IN`，时长153.529/124.974秒。raw/final、四键型、尾部时间和全部分项均保存在各自report中；修复后的格式通过不等于触屏手感通过。
 
-B对A的all bits变化只有4K +0.000006、free-x +0.0000005；首曲4K单seed F1分岔不能证明稳定收益。H的位置bits略降而DT bits略升，生成参考F1有正向变化，但图案尚未证明改善：free-x第二曲ABAB由21增到24，同时singleton窗口由312增到461；单调实例11→18，步距CV反而约.413→.499。这些四起点分类并不等于完整交互/楼梯的质量。D对H两路线all/位置bits均变差，free-x第二曲F1 .498→.297；辅助CE已学到关系（4K 1.2690、free-x 1.1602），不能据此采用D。
+B对A的all bits变化只有4K +0.000006、free-x +0.0000005；首曲4K单seed F1分岔不能证明稳定收益。H的位置bits略降而DT bits略升，生成参考F1有正向变化，但图案尚未证明改善：free-x第二曲ABAB由21增到24，同时singleton窗口由312增到461；单调实例11→18，步距CV反而约.413→.499。这些四起点分类并不等于完整交互/楼梯的质量。D对H两路线all/位置bits均变差，free-x第二曲F1 .498→.297；辅助CE低于零初始化的均匀预测（4K 1.2690、free-x 1.1602），不能据此证明学会图案或采用D。
 
-坐标沿用既有归一化：`w=.9/64`，`u=(clip(x,.05,.95−ε)−.05)/w`，`bin=floor(u)`，`δ=u−bin`；重建`x=.05+(bin+δ)w`，导出`positionX=(x−.5)/.05625`。历史反馈使用`(bin+δ)/64`表示可玩区内坐标；4K用`lane/3`表示逻辑轨道。当前NOTE的δ在forward后才反馈给后续token。软起音/历史投影为零权重且无bias；D辅助头的weight与bias均零初始化，构造完成后重置训练RNG。
+坐标沿用既有归一化：`w=.9/64`，`u=(clip(x,.05,.95−ε)−.05)/w`，`bin=floor(u)`，`δ=u−bin`；重建`x=.05+(bin+δ)w`，导出`positionX=(x−.5)/.05625`。历史反馈使用`(bin+δ)/64`表示可玩区内坐标；4K用`lane/3`表示逻辑轨道。当前NOTE的δ在forward后才反馈给后续token。软起音/历史投影为零权重且无bias；D辅助头的weight与bias均零初始化。H/D构造完成后重置训练RNG；A/B在CPU模型构造前设种子，实际CUDA训练的随机序列仍从相同种子开始。
 
 实现点：A/B `e22a42b`，H `7593498`，D `4d6a8ff`。阶段一7专项通过；历史接入42相关测试通过；D的45相关测试通过。设计独立只读核对初始化/数据顺序/分母/因果输入及结果，无重复训练。
 
-本地产物：`AudioLab-soft-onset-run/out/soft_onset_v1`、`AudioLab-history-run/out/history_v1`、`AudioLab-pattern-aux-run/out/pattern_aux_v1`；展示入口为当前工作区`out/soft_onset_comparison_v1/index.html`，含四条件、双玩法整曲和固定20–35/60–75秒片段。`summary.json`记录八份原report路径、SHA及数值，音频用只读共享链接。产物约434MiB（含缓存/pilot/八个final/预览），磁盘剩余约9.8GiB。进程用时分别记录；H尾部生成与D首组短暂重叠，不作跨条件速度比较。无新数据下载，也未训练音频前端。
+本地产物（路径相对`Audio/`）：`AudioLab-soft-onset-run/out/soft_onset_v1`、`AudioLab-history-run/out/history_v1`、`AudioLab-pattern-aux-run/out/pattern_aux_v1`；展示入口为`AudioLab-soft-onset/out/soft_onset_comparison_v1/index.html`，含四条件、双玩法整曲和固定20–35/60–75秒片段。`summary.json`记录八份原report路径、SHA及数值，音频用只读共享链接。产物约434MiB（含缓存/pilot/八个final/预览），磁盘剩余约9.8GiB。进程用时分别记录；H尾部生成与D首组短暂重叠，不作跨条件速度比较。无新数据下载，也未训练音频前端。
