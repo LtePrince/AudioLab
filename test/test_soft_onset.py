@@ -9,7 +9,7 @@ from src.data.timing import TIMING_SCHEMA
 from src.models.chart_decoder import ChartDecoder, generate_tokens
 from src.soft_onset import (MEMORY_SECONDS, condition_input, dense_condition,
                             forward_loss, initialize_decoder, load_decoder, state_hash)
-from script.train_soft_onset import sample_order
+from script.train_soft_onset import onset_metrics, sample_order
 
 
 def tiny_config():
@@ -94,3 +94,11 @@ def test_fixed_training_order_independent_of_condition():
     assert sample_order(rows,20,42)==sample_order(rows,20,42)
     assert set(sample_order(rows,7,42))==set(rows)
     assert sample_order(rows,20,43)!=sample_order(rows,20,42)
+
+
+def test_onset_score_reuses_optimal_one_to_one_matcher():
+    from types import SimpleNamespace
+    # At 60 BPM, one tick is 1/32 seconds: truth [0,.06], prediction [.04,.08].
+    result=onset_metrics([dict(time=.04*32,holdTime=0),dict(time=.08*32,holdTime=0)],
+                         [SimpleNamespace(tick=0),SimpleNamespace(tick=.06*32)],60,0,1)
+    assert result['matched']==2 and result['f1']==1.

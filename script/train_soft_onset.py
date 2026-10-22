@@ -15,6 +15,7 @@ import time
 import torch
 
 from script.diagnose_patterns import compact
+from src.audio_understanding.evaluation import match_events
 from src.audio_understanding.inference import code_version, infer_mel, load_audio, load_model, sha256
 from src.conditioning_audit import (encode_audio, enforce_preflight, estimate_working_set,
                                     file_fingerprint, load_reference, tensor_fingerprint)
@@ -196,11 +197,7 @@ def train(args,output,budget,device):
 def onset_metrics(raw,reference,bpm,offset,duration):
     generated = sorted({n['time']*tick_seconds(1,bpm)+offset for n in raw})
     truth = sorted({n.tick*tick_seconds(1,bpm)+offset for n in reference})
-    used=set(); errors=[]
-    for t in generated:
-        options=[(abs(t-r),i) for i,r in enumerate(truth) if i not in used and abs(t-r)<=.05]
-        if options:
-            error,index=min(options);used.add(index);errors.append(error)
+    errors=[abs(t-r) for r,t in match_events(truth,generated,.05)]
     p=len(errors)/len(generated) if generated else 0.;r=len(errors)/len(truth) if truth else 0.
     return dict(reference='retained chart onsets, not acoustic ground truth',tolerance_seconds=.05,
         generated_onsets=len(generated),reference_onsets=len(truth),matched=len(errors),
