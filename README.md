@@ -89,10 +89,14 @@ python -m script.run_product
 | `feature/transcription-baseline` | 音频表示、事件检测与共享转录模块 |
 | `feature/4k-generation` | 定轨布局与生成 |
 | `feature/freeform-gameplay` | 无轨玩法与后续演出 |
-| `chore/product-pipeline` | 本地任务、双模式流程、预览和导出的共享工程闭环 |
-| `docs/product-design-discussion` | 产品要求、讨论状态、独立审查与协作交接；文档提交不代表候选指标获批 |
 
 模型分支 → `develop` → `main`。共享修复独立提交并验证两条路线；推送不重写历史。详见 [AGENTS.md](AGENTS.md)。最新用户授权允许双 agent 持续实现和审查；训练和模型发布仍依照数据、资源、验证与分支规范，不因工程链路跑通就合入稳定版。
+
+2026-10-22 起仅保留上述六个长期分支。共享工程按需使用临时分支，合并后立即清理；
+文档维护直接提交 `develop`。历史记录中的 `chore/*`、`fix/*`、`docs/*` 名称仅代表
+当时的开发来源，已完成分支不再长期保留。未合并且已停用的阈值实验通过
+`archive/20261022/skeleton-selection-review` 与 `archive/20261022/model-optimization-plan`
+两个标签保留，不进入当前产品路径。
 
 ## 2. 产品具体指标
 
