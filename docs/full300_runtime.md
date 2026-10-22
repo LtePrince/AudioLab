@@ -57,8 +57,10 @@ python -m script.run_product --model-root checkpoints/timing_v1 --min-available-
 null，因为自由生成没有强制候选集合；自然 EOS 及格式检查不证明整曲音乐覆盖或可玩性。
 本包不改训练参数、不提高起音阈值、不增加多指上限。
 
-开发端产物位于 `AudioLab-full-corpus-runtime/out/runtime_delivery_full300/`，大文件
-不进入 Git。可通过 `python -m script.export_soft_onset_bundle --help` 查看再导出入口。
+开发端产物现位于主仓库的 `AudioLab/out/runtime_delivery_full300/`，大文件不进入 Git。
+2026-10-22 已清理原临时 worktree，权重 ZIP 字节及 SHA 不变；目录映射见
+[工作区目录约定](workspace_layout.md)。可通过
+`python -m script.export_soft_onset_bundle --help` 查看再导出入口。
 
 ## 交付验证
 

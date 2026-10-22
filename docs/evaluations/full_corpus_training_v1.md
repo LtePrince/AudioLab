@@ -61,7 +61,11 @@ manifest，不重训、不改原模型/谱面/report 字节。`chore/full-corpus
 整轮新产物约 **1,149.4 MiB**，结束余盘约 **8.69 GiB**。仅滚动保存模型 latest 与 final，
 不包含 optimizer/RNG 的精确续训状态；未复制数据集或虚拟环境。
 
-本地产物根目录（相对 `Audio/`）为 `AudioLab-full-corpus-run/out/full_corpus_v1/`：
+本地产物根目录（相对 `Audio/`）现为 `AudioLab/out/full_corpus_v1/`：
 `index.html` 为学习曲线及八份试听入口，`summary.json` 记录原报告路径与 SHA-256，
 四个模式/条件子目录各含 `decoder_final.pt`、`decoder_latest.pt`、`epoch_curve.json`
 及 `report.json`。模型、缓存、音频和生成结果不提交 Git。
+
+2026-10-22 清理临时 worktree 时，原 `AudioLab-full-corpus-run/out/full_corpus_v1/`
+已迁入上述主仓库位置。模型、缓存和报告字节保留；报告内历史绝对路径通过
+[目录迁移记录](../workspace_layout.md) 查找新位置。
