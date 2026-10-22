@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import math
 from pathlib import Path
 import random
 import time
@@ -33,14 +34,29 @@ from src.soft_onset import (CACHE_SCHEMA, MEMORY_SECONDS, SCHEMA, condition_inpu
 from src.test_decoder import load_models
 
 ROUTES = {'4k':'decoder','freex':'decoder_freex'}
+CACHE_STORAGE_SCHEMA = 'audiolab-frozen-soft-onset-cache-v2'
 
 
-def check_size(path, budget, maximum_mib=700):
+def check_size(path, budget, maximum_mib=None):
+    if maximum_mib is None:
+        maximum_mib = getattr(budget.args, 'max_artifact_mib', 700)
     state = budget.check(force=True)
     size = sum(p.stat().st_size for p in path.rglob('*') if p.is_file() and not p.is_symlink())
     if size > maximum_mib*1024**2:
         raise RuntimeError('experiment output exceeds explicit artifact budget')
     return dict(bytes=size, snapshot=state)
+
+
+def store_features(features, dtype):
+    """Quantize only the frozen audio encoder output, never timing/onset inputs."""
+    source = features.detach().cpu()
+    if source.dtype != torch.float32 or not torch.isfinite(source).all():
+        raise ValueError('finite float32 source audio features required')
+    stored = source.to({'float32':torch.float32, 'float16':torch.float16}[dtype])
+    if not torch.isfinite(stored).all():
+        raise ValueError('audio features overflow the selected cache dtype')
+    return stored, dict(dtype=dtype, training_dtype='float32', stored=tensor_fingerprint(stored),
+                       max_abs_roundtrip_error=float((source-stored.float()).abs().max()))
 
 
 def prepare(args, output, budget, device):
@@ -64,13 +80,16 @@ def prepare(args, output, budget, device):
         enc.requires_grad_(False); dec.requires_grad_(False)
         models[mode] = (enc,dec)
         sources[mode] = file_fingerprint(path)
-    report = dict(schema=CACHE_SCHEMA,status='running',source_manifest=file_fingerprint(args.manifest),
+    feature_dtype = args.cache_feature_dtype
+    report = dict(schema=CACHE_STORAGE_SCHEMA,status='running',source_manifest=file_fingerprint(args.manifest),
                   source_root=manifest['source_root'],models=sources,rows=[],implementation=code_version(),
                   contract=dict(onset='frozen predicted probability + subframe offset, no threshold/NMS',
                     audio_features='each route frozen legacy encoder, full attention',
                     onset_encoder='1024 mel core + 128 context, same train and inference',
                     memory_frame_seconds=MEMORY_SECONDS,condition_offset_unit='memory frames',
-                    target_used_for_acoustic_or_soft_inputs=False,freeze_frontend=True,selection='fixed before training'))
+                    target_used_for_acoustic_or_soft_inputs=False,freeze_frontend=True,selection='fixed before training',
+                    cache_feature_dtype=feature_dtype,loaded_feature_dtype='float32',
+                    condition_and_time_dtype='float32'))
     for index,row in enumerate(rows):
         budget.check(force=True)
         mel,duration = load_audio(row['audio'],max_seconds=args.max_seconds,budget=budget)
@@ -88,8 +107,10 @@ def prepare(args, output, budget, device):
             ref = references[mode]
             enforce_preflight(estimate_working_set(enc,dec,mel.shape[-1],len(ref.tokens)),budget,device)
             feats,valid,geometry = encode_audio(enc,mel,duration,device)
-            sample['routes'][mode] = dict(features=feats.cpu(),tokens=ref.tokens,frames=ref.frames,
-                offsets=ref.offsets,offset_mask=ref.offset_mask,reference=ref.metadata,geometry=geometry)
+            stored,storage = store_features(feats,feature_dtype)
+            sample['routes'][mode] = dict(features=stored,tokens=ref.tokens,frames=ref.frames,
+                offsets=ref.offsets,offset_mask=ref.offset_mask,reference=ref.metadata,geometry=geometry,
+                feature_storage=storage)
             if 'valid' in sample and not torch.equal(sample['valid'],valid.cpu()):
                 raise ValueError('two route encoders have different clocks')
             sample['valid'] = valid.cpu()
@@ -99,6 +120,7 @@ def prepare(args, output, budget, device):
         report['rows'].append(dict(id=row['id'],split=row['split'],file=path.name,sha256=sha256(path),
             audio=sample['audio'],duration=duration,
             token_counts={m:len(r['tokens']) for m,r in sample['routes'].items()},
+            feature_storage={m:r['feature_storage'] for m,r in sample['routes'].items()},
             condition=tensor_fingerprint(sample['soft_onsets']),valid=tensor_fingerprint(sample['valid'])))
         print(f'[prepare] {index+1}/{len(rows)} {row["id"]}',flush=True)
         del sample,arrays,references,mel,feats,valid
@@ -111,7 +133,7 @@ def prepare(args, output, budget, device):
 def cache_inputs(path):
     path = Path(path)
     manifest = json.loads((path/'cache.json').read_text())
-    if manifest.get('schema') != CACHE_SCHEMA or manifest.get('status') != 'completed':
+    if manifest.get('schema') not in (CACHE_SCHEMA,CACHE_STORAGE_SCHEMA) or manifest.get('status') != 'completed':
         raise ValueError('completed versioned cache required')
     for row in manifest['rows']:
         target = (path/row['file']).resolve()
@@ -121,7 +143,13 @@ def cache_inputs(path):
 
 
 def load_sample(cache,row):
-    return torch.load(Path(cache)/row['file'],map_location='cpu',weights_only=True)
+    sample = torch.load(Path(cache)/row['file'],map_location='cpu',weights_only=True)
+    for route in sample['routes'].values():
+        stored = route['features']
+        if stored.dtype not in (torch.float16,torch.float32):
+            raise ValueError('cache audio features must be float16 or float32')
+        route['features'] = stored.float()
+    return sample
 
 
 def sample_order(rows, steps, seed):
@@ -308,10 +336,13 @@ def main():
     parser.add_argument('--train-limit',type=int,default=0);parser.add_argument('--val-limit',type=int,default=0)
     parser.add_argument('--generate-limit',type=int,default=2);parser.add_argument('--max-decoder-steps',type=int,default=6000)
     parser.add_argument('--max-seconds',type=float,default=240);parser.add_argument('--max-reference-tokens',type=int,default=4096)
+    parser.add_argument('--cache-feature-dtype',choices=('float32','float16'),default='float32')
+    parser.add_argument('--max-artifact-mib',type=float,default=700)
     add_resource_args(parser);parser.set_defaults(max_rss_gib=4)
     args=parser.parse_args()
     if args.steps<1 or not 0<args.lr<1 or args.max_decoder_steps<1 or args.max_reference_tokens<2 \
-            or min(args.train_limit,args.val_limit,args.generate_limit)<0:
+            or min(args.train_limit,args.val_limit,args.generate_limit)<0 \
+            or not math.isfinite(args.max_artifact_mib) or args.max_artifact_mib<=0:
         parser.error('positive steps/lr and nonnegative sample limits required')
     required={'prepare':('manifest','model_root'),'train':('cache','mode','condition'),
               'evaluate':('cache','checkpoint')}[args.action]
