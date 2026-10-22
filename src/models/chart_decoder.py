@@ -35,6 +35,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
+from torch.utils.checkpoint import checkpoint
 
 from src.data.chart_tokenizer import VOCAB_SIZE
 from src.models.attention import RMSNorm, apply_rope, rope1d, timestep_embedding
@@ -151,6 +152,10 @@ class ChartDecoder(nn.Module):
         if soft_onset_dim not in (0, 2):
             raise ValueError('soft_onset_dim must be 0 (legacy) or 2 (dense probability/offset)')
         self.soft_onset_dim = soft_onset_dim
+        # Runtime training option; no checkpoint parameter or inference change.
+        # Recompute complete blocks in backward instead of retaining every
+        # layer's attention activations. The token/audio context stays complete.
+        self.gradient_checkpointing = False
         if history_dim not in (0,HISTORY_DIM):
             raise ValueError('unsupported causal history dimension')
         self.history_dim = history_dim
@@ -232,7 +237,10 @@ class ChartDecoder(nn.Module):
         freqs = rope1d(torch.arange(L, device=x.device).float(), self.head_dim, self.rope_theta)
         mask = self.cross_mask(tok_frames, memory.shape[1], mem_valid)
         for blk in self.blocks:
-            x = blk(x, freqs, memory, mask)
+            if self.gradient_checkpointing and self.training and torch.is_grad_enabled():
+                x = checkpoint(blk, x, freqs, memory, mask, use_reentrant=False)
+            else:
+                x = blk(x, freqs, memory, mask)
         h = self.norm_out(x)
         logits = self.lm_head(h)
         if return_hidden:
