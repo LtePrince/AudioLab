@@ -134,7 +134,9 @@ class ChartDecoder(nn.Module):
         factorized   : NOTE embeddings = E_type[t] + E_pos[bin]  (shares parameters
                        across the 4×n_lanes fused tokens — docs/freeform_design.md P1)
         offset_head  : regress the sub-bin position offset from the NOTE token's
-                       hidden state (anchor+offset; not part of the autoregression)
+                       hidden state (anchor+offset). Legacy mode has no residual
+                       feedback; history mode feeds past predicted residuals to
+                       later input tokens, never back into the current NOTE.
         cross_window : LOCAL cross-attention — a token whose musical clock is at
                        frame f may only attend memory frames |f' - f| <= window
                        (None = global).  The alignment is known from the clock, so
