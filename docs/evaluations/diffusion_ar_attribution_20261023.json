@@ -1,0 +1,412 @@
+{
+  "schema": "audiolab-diffusion-ar-attribution-v1",
+  "date": "2026-10-23",
+  "scope": "three existing development songs; single seed; no retraining; current AR is the 10-epoch global scratch experiment, not the full300_history shipped model",
+  "sources": {
+    "march": {
+      "path": "out/diffusion_march_20260314/report.json",
+      "sha256": "412fbd7367b4565e1a9e37757c2363fd114cac37fa03cfbdbd6c97f108c9d190"
+    },
+    "august_native": {
+      "path": "out/diffusion_benchmark_20261022/release_model/report.json",
+      "sha256": "400b0740293f23ecee5207a52e013e949a23b55f9ae2bea70e0576a1ed6e685b"
+    },
+    "august_fixed": {
+      "path": "out/diffusion_attribution_20261023/august_fixed/report.json",
+      "sha256": "2803791eae7f10a835821086e1a3f17a899765b13b9748620ced7b47f8b69441"
+    },
+    "ar": {
+      "path": "out/onset_attention_20261022/4k-scratch/global/report.json",
+      "sha256": "c956879083f0b22818a1a0c47ad12392179f96d7848f1f33299107912c7a521a"
+    },
+    "ar_training": {
+      "path": "out/onset_attention_20261022/4k-scratch/global/training.json",
+      "sha256": "3ef63c884286a3ef27b94eee830f910d21e02bcc7b9f629d267e08fef15a105e"
+    },
+    "august_metrics": {
+      "path": "checkpoints_big/dit/metrics.jsonl",
+      "sha256": "67997a3bbbfcf9039e210e0fada4c2bdb1c18ed4bc04ff9425479bb109f6a8df"
+    }
+  },
+  "protocol_sha256": "5b5fb33e54aea677bca80c78889964b4904c564142f021ee587f66d9e4f4effd",
+  "diffusion": {
+    "march": {
+      "run_id": "diffusion/march2000-original-code/seed42",
+      "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+      "rows": [
+        {
+          "id": "-SURREALISM-_IN",
+          "precision": 0.925,
+          "recall": 0.7047619047619048,
+          "f1": 0.8,
+          "matched": 518,
+          "false_positives": 42,
+          "false_negatives": 217,
+          "false_positives_per_minute": 16.413849004168597
+        },
+        {
+          "id": "ABYSS MOTION 192.333_IN",
+          "precision": 0.938034188034188,
+          "recall": 0.6702290076335878,
+          "f1": 0.7818343722172751,
+          "matched": 439,
+          "false_positives": 29,
+          "false_negatives": 216,
+          "false_positives_per_minute": 13.79711370724745
+        },
+        {
+          "id": "Eltaw_IN",
+          "precision": 0.9049676025917927,
+          "recall": 0.5977175463623395,
+          "f1": 0.7199312714776632,
+          "matched": 419,
+          "false_positives": 44,
+          "false_negatives": 282,
+          "false_positives_per_minute": 19.476087491836452
+        }
+      ],
+      "macro_f1_50ms": 0.7672552145649795
+    },
+    "august_native": {
+      "run_id": "diffusion/release-epoch293/seed42",
+      "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+      "rows": [
+        {
+          "id": "-SURREALISM-_IN",
+          "precision": 0.4176991150442478,
+          "recall": 0.32108843537414966,
+          "f1": 0.3630769230769231,
+          "matched": 236,
+          "false_positives": 329,
+          "false_negatives": 499,
+          "false_positives_per_minute": 128.575150532654
+        },
+        {
+          "id": "ABYSS MOTION 192.333_IN",
+          "precision": 0.5251677852348994,
+          "recall": 0.4778625954198473,
+          "f1": 0.5003996802557954,
+          "matched": 313,
+          "false_positives": 283,
+          "false_negatives": 342,
+          "false_positives_per_minute": 134.64079928106995
+        },
+        {
+          "id": "Eltaw_IN",
+          "precision": 0.5959409594095941,
+          "recall": 0.4607703281027104,
+          "f1": 0.5197103781174578,
+          "matched": 323,
+          "false_positives": 219,
+          "false_negatives": 378,
+          "false_positives_per_minute": 96.93779910709506
+        }
+      ],
+      "macro_f1_50ms": 0.46106232715005874
+    },
+    "august_fixed": {
+      "run_id": "diffusion/august293-fixed-length/seed42",
+      "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+      "rows": [
+        {
+          "id": "-SURREALISM-_IN",
+          "precision": 0.4386873920552677,
+          "recall": 0.345578231292517,
+          "f1": 0.3866057838660578,
+          "matched": 254,
+          "false_positives": 325,
+          "false_negatives": 481,
+          "false_positives_per_minute": 127.01192681797127
+        },
+        {
+          "id": "ABYSS MOTION 192.333_IN",
+          "precision": 0.4865211810012837,
+          "recall": 0.5786259541984733,
+          "f1": 0.5285913528591353,
+          "matched": 379,
+          "false_positives": 400,
+          "false_negatives": 276,
+          "false_positives_per_minute": 190.30501665168896
+        },
+        {
+          "id": "Eltaw_IN",
+          "precision": 0.5366614664586583,
+          "recall": 0.49072753209700426,
+          "f1": 0.5126676602086438,
+          "matched": 344,
+          "false_positives": 297,
+          "false_negatives": 357,
+          "false_positives_per_minute": 131.46359056989604
+        }
+      ],
+      "macro_f1_50ms": 0.475954932311279
+    }
+  },
+  "fixed_length_ablation": {
+    "changed": "fixed_length only; native vs padded 4096 chart frames",
+    "held_equal": [
+      "weights",
+      "code hashes",
+      "audio/cases",
+      "protocol",
+      "seed=42",
+      "CFG=3",
+      "DDIM=50",
+      "eta=0",
+      "logit threshold=0"
+    ],
+    "macro_delta": 0.014892605161220263,
+    "resources": {
+      "disk_free_gib": 17.13507080078125,
+      "ram_available_gib": 36.9990234375,
+      "rss_gib": 1.5470237731933594,
+      "gpu_peak_allocated_gib": 0.5942850112915039,
+      "gpu_peak_reserved_gib": 0.791015625
+    },
+    "limits": "Single seed/three songs; does not control March/August audio alignment or VAE binary threshold differences"
+  },
+  "ar": {
+    "checkpoint_sha256": "cef1095fa0ca1441968e41d02ed17e9fd0bce5e086d33299dc0305237d800b57",
+    "decoder_parameters": 6527745,
+    "config": {
+      "vocab_size": 129,
+      "hidden_dim": 256,
+      "depth": 6,
+      "num_heads": 8,
+      "mlp_ratio": 4.0,
+      "dropout": 0.1,
+      "mem_dim": 256,
+      "time_dim": 128,
+      "rope_theta": 10000.0,
+      "cross_window": null,
+      "token_dropout": 0.15,
+      "soft_onset_dim": 2,
+      "history_dim": 28,
+      "cross_time_scale": null
+    },
+    "epoch": 10,
+    "steps": 3300,
+    "curves": [
+      {
+        "epoch": 1,
+        "steps": 330,
+        "music_loss": 2.4952439880371093
+      },
+      {
+        "epoch": 2,
+        "steps": 660,
+        "music_loss": 1.8153765833377837
+      },
+      {
+        "epoch": 3,
+        "steps": 990,
+        "music_loss": 1.6676057465871175
+      },
+      {
+        "epoch": 4,
+        "steps": 1320,
+        "music_loss": 1.5956328004598617
+      },
+      {
+        "epoch": 5,
+        "steps": 1650,
+        "music_loss": 1.548065534432729
+      },
+      {
+        "epoch": 6,
+        "steps": 1980,
+        "music_loss": 1.5057256559530894
+      },
+      {
+        "epoch": 7,
+        "steps": 2310,
+        "music_loss": 1.4723920758565268
+      },
+      {
+        "epoch": 8,
+        "steps": 2640,
+        "music_loss": 1.446501772403717
+      },
+      {
+        "epoch": 9,
+        "steps": 2970,
+        "music_loss": 1.426550185084343
+      },
+      {
+        "epoch": 10,
+        "steps": 3300,
+        "music_loss": 1.413999349474907
+      }
+    ],
+    "songs": [
+      {
+        "id": "-SURREALISM-_IN",
+        "teacher_bits": {
+          "matched": 2.068934440612793,
+          "zero_audio": 2.103914499282837,
+          "zero_soft": 2.068894147872925
+        },
+        "zero_audio_relative_increase": 0.01690728231083205,
+        "zero_soft_delta_bits": -4.029273986816406e-05,
+        "generation": [
+          {
+            "greedy": true,
+            "seed": 42,
+            "note_count": 1083,
+            "generated_onsets": 722,
+            "types": {
+              "1": 1083
+            },
+            "f1_25ms": 0.6630061770761839,
+            "f1_50ms": 0.664378860672615,
+            "last_onset_seconds": 153.5,
+            "eos_clock_seconds": 153.66666666666666
+          },
+          {
+            "greedy": false,
+            "seed": 42,
+            "note_count": 775,
+            "generated_onsets": 751,
+            "types": {
+              "2": 690,
+              "3": 21,
+              "1": 64
+            },
+            "f1_25ms": 0.6998654104979811,
+            "f1_50ms": 0.7012113055181696,
+            "last_onset_seconds": 153.5,
+            "eos_clock_seconds": 153.66666666666666
+          }
+        ]
+      },
+      {
+        "id": "ABYSS MOTION 192.333_IN",
+        "teacher_bits": {
+          "matched": 1.9010472297668457,
+          "zero_audio": 1.9242738485336304,
+          "zero_soft": 1.9011708498001099
+        },
+        "zero_audio_relative_increase": 0.012217802063567484,
+        "zero_soft_delta_bits": 0.00012362003326416016,
+        "generation": [
+          {
+            "greedy": true,
+            "seed": 42,
+            "note_count": 1202,
+            "generated_onsets": 801,
+            "types": {
+              "1": 1202
+            },
+            "f1_25ms": 0.6771978021978022,
+            "f1_50ms": 0.6840659340659341,
+            "last_onset_seconds": 126.0314142658826,
+            "eos_clock_seconds": 126.18739373898394
+          },
+          {
+            "greedy": false,
+            "seed": 42,
+            "note_count": 986,
+            "generated_onsets": 876,
+            "types": {
+              "1": 983,
+              "2": 3
+            },
+            "f1_25ms": 0.5604180274330502,
+            "f1_50ms": 0.5695623775310255,
+            "last_onset_seconds": 126.10940400243328,
+            "eos_clock_seconds": 126.18739373898394
+          }
+        ]
+      },
+      {
+        "id": "Eltaw_IN",
+        "teacher_bits": {
+          "matched": 1.6405678987503052,
+          "zero_audio": 1.6573859453201294,
+          "zero_soft": 1.6405854225158691
+        },
+        "zero_audio_relative_increase": 0.010251356608059536,
+        "zero_soft_delta_bits": 1.7523765563964844e-05,
+        "generation": [
+          {
+            "greedy": true,
+            "seed": 42,
+            "note_count": 1356,
+            "generated_onsets": 865,
+            "types": {
+              "1": 1356
+            },
+            "f1_25ms": 0.7394636015325671,
+            "f1_50ms": 0.7394636015325671,
+            "last_onset_seconds": 135.5440414507772,
+            "eos_clock_seconds": 135.69948186528498
+          },
+          {
+            "greedy": false,
+            "seed": 42,
+            "note_count": 1321,
+            "generated_onsets": 1183,
+            "types": {
+              "1": 1189,
+              "3": 111,
+              "4": 9,
+              "2": 12
+            },
+            "f1_25ms": 0.5403397027600849,
+            "f1_50ms": 0.5403397027600849,
+            "last_onset_seconds": 127.30569948186529,
+            "eos_clock_seconds": 127.30569948186529
+          }
+        ]
+      }
+    ]
+  },
+  "august_training": {
+    "selected": {
+      "stage": "dit",
+      "elapsed_s": 2858.2,
+      "epoch": 293,
+      "step": 9669,
+      "train_loss": 0.07706361,
+      "lr": 8.047e-05,
+      "val_loss": 0.16555854,
+      "val_cond_gain": 0.03990991
+    },
+    "last": {
+      "stage": "dit",
+      "elapsed_s": 3748.7,
+      "epoch": 393,
+      "step": 12969,
+      "train_loss": 0.0578813,
+      "lr": 6.683e-05,
+      "val_loss": 0.17127898,
+      "val_cond_gain": -0.00658424
+    },
+    "note": "Stage-local counters; lifetime/resume provenance not established. Selected checkpoint has positive conditional denoising gain, unlike final epoch."
+  },
+  "training_membership": {
+    "current_ar": "All 300 songs; all three diagnostic songs trained",
+    "march": "Release reports 300 samples, original training list not reverified",
+    "august": "Current train/val lists have 270/30 songs: Eltaw train, SURREALISM/ABYSS val; no historical list hash tying these files to the August checkpoint, so historical membership remains unverified"
+  },
+  "interpretation_limits": [
+    "Teacher-forced zero-feature ablations do not prove unconditional generation or digital-silence behavior.",
+    "Onset F1 is reference-chart timing agreement, not key-type/position/motif/playability quality.",
+    "Epochs/steps across AR and diffusion are not compute-equivalent.",
+    "March and August large DiT both have 64,495,120 parameters.",
+    "VAE/Wave weights, timing conventions, threshold and training/selection changed together; no single-factor causal attribution for March versus August.",
+    "No product checkpoint or decoder settings changed in this audit."
+  ],
+  "march_audio_crop": {
+    "source": "20edd4d35b584dccd6608dafa92d7028bf41d80f:src/test.py",
+    "source_sha256": "a68fa569b6c4e50bfe5fa6cbb3c5c60dc9522e7b6290df2ed73166566b31d663",
+    "mel_frames": 4096,
+    "mel_hop_samples": 512,
+    "sample_rate": 22050,
+    "nominal_audio_seconds": 95.10893424036281,
+    "chart_axis_seconds": 190.21786848072563,
+    "eltaw_duration_seconds": 135.55083900226757,
+    "eltaw_unique_onsets_after_audio_crop": 116,
+    "interpretation": "Later song audio frames are absent except tiny STFT boundary context; memorization/extrapolation contribution is a hypothesis, not experimentally isolated."
+  }
+}
