@@ -23,7 +23,7 @@ from src.data.chart_constraints import constrain_4k_notes, constrain_free_notes
 from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.data.timing import TIMING_SCHEMA, tick_seconds
 from src.models.chart_decoder import generate_tokens
-from src.models.chart_history import HISTORY_SCHEMA, history_features
+from src.models.chart_history import HISTORY_SCHEMA, RELATION_SCHEMA, history_features
 from src.pattern_diagnostics import chart_events, summarize
 from src.product.artifacts import chart_document, repair_log, validate_chart, write_json, write_preview
 from src.resource_budget import ResourceBudget, add_resource_args
@@ -138,7 +138,8 @@ def train(args,output,budget,device):
     source = cache['models'][args.mode]
     if sha256(source['path']) != source['sha256']:
         raise ValueError('initial decoder changed')
-    decoder,config,initial = initialize_decoder(source['path'],args.seed,with_history=args.condition=='soft_history')
+    decoder,config,initial = initialize_decoder(source['path'],args.seed,
+        with_history=args.condition.startswith('soft_history'),with_relation_aux=args.condition=='soft_history_aux')
     decoder.to(device).train()
     rows = [r for r in cache['rows'] if r['split']=='train']
     if args.train_limit:
@@ -177,6 +178,8 @@ def train(args,output,budget,device):
         del sample,loss
     checkpoint = dict(soft_onset_schema=SCHEMA,timing_schema=TIMING_SCHEMA,condition=args.condition,
                       history_schema=HISTORY_SCHEMA if decoder.history_dim else None,
+                      relation_schema=RELATION_SCHEMA if decoder.relation_head is not None else None,
+                      relation_weight=.1 if decoder.relation_head is not None else None,
                       model={k:v.detach().cpu() for k,v in decoder.state_dict().items()},dec_config=config,
                       mode=args.mode,steps=args.steps,seed=args.seed,lr=args.lr,initialization=initial,
                       cache_manifest=file_fingerprint(Path(args.cache)/'cache.json'),
@@ -299,7 +302,7 @@ def main():
     parser.add_argument('action',choices=('prepare','train','evaluate'))
     parser.add_argument('--output',required=True);parser.add_argument('--device',default='cuda:0')
     parser.add_argument('--manifest');parser.add_argument('--model-root');parser.add_argument('--cache')
-    parser.add_argument('--mode',choices=tuple(ROUTES));parser.add_argument('--condition',choices=('none','soft','soft_history'))
+    parser.add_argument('--mode',choices=tuple(ROUTES));parser.add_argument('--condition',choices=('none','soft','soft_history','soft_history_aux'))
     parser.add_argument('--checkpoint');parser.add_argument('--steps',type=int,default=200)
     parser.add_argument('--seed',type=int,default=42);parser.add_argument('--lr',type=float,default=5e-5)
     parser.add_argument('--train-limit',type=int,default=0);parser.add_argument('--val-limit',type=int,default=0)

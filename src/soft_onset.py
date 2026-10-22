@@ -13,7 +13,8 @@ from src.conditioning_audit import offset_scores, token_scores
 from src.data.chart_tokenizer import ChartTokenizer, EOS, PAD
 from src.data.timing import TIMING_SCHEMA, check_checkpoint_timing
 from src.models.chart_decoder import ChartDecoder
-from src.models.chart_history import HISTORY_DIM, HISTORY_SCHEMA, history_features
+from src.models.chart_history import (HISTORY_DIM, HISTORY_SCHEMA, RELATION_NAMES, RELATION_SCHEMA,
+                                      history_features, relation_targets)
 from src.resource_budget import GIB, resource_snapshot
 
 SCHEMA = 'audiolab-soft-onset-memory-v1'
@@ -45,8 +46,8 @@ def dense_condition(arrays, memory_frames):
 
 
 def condition_input(values, condition):
-    if condition not in ('none', 'soft', 'soft_history'):
-        raise ValueError('condition must be none, soft or soft_history')
+    if condition not in ('none', 'soft', 'soft_history', 'soft_history_aux'):
+        raise ValueError('unknown soft-onset experiment condition')
     return torch.zeros_like(values) if condition == 'none' else values
 
 
@@ -59,7 +60,7 @@ def state_hash(state):
     return digest.hexdigest()
 
 
-def initialize_decoder(checkpoint, seed=42, *, with_history=False):
+def initialize_decoder(checkpoint, seed=42, *, with_history=False, with_relation_aux=False):
     """Explicit transfer: legacy state strict, then one declared zero residual."""
     ck = torch.load(checkpoint, map_location='cpu', weights_only=True)
     check_checkpoint_timing(ck)
@@ -69,27 +70,37 @@ def initialize_decoder(checkpoint, seed=42, *, with_history=False):
     config = dict(ck['dec_config'], soft_onset_dim=2)
     if with_history:
         config['history_dim']=HISTORY_DIM
+    if with_relation_aux:
+        config['relation_auxiliary']=True
     decoder = ChartDecoder(**config)
     old = {k.removeprefix('decoder.'): v for k,v in ck['model'].items() if k.startswith('decoder.')}
     state = dict(old, **{'soft_onset_proj.weight': torch.zeros_like(decoder.soft_onset_proj.weight)})
     if with_history:
         state['history_proj.weight']=torch.zeros_like(decoder.history_proj.weight)
+    if with_relation_aux:
+        state.update({'relation_head.weight':torch.zeros_like(decoder.relation_head.weight),
+                      'relation_head.bias':torch.zeros_like(decoder.relation_head.bias)})
     decoder.load_state_dict(state, strict=True)
     return decoder, config, dict(old_decoder_state_sha256=state_hash(old),
                                  initialized_state_sha256=state_hash(decoder.state_dict()),
-                                 added_parameters=['soft_onset_proj.weight']+(['history_proj.weight'] if with_history else []),
+                                 added_parameters=['soft_onset_proj.weight']+(['history_proj.weight'] if with_history else [])+
+                                    (['relation_head.weight','relation_head.bias'] if with_relation_aux else []),
                                  initialization='zero, no bias')
 
 
 def load_decoder(checkpoint, device):
     ck = torch.load(checkpoint, map_location='cpu', weights_only=True)
     check_checkpoint_timing(ck)
-    if ck.get('soft_onset_schema') != SCHEMA or ck.get('condition') not in ('none','soft','soft_history') \
+    if ck.get('soft_onset_schema') != SCHEMA or ck.get('condition') not in ('none','soft','soft_history','soft_history_aux') \
             or ck.get('dec_config',{}).get('soft_onset_dim') != 2:
         raise ValueError('not a supported explicit soft-onset experiment checkpoint')
     has_history=ck['dec_config'].get('history_dim',0)==HISTORY_DIM
-    if has_history != (ck['condition']=='soft_history') or (has_history and ck.get('history_schema')!=HISTORY_SCHEMA):
+    if has_history != ck['condition'].startswith('soft_history') or (has_history and ck.get('history_schema')!=HISTORY_SCHEMA):
         raise ValueError('checkpoint history schema/condition mismatch')
+    has_aux=ck['dec_config'].get('relation_auxiliary',False)
+    if has_aux != (ck['condition']=='soft_history_aux') or \
+            (has_aux and (ck.get('relation_schema')!=RELATION_SCHEMA or ck.get('relation_weight')!=.1)):
+        raise ValueError('checkpoint relation schema/condition mismatch')
     decoder = ChartDecoder(**ck['dec_config'])
     decoder.load_state_dict(ck['model'], strict=True)
     return decoder.to(device).eval(), ck
@@ -117,6 +128,15 @@ def forward_loss(decoder, sample, mode, condition, device, *, score=False):
             offset_loss = (predicted[mask]-row['offsets'][:-1].to(device)[mask]).square().mean()
     details = dict(token_ce_nats=float(ce.detach()), offset_mse=float(offset_loss.detach()),
                    supervised_tokens=len(tokens)-1)
+    auxiliary_loss=logits.new_zeros(())
+    if decoder.relation_head is not None:
+        labels=relation_targets(row['tokens'],row['frames'],n_lanes=decoder.n_lanes).to(device)
+        mask_aux=labels!=-100
+        if mask_aux.any():
+            auxiliary_loss=F.cross_entropy(decoder.relation_head(hidden)[0,mask_aux],labels[mask_aux])
+        details['relation_auxiliary']=dict(schema=RELATION_SCHEMA,weight=.1,count=int(mask_aux.sum()),
+            ce_nats=float(auxiliary_loss.detach()),
+            by_label={name:int((labels==i).sum()) for i,name in enumerate(RELATION_NAMES)})
     if score:
         tk = ChartTokenizer(decoder.n_lanes)
         details['scores'] = token_scores(logits[0], tokens[1:], tk)
@@ -125,7 +145,7 @@ def forward_loss(decoder, sample, mode, condition, device, *, score=False):
             -logits[0].float().log_softmax(-1)[eos, EOS].mean()/math.log(2)) if eos.any() else None)
         details['conditional_offset'] = (offset_scores(predicted,tokens[:-1],row['offsets'][:-1].to(device),mask,tk)
                                          if predicted is not None else None)
-    return ce+offset_loss, details
+    return ce+offset_loss+.1*auxiliary_loss, details
 
 
 def training_preflight(decoder, sample, mode, budget, device):
@@ -160,5 +180,12 @@ def weighted_scores(rows):
                          for r in rows if r['scores'][name]['count'])/count if count else None)
     offset = [r['conditional_offset'] for r in rows if r.get('conditional_offset')]
     count = sum(r['count'] for r in offset)
-    return dict(scores=out, conditional_offset=dict(count=count,
+    result=dict(scores=out, conditional_offset=dict(count=count,
                 mae_sub_bin=sum(r['mae_sub_bin']*r['count'] for r in offset if r['count'])/count if count else None))
+    aux=[r['relation_auxiliary'] for r in rows if r.get('relation_auxiliary')]
+    if aux:
+        count=sum(r['count'] for r in aux)
+        result['relation_auxiliary']=dict(count=count,weight=.1,
+            ce_nats=sum(r['ce_nats']*r['count'] for r in aux)/count if count else None,
+            by_label={name:sum(r['by_label'][name] for r in aux) for name in RELATION_NAMES})
+    return result

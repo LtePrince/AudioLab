@@ -127,7 +127,8 @@ class ChartDecoder(nn.Module):
                  rope_theta: float = 10000.0, n_lanes: int = 4,
                  factorized: bool = False, offset_head: bool = False,
                  cross_window: int | None = None, token_dropout: float = 0.0,
-                 soft_onset_dim: int = 0, history_dim: int = 0):
+                 soft_onset_dim: int = 0, history_dim: int = 0,
+                 relation_auxiliary: bool = False):
         """
         n_lanes      : position slots in the NOTE block (4 = 4k lanes, 64 = free-x bins)
         factorized   : NOTE embeddings = E_type[t] + E_pos[bin]  (shares parameters
@@ -151,6 +152,8 @@ class ChartDecoder(nn.Module):
         if history_dim not in (0,HISTORY_DIM):
             raise ValueError('unsupported causal history dimension')
         self.history_dim = history_dim
+        if type(relation_auxiliary) is not bool or (relation_auxiliary and not history_dim):
+            raise ValueError('relation auxiliary head requires explicit causal history configuration')
         self.head_dim, self.rope_theta, self.time_dim = hidden_dim // num_heads, rope_theta, time_dim
         self.cross_window, self.token_dropout = cross_window, token_dropout
         self.n_lanes, self.factorized = n_lanes, factorized
@@ -178,6 +181,9 @@ class ChartDecoder(nn.Module):
             DecoderBlock(hidden_dim, num_heads, mlp_ratio, dropout) for _ in range(depth)])
         self.norm_out = nn.LayerNorm(hidden_dim, eps=1e-6)
         self.lm_head  = nn.Linear(hidden_dim, vocab_size)
+        self.relation_head = nn.Linear(hidden_dim,4) if relation_auxiliary else None
+        if self.relation_head is not None:
+            nn.init.zeros_(self.relation_head.weight);nn.init.zeros_(self.relation_head.bias)
 
     @property
     def num_params(self) -> int:
