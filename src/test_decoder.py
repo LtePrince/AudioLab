@@ -67,6 +67,8 @@ def skeleton_from_transcriber(mel: torch.Tensor, transcriber, bpm: float, frame_
 
 def load_models(ckpt_path: str, device: torch.device):
     ck = torch.load(ckpt_path, map_location="cpu", weights_only=True)
+    if ck.get('soft_onset_schema'):
+        raise ValueError('soft-onset experiment checkpoints require the explicit experiment loader')
     check_checkpoint_timing(ck)
     enc = TranscriberNet(**ck["enc_config"]); dec = ChartDecoder(**ck["dec_config"])
     state = ck["model"]

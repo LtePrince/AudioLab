@@ -38,6 +38,7 @@ from torch import Tensor
 
 from src.data.chart_tokenizer import VOCAB_SIZE
 from src.models.attention import RMSNorm, apply_rope, rope1d, timestep_embedding
+from src.models.chart_history import CausalChartHistory, HISTORY_DIM
 
 __all__ = ["DEFAULT_DECODER_CONFIG", "ChartDecoder", "time_embed"]
 
@@ -125,7 +126,8 @@ class ChartDecoder(nn.Module):
                  dropout: float = 0.1, mem_dim: int = 256, time_dim: int = 128,
                  rope_theta: float = 10000.0, n_lanes: int = 4,
                  factorized: bool = False, offset_head: bool = False,
-                 cross_window: int | None = None, token_dropout: float = 0.0):
+                 cross_window: int | None = None, token_dropout: float = 0.0,
+                 soft_onset_dim: int = 0, history_dim: int = 0):
         """
         n_lanes      : position slots in the NOTE block (4 = 4k lanes, 64 = free-x bins)
         factorized   : NOTE embeddings = E_type[t] + E_pos[bin]  (shares parameters
@@ -143,11 +145,20 @@ class ChartDecoder(nn.Module):
                        next token and the audio path receives gradient pressure.
         """
         super().__init__()
+        if soft_onset_dim not in (0, 2):
+            raise ValueError('soft_onset_dim must be 0 (legacy) or 2 (dense probability/offset)')
+        self.soft_onset_dim = soft_onset_dim
+        if history_dim not in (0,HISTORY_DIM):
+            raise ValueError('unsupported causal history dimension')
+        self.history_dim = history_dim
         self.head_dim, self.rope_theta, self.time_dim = hidden_dim // num_heads, rope_theta, time_dim
         self.cross_window, self.token_dropout = cross_window, token_dropout
         self.n_lanes, self.factorized = n_lanes, factorized
         self._note0, self._n_note = 50, 4 * n_lanes
         self.tok_emb   = nn.Embedding(vocab_size, hidden_dim)
+        self.history_proj = nn.Linear(history_dim,hidden_dim,bias=False) if history_dim else None
+        if self.history_proj is not None:
+            nn.init.zeros_(self.history_proj.weight)
         if factorized:
             self.type_emb = nn.Embedding(4, hidden_dim)
             self.pos_emb  = nn.Embedding(n_lanes, hidden_dim)
@@ -155,6 +166,11 @@ class ChartDecoder(nn.Module):
                                          nn.Linear(hidden_dim, 1)) if offset_head else None
         self.time_proj = nn.Linear(time_dim, hidden_dim)
         self.mem_proj  = nn.Linear(mem_dim, hidden_dim)
+        # Opt-in experimental residual; absent from legacy state dicts. No bias:
+        # the same architecture with zero inputs is the exact audio-only control.
+        self.soft_onset_proj = nn.Linear(soft_onset_dim, hidden_dim, bias=False) if soft_onset_dim else None
+        if self.soft_onset_proj is not None:
+            nn.init.zeros_(self.soft_onset_proj.weight)
         self.mem_time  = nn.Linear(time_dim, hidden_dim)
         self.mem_norm  = nn.LayerNorm(hidden_dim, eps=1e-6)
         self.drop      = nn.Dropout(dropout)
@@ -167,15 +183,24 @@ class ChartDecoder(nn.Module):
     def num_params(self) -> int:
         return sum(p.numel() for p in self.parameters())
 
-    def prepare_memory(self, features: Tensor) -> Tensor:
+    def prepare_memory(self, features: Tensor, soft_onsets: Tensor | None = None) -> Tensor:
         """(B, T, mem_dim) encoder features → decoder memory with time embedding."""
         B, T, _ = features.shape
         frames = torch.arange(T, device=features.device).float().expand(B, T)
         mem = self.mem_proj(features) + self.mem_time(time_embed(frames, self.time_dim))
+        if self.soft_onset_proj is not None:
+            if soft_onsets is None or soft_onsets.shape != (B, T, self.soft_onset_dim):
+                raise ValueError('experimental decoder requires aligned dense soft onset inputs')
+            if not torch.isfinite(soft_onsets).all():
+                raise ValueError('soft onset inputs must be finite')
+            mem = mem + self.soft_onset_proj(soft_onsets)
+        elif soft_onsets is not None:
+            raise ValueError('legacy decoder does not accept soft onset inputs')
         return self.mem_norm(mem)
 
     def forward(self, tokens: Tensor, tok_frames: Tensor, memory: Tensor,
-                mem_valid: Tensor | None = None, return_hidden: bool = False):
+                mem_valid: Tensor | None = None, return_hidden: bool = False,
+                history: Tensor | None = None):
         """
         tokens     : (B, L) long
         tok_frames : (B, L) float — musical time of each token in chart frames
@@ -185,6 +210,12 @@ class ChartDecoder(nn.Module):
         """
         B, L = tokens.shape
         tok = self.embed(tokens)
+        if self.history_proj is not None:
+            if history is None or history.shape != (B,L,self.history_dim) or not torch.isfinite(history).all():
+                raise ValueError('history decoder requires finite prefix-only history features')
+            tok = tok + self.history_proj(history)
+        elif history is not None:
+            raise ValueError('decoder does not accept causal history inputs')
         if self.training and self.token_dropout > 0:
             keep = (torch.rand(B, L, 1, device=tok.device) >= self.token_dropout).to(tok.dtype)
             tok = tok * keep
@@ -204,11 +235,17 @@ class ChartDecoder(nn.Module):
         return [blk.init_cache(memory) for blk in self.blocks]
 
     def step(self, token: Tensor, frame: Tensor, pos: int, caches: list[dict],
-             T_mem: int, mem_valid: Tensor | None):
+             T_mem: int, mem_valid: Tensor | None, history: Tensor | None = None):
         """One incremental decoding step.
         token (B,) long · frame (B,) float · pos = sequence index of this token.
         Returns (logits (B,V), hidden (B,D))."""
         x = self.embed(token[:, None]) + self.time_proj(time_embed(frame[:, None], self.time_dim))
+        if self.history_proj is not None:
+            if history is None or history.shape != (len(token),self.history_dim) or not torch.isfinite(history).all():
+                raise ValueError('history decoder step requires finite prefix-only history features')
+            x = x + self.history_proj(history[:,None])
+        elif history is not None:
+            raise ValueError('decoder does not accept causal history inputs')
         freqs = rope1d(torch.tensor([pos], device=x.device).float(), self.head_dim, self.rope_theta)
         mask = self.cross_mask(frame[:, None], T_mem, mem_valid)
         for blk, cache in zip(self.blocks, caches):
@@ -349,6 +386,10 @@ def generate_tokens(
     values = [T.value(i) for i in range(decoder.lm_head.out_features)]
 
     offset_frames = offset * 1000.0 / frame_ms
+    history_state = (CausalChartHistory(T.n_lanes,60000.0/bpm/frame_ms)
+                     if getattr(decoder,'history_dim',0) else None)
+    if history_state is not None and skeleton_ticks is not None:
+        raise ValueError('causal history experiment requires free decoding, not forced skeleton')
     tokens, frames = [BOS], [offset_frames]
     offsets: dict[int, float] = {}       # token position → sub-bin offset (free-x)
     gs = GrammarState(T); gs.step(BOS)
@@ -379,13 +420,17 @@ def generate_tokens(
         if progress_callback is not None and step_index % 32 == 0:
             progress_callback(step_index, skel_i, len(skel) if skel is not None else None)
         pos = len(tokens) - 1
+        history_args = ({'history':torch.tensor([history_state.features(frames[-1])],device=device)}
+                        if history_state is not None else {})
         logits, hidden = decoder.step(
             torch.tensor([tokens[-1]], device=device),
             torch.tensor([frames[-1]], device=device, dtype=torch.float32),
-            pos, caches, T_mem, mem_valid)
+            pos, caches, T_mem, mem_valid, **history_args)
         logits = logits[0].float()
         if decoder.offset_head is not None and kinds[tokens[-1]] == "NOTE":
             offsets[pos] = float(decoder.predict_offset(hidden[:, None])[0, 0])
+        if history_state is not None:
+            history_state.observe(tokens[-1],frames[-1],offsets.get(pos))
 
         allowed = torch.tensor([gs.is_allowed(i) for i in range(len(kinds))], device=device)
         # used_lanes resets on every DT, including forced skeleton chains. Mask

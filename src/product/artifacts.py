@@ -87,14 +87,15 @@ def validate_chart(chart, mode, duration, skeleton_ticks):
                            type=names[kind], time_seconds=start, end_seconds=end,
                            screen_x=x, lane=min(range(4), key=lambda lane: abs(LANE_CENTERS[lane]-note['positionX']))
                            if mode == '4k' else None))
-    expected = set(skeleton_ticks)
-    if observed != expected:
+    expected = set(skeleton_ticks) if skeleton_ticks is not None else None
+    if expected is not None and observed != expected:
         raise ValueError(f'incomplete candidate coverage: {len(expected-observed)} missing, '
                          f'{len(observed-expected)} unexpected onsets; output may be truncated')
     return dict(schema=EVENT_SCHEMA, time_basis='audio_seconds', mode=mode,
                 duration_seconds=duration, difficulty='baseline', events=events), dict(
                     note_count=len(notes), note_types=counts, unique_onsets=len(observed),
-                    candidate_ticks=len(expected), complete_candidate_coverage=True,
+                    candidate_ticks=len(expected) if expected is not None else None,
+                    complete_candidate_coverage=True if expected is not None else None,
                     hard_checks='passed', human_playability='unverified',
                     target_player_compatibility='unverified')
 
