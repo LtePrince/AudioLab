@@ -1,0 +1,1034 @@
+{
+  "schema": "audiolab-diffusion-release-comparison-v1",
+  "release": "https://github.com/LtePrince/AudioLab/releases/tag/diffusion-legacy-20261022",
+  "zip_sha256": "2b6bf62d7f9299b6af7bbb4c23d010225ecc80ebe1d358297c1ed9ae8f8cdf30",
+  "manifest": {
+    "bundle": "audiolab-diffusion-legacy-20261022",
+    "code_commit": "8c39320284b80c60f4256b085656c043908e3610",
+    "checkpoint_timing": "legacy/unknown; original bytes preserved",
+    "dit_epoch": 293,
+    "dit_val_loss": 0.16555854147736682,
+    "validation": {
+      "all_three_strict_load": "passed on CPU",
+      "standalone_wave_equals_dit_embedded_wave": true,
+      "generation_run": "not performed"
+    },
+    "files": {
+      "checkpoints/dit/dit_best.pt": {
+        "bytes": 293665575,
+        "sha256": "030dc32dd29d95d61a37df33e9a8717a48f7ed974296408bb465c5061c04afa5"
+      },
+      "checkpoints/vae/vae_final.pt": {
+        "bytes": 28356875,
+        "sha256": "885cfe7123deed8df30defd5b796002228f634da085d811af2c21e64538ba468"
+      },
+      "checkpoints/dit/wave_finetuned.pt": {
+        "bytes": 35591331,
+        "sha256": "ff51ea2007efef99d1aa864062944d8cdafb40a558e9d66abe70e79c7285021c"
+      }
+    },
+    "manifest_sha256": "75977d728c0cc2c59dc72fe6180d746c451605afa6a61f064dccb8342e6f085f"
+  },
+  "protocol_sha256": "5b5fb33e54aea677bca80c78889964b4904c564142f021ee587f66d9e4f4effd",
+  "input_sha256": "5a4131a1f9c85afe47114937f90cd9e35ab32a12bca966867990ce3c26673040",
+  "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+  "metadata": {
+    "stage": "decoded_layout",
+    "mode": "4k",
+    "seed": 42,
+    "ddim_steps": 50,
+    "cfg_scale": 3.0,
+    "eta": 0.0,
+    "fixed_length": false,
+    "from_logits": true,
+    "repairs": "none; existing converter threshold/hold interpretation retained",
+    "checkpoint_sha256": {
+      "dit": "030dc32dd29d95d61a37df33e9a8717a48f7ed974296408bb465c5061c04afa5",
+      "vae": "885cfe7123deed8df30defd5b796002228f634da085d811af2c21e64538ba468",
+      "wave": "ff51ea2007efef99d1aa864062944d8cdafb40a558e9d66abe70e79c7285021c"
+    },
+    "upload_reproduction": "not established",
+    "timing_schema": "legacy_unknown",
+    "caveats": [
+      "development/training songs only",
+      "single stochastic seed",
+      "benchmark unchanged; uploaded chart has unknown generation provenance"
+    ],
+    "source_sha256": {
+      "script/benchmark_diffusion.py": "a995020fb759db629fd24f23ebe1e3fc812246554b65e28db68ba45b73629c82",
+      "src/test.py": "c64981c11ab6bd87ce0ac18f93b9bebba794c629cf96afa328046dd938b5d967",
+      "src/data/chart2array.py": "a85835816b4d99ad0679e0e8dc4e82588040c2231d9a2d86f9cf4eccc2aa53f1",
+      "src/data/audio2mel.py": "00d73fa0afee5949e725cc6f57b352daeefb5ff4d08ef8e15fe23a0b5724ea0d",
+      "src/models/dit.py": "9b4478b9921a56a1884f83c62cd8147d6352da69632d4587533ca5faa0c03ee2",
+      "src/diffusion/sampler.py": "d1a8ea9053e6a5df2ac7e196aa5446b745e0c65f544e3b5c6ed9d895e5db0f1b",
+      "src/encoder/encoder.py": "1bc0f969513dcde0021565e79062e127abae498ec3bc1b1cc3e1ac2bf152c103",
+      "src/condition/wave.py": "1f01a44f4d4b05a55c4ab06233d40414019903f8b23442dc2f5018f39748047c",
+      "src/model_benchmark.py": "c7257da6cb65d8522ae376ecbb23acf5db696cb879a30818a326a780146cf250"
+    },
+    "dit_epoch": 293,
+    "dit_config": {
+      "z_channels": 16,
+      "audio_channels": 256,
+      "hidden_dim": 384,
+      "depth": 12,
+      "num_heads": 8,
+      "mlp_ratio": 4.0,
+      "dropout": 0.1,
+      "rope_theta": 10000.0
+    },
+    "model_parameters": {
+      "dit": 64495120,
+      "vae": 7064308,
+      "wave": 8887424
+    },
+    "vae_latent_scale": 1.0040044784545898,
+    "generation_seconds": {
+      "piano_three": 2.926832314580679,
+      "piano_weak_middle": 1.5504497662186623,
+      "piano_repeated": 1.5473176576197147,
+      "piano_chunk_boundary": 1.6232612580060959,
+      "silence": 1.5430607721209526,
+      "-SURREALISM-_IN": 2.087510507553816,
+      "ABYSS MOTION 192.333_IN": 1.949854888021946,
+      "Eltaw_IN": 1.9603624530136585
+    }
+  },
+  "resources": {
+    "disk_free_gib": 17.61176300048828,
+    "ram_available_gib": 36.98136520385742,
+    "rss_gib": 1.5739212036132812,
+    "gpu_peak_allocated_gib": 0.5942850112915039,
+    "gpu_peak_reserved_gib": 0.791015625
+  },
+  "release_cases": [
+    {
+      "id": "piano_three",
+      "case_sha256": "8d96182e2c5fa6a06d1464552204ee0563ff3c582cc53b17f14c8a23d99487d1",
+      "status": "scored",
+      "notes": 60,
+      "unique_onsets_including_outside": 51,
+      "events": {
+        "id": "piano_three",
+        "source_group": "piano_three",
+        "label_source": "constructed_acoustic_probe",
+        "reference_count": 3,
+        "prediction_count": 51,
+        "ignored_predictions": 0,
+        "evaluated_seconds": 10.0,
+        "at_25ms": {
+          "precision": 0.058823529411764705,
+          "recall": 1.0,
+          "f1": 0.1111111111111111,
+          "matched": 3,
+          "false_positives": 48,
+          "false_negatives": 0,
+          "false_positives_per_minute": 288.0
+        },
+        "at_50ms": {
+          "precision": 0.058823529411764705,
+          "recall": 1.0,
+          "f1": 0.1111111111111111,
+          "matched": 3,
+          "false_positives": 48,
+          "false_negatives": 0,
+          "false_positives_per_minute": 288.0
+        },
+        "at_100ms": {
+          "precision": 0.058823529411764705,
+          "recall": 1.0,
+          "f1": 0.1111111111111111,
+          "matched": 3,
+          "false_positives": 48,
+          "false_negatives": 0,
+          "false_positives_per_minute": 288.0
+        },
+        "timing_100ms": {
+          "signed_mean_ms": 0.0,
+          "median_absolute_ms": 15.625,
+          "p95_absolute_ms": 15.625,
+          "unmatched_reference_fraction": 0.0,
+          "unmatched_prediction_fraction": 0.9411764705882353
+        },
+        "prediction_count_including_outside": 51
+      },
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": [],
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": true,
+        "isolated_positive_contract": false,
+        "reviewed_silence_no_events": false
+      },
+      "silence": {
+        "annotated_seconds": 6.400000000000001,
+        "events": 11
+      },
+      "weak_recall_50ms": null,
+      "rhythm_bonus_per_onset": null,
+      "coverage": {
+        "reference_nonempty_segments": 1,
+        "empty_positive_segments": 0,
+        "last_quarter_reference_recall_50ms": 1.0,
+        "first_reference_seconds": 1.0,
+        "first_prediction_seconds": 1.0,
+        "onset_count_ratio": 17.0,
+        "eos_clock_seconds": null,
+        "eos_overshoot_seconds": null
+      },
+      "layout": {
+        "note_count": 60,
+        "unique_onsets": 51,
+        "type_counts": {
+          "tap": 24,
+          "drag": 36
+        },
+        "chord_sizes": {
+          "1": 42,
+          "2": 9
+        },
+        "four_onset_patterns": {
+          "unclassified": 20,
+          "AAAA": 5
+        },
+        "singleton_windows": 25,
+        "chord_interrupted_windows": 23,
+        "jack_runs_2_to_3": 7,
+        "jack_runs_4_plus": 2,
+        "longest_jack_run": 7,
+        "hold_overlap_pairs": 0,
+        "hold_touching_pairs": 0,
+        "hold_examples": [],
+        "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+      }
+    },
+    {
+      "id": "piano_weak_middle",
+      "case_sha256": "c176ec5857ae5cf77fe810e13179adca15ba77316268dae8efd56b3bfffb1137",
+      "status": "scored",
+      "notes": 66,
+      "unique_onsets_including_outside": 59,
+      "events": {
+        "id": "piano_weak_middle",
+        "source_group": "piano_weak_middle",
+        "label_source": "constructed_acoustic_probe",
+        "reference_count": 3,
+        "prediction_count": 58,
+        "ignored_predictions": 0,
+        "evaluated_seconds": 10.0,
+        "at_25ms": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "matched": 0,
+          "false_positives": 59,
+          "false_negatives": 3,
+          "false_positives_per_minute": 354.0
+        },
+        "at_50ms": {
+          "precision": 0.05084745762711865,
+          "recall": 1.0,
+          "f1": 0.0967741935483871,
+          "matched": 3,
+          "false_positives": 56,
+          "false_negatives": 0,
+          "false_positives_per_minute": 336.0
+        },
+        "at_100ms": {
+          "precision": 0.05084745762711865,
+          "recall": 1.0,
+          "f1": 0.0967741935483871,
+          "matched": 3,
+          "false_positives": 56,
+          "false_negatives": 0,
+          "false_positives_per_minute": 336.0
+        },
+        "timing_100ms": {
+          "signed_mean_ms": -36.458333333333336,
+          "median_absolute_ms": 31.25,
+          "p95_absolute_ms": 45.3125,
+          "unmatched_reference_fraction": 0.0,
+          "unmatched_prediction_fraction": 0.9491525423728814
+        },
+        "prediction_count_including_outside": 59
+      },
+      "out_of_audio_onsets": [
+        10.0
+      ],
+      "invalid_note_indices": [
+        65
+      ],
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": false,
+        "note_bounds_and_types": false,
+        "nonempty_positive": true,
+        "isolated_positive_contract": false,
+        "reviewed_silence_no_events": false
+      },
+      "silence": {
+        "annotated_seconds": 6.400000000000001,
+        "events": 15
+      },
+      "weak_recall_50ms": 1.0,
+      "rhythm_bonus_per_onset": null,
+      "coverage": {
+        "reference_nonempty_segments": 1,
+        "empty_positive_segments": 0,
+        "last_quarter_reference_recall_50ms": 1.0,
+        "first_reference_seconds": 1.0,
+        "first_prediction_seconds": 0.953125,
+        "onset_count_ratio": 19.333333333333332,
+        "eos_clock_seconds": null,
+        "eos_overshoot_seconds": null
+      },
+      "layout": null
+    },
+    {
+      "id": "piano_repeated",
+      "case_sha256": "ba231764a309ef223e538dff0aade8ec05fbb473b30f71f545ec5cfe3af24ee9",
+      "status": "scored",
+      "notes": 62,
+      "unique_onsets_including_outside": 50,
+      "events": {
+        "id": "piano_repeated",
+        "source_group": "piano_repeated",
+        "label_source": "constructed_acoustic_probe",
+        "reference_count": 3,
+        "prediction_count": 50,
+        "ignored_predictions": 0,
+        "evaluated_seconds": 10.0,
+        "at_25ms": {
+          "precision": 0.02,
+          "recall": 0.3333333333333333,
+          "f1": 0.03773584905660377,
+          "matched": 1,
+          "false_positives": 49,
+          "false_negatives": 2,
+          "false_positives_per_minute": 294.0
+        },
+        "at_50ms": {
+          "precision": 0.04,
+          "recall": 0.6666666666666666,
+          "f1": 0.07547169811320754,
+          "matched": 2,
+          "false_positives": 48,
+          "false_negatives": 1,
+          "false_positives_per_minute": 288.0
+        },
+        "at_100ms": {
+          "precision": 0.06,
+          "recall": 1.0,
+          "f1": 0.11320754716981132,
+          "matched": 3,
+          "false_positives": 47,
+          "false_negatives": 0,
+          "false_positives_per_minute": 282.0
+        },
+        "timing_100ms": {
+          "signed_mean_ms": 15.625,
+          "median_absolute_ms": 31.25,
+          "p95_absolute_ms": 73.4375,
+          "unmatched_reference_fraction": 0.0,
+          "unmatched_prediction_fraction": 0.94
+        },
+        "prediction_count_including_outside": 50
+      },
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": [],
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": true,
+        "isolated_positive_contract": false,
+        "reviewed_silence_no_events": false
+      },
+      "silence": {
+        "annotated_seconds": 6.400000000000001,
+        "events": 10
+      },
+      "weak_recall_50ms": null,
+      "rhythm_bonus_per_onset": null,
+      "coverage": {
+        "reference_nonempty_segments": 1,
+        "empty_positive_segments": 0,
+        "last_quarter_reference_recall_50ms": 0.0,
+        "first_reference_seconds": 1.0,
+        "first_prediction_seconds": 1.0,
+        "onset_count_ratio": 16.666666666666668,
+        "eos_clock_seconds": null,
+        "eos_overshoot_seconds": null
+      },
+      "layout": {
+        "note_count": 62,
+        "unique_onsets": 50,
+        "type_counts": {
+          "tap": 34,
+          "drag": 27,
+          "hold": 1
+        },
+        "chord_sizes": {
+          "1": 40,
+          "2": 8,
+          "3": 2
+        },
+        "four_onset_patterns": {
+          "unclassified": 16,
+          "AAAA": 7
+        },
+        "singleton_windows": 23,
+        "chord_interrupted_windows": 24,
+        "jack_runs_2_to_3": 4,
+        "jack_runs_4_plus": 2,
+        "longest_jack_run": 8,
+        "hold_overlap_pairs": 0,
+        "hold_touching_pairs": 0,
+        "hold_examples": [],
+        "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+      }
+    },
+    {
+      "id": "piano_chunk_boundary",
+      "case_sha256": "d3e21fdd38e36a44cd76efb8ada9bf6951c35eb61c7aa3149bf6a86a8e15c1e1",
+      "status": "scored",
+      "notes": 34,
+      "unique_onsets_including_outside": 33,
+      "events": {
+        "id": "piano_chunk_boundary",
+        "source_group": "piano_chunk_boundary",
+        "label_source": "constructed_acoustic_probe",
+        "reference_count": 3,
+        "prediction_count": 33,
+        "ignored_predictions": 0,
+        "evaluated_seconds": 32.0,
+        "at_25ms": {
+          "precision": 0.030303030303030304,
+          "recall": 0.3333333333333333,
+          "f1": 0.05555555555555555,
+          "matched": 1,
+          "false_positives": 32,
+          "false_negatives": 2,
+          "false_positives_per_minute": 60.0
+        },
+        "at_50ms": {
+          "precision": 0.06060606060606061,
+          "recall": 0.6666666666666666,
+          "f1": 0.1111111111111111,
+          "matched": 2,
+          "false_positives": 31,
+          "false_negatives": 1,
+          "false_positives_per_minute": 58.125
+        },
+        "at_100ms": {
+          "precision": 0.09090909090909091,
+          "recall": 1.0,
+          "f1": 0.16666666666666666,
+          "matched": 3,
+          "false_positives": 30,
+          "false_negatives": 0,
+          "false_positives_per_minute": 56.25
+        },
+        "timing_100ms": {
+          "signed_mean_ms": 36.458333333333336,
+          "median_absolute_ms": 31.25,
+          "p95_absolute_ms": 59.375,
+          "unmatched_reference_fraction": 0.0,
+          "unmatched_prediction_fraction": 0.9090909090909091
+        },
+        "prediction_count_including_outside": 33
+      },
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": [],
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": true,
+        "isolated_positive_contract": false,
+        "reviewed_silence_no_events": false
+      },
+      "silence": {
+        "annotated_seconds": 28.39999999999999,
+        "events": 17
+      },
+      "weak_recall_50ms": null,
+      "rhythm_bonus_per_onset": null,
+      "coverage": {
+        "reference_nonempty_segments": 2,
+        "empty_positive_segments": 0,
+        "last_quarter_reference_recall_50ms": 0.0,
+        "first_reference_seconds": 1.0,
+        "first_prediction_seconds": 1.015625,
+        "onset_count_ratio": 11.0,
+        "eos_clock_seconds": null,
+        "eos_overshoot_seconds": null
+      },
+      "layout": {
+        "note_count": 34,
+        "unique_onsets": 33,
+        "type_counts": {
+          "tap": 13,
+          "drag": 17,
+          "hold": 4
+        },
+        "chord_sizes": {
+          "1": 32,
+          "2": 1
+        },
+        "four_onset_patterns": {
+          "AAAA": 9,
+          "unclassified": 19,
+          "ABAB": 1
+        },
+        "singleton_windows": 29,
+        "chord_interrupted_windows": 1,
+        "jack_runs_2_to_3": 5,
+        "jack_runs_4_plus": 2,
+        "longest_jack_run": 10,
+        "hold_overlap_pairs": 0,
+        "hold_touching_pairs": 0,
+        "hold_examples": [],
+        "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+      }
+    },
+    {
+      "id": "silence",
+      "case_sha256": "89a37e5f4c770bcd331e7470d23056763ab6de8eb7408adc22083fb9a4bf94c1",
+      "status": "scored",
+      "notes": 47,
+      "unique_onsets_including_outside": 41,
+      "events": {
+        "id": "silence",
+        "source_group": "silence",
+        "label_source": "constructed_acoustic_probe",
+        "reference_count": 0,
+        "prediction_count": 40,
+        "ignored_predictions": 0,
+        "evaluated_seconds": 10.0,
+        "at_25ms": {
+          "precision": 0.0,
+          "recall": 1.0,
+          "f1": 0.0,
+          "matched": 0,
+          "false_positives": 41,
+          "false_negatives": 0,
+          "false_positives_per_minute": 246.0
+        },
+        "at_50ms": {
+          "precision": 0.0,
+          "recall": 1.0,
+          "f1": 0.0,
+          "matched": 0,
+          "false_positives": 41,
+          "false_negatives": 0,
+          "false_positives_per_minute": 246.0
+        },
+        "at_100ms": {
+          "precision": 0.0,
+          "recall": 1.0,
+          "f1": 0.0,
+          "matched": 0,
+          "false_positives": 41,
+          "false_negatives": 0,
+          "false_positives_per_minute": 246.0
+        },
+        "timing_100ms": {
+          "signed_mean_ms": null,
+          "median_absolute_ms": null,
+          "p95_absolute_ms": null,
+          "unmatched_reference_fraction": 0.0,
+          "unmatched_prediction_fraction": 1.0
+        },
+        "prediction_count_including_outside": 41
+      },
+      "out_of_audio_onsets": [
+        10.015625
+      ],
+      "invalid_note_indices": [
+        46
+      ],
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": false,
+        "note_bounds_and_types": false,
+        "silence_no_events": false,
+        "reviewed_silence_no_events": false
+      },
+      "silence": {
+        "annotated_seconds": 10.0,
+        "events": 40
+      },
+      "weak_recall_50ms": null,
+      "rhythm_bonus_per_onset": null,
+      "coverage": {
+        "reference_nonempty_segments": 0,
+        "empty_positive_segments": 0,
+        "last_quarter_reference_recall_50ms": null,
+        "first_reference_seconds": null,
+        "first_prediction_seconds": 1.125,
+        "onset_count_ratio": null,
+        "eos_clock_seconds": null,
+        "eos_overshoot_seconds": null
+      },
+      "layout": null
+    },
+    {
+      "id": "-SURREALISM-_IN",
+      "case_sha256": "c4ee8a45d8b51136d2052fb67eb695b9adb2c5257eacd7faa1a8c941d29a7476",
+      "status": "scored",
+      "notes": 674,
+      "unique_onsets_including_outside": 565,
+      "events": {
+        "id": "-SURREALISM-_IN",
+        "source_group": "-SURREALISM-_IN",
+        "label_source": "chart_onset",
+        "reference_count": 735,
+        "prediction_count": 565,
+        "ignored_predictions": 0,
+        "evaluated_seconds": 153.5288888888889,
+        "at_25ms": {
+          "precision": 0.27256637168141595,
+          "recall": 0.20952380952380953,
+          "f1": 0.23692307692307693,
+          "matched": 154,
+          "false_positives": 411,
+          "false_negatives": 581,
+          "false_positives_per_minute": 160.6212366836498
+        },
+        "at_50ms": {
+          "precision": 0.4176991150442478,
+          "recall": 0.32108843537414966,
+          "f1": 0.3630769230769231,
+          "matched": 236,
+          "false_positives": 329,
+          "false_negatives": 499,
+          "false_positives_per_minute": 128.575150532654
+        },
+        "at_100ms": {
+          "precision": 0.5823008849557522,
+          "recall": 0.44761904761904764,
+          "f1": 0.5061538461538462,
+          "matched": 329,
+          "false_positives": 236,
+          "false_negatives": 406,
+          "false_positives_per_minute": 92.23019916628068
+        },
+        "timing_100ms": {
+          "signed_mean_ms": -3.292802431610464,
+          "median_absolute_ms": 31.25,
+          "p95_absolute_ms": 83.33360000000454,
+          "unmatched_reference_fraction": 0.5523809523809524,
+          "unmatched_prediction_fraction": 0.4176991150442478
+        },
+        "prediction_count_including_outside": 565
+      },
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": [],
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": true
+      },
+      "silence": {
+        "annotated_seconds": 0,
+        "events": 0
+      },
+      "weak_recall_50ms": null,
+      "rhythm_bonus_per_onset": 0.15752603185847447,
+      "coverage": {
+        "reference_nonempty_segments": 56,
+        "empty_positive_segments": 7,
+        "last_quarter_reference_recall_50ms": 0.34782608695652173,
+        "first_reference_seconds": 1.333333,
+        "first_prediction_seconds": 11.958333,
+        "onset_count_ratio": 0.7687074829931972,
+        "eos_clock_seconds": null,
+        "eos_overshoot_seconds": null
+      },
+      "layout": {
+        "note_count": 674,
+        "unique_onsets": 565,
+        "type_counts": {
+          "drag": 306,
+          "hold": 67,
+          "flick": 4,
+          "tap": 297
+        },
+        "chord_sizes": {
+          "1": 481,
+          "2": 65,
+          "3": 13,
+          "4": 6
+        },
+        "four_onset_patterns": {
+          "unclassified": 283,
+          "monotonic_run": 1,
+          "AAAA": 47,
+          "ABAB": 11
+        },
+        "singleton_windows": 342,
+        "chord_interrupted_windows": 220,
+        "jack_runs_2_to_3": 79,
+        "jack_runs_4_plus": 18,
+        "longest_jack_run": 19,
+        "hold_overlap_pairs": 0,
+        "hold_touching_pairs": 0,
+        "hold_examples": [],
+        "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+      }
+    },
+    {
+      "id": "ABYSS MOTION 192.333_IN",
+      "case_sha256": "985df6598ba3c51ea8b4b43301e95109253c2393c9d623a9f510624a9db2f8f1",
+      "status": "scored",
+      "notes": 666,
+      "unique_onsets_including_outside": 596,
+      "events": {
+        "id": "ABYSS MOTION 192.333_IN",
+        "source_group": "ABYSS MOTION 192.333_IN",
+        "label_source": "chart_onset",
+        "reference_count": 655,
+        "prediction_count": 596,
+        "ignored_predictions": 0,
+        "evaluated_seconds": 126.11333333333333,
+        "at_25ms": {
+          "precision": 0.35906040268456374,
+          "recall": 0.3267175572519084,
+          "f1": 0.34212629896083135,
+          "matched": 214,
+          "false_positives": 382,
+          "false_negatives": 441,
+          "false_positives_per_minute": 181.74129090236295
+        },
+        "at_50ms": {
+          "precision": 0.5251677852348994,
+          "recall": 0.4778625954198473,
+          "f1": 0.5003996802557954,
+          "matched": 313,
+          "false_positives": 283,
+          "false_negatives": 342,
+          "false_positives_per_minute": 134.64079928106995
+        },
+        "at_100ms": {
+          "precision": 0.6342281879194631,
+          "recall": 0.5770992366412214,
+          "f1": 0.60431654676259,
+          "matched": 378,
+          "false_positives": 218,
+          "false_negatives": 277,
+          "false_positives_per_minute": 103.71623407517049
+        },
+        "timing_100ms": {
+          "signed_mean_ms": -1.599000000000041,
+          "median_absolute_ms": 19.497999999998683,
+          "p95_absolute_ms": 87.73800000000014,
+          "unmatched_reference_fraction": 0.42290076335877863,
+          "unmatched_prediction_fraction": 0.36577181208053694
+        },
+        "prediction_count_including_outside": 596
+      },
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": [],
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": true
+      },
+      "silence": {
+        "annotated_seconds": 0,
+        "events": 0
+      },
+      "weak_recall_50ms": null,
+      "rhythm_bonus_per_onset": 0.15604491862282144,
+      "coverage": {
+        "reference_nonempty_segments": 49,
+        "empty_positive_segments": 13,
+        "last_quarter_reference_recall_50ms": 0.4024390243902439,
+        "first_reference_seconds": 3.743507,
+        "first_prediction_seconds": 13.726194,
+        "onset_count_ratio": 0.9099236641221374,
+        "eos_clock_seconds": null,
+        "eos_overshoot_seconds": null
+      },
+      "layout": {
+        "note_count": 666,
+        "unique_onsets": 596,
+        "type_counts": {
+          "hold": 33,
+          "drag": 422,
+          "tap": 204,
+          "flick": 7
+        },
+        "chord_sizes": {
+          "1": 529,
+          "2": 64,
+          "3": 3
+        },
+        "four_onset_patterns": {
+          "unclassified": 321,
+          "AAAA": 58,
+          "ABAB": 10
+        },
+        "singleton_windows": 389,
+        "chord_interrupted_windows": 204,
+        "jack_runs_2_to_3": 87,
+        "jack_runs_4_plus": 26,
+        "longest_jack_run": 10,
+        "hold_overlap_pairs": 0,
+        "hold_touching_pairs": 0,
+        "hold_examples": [],
+        "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+      }
+    },
+    {
+      "id": "Eltaw_IN",
+      "case_sha256": "87ef3ec6e2e18e037b35dc4361ff52c8eb6010b835df3429040506216a744c4c",
+      "status": "scored",
+      "notes": 587,
+      "unique_onsets_including_outside": 542,
+      "events": {
+        "id": "Eltaw_IN",
+        "source_group": "Eltaw_IN",
+        "label_source": "chart_onset",
+        "reference_count": 701,
+        "prediction_count": 542,
+        "ignored_predictions": 0,
+        "evaluated_seconds": 135.55083900226757,
+        "at_25ms": {
+          "precision": 0.35239852398523985,
+          "recall": 0.2724679029957204,
+          "f1": 0.3073209975864843,
+          "matched": 191,
+          "false_positives": 351,
+          "false_negatives": 510,
+          "false_positives_per_minute": 155.36606158260443
+        },
+        "at_50ms": {
+          "precision": 0.5959409594095941,
+          "recall": 0.4607703281027104,
+          "f1": 0.5197103781174578,
+          "matched": 323,
+          "false_positives": 219,
+          "false_negatives": 378,
+          "false_positives_per_minute": 96.93779910709506
+        },
+        "at_100ms": {
+          "precision": 0.7158671586715867,
+          "recall": 0.5534950071326676,
+          "f1": 0.6242960579243765,
+          "matched": 388,
+          "false_positives": 154,
+          "false_negatives": 313,
+          "false_positives_per_minute": 68.16630622142758
+        },
+        "timing_100ms": {
+          "signed_mean_ms": 0.6510283505154595,
+          "median_absolute_ms": 29.144999999999754,
+          "p95_absolute_ms": 87.43499999999926,
+          "unmatched_reference_fraction": 0.44650499286733236,
+          "unmatched_prediction_fraction": 0.28413284132841327
+        },
+        "prediction_count_including_outside": 542
+      },
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": [],
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": true
+      },
+      "silence": {
+        "annotated_seconds": 0,
+        "events": 0
+      },
+      "weak_recall_50ms": null,
+      "rhythm_bonus_per_onset": 0.1734350238622272,
+      "coverage": {
+        "reference_nonempty_segments": 52,
+        "empty_positive_segments": 2,
+        "last_quarter_reference_recall_50ms": 0.5511363636363636,
+        "first_reference_seconds": 1.243523,
+        "first_prediction_seconds": 1.224093,
+        "onset_count_ratio": 0.7731811697574893,
+        "eos_clock_seconds": null,
+        "eos_overshoot_seconds": null
+      },
+      "layout": {
+        "note_count": 587,
+        "unique_onsets": 542,
+        "type_counts": {
+          "tap": 242,
+          "drag": 293,
+          "hold": 51,
+          "flick": 1
+        },
+        "chord_sizes": {
+          "1": 497,
+          "2": 45
+        },
+        "four_onset_patterns": {
+          "unclassified": 342,
+          "ABAB": 14,
+          "AAAA": 41,
+          "monotonic_run": 1
+        },
+        "singleton_windows": 398,
+        "chord_interrupted_windows": 141,
+        "jack_runs_2_to_3": 93,
+        "jack_runs_4_plus": 22,
+        "longest_jack_run": 7,
+        "hold_overlap_pairs": 0,
+        "hold_touching_pairs": 0,
+        "hold_examples": [],
+        "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+      }
+    }
+  ],
+  "eltaw_comparison": [
+    {
+      "run_id": "diffusion/release-epoch293/seed42",
+      "notes": 587,
+      "unique_onsets": 542,
+      "f1_25ms": 0.3073209975864843,
+      "precision": 0.5959409594095941,
+      "recall": 0.4607703281027104,
+      "f1": 0.5197103781174578,
+      "matched": 323,
+      "false_positives": 219,
+      "false_negatives": 378,
+      "false_positives_per_minute": 96.93779910709506,
+      "grid_bonus_per_onset": 0.1734350238622272,
+      "first_onset_seconds": 1.2240932642487046,
+      "last_onset_seconds": 130.60880829015545,
+      "type_counts": {
+        "tap": 242,
+        "drag": 293,
+        "hold": 51,
+        "flick": 1
+      }
+    },
+    {
+      "run_id": "4k/global/seed42",
+      "notes": 1321,
+      "unique_onsets": 1183,
+      "f1_25ms": 0.5403397027600849,
+      "precision": 0.43026204564666104,
+      "recall": 0.7261055634807418,
+      "f1": 0.5403397027600849,
+      "matched": 509,
+      "false_positives": 674,
+      "false_negatives": 192,
+      "false_positives_per_minute": 298.33824930676747,
+      "grid_bonus_per_onset": 1.0,
+      "first_onset_seconds": 1.2435233160621761,
+      "last_onset_seconds": 127.30569948186529,
+      "type_counts": {
+        "tap": 1189,
+        "hold": 111,
+        "flick": 9,
+        "drag": 12
+      }
+    },
+    {
+      "run_id": "diffusion/user-upload/Eltaw-v2",
+      "notes": 531,
+      "unique_onsets": 463,
+      "f1_25ms": 0.6821305841924399,
+      "precision": 0.9049676025917927,
+      "recall": 0.5977175463623395,
+      "f1": 0.7199312714776632,
+      "matched": 419,
+      "false_positives": 44,
+      "false_negatives": 282,
+      "false_positives_per_minute": 19.476087491836452,
+      "grid_bonus_per_onset": 0.25054631763859275,
+      "first_onset_seconds": 1.2240932642487046,
+      "last_onset_seconds": 130.56023316062175,
+      "type_counts": {
+        "tap": 252,
+        "drag": 242,
+        "hold": 35,
+        "flick": 2
+      }
+    },
+    {
+      "run_id": "diffusion/current-legacy-checkpoints/seed42",
+      "notes": 534,
+      "unique_onsets": 489,
+      "f1_25ms": 0.3092436974789916,
+      "precision": 0.5869120654396728,
+      "recall": 0.4094151212553495,
+      "f1": 0.4823529411764706,
+      "matched": 287,
+      "false_positives": 202,
+      "false_negatives": 414,
+      "false_positives_per_minute": 89.4129471216128,
+      "grid_bonus_per_onset": 0.1636025881390496,
+      "first_onset_seconds": 1.1852331606217616,
+      "last_onset_seconds": 134.09650259067357,
+      "type_counts": {
+        "tap": 238,
+        "drag": 260,
+        "hold": 35,
+        "flick": 1
+      }
+    }
+  ],
+  "natural_song_comparison": [
+    {
+      "run_id": "diffusion/release-epoch293/seed42",
+      "scored_cases": 3,
+      "expected_cases": 3,
+      "f1_50ms_macro": 0.46106232715005874,
+      "individual_f1_50ms": {
+        "-SURREALISM-_IN": 0.3630769230769231,
+        "ABYSS MOTION 192.333_IN": 0.5003996802557954,
+        "Eltaw_IN": 0.5197103781174578
+      }
+    },
+    {
+      "run_id": "4k/global/seed42",
+      "scored_cases": 3,
+      "expected_cases": 3,
+      "f1_50ms_macro": 0.6037044619364266,
+      "individual_f1_50ms": {
+        "-SURREALISM-_IN": 0.7012113055181696,
+        "ABYSS MOTION 192.333_IN": 0.5695623775310255,
+        "Eltaw_IN": 0.5403397027600849
+      }
+    },
+    {
+      "run_id": "diffusion/user-upload/Eltaw-v2",
+      "scored_cases": 1,
+      "expected_cases": 3,
+      "f1_50ms_macro": 0.7199312714776632,
+      "individual_f1_50ms": {
+        "Eltaw_IN": 0.7199312714776632
+      }
+    },
+    {
+      "run_id": "diffusion/current-legacy-checkpoints/seed42",
+      "scored_cases": 3,
+      "expected_cases": 3,
+      "f1_50ms_macro": 0.45173185192105986,
+      "individual_f1_50ms": {
+        "-SURREALISM-_IN": 0.4023494860499266,
+        "ABYSS MOTION 192.333_IN": 0.47049312853678255,
+        "Eltaw_IN": 0.4823529411764706
+      }
+    }
+  ],
+  "provenance_limit": "Release preserved best + finetuned; historical shell command used missing dit_final.pt + wave/wave_final.pt. Exact upload reproduction not established.",
+  "artifacts": {
+    "release_inputs_sha256": "a0a473bac59e6417e7c91593816ddf59d56fc7318f83dc0466b26c2bdbae1926",
+    "release_report_sha256": "400b0740293f23ecee5207a52e013e949a23b55f9ae2bea70e0576a1ed6e685b",
+    "comparison_inputs_sha256": "bd8099437d7df0ead6145ea4863daf5a0d64bf1e4a22dba17b5c3933958fb9e7",
+    "comparison_report_sha256": "e82129fc241f58618680f7a916a60a1816b01ecc0ab4a4d4f8c4815ae547955a",
+    "eltaw_chart_sha256": "369f8ef6cfef1cfad364a678420efffc254b2f4d2b0e7b804c39e7140a46ca9c"
+  }
+}

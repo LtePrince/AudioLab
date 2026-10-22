@@ -1,5 +1,7 @@
 # 旧 diffusion 与 AR：同一 benchmark 对照（2026-10-22）
 
+后续已收到历史权重 Release，并完成相同 8 例的[Release 权重复跑](diffusion_release_20261022.md)。下文保留此前本地权重对照，勿将两组权重混同。
+
 用户反馈上传的旧 diffusion 谱节奏优于 AR。本轮对上传文件原样评分，并用本地现存旧 diffusion 权重执行相同 8 个案例。未重训、未改阈值、未吸附拍点、未改变 benchmark v1。用户随后确认历史权重可能在另一台 PC，正在查找，因此本地复跑不宣称复现上传谱。
 
 ## Eltaw 同曲结果

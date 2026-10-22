@@ -79,6 +79,7 @@ def main():
     p.add_argument('--wave', type=Path, default=Path('checkpoints/dit/wave_finetuned.pt'))
     p.add_argument('--upload', type=Path)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--run-id', help='Unique label for this checkpoint/sampler run in comparison reports')
     p.add_argument('--seed', type=int, default=42)
     p.add_argument('--ddim-steps', type=int, default=50)
     p.add_argument('--cfg-scale', type=float, default=3.)
@@ -96,7 +97,7 @@ def main():
     cases = deepcopy(baseline['cases'])
     audio = input_audio(cases, args.cache, args.probes)
     protocol = read(args.protocol)
-    run = dict(id=f'diffusion/current-legacy-checkpoints/seed{args.seed}', cases=cases, predictions={},
+    run = dict(id=args.run_id or f'diffusion/current-legacy-checkpoints/seed{args.seed}', cases=cases, predictions={},
         metadata=dict(stage='decoded_layout', mode='4k', seed=args.seed, ddim_steps=args.ddim_steps,
                       cfg_scale=args.cfg_scale, eta=0., fixed_length=args.fixed_length,
                       from_logits=True, repairs='none; existing converter threshold/hold interpretation retained',
@@ -132,6 +133,10 @@ def main():
         if any(not torch.equal(actual[k].cpu(), v) for k, v in ck['wave'].items()):
             raise ValueError('Wave weights differ from the DiT checkpoint training pair')
     run['metadata']['dit_epoch'] = ck.get('epoch')
+    run['metadata']['dit_config'] = ck.get('dit_config')
+    run['metadata']['model_parameters'] = {
+        name: sum(p.numel() for p in model.parameters())
+        for name, model in (('dit', dit), ('vae', vae), ('wave', wave))}
     run['metadata']['vae_latent_scale'] = vae.scale
     del ck
     schedule = NoiseSchedule(**DEFAULT_SCHEDULE_CONFIG).to(device)
