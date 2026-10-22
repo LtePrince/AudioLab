@@ -13,6 +13,7 @@ from src.conditioning_audit import offset_scores, token_scores
 from src.data.chart_tokenizer import ChartTokenizer, EOS, PAD
 from src.data.timing import TIMING_SCHEMA, check_checkpoint_timing
 from src.models.chart_decoder import ChartDecoder
+from src.models.chart_history import HISTORY_DIM, HISTORY_SCHEMA, history_features
 from src.resource_budget import GIB, resource_snapshot
 
 SCHEMA = 'audiolab-soft-onset-memory-v1'
@@ -44,8 +45,8 @@ def dense_condition(arrays, memory_frames):
 
 
 def condition_input(values, condition):
-    if condition not in ('none', 'soft'):
-        raise ValueError('condition must be none or soft')
+    if condition not in ('none', 'soft', 'soft_history'):
+        raise ValueError('condition must be none, soft or soft_history')
     return torch.zeros_like(values) if condition == 'none' else values
 
 
@@ -58,7 +59,7 @@ def state_hash(state):
     return digest.hexdigest()
 
 
-def initialize_decoder(checkpoint, seed=42):
+def initialize_decoder(checkpoint, seed=42, *, with_history=False):
     """Explicit transfer: legacy state strict, then one declared zero residual."""
     ck = torch.load(checkpoint, map_location='cpu', weights_only=True)
     check_checkpoint_timing(ck)
@@ -66,21 +67,29 @@ def initialize_decoder(checkpoint, seed=42):
         raise ValueError('initialization requires the frozen legacy decoder checkpoint')
     torch.manual_seed(seed)
     config = dict(ck['dec_config'], soft_onset_dim=2)
+    if with_history:
+        config['history_dim']=HISTORY_DIM
     decoder = ChartDecoder(**config)
     old = {k.removeprefix('decoder.'): v for k,v in ck['model'].items() if k.startswith('decoder.')}
     state = dict(old, **{'soft_onset_proj.weight': torch.zeros_like(decoder.soft_onset_proj.weight)})
+    if with_history:
+        state['history_proj.weight']=torch.zeros_like(decoder.history_proj.weight)
     decoder.load_state_dict(state, strict=True)
     return decoder, config, dict(old_decoder_state_sha256=state_hash(old),
                                  initialized_state_sha256=state_hash(decoder.state_dict()),
-                                 added_parameter='soft_onset_proj.weight', initialization='zero, no bias')
+                                 added_parameters=['soft_onset_proj.weight']+(['history_proj.weight'] if with_history else []),
+                                 initialization='zero, no bias')
 
 
 def load_decoder(checkpoint, device):
     ck = torch.load(checkpoint, map_location='cpu', weights_only=True)
     check_checkpoint_timing(ck)
-    if ck.get('soft_onset_schema') != SCHEMA or ck.get('condition') not in ('none','soft') \
+    if ck.get('soft_onset_schema') != SCHEMA or ck.get('condition') not in ('none','soft','soft_history') \
             or ck.get('dec_config',{}).get('soft_onset_dim') != 2:
         raise ValueError('not a supported explicit soft-onset experiment checkpoint')
+    has_history=ck['dec_config'].get('history_dim',0)==HISTORY_DIM
+    if has_history != (ck['condition']=='soft_history') or (has_history and ck.get('history_schema')!=HISTORY_SCHEMA):
+        raise ValueError('checkpoint history schema/condition mismatch')
     decoder = ChartDecoder(**ck['dec_config'])
     decoder.load_state_dict(ck['model'], strict=True)
     return decoder.to(device).eval(), ck
@@ -92,7 +101,12 @@ def forward_loss(decoder, sample, mode, condition, device, *, score=False):
     acoustic, valid = row['features'].to(device), sample['valid'].to(device)
     soft = condition_input(sample['soft_onsets'].to(device), condition)
     memory = decoder.prepare_memory(acoustic, soft)
-    logits, hidden = decoder(tokens[None,:-1], frames[None,:-1], memory, valid, return_hidden=True)
+    history = None
+    if decoder.history_dim:
+        history = history_features(row['tokens'][:-1],row['frames'][:-1],n_lanes=decoder.n_lanes,
+                    frames_per_beat=60/row['reference']['timebase_bpm']/MEMORY_SECONDS,
+                    offsets=row['offsets'][:-1] if decoder.n_lanes==64 else None)[None].to(device)
+    logits, hidden = decoder(tokens[None,:-1], frames[None,:-1], memory, valid, return_hidden=True,history=history)
     ce = F.cross_entropy(logits[0], tokens[1:], ignore_index=PAD)
     offset_loss = logits.new_zeros(())
     mask = row['offset_mask'][:-1].to(device)

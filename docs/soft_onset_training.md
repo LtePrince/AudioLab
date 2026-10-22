@@ -14,3 +14,5 @@ python -m script.train_soft_onset train --cache out/soft-onset/cache --mode 4k -
 默认整曲不超过240秒、完整参考4096 token；超限拒绝，不截断音符/Hold。训练只保存一个 decoder final，无 optimizer/逐轮快照。默认RSS上限4GiB、空闲RAM/磁盘各8GiB、CUDA份额.65；缓存及运行目录另限700MiB。实验 checkpoint 用独立 schema，旧产品加载器明确拒绝；显式 loader 严格检查参数与条件。
 
 每次训练结束评估全部指定开发留出，按分项 token bits 和当前NOTE的连续offset误差报告；默认前两首留出自由生成，保留 raw/final、自然EOS或预算失败、起点/曲长、四键型和现有pattern统计，并给出带音频的预览。参考起点F1只描述同曲编排相似度，不能当声学真值或可玩性认证。固定200步，不用留出挑训练时长。
+
+第二阶段条件 `soft_history` 在B基础结构上加入[28维因果历史输入](causal_chart_history.md)，仍从共同旧权重重新训练200步，不在B结果上追加训练。新分支零初始化；构造模型之后重新设置训练RNG种子。Teacher forcing只读取更早token/连续offset，采样只读取更早生成值；当前NOTE的连续坐标在当前forward与offset预测完成后才进入状态，因此不能读自己的回归目标。该阶段不添加pattern辅助损失，不强制重复/交互/对称。

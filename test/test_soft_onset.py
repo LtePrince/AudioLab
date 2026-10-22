@@ -7,6 +7,7 @@ import torch
 from src.data.chart_tokenizer import BOS, EOS, ChartTokenizer, TokenNote
 from src.data.timing import TIMING_SCHEMA
 from src.models.chart_decoder import ChartDecoder, generate_tokens
+from src.models.chart_history import CausalChartHistory, HISTORY_DIM, history_features
 from src.soft_onset import (MEMORY_SECONDS, condition_input, dense_condition,
                             forward_loss, initialize_decoder, load_decoder, state_hash)
 from script.train_soft_onset import onset_metrics, sample_order
@@ -102,3 +103,53 @@ def test_onset_score_reuses_optimal_one_to_one_matcher():
     result=onset_metrics([dict(time=.04*32,holdTime=0),dict(time=.08*32,holdTime=0)],
                          [SimpleNamespace(tick=0),SimpleNamespace(tick=.06*32)],60,0,1)
     assert result['matched']==2 and result['f1']==1.
+
+
+@pytest.mark.parametrize('lanes',[4,64])
+def test_history_teacher_step_agree_and_current_residual_is_not_visible(lanes):
+    torch.manual_seed(7);tk=ChartTokenizer(lanes)
+    dec=ChartDecoder(**tiny_config(),vocab_size=tk.vocab_size,n_lanes=lanes,
+                     offset_head=lanes==64,history_dim=HISTORY_DIM).eval()
+    # Nonzero learned history branch ensures the test can catch omission/misalignment.
+    torch.nn.init.normal_(dec.history_proj.weight,std=.1)
+    tokens=torch.tensor(tk.encode_notes([TokenNote(1,0,1,0),TokenNote(5,2,3,2),TokenNote(9,1,4,0)]))
+    frames=torch.tensor(tk.ticks_per_position(tokens),dtype=torch.float32)*.1
+    residual=torch.full((len(tokens),),.2)
+    kwargs=dict(n_lanes=lanes,frames_per_beat=3.2,offsets=residual if lanes==64 else None)
+    hist=history_features(tokens,frames,**kwargs)
+    memory=dec.prepare_memory(torch.randn(1,6,8));valid=torch.ones(1,6,dtype=torch.bool)
+    full=dec(tokens[None],frames[None],memory,valid,history=hist[None])
+    cache=dec.init_cache(memory);state=CausalChartHistory(lanes,3.2);stepped=[]
+    for i,token in enumerate(tokens):
+        prefix=torch.tensor([state.features(frames[i])])
+        torch.testing.assert_close(prefix[0],hist[i])
+        logits,_=dec.step(token[None],frames[i:i+1],i,cache,6,valid,history=prefix)
+        stepped.append(logits[0]);state.observe(token,frames[i],residual[i] if lanes==64 else None)
+    torch.testing.assert_close(torch.stack(stepped),full[0],atol=1e-5,rtol=1e-5)
+    if lanes==64:
+        note=next(i for i,t in enumerate(tokens) if tk.kind(int(t))=='NOTE')
+        changed=residual.clone();changed[note]=.9
+        other=history_features(tokens,frames,n_lanes=lanes,frames_per_beat=3.2,offsets=changed)
+        altered=dec(tokens[None],frames[None],memory,valid,history=other[None])
+        torch.testing.assert_close(full[:,:note+1],altered[:,:note+1],atol=0,rtol=0)
+        assert not torch.equal(full[:,note+1:],altered[:,note+1:])
+
+
+def test_incremental_free_history_observes_predicted_offset_after_note(monkeypatch):
+    tk=ChartTokenizer(64)
+    dec=ChartDecoder(**tiny_config(),vocab_size=tk.vocab_size,n_lanes=64,
+                     offset_head=True,history_dim=HISTORY_DIM).eval()
+    sequence=iter([tk.dtt(4),tk.note(8,1),tk.dtt(4),EOS]);seen=[]
+    def step(token,frame,pos,caches,t,valid,history=None):
+        seen.append((int(token[0]),history.clone()))
+        logits=torch.full((1,tk.vocab_size),-100.);logits[0,next(sequence)]=100.
+        return logits,torch.zeros(1,16)
+    monkeypatch.setattr(dec,'step',step)
+    monkeypatch.setattr(dec,'predict_offset',lambda h:torch.full(h.shape[:2],.75))
+    tokens,offsets=generate_tokens(dec,torch.zeros(1,8,16),torch.ones(1,8,dtype=torch.bool),120,
+        MEMORY_SECONDS*1000,100,tokenizer=tk,max_tokens=5,require_complete=True)
+    current=next(h for token,h in seen if token==tk.note(8,1))
+    assert current[0,0]==0  # Its own offset is unavailable to its hidden state.
+    later=seen[-1][1]
+    assert later[0,1]==pytest.approx((8+.75)/64)
+    assert list(offsets.values())==[.75]

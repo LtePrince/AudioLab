@@ -23,6 +23,7 @@ from src.data.chart_constraints import constrain_4k_notes, constrain_free_notes
 from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.data.timing import TIMING_SCHEMA, tick_seconds
 from src.models.chart_decoder import generate_tokens
+from src.models.chart_history import HISTORY_SCHEMA, history_features
 from src.pattern_diagnostics import chart_events, summarize
 from src.product.artifacts import chart_document, repair_log, validate_chart, write_json, write_preview
 from src.resource_budget import ResourceBudget, add_resource_args
@@ -137,7 +138,7 @@ def train(args,output,budget,device):
     source = cache['models'][args.mode]
     if sha256(source['path']) != source['sha256']:
         raise ValueError('initial decoder changed')
-    decoder,config,initial = initialize_decoder(source['path'],args.seed)
+    decoder,config,initial = initialize_decoder(source['path'],args.seed,with_history=args.condition=='soft_history')
     decoder.to(device).train()
     rows = [r for r in cache['rows'] if r['split']=='train']
     if args.train_limit:
@@ -147,7 +148,7 @@ def train(args,output,budget,device):
     # Model constructors may consume RNG even for zero-initialized adapters.
     # Reset after construction so every arm starts the same dropout stream.
     torch.manual_seed(args.seed)
-    losses = []; estimates = {}; first_gradient = None; started=time.monotonic()
+    losses = []; estimates = {}; first_gradient = None; first_history_gradient=None; started=time.monotonic()
     for step,index in enumerate(order,1):
         row = rows[index]; sample = load_sample(args.cache,row)
         if row['id'] not in estimates:
@@ -161,8 +162,12 @@ def train(args,output,budget,device):
         gradient = decoder.soft_onset_proj.weight.grad
         if first_gradient is None:
             first_gradient = float(gradient.norm())
-            if args.condition=='soft' and first_gradient<=0:
+            if args.condition!='none' and first_gradient<=0:
                 raise RuntimeError('soft onset projection received no gradient')
+            if decoder.history_dim:
+                first_history_gradient=float(decoder.history_proj.weight.grad.norm())
+                if first_history_gradient<=0:
+                    raise RuntimeError('causal history projection received no gradient')
         torch.nn.utils.clip_grad_norm_(decoder.parameters(),1.)
         optimizer.step()
         losses.append(dict(step=step,sample=row['id'],loss=float(loss.detach()),**details))
@@ -171,6 +176,7 @@ def train(args,output,budget,device):
                   f'seconds={time.monotonic()-started:.1f}',flush=True)
         del sample,loss
     checkpoint = dict(soft_onset_schema=SCHEMA,timing_schema=TIMING_SCHEMA,condition=args.condition,
+                      history_schema=HISTORY_SCHEMA if decoder.history_dim else None,
                       model={k:v.detach().cpu() for k,v in decoder.state_dict().items()},dec_config=config,
                       mode=args.mode,steps=args.steps,seed=args.seed,lr=args.lr,initialization=initial,
                       cache_manifest=file_fingerprint(Path(args.cache)/'cache.json'),
@@ -181,7 +187,9 @@ def train(args,output,budget,device):
         seed=args.seed,lr=args.lr,optimizer='AdamW, weight_decay=.01, clip_grad_norm=1',
         dropout_rng_reset='after model/optimizer construction',
         initialization=initial,first_projection_gradient_norm=first_gradient,
-        final_projection_norm=float(decoder.soft_onset_proj.weight.norm()),
+        final_projection_norm=float(decoder.soft_onset_proj.weight.detach().norm()),
+        first_history_projection_gradient_norm=first_history_gradient,
+        final_history_projection_norm=float(decoder.history_proj.weight.detach().norm()) if decoder.history_dim else None,
         training_order=checkpoint['training_order'],train_samples=len(rows),metrics=losses,
         checkpoint=file_fingerprint(output/'decoder_final.pt'),cache=checkpoint['cache_manifest'],
         estimates=estimates,training_seconds=time.monotonic()-started,implementation=code_version())
@@ -266,14 +274,19 @@ def evaluate(args,output,budget,device,checkpoint=None):
         print(f'[generate {mode}/{condition}] {row["id"]}: {result["status"]}',flush=True)
     # Same trained B, true predictions vs zero is a finite sensitivity probe.
     sensitivity=None
-    if condition=='soft' and rows:
+    if condition!='none' and rows:
         sample=load_sample(args.cache,rows[0]);route=sample['routes'][mode]
         tokens=route['tokens'][:65].to(device);frames=route['frames'][:65].to(device)
         outputs=[]
+        history=None
+        if decoder.history_dim:
+            history=history_features(route['tokens'][:len(tokens)-1],route['frames'][:len(tokens)-1],
+                n_lanes=decoder.n_lanes,frames_per_beat=60/route['reference']['timebase_bpm']/MEMORY_SECONDS,
+                offsets=route['offsets'][:len(tokens)-1] if decoder.n_lanes==64 else None)[None].to(device)
         for selected in ('none','soft'):
             mem=decoder.prepare_memory(route['features'].to(device),
                         condition_input(sample['soft_onsets'].to(device),selected))
-            outputs.append(decoder(tokens[None,:-1],frames[None,:-1],mem,sample['valid'].to(device)))
+            outputs.append(decoder(tokens[None,:-1],frames[None,:-1],mem,sample['valid'].to(device),history=history))
         sensitivity=dict(sample=rows[0]['id'],first_input_tokens=len(tokens)-1,
                          max_abs_logit_difference=float((outputs[0]-outputs[1]).abs().max()))
     return dict(val_samples=len(rows),teacher_forcing=scores,weighted=weighted_scores(scores),
@@ -286,7 +299,7 @@ def main():
     parser.add_argument('action',choices=('prepare','train','evaluate'))
     parser.add_argument('--output',required=True);parser.add_argument('--device',default='cuda:0')
     parser.add_argument('--manifest');parser.add_argument('--model-root');parser.add_argument('--cache')
-    parser.add_argument('--mode',choices=tuple(ROUTES));parser.add_argument('--condition',choices=('none','soft'))
+    parser.add_argument('--mode',choices=tuple(ROUTES));parser.add_argument('--condition',choices=('none','soft','soft_history'))
     parser.add_argument('--checkpoint');parser.add_argument('--steps',type=int,default=200)
     parser.add_argument('--seed',type=int,default=42);parser.add_argument('--lr',type=float,default=5e-5)
     parser.add_argument('--train-limit',type=int,default=0);parser.add_argument('--val-limit',type=int,default=0)
