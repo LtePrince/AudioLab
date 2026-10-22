@@ -290,3 +290,14 @@ allocator 0.65 的预算保持原值。用户需停止旧服务，用新参数�
 用户的资源读数，保持真实资源检查、小型 CPU 模型生成和两 ZIP 完整读回：4 GiB
 设置完成，默认 8 GiB 拒绝，磁盘／RSS 限制继续生效。没有制造实际资源耗尽，
 也没有据此宣称该 PC 已完成整曲；更新后的目标机生成仍需实际运行确认。
+
+## 2026-10-22：O1 图案诊断与 O2 声学特征对照
+
+集成 `chore/pattern-diagnostics@b9b4f5b`、`chore/layout-feature-ablation@95f1add`
+和 `docs/model-optimization-plan@c2895e4`。集成点 `df31753` 完整回归
+**446 passed，9 warnings，52.99 秒**；设计 agent 已分别独立审查工具和真实产物。
+O1 复用12份整谱；O2 完成单曲两模式的正常／零声学特征四次推理，正常条件与旧基线
+逐字节一致。详见 [O1](evaluations/pattern_diagnostics_v1.md) 与
+[O2](evaluations/layout_feature_ablation_v1.md)。结果支持有限音频条件敏感性，
+不代表音乐质量已提升；未改权重或产品默认。下一轮由两个 agent 协作，聚焦有限
+骨架候选取舍与可听看的对照，保留8 GiB磁盘余量；main 发布门槛不变。
