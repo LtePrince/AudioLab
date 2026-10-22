@@ -201,7 +201,7 @@ def probe_media(output):
 def probe_models(model_root, output, min_available_ram_gib=DEFAULT_MIN_AVAILABLE_RAM_GIB):
     import torch
     from src.audio_understanding.inference import load_model
-    from src.test_decoder import load_models
+    from src.product.experimental_models import load_models, runtime_contract
 
     result = {}
     for role, relative in MODEL_FILES.items():
@@ -215,11 +215,15 @@ def probe_models(model_root, output, min_available_ram_gib=DEFAULT_MIN_AVAILABLE
                 result[role] = dict(status='loaded', label_source=metadata['label_source'])
                 del model
             else:
+                contract = runtime_contract(model_root/relative,
+                    audio_sha256=fingerprint(model_root/MODEL_FILES['audio'])['sha256'], mode=role)
                 encoder, decoder = load_models(str(model_root/relative), torch.device('cpu'))
                 expected = 4 if role == '4k' else 64
                 if decoder.n_lanes != expected or encoder.conv_in.in_channels != 128 or encoder.mel_per_frame != 2:
                     raise ValueError(f'{role}: incompatible model configuration')
                 result[role] = dict(status='loaded', decoder_positions=decoder.n_lanes)
+                if contract is not None:
+                    result[role].update(runtime_contract=contract, quality_status='experimental')
                 del encoder, decoder
         gc.collect()
         check_resources(output, min_available_ram_gib)

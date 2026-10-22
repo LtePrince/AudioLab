@@ -20,7 +20,7 @@ from src.data.chart_tokenizer import ChartTokenizer, free_notes_to_phigros
 from src.data.timing import TIMING_SCHEMA, tick_seconds
 from src.models.chart_decoder import generate_tokens
 from src.resource_budget import GIB, ResourceBudget, resource_snapshot
-from src.test_decoder import load_models
+from .experimental_models import load_models, runtime_contract
 from . import JOB_SCHEMA
 from .artifacts import chart_document, repair_log, validate_chart, write_json, write_preview
 from .tempo import estimate_tempo, provided_tempo, TempoRequired
@@ -84,7 +84,7 @@ class JobControl:
 
 @torch.no_grad()
 def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, device, control,
-                 max_tokens=6000, encoder_mode='full', feature_condition=None):
+                 max_tokens=6000, encoder_mode='full', feature_condition=None, soft_arrays=None):
     """Keep the AR state for the entire song; bound only encoder attention.
 
     Encoder windows are explicitly versioned and require quality calibration.
@@ -94,6 +94,10 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
         raise ValueError('unsupported experimental layout feature condition')
     encoding_start = time.monotonic()
     enc, dec = load_models(str(checkpoint), device)
+    contract = getattr(dec, 'runtime_contract', None)
+    if contract is not None and (encoder_mode != 'full' or skeleton is not None
+                                 or soft_arrays is None or feature_condition is not None):
+        raise ValueError('soft-onset runtime requires full encoder, dense inputs and free generation')
     expected_lanes = 4 if mode == '4k' else 64
     if dec.n_lanes != expected_lanes:
         raise ValueError(f'{mode} requires a {expected_lanes}-position decoder checkpoint')
@@ -108,7 +112,7 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
     from src.data.chart_tokenizer import N_DTB, N_DTT
     audit_tk=ChartTokenizer(n_lanes=dec.n_lanes)
     extra_forced_steps=0;previous_tick=0
-    for tick in skeleton:
+    for tick in skeleton or ():
         if tick > previous_tick:
             chain=[]
             audit_tk._emit_span(chain,tick-previous_tick,audit_tk.dtb,audit_tk.dtt,N_DTB,N_DTT)
@@ -159,7 +163,14 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
             mapping['remaining_conditioning'] = 'projection biases, memory time embedding, sampled token history, fixed candidate times'
         intervention = dict(mapping=mapping, source_features=source_fingerprint,
                             altered_features=tensor_fingerprint(features), valid_mask=tensor_fingerprint(feature_valid))
-    memory = dec.prepare_memory(features)
+    if contract is not None:
+        from src.soft_onset import dense_condition
+        # Match the frozen training cache roundtrip, without quantizing onsets.
+        if contract['feature_storage_dtype'] == 'float16':
+            features = features.half().float()
+        memory = dec.prepare_memory(features, dense_condition(soft_arrays, features.shape[1]).to(device))
+    else:
+        memory = dec.prepare_memory(features)
     encoding_seconds = time.monotonic()-encoding_start
     del features, enc
     valid = torch.ones(1, memory.shape[1], dtype=torch.bool, device=device)
@@ -192,6 +203,9 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
                        encoder_quality_calibration='pending', seed=seed, temperature=1.0,
                        top_p=.95, sampling_policy='flat', chord_size_cap=None,
                        termination_policy='natural_eos_required')
+    if contract is not None:
+        details.update(runtime_contract=contract, generation_policy='dense-soft-onset-free-ar-v1',
+                       quality_status='experimental', song_tail_coverage='unverified')
     if intervention is not None:
         from src.conditioning_audit import tensor_fingerprint
         intervention['sampled_tokens'] = tensor_fingerprint(torch.tensor(tokens, dtype=torch.long))
@@ -247,6 +261,11 @@ def run_job(args):
         control = JobControl(directory, budget, args.timeout_seconds, args.cancel_file)
         control.update(resource_limits=resource_limits)
         control.check()
+        audio_model_hash = sha256(audio_checkpoint)
+        contracts = {mode: runtime_contract(checkpoints[mode], audio_sha256=audio_model_hash, mode=mode)
+                     for mode in modes}
+        if any(contracts.values()) and args.layout_encoder != 'full':
+            raise ValueError('soft-onset runtime requires --layout-encoder full')
         audio_path = directory / ('audio'+source.suffix.lower())
         _copy_audio(source, audio_path, control)
         source_hash = sha256(audio_path)
@@ -299,10 +318,14 @@ def run_job(args):
         report['audio'].update(duration_seconds=duration, feature_schema=FEATURE_SCHEMA,
                                checkpoint_sha256=metadata['checkpoint_sha256'],
                                label_source=metadata['label_source'])
-        skeleton, quantization = quantize_candidates(evidence, bpm, args.offset)
+        needs_skeleton = any(contract is None for contract in contracts.values())
+        skeleton, quantization = (quantize_candidates(evidence, bpm, args.offset) if needs_skeleton
+                                  else (None, dict(quantization='unused-dense-onset-inputs')))
         report['audio']['candidates'] = len(evidence['events'])
-        report['audio']['candidate_ticks'] = len(skeleton)
+        report['audio']['candidate_ticks'] = len(skeleton) if skeleton is not None else None
         report['audio'].update(quantization)
+        soft_arrays = {key: arrays[key] for key in ('frame_times_seconds', 'event_probability',
+                      'time_offset_seconds', 'event_times_seconds')} if any(contracts.values()) else None
         del arrays, audio_model
         gc.collect()
         if device.type == 'cuda':
@@ -312,9 +335,11 @@ def run_job(args):
             phase = time.monotonic()
             budget.check(force=True, extra_bytes=16*1024**2)
             control.update('layout_'+mode, progress=None)
-            raw, decoding = decode_notes(mel, duration, skeleton, checkpoints[mode], mode,
+            route_skeleton = None if contracts[mode] else skeleton
+            raw, decoding = decode_notes(mel, duration, route_skeleton, checkpoints[mode], mode,
                                          bpm, args.offset, args.seed, device, control,
-                                         max_tokens=args.max_decoder_steps, encoder_mode=args.layout_encoder)
+                                         max_tokens=args.max_decoder_steps, encoder_mode=args.layout_encoder,
+                                         soft_arrays=soft_arrays if contracts[mode] else None)
             # Raw artifacts remain diagnostic only; an over-budget decoder may
             # contain an early EOS and must never receive a completion marker.
             raw_name, chart_name, events_name = f'{mode}.raw.json', f'{mode}.json', f'{mode}.events.json'
@@ -323,7 +348,7 @@ def run_job(args):
             final, repairs = (constrain_4k_notes(raw, end_tick) if mode == '4k'
                               else constrain_free_notes(raw, end_tick))
             chart = chart_document(final, bpm, args.offset, directory/chart_name)
-            events, checks = validate_chart(chart, mode, duration, skeleton)
+            events, checks = validate_chart(chart, mode, duration, route_skeleton)
             events['source_audio_sha256'] = source_hash
             write_json(directory/events_name, events)
             changes = repair_log(raw, final)

@@ -91,6 +91,11 @@ def initialize_decoder(checkpoint, seed=42, *, with_history=False, with_relation
 
 def load_decoder(checkpoint, device):
     ck = torch.load(checkpoint, map_location='cpu', weights_only=True)
+    return decoder_from_checkpoint(ck, device), ck
+
+
+def decoder_from_checkpoint(ck, device):
+    """Strict shared loader for research and explicitly packaged runtime models."""
     check_checkpoint_timing(ck)
     if ck.get('soft_onset_schema') != SCHEMA or ck.get('condition') not in ('none','soft','soft_history','soft_history_aux') \
             or ck.get('dec_config',{}).get('soft_onset_dim') != 2:
@@ -104,7 +109,7 @@ def load_decoder(checkpoint, device):
         raise ValueError('checkpoint relation schema/condition mismatch')
     decoder = ChartDecoder(**ck['dec_config'])
     decoder.load_state_dict(ck['model'], strict=True)
-    return decoder.to(device).eval(), ck
+    return decoder.to(device).eval()
 
 
 def forward_loss(decoder, sample, mode, condition, device, *, score=False):
