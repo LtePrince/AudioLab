@@ -125,7 +125,8 @@ class ChartDecoder(nn.Module):
                  dropout: float = 0.1, mem_dim: int = 256, time_dim: int = 128,
                  rope_theta: float = 10000.0, n_lanes: int = 4,
                  factorized: bool = False, offset_head: bool = False,
-                 cross_window: int | None = None, token_dropout: float = 0.0):
+                 cross_window: int | None = None, token_dropout: float = 0.0,
+                 soft_onset_dim: int = 0):
         """
         n_lanes      : position slots in the NOTE block (4 = 4k lanes, 64 = free-x bins)
         factorized   : NOTE embeddings = E_type[t] + E_pos[bin]  (shares parameters
@@ -143,6 +144,9 @@ class ChartDecoder(nn.Module):
                        next token and the audio path receives gradient pressure.
         """
         super().__init__()
+        if soft_onset_dim not in (0, 2):
+            raise ValueError('soft_onset_dim must be 0 (legacy) or 2 (dense probability/offset)')
+        self.soft_onset_dim = soft_onset_dim
         self.head_dim, self.rope_theta, self.time_dim = hidden_dim // num_heads, rope_theta, time_dim
         self.cross_window, self.token_dropout = cross_window, token_dropout
         self.n_lanes, self.factorized = n_lanes, factorized
@@ -155,6 +159,11 @@ class ChartDecoder(nn.Module):
                                          nn.Linear(hidden_dim, 1)) if offset_head else None
         self.time_proj = nn.Linear(time_dim, hidden_dim)
         self.mem_proj  = nn.Linear(mem_dim, hidden_dim)
+        # Opt-in experimental residual; absent from legacy state dicts. No bias:
+        # the same architecture with zero inputs is the exact audio-only control.
+        self.soft_onset_proj = nn.Linear(soft_onset_dim, hidden_dim, bias=False) if soft_onset_dim else None
+        if self.soft_onset_proj is not None:
+            nn.init.zeros_(self.soft_onset_proj.weight)
         self.mem_time  = nn.Linear(time_dim, hidden_dim)
         self.mem_norm  = nn.LayerNorm(hidden_dim, eps=1e-6)
         self.drop      = nn.Dropout(dropout)
@@ -167,11 +176,19 @@ class ChartDecoder(nn.Module):
     def num_params(self) -> int:
         return sum(p.numel() for p in self.parameters())
 
-    def prepare_memory(self, features: Tensor) -> Tensor:
+    def prepare_memory(self, features: Tensor, soft_onsets: Tensor | None = None) -> Tensor:
         """(B, T, mem_dim) encoder features → decoder memory with time embedding."""
         B, T, _ = features.shape
         frames = torch.arange(T, device=features.device).float().expand(B, T)
         mem = self.mem_proj(features) + self.mem_time(time_embed(frames, self.time_dim))
+        if self.soft_onset_proj is not None:
+            if soft_onsets is None or soft_onsets.shape != (B, T, self.soft_onset_dim):
+                raise ValueError('experimental decoder requires aligned dense soft onset inputs')
+            if not torch.isfinite(soft_onsets).all():
+                raise ValueError('soft onset inputs must be finite')
+            mem = mem + self.soft_onset_proj(soft_onsets)
+        elif soft_onsets is not None:
+            raise ValueError('legacy decoder does not accept soft onset inputs')
         return self.mem_norm(mem)
 
     def forward(self, tokens: Tensor, tok_frames: Tensor, memory: Tensor,
