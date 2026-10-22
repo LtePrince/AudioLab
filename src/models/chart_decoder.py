@@ -7,9 +7,8 @@ transcription encoder (TranscriberNet.features).
 
 Why AR on top of the transcriber
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The per-frame transcriber nails WHEN (audio-determined) but has no output-
-side context, so design semantics (Drag streams, Hold+Flick combos, type
-marginals) collapse.  Here every token is conditioned on the tokens already
+The per-frame transcriber supplies chart-onset evidence, not verified acoustic
+ground truth. It has no output-side context for chart design. Here every token is conditioned on the tokens already
 generated (p(y_t | y_<t, audio)) — sequence-level structure is expressible —
 while cross-attention to the encoder keeps the alignment.
 
@@ -129,7 +128,8 @@ class ChartDecoder(nn.Module):
                  factorized: bool = False, offset_head: bool = False,
                  cross_window: int | None = None, token_dropout: float = 0.0,
                  soft_onset_dim: int = 0, history_dim: int = 0,
-                 relation_auxiliary: bool = False):
+                 relation_auxiliary: bool = False,
+                 cross_time_scale: float | None = None):
         """
         n_lanes      : position slots in the NOTE block (4 = 4k lanes, 64 = free-x bins)
         factorized   : NOTE embeddings = E_type[t] + E_pos[bin]  (shares parameters
@@ -138,6 +138,9 @@ class ChartDecoder(nn.Module):
                        hidden state (anchor+offset). Legacy mode has no residual
                        feedback; history mode feeds past predicted residuals to
                        later input tokens, never back into the current NOTE.
+        cross_time_scale: Optional global relative-time prior, in memory frames:
+                       log attention bias = -log(1 + ((audio_frame-clock)/scale)^2).
+                       Requires cross_window=None; distant valid frames stay visible.
         cross_window : LOCAL cross-attention — a token whose musical clock is at
                        frame f may only attend memory frames |f' - f| <= window
                        (None = global).  The alignment is known from the clock, so
@@ -162,6 +165,13 @@ class ChartDecoder(nn.Module):
         if type(relation_auxiliary) is not bool or (relation_auxiliary and not history_dim):
             raise ValueError('relation auxiliary head requires explicit causal history configuration')
         self.head_dim, self.rope_theta, self.time_dim = hidden_dim // num_heads, rope_theta, time_dim
+        if cross_time_scale is not None and (not math.isfinite(cross_time_scale) or cross_time_scale <= 0
+                                            or cross_window is not None):
+            raise ValueError('global time bias requires positive finite scale and cross_window=None')
+        # Optional global attention with a heavy-tailed relative-time prior.
+        # All valid frames remain accessible; padded frames remain invisible.
+        # Scale uses memory frames, exactly the same clock as tok_frames.
+        self.cross_time_scale = cross_time_scale
         self.cross_window, self.token_dropout = cross_window, token_dropout
         self.n_lanes, self.factorized = n_lanes, factorized
         self._note0, self._n_note = 50, 4 * n_lanes
@@ -277,7 +287,7 @@ class ChartDecoder(nn.Module):
         """
         if T < 1:
             raise ValueError('cross-attention requires nonempty audio memory')
-        if mem_valid is None and self.cross_window is None:
+        if mem_valid is None and self.cross_window is None and self.cross_time_scale is None:
             return None
         B = tok_frames.shape[0]
         mask = torch.ones(B, 1, 1, T, dtype=torch.bool, device=tok_frames.device)
@@ -301,6 +311,11 @@ class ChartDecoder(nn.Module):
                 mask = mask | (fallback & empty)
         elif mem_valid is not None and not mem_valid.any(dim=-1).all():
             raise ValueError('each sample needs at least one valid audio frame')
+        if self.cross_time_scale is not None:
+            fidx = torch.arange(T, device=tok_frames.device).float()
+            distance = tok_frames[:, None, :, None].float() - fidx[None, None, None, :]
+            bias = -torch.log1p((distance / self.cross_time_scale).square())
+            return bias.masked_fill(~mask, float('-inf'))
         return mask
 
     def embed(self, tokens: Tensor) -> Tensor:
@@ -370,6 +385,7 @@ def generate_tokens(
     max_chord_size: int | None = None,
     progress_callback = None,   # optional cancellation/resource checks; no sampling changes
     require_complete: bool = False,  # product jobs reject budget-forced finalization
+    greedy: bool = False,  # explicit diagnostic; production sampling is unchanged
 ) -> list[int]:
     """Sample a grammar-valid token sequence.
 
@@ -486,7 +502,7 @@ def generate_tokens(
             probs[adv_id] = p_adv
         probs = (type_preserving_probs(probs, top_p, T.note(0, 1), T.n_lanes)
                  if sampling_policy == 'type_preserving' else nucleus_probs(probs, top_p))
-        nxt = int(torch.multinomial(probs, 1, generator=generator).item())
+        nxt = int(probs.argmax().item() if greedy else torch.multinomial(probs, 1, generator=generator).item())
 
         if skel is not None and kinds[nxt] in ("DTB", "DTT"):
             # forced advance: inject the canonical DT chain to the next onset
