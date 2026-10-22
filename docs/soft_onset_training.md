@@ -16,3 +16,5 @@ python -m script.train_soft_onset train --cache out/soft-onset/cache --mode 4k -
 每次训练结束评估全部指定开发留出，按分项 token bits 和当前NOTE的连续offset误差报告；默认前两首留出自由生成，保留 raw/final、自然EOS或预算失败、起点/曲长、四键型和现有pattern统计，并给出带音频的预览。参考起点F1只描述同曲编排相似度，不能当声学真值或可玩性认证。固定200步，不用留出挑训练时长。
 
 第二阶段条件 `soft_history` 在B基础结构上加入[28维因果历史输入](causal_chart_history.md)，仍从共同旧权重重新训练200步，不在B结果上追加训练。新分支零初始化；构造模型之后重新设置训练RNG种子。Teacher forcing只读取更早token/连续offset，采样只读取更早生成值；当前NOTE的连续坐标在当前forward与offset预测完成后才进入状态，因此不能读自己的回归目标。该阶段不添加pattern辅助损失，不强制重复/交互/对称。
+
+随后单独条件 `soft_history_aux` 增加固定权重0.1的四类下一NOTE关系CE：同位置→返回前一不同角色→左→右，按此优先级。只监督相邻singleton起点组；和弦及其后的首个singleton不监督，并重置角色。目标组信息仅产生loss标签/mask，不输入hidden；标签按lane/bin定义，不代表连续几何或完整pattern。辅助头零初始化，只在训练中使用，采样不受它的硬规则约束。D同样从共同旧权重重新200步，与H保持预算相同。

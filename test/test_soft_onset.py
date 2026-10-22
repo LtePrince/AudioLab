@@ -7,8 +7,9 @@ import torch
 from src.data.chart_tokenizer import BOS, EOS, ChartTokenizer, TokenNote
 from src.data.timing import TIMING_SCHEMA
 from src.models.chart_decoder import ChartDecoder, generate_tokens
-from src.models.chart_history import CausalChartHistory, HISTORY_DIM, history_features
-from src.soft_onset import (MEMORY_SECONDS, condition_input, dense_condition,
+from src.models.chart_history import (CausalChartHistory, HISTORY_DIM, HISTORY_SCHEMA, RELATION_SCHEMA,
+                                      history_features, relation_targets)
+from src.soft_onset import (SCHEMA, MEMORY_SECONDS, condition_input, dense_condition,
                             forward_loss, initialize_decoder, load_decoder, state_hash)
 from script.train_soft_onset import onset_metrics, sample_order
 
@@ -153,3 +154,45 @@ def test_incremental_free_history_observes_predicted_offset_after_note(monkeypat
     later=seen[-1][1]
     assert later[0,1]==pytest.approx((8+.75)/64)
     assert list(offsets.values())==[.75]
+
+
+def test_auxiliary_relations_preserve_distinct_role_and_break_at_chords():
+    tk=ChartTokenizer()
+    # A B B A, chord, A B: return survives repetition; chord and next A masked.
+    notes=[TokenNote(t,lane,1,0) for t,lane in [(1,0),(2,1),(3,1),(4,0),(5,0),(5,2),(6,0),(7,1)]]
+    tokens=tk.encode_notes(notes);frames=tk.ticks_per_position(tokens)
+    labels=relation_targets(tokens,frames,n_lanes=4)
+    note_labels=[int(labels[i-1]) for i,t in enumerate(tokens) if tk.kind(t)=='NOTE']
+    assert note_labels==[-100,3,0,1,-100,-100,-100,3]
+
+
+def test_auxiliary_labels_change_loss_not_decoder_inputs(monkeypatch):
+    torch.manual_seed(3);tk=ChartTokenizer()
+    dec=ChartDecoder(**tiny_config(),soft_onset_dim=2,history_dim=HISTORY_DIM,relation_auxiliary=True).eval()
+    tokens=tk.encode_notes([TokenNote(t,l,1,0) for t,l in [(1,0),(2,1),(3,1)]])
+    sample=dict(valid=torch.ones(1,5,dtype=torch.bool),soft_onsets=torch.rand(1,5,2),routes={'4k':dict(
+        tokens=torch.tensor(tokens),frames=torch.tensor(tk.ticks_per_position(tokens),dtype=torch.float32)*.1,
+        features=torch.randn(1,5,8),offsets=torch.zeros(len(tokens)),offset_mask=torch.zeros(len(tokens),dtype=torch.bool),
+        reference=dict(timebase_bpm=120))})
+    captured=[]
+    hook=dec.lm_head.register_forward_hook(lambda module,args,value:captured.append(value.detach().clone()))
+    loss,details=forward_loss(dec,sample,'4k','soft_history_aux','cpu')
+    assert details['relation_auxiliary']['count']==2
+    loss.backward();assert float(dec.relation_head.weight.grad.norm())>0
+    labels=relation_targets(sample['routes']['4k']['tokens'],sample['routes']['4k']['frames'],n_lanes=4)
+    labels[labels!=-100]=2
+    monkeypatch.setattr('src.soft_onset.relation_targets',lambda *args,**kw:labels)
+    forward_loss(dec,sample,'4k','soft_history_aux','cpu')
+    hook.remove();torch.testing.assert_close(captured[0],captured[1],atol=0,rtol=0)
+
+
+def test_auxiliary_checkpoint_requires_explicit_schema(tmp_path):
+    dec=ChartDecoder(**tiny_config(),soft_onset_dim=2,history_dim=HISTORY_DIM,relation_auxiliary=True)
+    config=dict(tiny_config(),soft_onset_dim=2,history_dim=HISTORY_DIM,relation_auxiliary=True)
+    ck=dict(soft_onset_schema=SCHEMA,timing_schema=TIMING_SCHEMA,history_schema=HISTORY_SCHEMA,
+            relation_schema=RELATION_SCHEMA,relation_weight=.1,condition='soft_history_aux',
+            model=dec.state_dict(),dec_config=config)
+    path=tmp_path/'aux.pt';torch.save(ck,path)
+    loaded,_=load_decoder(path,'cpu');assert loaded.relation_head is not None
+    ck.pop('relation_schema');torch.save(ck,path)
+    with pytest.raises(ValueError,match='relation schema'):load_decoder(path,'cpu')

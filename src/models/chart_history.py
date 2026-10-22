@@ -20,6 +20,41 @@ HISTORY_NAMES = (
     'group_2_x', 'group_2_singleton', 'group_3_x', 'group_3_singleton',
 )
 HISTORY_DIM = len(HISTORY_NAMES)
+RELATION_SCHEMA = 'adjacent-singleton-position-relation-v1'
+RELATION_NAMES = ('same_last','return_previous_distinct','left','right')
+
+
+def relation_targets(tokens, frames, *, n_lanes):
+    """Labels for the NEXT token, never an input feature.
+
+    Full target groups determine supervision only. Chords break the sequence;
+    their internal canonical ordering is not a directional pattern target.
+    """
+    import torch
+    tokens,frames=list(tokens),list(frames)
+    if len(tokens)!=len(frames) or len(tokens)<2:
+        raise ValueError('matching nonempty token/frame sequences required')
+    tk=ChartTokenizer(n_lanes);groups=[]
+    for i,token in enumerate(tokens):
+        token=int(token)
+        if tk.kind(token)!='NOTE':continue
+        frame=float(frames[i]);lane=tk.value(token)//4
+        if groups and abs(groups[-1]['frame']-frame)<1e-5:
+            groups[-1]['notes'].append((i,lane))
+        else:groups.append(dict(frame=frame,notes=[(i,lane)]))
+    labels=torch.full((len(tokens)-1,),-100,dtype=torch.long)
+    last=previous_distinct=None
+    for group in groups:
+        if len(group['notes'])!=1:
+            last=previous_distinct=None
+            continue
+        index,lane=group['notes'][0]
+        if last is not None:
+            label=(0 if lane==last else 1 if lane==previous_distinct else 2 if lane<last else 3)
+            labels[index-1]=label
+        if last is not None and lane!=last:previous_distinct=last
+        last=lane
+    return labels
 
 
 def _scaled(value, maximum=64):
