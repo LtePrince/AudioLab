@@ -357,6 +357,11 @@ def evaluate(args,output,budget,device,checkpoint=None):
             chart=chart_document(final,bpm,offset,folder/'chart.json')
             events,checks=validate_chart(chart,mode,duration,None)
             write_json(folder/'events.json',events)
+            write_json(folder/'manifest.json',dict(schema='audiolab-training-preview-v1',
+                sample_id=row['id'],mode=mode,condition=condition,evaluation_scope=scope,
+                forced_skeleton=None,checkpoint=file_fingerprint(checkpoint),
+                source_audio=sample['audio'],chart=file_fingerprint(folder/'chart.json'),
+                raw_chart=file_fingerprint(folder/'raw.json'),events=file_fingerprint(folder/'events.json')))
             audio=Path(sample['audio']['path']);(folder/('audio'+audio.suffix)).symlink_to(audio)
             write_preview(folder/'preview.html',title=f'{row["id"]} · {mode} / {condition} · 训练实验候选',
                 audio_name='audio'+audio.suffix,duration=duration,
