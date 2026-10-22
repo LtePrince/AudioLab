@@ -1,0 +1,477 @@
+{
+  "schema": "audiolab-diffusion-march-replay-v1",
+  "release": "https://github.com/LtePrince/AudioLab/releases/tag/diffusion-20260314",
+  "manifest": {
+    "bundle": "audiolab-diffusion-20260314",
+    "code_commit": "20edd4d35b584dccd6608dafa92d7028bf41d80f",
+    "code_version_basis": "Latest available Git commit before 2026-03-14; original checkpoints do not store a code commit; all three strictly loaded with this code snapshot",
+    "packaged_date": "2026-10-22",
+    "checkpoint_timing": "original March 2026 implementation, before August time-axis fix",
+    "dit_epoch": 2000,
+    "dit_steps": 74000,
+    "validation": {
+      "models": {
+        "dit": {
+          "strict_load": "passed",
+          "parameters": 64495120
+        },
+        "vae": {
+          "strict_load": "passed",
+          "parameters": 7064308
+        },
+        "wave": {
+          "strict_load": "passed",
+          "parameters": 8887424
+        }
+      },
+      "parser": "passed",
+      "new_audio_generation": "not_performed"
+    },
+    "files": {
+      "checkpoints/dit_2/dit_final.pt": {
+        "bytes": 763662974,
+        "sha256": "2aefc346f55bfb2ed41a6d7436fda078ac6b1e9d7a068bc086af15f58c5d2a3e",
+        "file_mtime_sydney": "2026-03-14T22:45:18.694029+11:00"
+      },
+      "checkpoints/vae_1/vae_final.pt": {
+        "bytes": 28356619,
+        "sha256": "fb14066c2b154f10e236d4804e2028c39ba44ab67003882952ea366516b56b29",
+        "file_mtime_sydney": "2026-03-13T13:29:36.803851+11:00"
+      },
+      "checkpoints/wave/wave_final.pt": {
+        "bytes": 35590851,
+        "sha256": "94da7322c70db84cdd6b404cec55400f10a2881cb645fc440282494d1eb16462",
+        "file_mtime_sydney": "2026-03-13T13:37:09.290880+11:00"
+      }
+    }
+  },
+  "zip_sha256": "75f24582dfb085bfb2d9cee4410866f79692b72c8e6a0593e7d4034900c2f2ac",
+  "protocol_sha256": "5b5fb33e54aea677bca80c78889964b4904c564142f021ee587f66d9e4f4effd",
+  "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+  "runtime": {
+    "python": "3.13.13",
+    "torch": "2.10.0+cu128",
+    "cuda_build": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3090"
+  },
+  "checkpoint_metadata": {
+    "epoch": 2000,
+    "step": 74000,
+    "global_step": null
+  },
+  "model_parameters": {
+    "dit": 64495120,
+    "vae": 7064308,
+    "wave": 8887424
+  },
+  "vae_scale": 1.0,
+  "sampler": {
+    "seed": 42,
+    "cfg_scale": 3.0,
+    "ddim_steps": 50,
+    "eta": 0.0,
+    "max_frame": 4096,
+    "hop_length": 512,
+    "n_mels": 128,
+    "sr": 22050
+  },
+  "fixed_length": true,
+  "from_logits": false,
+  "timing": "original March behavior, before the August 2x alignment fix",
+  "code_commit": "20edd4d35b584dccd6608dafa92d7028bf41d80f",
+  "source_sha256": {
+    "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/condition/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/condition/wave.py": "f9d92e731d8a05aecffcfd36a7e484f96cb5ffb89c832b73cf8e9af76ef8e104",
+    "src/data/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/data/audio2mel.py": "44358148a69d821150332e5b80c4cdcda7400b9a4f1e9ca25309e68dde9bd49c",
+    "src/data/chart2array.py": "fc6e070652fdcf79b24718e82ab6fd0c3e3b67698faf04eb08a3dc70f913e924",
+    "src/data/dataset.py": "6aaf734261003201481b0719dc08ad197844eaab2fd23a1f20145c18a3e9ff4e",
+    "src/diffusion/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/diffusion/sampler.py": "b77f27c3317f342b964448ca1c290acf13ec33bdf769bbeb9adb2c0446c929ea",
+    "src/diffusion/schedule.py": "ac8586743445315eb72b513847bef23216b943f8bc1f4e5e99d223c3a6720b5d",
+    "src/encoder/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/encoder/encoder.py": "ed9c7e2f05b35695d09f1531b92fab1900817901e32138d464ca509946a1df1e",
+    "src/models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/models/attention.py": "000b367ede16e613e12dd65125611063a1cb73e2e7f6bac511e66f696595410d",
+    "src/models/dit.py": "d58d44c9f46969eb47d150c704544ff292c4ad59450c4b57e327b0aeb7337109",
+    "src/pre_train.py": "44d5476b83638326a46afc0a71bac2550431a8e63b0d6918c51119d17ec3add9",
+    "src/test.py": "a68fa569b6c4e50bfe5fa6cbb3c5c60dc9522e7b6290df2ed73166566b31d663",
+    "src/train.py": "4a2f699e0a4c0435832c1400eba0983371c92792d7e65d44d0528eea452b3620"
+  },
+  "runner_sha256": "0452936fe006244ca4694511ca794f7221c7bff37b49c5800bf37850103afaec",
+  "request_sha256": "9fee0af7e85c2bc6aa7db8b20d49795d9e347dbca7eec3c7877fe03348c5d396",
+  "resources": {
+    "disk_free_gib": 16.435699462890625,
+    "ram_available_gib": 36.969478607177734,
+    "rss_gib": 1.5045928955078125,
+    "gpu_peak_allocated_gib": 1.050337314605713,
+    "gpu_peak_reserved_gib": 1.373046875
+  },
+  "temporary_source_cleaned": true,
+  "total_generation_seconds": 13.946667145937681,
+  "upload_comparison": {
+    "normalized_notes_exact_match": true,
+    "unique_onsets_exact_match": true,
+    "original_notes": 531,
+    "replay_notes": 531,
+    "original_unique_onsets": 463,
+    "replay_unique_onsets": 463
+  },
+  "case_results": [
+    {
+      "id": "piano_three",
+      "case_sha256": "8d96182e2c5fa6a06d1464552204ee0563ff3c582cc53b17f14c8a23d99487d1",
+      "status": "scored",
+      "notes": 0,
+      "unique_onsets": 0,
+      "reference_onsets": 3,
+      "f1_25ms": 0.0,
+      "at_50ms": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "matched": 0,
+        "false_positives": 0,
+        "false_negatives": 3,
+        "false_positives_per_minute": 0.0
+      },
+      "grid_bonus_per_onset": null,
+      "weak_recall_50ms": null,
+      "silence": {
+        "annotated_seconds": 6.400000000000001,
+        "events": 0
+      },
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": false,
+        "isolated_positive_contract": false,
+        "reviewed_silence_no_events": true
+      },
+      "type_counts": {},
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": []
+    },
+    {
+      "id": "piano_weak_middle",
+      "case_sha256": "c176ec5857ae5cf77fe810e13179adca15ba77316268dae8efd56b3bfffb1137",
+      "status": "scored",
+      "notes": 0,
+      "unique_onsets": 0,
+      "reference_onsets": 3,
+      "f1_25ms": 0.0,
+      "at_50ms": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "matched": 0,
+        "false_positives": 0,
+        "false_negatives": 3,
+        "false_positives_per_minute": 0.0
+      },
+      "grid_bonus_per_onset": null,
+      "weak_recall_50ms": 0.0,
+      "silence": {
+        "annotated_seconds": 6.400000000000001,
+        "events": 0
+      },
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": false,
+        "isolated_positive_contract": false,
+        "reviewed_silence_no_events": true
+      },
+      "type_counts": {},
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": []
+    },
+    {
+      "id": "piano_repeated",
+      "case_sha256": "ba231764a309ef223e538dff0aade8ec05fbb473b30f71f545ec5cfe3af24ee9",
+      "status": "scored",
+      "notes": 0,
+      "unique_onsets": 0,
+      "reference_onsets": 3,
+      "f1_25ms": 0.0,
+      "at_50ms": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "matched": 0,
+        "false_positives": 0,
+        "false_negatives": 3,
+        "false_positives_per_minute": 0.0
+      },
+      "grid_bonus_per_onset": null,
+      "weak_recall_50ms": null,
+      "silence": {
+        "annotated_seconds": 6.400000000000001,
+        "events": 0
+      },
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": false,
+        "isolated_positive_contract": false,
+        "reviewed_silence_no_events": true
+      },
+      "type_counts": {},
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": []
+    },
+    {
+      "id": "piano_chunk_boundary",
+      "case_sha256": "d3e21fdd38e36a44cd76efb8ada9bf6951c35eb61c7aa3149bf6a86a8e15c1e1",
+      "status": "scored",
+      "notes": 36,
+      "unique_onsets": 34,
+      "reference_onsets": 3,
+      "f1_25ms": 0.0,
+      "at_50ms": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "matched": 0,
+        "false_positives": 34,
+        "false_negatives": 3,
+        "false_positives_per_minute": 63.75
+      },
+      "grid_bonus_per_onset": null,
+      "weak_recall_50ms": null,
+      "silence": {
+        "annotated_seconds": 28.39999999999999,
+        "events": 30
+      },
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": true,
+        "isolated_positive_contract": false,
+        "reviewed_silence_no_events": false
+      },
+      "type_counts": {
+        "drag": 17,
+        "tap": 19
+      },
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": []
+    },
+    {
+      "id": "silence",
+      "case_sha256": "89a37e5f4c770bcd331e7470d23056763ab6de8eb7408adc22083fb9a4bf94c1",
+      "status": "scored",
+      "notes": 0,
+      "unique_onsets": 0,
+      "reference_onsets": 0,
+      "f1_25ms": 1.0,
+      "at_50ms": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "matched": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "false_positives_per_minute": 0.0
+      },
+      "grid_bonus_per_onset": null,
+      "weak_recall_50ms": null,
+      "silence": {
+        "annotated_seconds": 10.0,
+        "events": 0
+      },
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "silence_no_events": true,
+        "reviewed_silence_no_events": true
+      },
+      "type_counts": {},
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": []
+    },
+    {
+      "id": "-SURREALISM-_IN",
+      "case_sha256": "c4ee8a45d8b51136d2052fb67eb695b9adb2c5257eacd7faa1a8c941d29a7476",
+      "status": "scored",
+      "notes": 633,
+      "unique_onsets": 560,
+      "reference_onsets": 735,
+      "f1_25ms": 0.7876447876447876,
+      "at_50ms": {
+        "precision": 0.925,
+        "recall": 0.7047619047619048,
+        "f1": 0.8,
+        "matched": 518,
+        "false_positives": 42,
+        "false_negatives": 217,
+        "false_positives_per_minute": 16.413849004168597
+      },
+      "grid_bonus_per_onset": 0.29286211428581277,
+      "weak_recall_50ms": null,
+      "silence": {
+        "annotated_seconds": 0,
+        "events": 0
+      },
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": true
+      },
+      "type_counts": {
+        "drag": 288,
+        "tap": 309,
+        "hold": 35,
+        "flick": 1
+      },
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": []
+    },
+    {
+      "id": "ABYSS MOTION 192.333_IN",
+      "case_sha256": "985df6598ba3c51ea8b4b43301e95109253c2393c9d623a9f510624a9db2f8f1",
+      "status": "scored",
+      "notes": 516,
+      "unique_onsets": 468,
+      "reference_onsets": 655,
+      "f1_25ms": 0.7266251113089938,
+      "at_50ms": {
+        "precision": 0.938034188034188,
+        "recall": 0.6702290076335878,
+        "f1": 0.7818343722172751,
+        "matched": 439,
+        "false_positives": 29,
+        "false_negatives": 216,
+        "false_positives_per_minute": 13.79711370724745
+      },
+      "grid_bonus_per_onset": 0.23291116187008518,
+      "weak_recall_50ms": null,
+      "silence": {
+        "annotated_seconds": 0,
+        "events": 0
+      },
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": true
+      },
+      "type_counts": {
+        "hold": 76,
+        "flick": 15,
+        "drag": 232,
+        "tap": 193
+      },
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": []
+    },
+    {
+      "id": "Eltaw_IN",
+      "case_sha256": "87ef3ec6e2e18e037b35dc4361ff52c8eb6010b835df3429040506216a744c4c",
+      "status": "scored",
+      "notes": 531,
+      "unique_onsets": 463,
+      "reference_onsets": 701,
+      "f1_25ms": 0.6821305841924399,
+      "at_50ms": {
+        "precision": 0.9049676025917927,
+        "recall": 0.5977175463623395,
+        "f1": 0.7199312714776632,
+        "matched": 419,
+        "false_positives": 44,
+        "false_negatives": 282,
+        "false_positives_per_minute": 19.476087491836452
+      },
+      "grid_bonus_per_onset": 0.25054631763859275,
+      "weak_recall_50ms": null,
+      "silence": {
+        "annotated_seconds": 0,
+        "events": 0
+      },
+      "gates": {
+        "generation_completed": true,
+        "onset_bounds": true,
+        "note_bounds_and_types": true,
+        "nonempty_positive": true
+      },
+      "type_counts": {
+        "tap": 252,
+        "drag": 242,
+        "hold": 35,
+        "flick": 2
+      },
+      "out_of_audio_onsets": [],
+      "invalid_note_indices": []
+    }
+  ],
+  "comparisons": [
+    {
+      "run_id": "diffusion/march2000-original-code/seed42",
+      "natural_songs": 3,
+      "f1_50ms_macro": 0.7672552145649795,
+      "f1_50ms": {
+        "-SURREALISM-_IN": 0.8,
+        "ABYSS MOTION 192.333_IN": 0.7818343722172751,
+        "Eltaw_IN": 0.7199312714776632
+      }
+    },
+    {
+      "run_id": "diffusion/release-epoch293/seed42",
+      "natural_songs": 3,
+      "f1_50ms_macro": 0.46106232715005874,
+      "f1_50ms": {
+        "-SURREALISM-_IN": 0.3630769230769231,
+        "ABYSS MOTION 192.333_IN": 0.5003996802557954,
+        "Eltaw_IN": 0.5197103781174578
+      }
+    },
+    {
+      "run_id": "4k/global/seed42",
+      "natural_songs": 3,
+      "f1_50ms_macro": 0.6037044619364266,
+      "f1_50ms": {
+        "-SURREALISM-_IN": 0.7012113055181696,
+        "ABYSS MOTION 192.333_IN": 0.5695623775310255,
+        "Eltaw_IN": 0.5403397027600849
+      }
+    },
+    {
+      "run_id": "diffusion/user-upload/Eltaw-v2",
+      "natural_songs": 1,
+      "f1_50ms_macro": 0.7199312714776632,
+      "f1_50ms": {
+        "Eltaw_IN": 0.7199312714776632
+      }
+    },
+    {
+      "run_id": "diffusion/current-legacy-checkpoints/seed42",
+      "natural_songs": 3,
+      "f1_50ms_macro": 0.45173185192105986,
+      "f1_50ms": {
+        "-SURREALISM-_IN": 0.4023494860499266,
+        "ABYSS MOTION 192.333_IN": 0.47049312853678255,
+        "Eltaw_IN": 0.4823529411764706
+      }
+    }
+  ],
+  "artifacts": {
+    "inputs.json": "59721cff817f62df62644470a7243401cd55c2128465c8080cb5aac9eed35184",
+    "report.json": "412fbd7367b4565e1a9e37757c2363fd114cac37fa03cfbdbd6c97f108c9d190",
+    "model/generation.json": "4ab8a8bff281a4afb2e1ca4eac9e6f73c5d1bb0dc114ba903e38b138a4d7cd64",
+    "model/case-07.json": "f03f6d80ff88a21ca70b4b9b4a0c6a2ee8633b95d9f968efc8a00e03a81a9364",
+    "request.json": "9fee0af7e85c2bc6aa7db8b20d49795d9e347dbca7eec3c7877fe03348c5d396"
+  },
+  "limitations": [
+    "One seed; fixed development cases, not independent generalization evaluation.",
+    "Original checkpoints omit source commit; pinned code reproduces all uploaded Eltaw note events exactly.",
+    "Four positive acoustic probes fail; silence passes. Silence does not enter the positive F1 macro.",
+    "March preprocessing/converter behavior is preserved; no threshold search, snapping, or retraining."
+  ]
+}

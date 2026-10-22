@@ -1,5 +1,7 @@
 # Release 历史 diffusion 权重：同一 benchmark 复跑
 
+版本更正：本页测试的是八月权重，相关 Release 已由用户撤下；随后找回三月权重，并已[精确复现 Eltaw v2](diffusion_march_20260314.md)。本页 0.5197 结果不代表三月 v2 模型。
+
 已下载并校验 [diffusion-legacy-20261022](https://github.com/LtePrince/AudioLab/releases/tag/diffusion-legacy-20261022)，按发布参数完成原有 8 例推理。Eltaw F1@50ms 从此前本地权重的 0.4824 提升到 0.5197，但未复现用户上传旧谱的 0.7199。五个构造案例仍未通过基础检查。
 
 ## 权重与复现范围
