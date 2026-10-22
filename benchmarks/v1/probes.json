@@ -1,0 +1,188 @@
+[
+  {
+    "id": "piano_three",
+    "source_group": "piano_three",
+    "label_source": "constructed_acoustic_probe",
+    "audio_sha256": "8d16afc3e294312a3b63ae7b59d480a6444a2ad81975f64fb23ad3b93b68ad45",
+    "duration_seconds": 10.0,
+    "coverage": [
+      [
+        0.0,
+        10.0
+      ]
+    ],
+    "events_seconds": [
+      1.0,
+      4.0,
+      7.0
+    ],
+    "split": "constructed_development",
+    "contract": "exact_onsets",
+    "clock": null,
+    "silent_regions": [
+      [
+        0.0,
+        0.9
+      ],
+      [
+        2.1,
+        3.9
+      ],
+      [
+        5.1,
+        6.9
+      ],
+      [
+        8.1,
+        10.0
+      ]
+    ],
+    "weak_events_seconds": []
+  },
+  {
+    "id": "piano_weak_middle",
+    "source_group": "piano_weak_middle",
+    "label_source": "constructed_acoustic_probe",
+    "audio_sha256": "e726425645198728b927de18c067c0375d463cb0b4e7add0c1feedbb0db087b0",
+    "duration_seconds": 10.0,
+    "coverage": [
+      [
+        0.0,
+        10.0
+      ]
+    ],
+    "events_seconds": [
+      1.0,
+      4.0,
+      7.0
+    ],
+    "split": "constructed_development",
+    "contract": "exact_onsets",
+    "clock": null,
+    "silent_regions": [
+      [
+        0.0,
+        0.9
+      ],
+      [
+        2.1,
+        3.9
+      ],
+      [
+        5.1,
+        6.9
+      ],
+      [
+        8.1,
+        10.0
+      ]
+    ],
+    "weak_events_seconds": [
+      4.0
+    ]
+  },
+  {
+    "id": "piano_repeated",
+    "source_group": "piano_repeated",
+    "label_source": "constructed_acoustic_probe",
+    "audio_sha256": "97348c25cfbcdb6bedcaa5097ed912df0857671915ad68bdfa074d4b473908c3",
+    "duration_seconds": 10.0,
+    "coverage": [
+      [
+        0.0,
+        10.0
+      ]
+    ],
+    "events_seconds": [
+      1.0,
+      4.0,
+      7.0
+    ],
+    "split": "constructed_development",
+    "contract": "exact_onsets",
+    "clock": null,
+    "silent_regions": [
+      [
+        0.0,
+        0.9
+      ],
+      [
+        2.1,
+        3.9
+      ],
+      [
+        5.1,
+        6.9
+      ],
+      [
+        8.1,
+        10.0
+      ]
+    ],
+    "weak_events_seconds": []
+  },
+  {
+    "id": "piano_chunk_boundary",
+    "source_group": "piano_chunk_boundary",
+    "label_source": "constructed_acoustic_probe",
+    "audio_sha256": "2c2b91672321eb4ef75cdb737c030e387e4489f9c3809bfecb1ee48d56311ac7",
+    "duration_seconds": 32.0,
+    "coverage": [
+      [
+        0.0,
+        32.0
+      ]
+    ],
+    "events_seconds": [
+      1.0,
+      24.0,
+      29.0
+    ],
+    "split": "constructed_development",
+    "contract": "exact_onsets",
+    "clock": null,
+    "silent_regions": [
+      [
+        0.0,
+        0.9
+      ],
+      [
+        2.1,
+        23.9
+      ],
+      [
+        25.1,
+        28.9
+      ],
+      [
+        30.1,
+        32.0
+      ]
+    ],
+    "weak_events_seconds": []
+  },
+  {
+    "id": "silence",
+    "source_group": "silence",
+    "label_source": "constructed_acoustic_probe",
+    "audio_sha256": "282aa595aaa33f78391efbb6fc31ace00dd2104b23355e069952e69b97ac9d3e",
+    "duration_seconds": 10.0,
+    "coverage": [
+      [
+        0.0,
+        10.0
+      ]
+    ],
+    "events_seconds": [],
+    "split": "constructed_development",
+    "contract": "silence",
+    "clock": null,
+    "silent_regions": [
+      [
+        0.0,
+        10.0
+      ]
+    ],
+    "weak_events_seconds": []
+  }
+]

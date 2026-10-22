@@ -1,0 +1,681 @@
+{
+  "schema": "audiolab-benchmark-v1",
+  "protocol_sha256": "5b5fb33e54aea677bca80c78889964b4904c564142f021ee587f66d9e4f4effd",
+  "input_sha256": "36b69c8e39da1bb00b18cd6eca77ee0816e90d1359e71fda3bec3a2d8d308936",
+  "scorer_source_sha256": {
+    "script/benchmark_models.py": "e9b932c40599acd3de3f0b450c8c45e5ca0fb635770c8732b792912d46cc2b6e",
+    "src/model_benchmark.py": "c7257da6cb65d8522ae376ecbb23acf5db696cb879a30818a326a780146cf250",
+    "src/pattern_diagnostics.py": "c3355a18928182afeb5bc0ff6588c72e5f6aa5798af8455b3375b80f910cd175",
+    "src/audio_understanding/evaluation.py": "c57d0c4eb36df95f04f7772f98d68229946e168a3aa830458d4eb150357194e0",
+    "src/audio_understanding/annotations.py": "36e52b993ea97121f6d4baab2aa6c96b0fb4701763431e764b6a2009ff9f3d62"
+  },
+  "replay_resources": {
+    "device": "cpu",
+    "elapsed_seconds": 2.953171718865633,
+    "peak_rss_gib": 0.5260429382324219,
+    "note": "CPU scoring only, not model inference performance"
+  },
+  "overall_quality": "not_certified; no independent natural test or human playability score",
+  "runs": [
+    {
+      "id": "onset_frontend",
+      "metadata": {
+        "stage": "acoustic_onset",
+        "mode": "shared",
+        "model": {
+          "checkpoint_sha256": "cdc148382f9015901ad62444db02c8c43de5e34b08fbbac34f6507b0fb66e213",
+          "label_source": "chart_onset",
+          "feature_schema": "torchaudio-normalized-logmel-22050-2048-512-128-v1",
+          "training": {}
+        },
+        "selection": {
+          "threshold": 0.7,
+          "min_interval_ms": 35,
+          "tuned_on_probes": false
+        },
+        "artifact_sha256": "29ba80a5efb231e12500931e82ad8b9a2440ef7f4a2a85c2c533565cc9838acc"
+      },
+      "cases_sha256": "ca3cfa3d16a673909c70a3263bc7b892ede0a3b1754c9c4d88b66a94cbdd3392",
+      "predictions_sha256": "9aabd61150f7f21492cd8429318bccf3bca5d21878083567c7350584c2efb1da",
+      "contract_status": "fail",
+      "coverage_status": "complete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 5,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.95,
+          "positive_reference_onsets": 12,
+          "empty_positive_cases": 0,
+          "failed_contracts": 1
+        }
+      ]
+    },
+    {
+      "id": "4k/local/greedy",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "4k",
+        "attention": "local",
+        "greedy": true,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/4k-scratch/local/decoder_latest.pt",
+          "sha256": "87ce7773aac99da52f32a775863df5680348facabb80aa1ae86b9413d96acc13"
+        },
+        "artifact_sha256": "24f323f594b16d536353114f28db4e90517fdafc747c6578017956d77c523be4",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+      "predictions_sha256": "24a3ff0da6d514ce1f4532c0a3591e85d20105f5152a756d14858a9c580e6c2a",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.548882321579964,
+          "positive_reference_onsets": 2091,
+          "empty_positive_cases": 0,
+          "failed_contracts": 0
+        }
+      ]
+    },
+    {
+      "id": "4k/local/seed42",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "4k",
+        "attention": "local",
+        "greedy": false,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/4k-scratch/local/decoder_latest.pt",
+          "sha256": "87ce7773aac99da52f32a775863df5680348facabb80aa1ae86b9413d96acc13"
+        },
+        "artifact_sha256": "24f323f594b16d536353114f28db4e90517fdafc747c6578017956d77c523be4",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+      "predictions_sha256": "94e0ae422af1d92ee2b767a4a411baa85c8fd8c181e13cc259493d1094bb011f",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.25,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 0,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.4655715047529587,
+          "positive_reference_onsets": 2091,
+          "empty_positive_cases": 0,
+          "failed_contracts": 0
+        }
+      ]
+    },
+    {
+      "id": "4k/global/greedy",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "4k",
+        "attention": "global",
+        "greedy": true,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/4k-scratch/global/decoder_latest.pt",
+          "sha256": "cef1095fa0ca1441968e41d02ed17e9fd0bce5e086d33299dc0305237d800b57"
+        },
+        "artifact_sha256": "c956879083f0b22818a1a0c47ad12392179f96d7848f1f33299107912c7a521a",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+      "predictions_sha256": "3b313d3798dd9f3dd3bb0d97148d2abb9917bfe19e210487c37b5f9cf83957a5",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.6959694654237053,
+          "positive_reference_onsets": 2091,
+          "empty_positive_cases": 0,
+          "failed_contracts": 0
+        }
+      ]
+    },
+    {
+      "id": "4k/global/seed42",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "4k",
+        "attention": "global",
+        "greedy": false,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/4k-scratch/global/decoder_latest.pt",
+          "sha256": "cef1095fa0ca1441968e41d02ed17e9fd0bce5e086d33299dc0305237d800b57"
+        },
+        "artifact_sha256": "c956879083f0b22818a1a0c47ad12392179f96d7848f1f33299107912c7a521a",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+      "predictions_sha256": "a8647ab64e5f4d928e9a188314f8cc2e834ac664d1ac36cbf64eb0f00ab76ce4",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.6037044619364266,
+          "positive_reference_onsets": 2091,
+          "empty_positive_cases": 0,
+          "failed_contracts": 0
+        }
+      ]
+    },
+    {
+      "id": "4k/time_bias/greedy",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "4k",
+        "attention": "time_bias",
+        "greedy": true,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/4k-scratch/time_bias/decoder_latest.pt",
+          "sha256": "a5082648f50d3b4b6207a5192dab5caed632cd77d08f32b52907e0c2a8348066"
+        },
+        "artifact_sha256": "de2c92637ec231f0d5288bade826093922ad476d4e7e44ab6dc36fc3d02adc18",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+      "predictions_sha256": "6871fc50e644fcdd1773271f723301319ef4ea5f8184583dad0f2ee9432b9d85",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.7250433492541312,
+          "positive_reference_onsets": 2091,
+          "empty_positive_cases": 0,
+          "failed_contracts": 0
+        }
+      ]
+    },
+    {
+      "id": "4k/time_bias/seed42",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "4k",
+        "attention": "time_bias",
+        "greedy": false,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/4k-scratch/time_bias/decoder_latest.pt",
+          "sha256": "a5082648f50d3b4b6207a5192dab5caed632cd77d08f32b52907e0c2a8348066"
+        },
+        "artifact_sha256": "de2c92637ec231f0d5288bade826093922ad476d4e7e44ab6dc36fc3d02adc18",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "22c281680e6aa5b48d6598a10b07d25c1deccf9b2b3799a6ef377f18d73b882a",
+      "predictions_sha256": "de4e33c21ee65351f114e50dff45957105ce52ce8f099b3cae5fa9537065b243",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.42443476442099465,
+          "positive_reference_onsets": 2091,
+          "empty_positive_cases": 0,
+          "failed_contracts": 1
+        }
+      ]
+    },
+    {
+      "id": "freex/local/greedy",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "freex",
+        "attention": "local",
+        "greedy": true,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/freex-scratch/local/decoder_latest.pt",
+          "sha256": "8199917e15ac7e4a42d0d2fc419d33c133d8ebd916b150cd5fa64362e949756f"
+        },
+        "artifact_sha256": "6216bf208b0d18f83a446a56ac09c6ec0822f4ae40d1970f5feb328b1f02c3b5",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "c30b8174f82257a4c698d3314998ed194822f66a097b6f9626168a417931b5d3",
+      "predictions_sha256": "c006a4736291f00f9eb8db5019a9c71acc3d21017ee9721d30094e7732967469",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.4040464059254465,
+          "positive_reference_onsets": 2113,
+          "empty_positive_cases": 0,
+          "failed_contracts": 0
+        }
+      ]
+    },
+    {
+      "id": "freex/local/seed42",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "freex",
+        "attention": "local",
+        "greedy": false,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/freex-scratch/local/decoder_latest.pt",
+          "sha256": "8199917e15ac7e4a42d0d2fc419d33c133d8ebd916b150cd5fa64362e949756f"
+        },
+        "artifact_sha256": "6216bf208b0d18f83a446a56ac09c6ec0822f4ae40d1970f5feb328b1f02c3b5",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "c30b8174f82257a4c698d3314998ed194822f66a097b6f9626168a417931b5d3",
+      "predictions_sha256": "5da130c0a7f3cb8c34567915fd5a6629933e7badccb4d5a0489084810fee61b6",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.4984162126882736,
+          "positive_reference_onsets": 2113,
+          "empty_positive_cases": 0,
+          "failed_contracts": 0
+        }
+      ]
+    },
+    {
+      "id": "freex/global/greedy",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "freex",
+        "attention": "global",
+        "greedy": true,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/freex-scratch/global/decoder_latest.pt",
+          "sha256": "592a2656f763a7e9a87c85ac21484a569ce91a5755a017970968f133b206dcf1"
+        },
+        "artifact_sha256": "a4342f691c7a710199f0dba76ba7edc3e53ad5379fcef1f6e50eef6c84e5ed92",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "c30b8174f82257a4c698d3314998ed194822f66a097b6f9626168a417931b5d3",
+      "predictions_sha256": "6a0ffa037eca059b84ebfae32b13f6f0e810cbc8d0a910bb7bdd02531bc1ba27",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.11269063180827887,
+          "positive_reference_onsets": 2113,
+          "empty_positive_cases": 1,
+          "failed_contracts": 2
+        }
+      ]
+    },
+    {
+      "id": "freex/global/seed42",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "freex",
+        "attention": "global",
+        "greedy": false,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/freex-scratch/global/decoder_latest.pt",
+          "sha256": "592a2656f763a7e9a87c85ac21484a569ce91a5755a017970968f133b206dcf1"
+        },
+        "artifact_sha256": "a4342f691c7a710199f0dba76ba7edc3e53ad5379fcef1f6e50eef6c84e5ed92",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "c30b8174f82257a4c698d3314998ed194822f66a097b6f9626168a417931b5d3",
+      "predictions_sha256": "14bf33b6ea269c93c3c9f6eb0d6888f629d0f3797cb64994bbd7648e2cdd8efa",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.4970947774206607,
+          "positive_reference_onsets": 2113,
+          "empty_positive_cases": 0,
+          "failed_contracts": 0
+        }
+      ]
+    },
+    {
+      "id": "freex/time_bias/greedy",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "freex",
+        "attention": "time_bias",
+        "greedy": true,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/freex-scratch/time_bias/decoder_latest.pt",
+          "sha256": "1b0e9fcbaa0138d01007a5123817beba0f105a5345ba8b0b880fa3a489806e33"
+        },
+        "artifact_sha256": "eaada3f8865c2cc8142b3d37ba3ebaf3649247773c36b35eafaa414095edeebd",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "c30b8174f82257a4c698d3314998ed194822f66a097b6f9626168a417931b5d3",
+      "predictions_sha256": "c887120febbd580a0bf129de426cb671a3f450d65a57cfcf141d83a4f2233455",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.19752743971201844,
+          "positive_reference_onsets": 2113,
+          "empty_positive_cases": 0,
+          "failed_contracts": 0
+        }
+      ]
+    },
+    {
+      "id": "freex/time_bias/seed42",
+      "metadata": {
+        "stage": "raw_layout",
+        "mode": "freex",
+        "attention": "time_bias",
+        "greedy": false,
+        "seed": 42,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "condition": "predicted",
+        "checkpoint": {
+          "path": "/home/ziyaowang/Alvin/Audio/AudioLab/out/onset_attention_20261022/freex-scratch/time_bias/decoder_latest.pt",
+          "sha256": "1b0e9fcbaa0138d01007a5123817beba0f105a5345ba8b0b880fa3a489806e33"
+        },
+        "artifact_sha256": "eaada3f8865c2cc8142b3d37ba3ebaf3649247773c36b35eafaa414095edeebd",
+        "evidence_gaps": [
+          "seeds 43/44 not run",
+          "no independent natural test",
+          "no designated pattern continuations",
+          "no final Phira playtest"
+        ]
+      },
+      "cases_sha256": "c30b8174f82257a4c698d3314998ed194822f66a097b6f9626168a417931b5d3",
+      "predictions_sha256": "614b5771b7c8ba8c6f7a2e826e7e7f16b841f18ece79818b554541186dbbe698",
+      "contract_status": "fail",
+      "coverage_status": "incomplete",
+      "summary": [
+        {
+          "label_source": "constructed_acoustic_probe",
+          "split": "constructed_development",
+          "expected_cases": 5,
+          "scored_cases": 3,
+          "missing_or_failed": 2,
+          "positive_f1_50ms_macro": 0.0,
+          "positive_reference_onsets": 6,
+          "empty_positive_cases": 2,
+          "failed_contracts": 2
+        },
+        {
+          "label_source": "chart_onset",
+          "split": "seen_training",
+          "expected_cases": 3,
+          "scored_cases": 3,
+          "missing_or_failed": 0,
+          "positive_f1_50ms_macro": 0.5021222766745166,
+          "positive_reference_onsets": 2113,
+          "empty_positive_cases": 0,
+          "failed_contracts": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "audiolab-benchmark-v1",
+  "ticks_per_beat": 32,
+  "rhythm": {
+    "phase_ticks": [0, 4, 8, 16, 24, 32],
+    "tolerance_ticks": 1.0,
+    "window_beats": 8,
+    "interpretation": "positive matching bonus only; no required ordering, quota, penalty or decoding constraint"
+  },
+  "event_tolerances_ms": [25, 50, 100],
+  "contract_tolerance_ms": 50,
+  "required_probes": ["piano_three", "piano_weak_middle", "piano_repeated", "piano_chunk_boundary", "silence"],
+  "sampling": {"greedy": true, "stochastic_seeds": [42, 43, 44], "temperature": 1.0, "top_p": 0.95},
+  "independent_natural_test_status": "unavailable; full300 songs have all been used for training",
+  "promotion": "No single aggregate score. Probe contracts, missing coverage, music metrics and human review are separate."
+}
