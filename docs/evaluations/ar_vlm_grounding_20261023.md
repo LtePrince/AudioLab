@@ -67,7 +67,7 @@
 
 ## 下一轮结构候选：时间定位与组内排布
 
-以下仅为代码对照后的设计，尚未实现或验证。Pix2Seq 的坐标/类别序列提供表示参考；可变长度输入位置的选择另参考 [Pointer Networks](https://arxiv.org/abs/1506.03134) 与 [Kool 等作者官方 attention model](https://github.com/wouterkool/attention-learn-to-route/blob/master/nets/attention_model.py) 的 `_precompute`、`_get_log_p`、`_one_to_many_logits`。后者是路径规划实现，不能复制“访问过的位置永久不可选”的约束。
+以下为本轮结束时的设计；随后用户确认继续，已进入独立的[时间定位与软起音输入对照实验](ar_time_pointer_20261023.md)，实现与结果以该记录为准。Pix2Seq 的坐标/类别序列提供表示参考；可变长度输入位置的选择另参考 [Pointer Networks](https://arxiv.org/abs/1506.03134) 与 [Kool 等作者官方 attention model](https://github.com/wouterkool/attention-learn-to-route/blob/master/nets/attention_model.py) 的 `_precompute`、`_get_log_p`、`_one_to_many_logits`。后者是路径规划实现，不能复制“访问过的位置永久不可选”的约束。
 
 最小可检验协议：`BOS → 预测下一时间或结束 → 该起点下生成 NOTE/DUR → END_GROUP → 下一时间或结束`。时间头使用历史状态查询全部音频帧，原 AR 生成同起点的多音符、类型、位置与 Hold 时长。模型预测时间，弱起音作为连续证据；不是外部阈值选起点后强制填键型。
 

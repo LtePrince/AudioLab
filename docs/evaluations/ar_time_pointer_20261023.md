@@ -1,0 +1,50 @@
+# AR：直接监督时间定位与软起音输入对照
+
+本轮接续[条件训练实验](ar_vlm_grounding_20261023.md)。用户确认当前优先解决起点对应与时间推进，键型上下文、短纵/长纵、交互、楼梯及重复/模进留到后续专项；全 Tap 本轮仅记录，不作为时间定位验收的阻塞条件。另一个明确问题是：额外软起音输入是否有必要。
+
+上一轮三组模型的真实历史诊断中，清零软起音的平均 token 损失变化均小于 0.0003 bits/token，尚未证明该通道有效。这不等于证明起音信息无用，也不能把异常零特征当成真实静音。本轮通过两组重新训练的自由生成对照，测量**显式软起音通道**的增益；两组声学编码器内都可能已含起音信息。
+
+## 实现与来源
+
+`src/anchored_ar.py` 复用原 `ChartDecoder` 的因果 self-attention、全局 audio cross-attention 与历史状态，新增可学习时间 pointer、帧内偏移及独立停止头，约 6.627M 参数。新协议绑定 `audiolab-absolute-time-group-ar-v1`，不能用产品旧 DT loader 加载。
+
+参考 [Pix2Seq 作者代码](https://github.com/google-research/pix2seq/blob/main/tasks/object_detection.py)的坐标/类别结构化生成，以及 [Kool 等作者 attention model](https://github.com/wouterkool/attention-learn-to-route/blob/master/nets/attention_model.py)的状态 query 与可变输入位置 logits。实现是本项目针对物理时间和同起点和弦的适配，不是这些模型的复现，不复制路径规划的节点访问规则。
+
+```mermaid
+flowchart LR
+    A[全曲声学特征] --> M[全局音频 memory]
+    O[可选软起音概率与偏移] --> M
+    H[已生成音符历史] --> D[因果 Decoder]
+    M --> D
+    D --> P[下一帧位置与帧内偏移 / 停止]
+    P --> G[时间锚点下生成 NOTE / DUR]
+    G --> E[END_GROUP]
+    E --> H
+```
+
+协议为 `BOS → ANCHOR(t) → NOTE/DUR… → END_GROUP → ANCHOR(t')…`。只有 BOS、END_GROUP 的 hidden 预测下一时间/停止；它们仍携带上一时间，未提前消费目标 DT、下一音符或下一时间 embedding。训练在时间预测之后使用真值 ANCHOR 监督排布，推理使用预测 ANCHOR。保留槽 113/114 在新版本中分别为 ANCHOR/END_GROUP，旧 tokenizer 与产品权重不改变。
+
+定位输出为音频 memory 帧索引与该帧内偏移。帧间隔约 46.44ms；若下一起点和上一起点同帧，则偏移定义在“上一时间到该帧末端”的剩余区间；后续帧使用整帧，尾帧截到真实音频时长。训练归一化和推理反归一化使用同一公式，最终直接导出连续秒，不再转回 DT 或按节拍网格吸附。严格递增的 1µs 数值间隔只用于区分音符组，不是音乐间隔规则。
+
+输出位置只能按时间前进，**cross attention 仍看全部有效音频**。同一起点和弦共享一个锚点；ANCHOR 后必须生成至少一个完整音符才能 END_GROUP。沿用同轨互斥与合法 Hold 时长语法，不设双指上限、键型比例、网格位置要求或起音阈值。耗尽生成预算、没有未来位置却仍预测继续，均记录为失败，不冒充自然结束。
+
+## 固定对照与检查
+
+- `audio`：声学特征，显式软起音输入在训练和推理均为零。
+- `soft`：相同声学特征，加全部连续起音概率与偏移，包括弱起音。
+
+两组模型结构相同，decoder 和时间头从零初始化；初始完整 state_dict SHA256 都为 `8a4f75f2dcd41e7950df7680f59177883bbb755ac0f8fc6dbaa5d8bc4980e041`。只切换软起音输入，不删层。冻结前端沿用原缓存对应权重。seed=42、AdamW 初始 lr=3e-4、10 轮/3000 更新、相同样本顺序和调度。该对照能比较软起音通道；与旧协议模型还存在表示及训练配方差异，不是单因素架构胜负实验。
+
+每次更新包含一首原整曲、两个真实波形平移短段和等长真实静音。全部 300 首原曲的音符及 Hold 时间边界已检查合法，没有因本轮表示删除歌曲。固定钢琴 benchmark 文件不入训。
+
+损失：`frame_CE + subframe_MSE + 0.25 × layout_CE + 0.5 × stop_BCE`。帧与帧内偏移按本次全部待预测锚点数归一化，layout 按全部组内目标 token 数归一化；stop/continue BCE 按两类合计事件数归一化，不额外提高稀少 stop 标签的权重。记录非结尾误停率和末尾停止率，避免只看平均损失。位置 CE 在消费目标锚点之前计算，帧内偏移头读取所选帧特征；该帧在训练中由标签选择、自由生成时由模型选择。
+
+7 项专项测试覆盖时间输入隔离、同帧/帧边界/尾帧偏移还原、训练与逐步缓存一致、时间头梯度、零 soft 对照、真实静音可直接结束、完整 Hold 与同帧多组的实际生成流程。共享 attention/缓存及条件训练相关测试同时通过。没有改动生产解码器行为。
+
+使用同一 benchmark v1 的三首既有歌、四个正例钢琴探针与真实静音，分别做 greedy 和 seed42/top-p=.95。附加 6 个未训练过的平移版本检查首起点与位移跟随。最终关注自由生成 F1、首音偏差、误停/早停、静音误出音；教师强制下的帧准确率不能代替这些结果。
+
+入口为 `script.train_models --worker script.train_anchored_ar`；训练和评测分别选择 `train`/`evaluate`，`--variant audio|soft`，输出目录为 `out/anchored_ar_20261023/audio|soft`。每组保留一个最新 checkpoint 及优化器/RNG恢复信息；保持磁盘/RAM保护线8GiB、RSS上限4GiB、GPU分配比例0.65。
+
+## 执行结果
+
+两组已启动训练，结果待填写；不以实现完成或训练损失下降宣称定位成功。
