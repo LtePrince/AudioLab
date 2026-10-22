@@ -1,0 +1,28 @@
+# O2：单曲自由采样的声学特征依赖
+
+2026-10-22，代码 `baaa2e5`（干净工作树），分支 `chore/layout-feature-ablation`。新入口与原产品管线21项测试通过11.73s，设计独立重复21项通过11.30s。命令与控制条件见 [实验说明](../layout_feature_ablation.md)。
+
+已用物理GPU1串行完成 manual song-0 的两模式×两特征条件，共4/4、失败0；未训练或重算候选。报告 `out/layout_feature_ablation_v1/report.json` 的SHA256为 `b7ace14e2e3269271c78ffc895e03d6e90137b670ad4c785195469de493046e1`，运行59.46s。总产物2,660,631B；结束RSS采样1.747GiB，PyTorch峰allocated0.0995GiB／reserved0.1113GiB（不是整卡占用）；余盘10.245GiB。两个预览复用音频软链接。
+
+音频102.770s，547个固定候选起点、188 BPM、offset0、seed42、temperature1、top_p.95、flat采样、完整encoder、自然EOS。两条件源encoder feature和有效mask指纹一致。zero在prepare_memory之前清声学feature，保留时间嵌入、投影bias和各自采样历史；它不是没有时间信息的无条件模型。
+
+**matched的4K/free-x原始与最终JSON均与旧冻结基线逐字节一致。** 因此本次对照没有把基线实现漂移混入声学干预。
+
+| 路线／条件 | 音符 | Tap／Drag／Hold／Flick | 原始Hold总秒 | 最终Hold总秒 | 截短Hold | 位置修复 |
+| --- | ---: | --- | ---: | ---: | ---: | ---: |
+| 4K matched | 735 | 488／231／5／11 | 2.553 | 1.755 | 1 | 0 |
+| 4K zero | 681 | 452／114／44／71 | 18.900 | 15.060 | 11 | 0 |
+| free-x matched | 783 | 633／93／27／30 | 10.532 | 8.657 | 7 | 0 |
+| free-x zero | 749 | 561／38／108／42 | 57.407 | 43.314 | 26 | 2 |
+
+全部条件保持547个起点。4K有494/547组在键型、位置、持续或押数上不同；free-x有547/547组不同。设计独立按 `(type,bin,holdTime)` 多重集重算：free-x中539组离散内容改变，另8组仅连续x改变；4K的494组均有离散变化。押数改变分别为4K的203组、free-x的210组，raw/final结论相同。对照配对的是候选组，独立采样的同序号音符不视为同一事件。
+
+独立复核还验证4行控制、16个产物哈希、旧基线逐字节一致，以及全0 float32声学feature／全true有效mask的指纹。证据为设计工作区 `out/optimization_review/layout_feature_ablation_v1_review.json`；未重新推理。
+
+四个singleton窗口分母分别为206／217／154／147；AAAA、ABAB、单调位置与未分类均留在报告。分母随和弦改变，数量不是质量分数。生成持续与修复的变化说明该音频条件影响输出，不能据Hold更多／更少评价音乐对应。
+
+## 结论及继续方向
+
+本曲证明布局采样对声学feature敏感，与 [C2](audio_conditioning_v2.md) 的有限teacher-forcing依赖相互补充。它反驳了“布局完全没用音频”这一绝对说法，但只含一曲一个seed，且清零会造成分布偏移、第一处分歧后采样历史也不同；不能归因每个后续音符，更不能替代Phira触摸与音乐判断。
+
+结合 [O1](pattern_diagnostics_v1.md)，当前不采用全谱吸附或residual归中作为默认修复，也不追齐Hold占比。下一项应围绕可辨认片段检查候选选择与离散布局，而不是继续扩大同一消融。已有阈值前分数与原谱来源已可复用，后续只选一个明确因素并保留基线；未声称模型已达到新的可玩质量门槛。

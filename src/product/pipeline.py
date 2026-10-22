@@ -84,12 +84,14 @@ class JobControl:
 
 @torch.no_grad()
 def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, device, control,
-                 max_tokens=6000, encoder_mode='full'):
+                 max_tokens=6000, encoder_mode='full', feature_condition=None):
     """Keep the AR state for the entire song; bound only encoder attention.
 
     Encoder windows are explicitly versioned and require quality calibration.
     Natural EOS and exact candidate coverage are independently required.
     """
+    if feature_condition not in (None, 'matched', 'zero_acoustic_features'):
+        raise ValueError('unsupported experimental layout feature condition')
     encoding_start = time.monotonic()
     enc, dec = load_models(str(checkpoint), device)
     expected_lanes = 4 if mode == '4k' else 64
@@ -145,6 +147,18 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
         features = enc.features(F.pad(mel, (0,total-mel.shape[-1])).unsqueeze(0).to(device))
     else:
         raise ValueError('unknown encoder mode')
+    intervention = None
+    if feature_condition is not None:
+        # An explicit diagnostic hook only. Default product calls take the
+        # unchanged path; zeroing happens before projection biases/time embedding.
+        from src.conditioning_audit import alter_features, tensor_fingerprint
+        feature_valid = torch.ones(1, features.shape[1], dtype=torch.bool, device=device)
+        source_fingerprint = tensor_fingerprint(features)
+        features, mapping = alter_features(features, feature_valid, feature_condition)
+        if feature_condition == 'zero_acoustic_features':
+            mapping['remaining_conditioning'] = 'projection biases, memory time embedding, sampled token history, fixed candidate times'
+        intervention = dict(mapping=mapping, source_features=source_fingerprint,
+                            altered_features=tensor_fingerprint(features), valid_mask=tensor_fingerprint(feature_valid))
     memory = dec.prepare_memory(features)
     encoding_seconds = time.monotonic()-encoding_start
     del features, enc
@@ -167,7 +181,7 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
         tokens = generated
         notes = tk.to_phigros_notes(tk.decode_tokens(tokens, strict=True), bpm)
     control.check()
-    return notes, dict(token_count=len(tokens), max_decoder_steps=max_tokens,
+    details = dict(token_count=len(tokens), max_decoder_steps=max_tokens,
                        model_load_and_encoding_seconds=encoding_seconds,
                        encoded_frames=memory.shape[1],
                        encoding_preflight=preflight,
@@ -178,6 +192,11 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
                        encoder_quality_calibration='pending', seed=seed, temperature=1.0,
                        top_p=.95, sampling_policy='flat', chord_size_cap=None,
                        termination_policy='natural_eos_required')
+    if intervention is not None:
+        from src.conditioning_audit import tensor_fingerprint
+        intervention['sampled_tokens'] = tensor_fingerprint(torch.tensor(tokens, dtype=torch.long))
+        details['feature_intervention'] = intervention
+    return notes, details
 
 
 def _copy_audio(source, target, control):
