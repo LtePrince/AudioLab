@@ -31,6 +31,20 @@ from src.resource_budget import ResourceBudget, add_resource_args
 from src.soft_onset import MEMORY_SECONDS, dense_condition, forward_loss, state_hash, training_preflight
 
 
+def training_state(optimizer, sampler):
+    return dict(optimizer=optimizer.state_dict(), sampler=sampler.getstate(),
+                torch_rng=torch.get_rng_state(),
+                cuda_rng=torch.cuda.get_rng_state_all() if torch.cuda.is_available() else [])
+
+
+def restore_training(state, optimizer, sampler):
+    optimizer.load_state_dict(state['optimizer'])
+    sampler.setstate(state['sampler'])
+    torch.set_rng_state(state['torch_rng'].cpu())
+    if state['cuda_rng']:
+        torch.cuda.set_rng_state_all([value.cpu() for value in state['cuda_rng']])
+
+
 @torch.no_grad()
 def silent_samples(encoder, onset, mode, device):
     rows=[];processor=AudioGPUprocessor(device='cpu')
@@ -76,8 +90,35 @@ def train_variant(args, variant, source, encoder, silence, cache, budget, device
         silence_target='BOS EOS; actual zero waveform through original frontend',
         training_ids=[r['id'] for r in rows],evaluation_scope='training_diagnostic',
         checkpoint_sources=cache['models'],implementation=code_version(),curves=epochs)
+    checkpoint_path=destination/'decoder_latest.pt'
+    previous=None
+    if checkpoint_path.exists():
+        if not args.resume:raise ValueError('output contains a checkpoint; use --resume')
+        previous=torch.load(checkpoint_path,map_location='cpu',weights_only=True)
+        old=previous['scratch_training']
+        for key in ('mode','variant','seed','initial_state_sha256','cache_sha256','lr','epochs',
+                    'silent_training_seconds','silence_every_music_updates','training_ids','checkpoint_sources'):
+            if old[key]!=provenance[key]:raise ValueError(f'resume experiment differs: {key}')
+        decoder.load_state_dict(previous['model'],strict=True)
+        provenance=old;epochs=provenance['curves'];steps=previous['steps']
+        if len(epochs)!=previous['epoch']:raise ValueError('checkpoint epoch/curve mismatch')
+        started-=epochs[-1]['elapsed_seconds']
+        completed=destination/'report.json'
+        if completed.exists():
+            done=json.loads(completed.read_text())
+            if (done.get('status')=='completed' and len(epochs)==args.epochs
+                    and done['checkpoint']['sha256']==sha256(checkpoint_path)):
+                print(f'[resume {args.mode}/{variant}] completed; skipped training and evaluation',flush=True)
+                return dict(variant=variant,initial_state_sha256=initial_hash,report=str(completed))
+        if len(epochs)<args.epochs:
+            if 'training_state' not in previous:raise ValueError('partial legacy checkpoint lacks optimizer/RNG state')
+            restore_training(previous['training_state'],optimizer,sampler)
+        print(f'[resume {args.mode}/{variant}] {len(epochs)}/{args.epochs} trained epochs retained',flush=True)
+    elif (destination/'training.json').exists():
+        prior=json.loads((destination/'training.json').read_text())
+        if prior.get('curves'):raise ValueError('training log has completed epochs but checkpoint is missing')
     write_json(destination/'training.json',provenance)
-    for epoch in range(args.epochs):
+    for epoch in range(len(epochs),args.epochs):
         order=list(rows);sampler.shuffle(order);decoder.train()
         music_losses=[];silence_losses=[]
         for i,row in enumerate(order):
@@ -108,15 +149,17 @@ def train_variant(args, variant, source, encoder, silence, cache, budget, device
         epochs.append(dict(epoch=epoch+1,steps=steps,music_loss=sum(music_losses)/len(music_losses),
                            silence_loss=sum(silence_losses)/len(silence_losses),
                            teacher_scores=scores,silence_eos_nll=quiet,elapsed_seconds=time.monotonic()-started))
-        write_json(destination/'training.json',provenance)
         saved={key:deepcopy(source[key]) for key in ('soft_onset_schema','timing_schema','condition','history_schema','mode') if key in source}
         saved.update(model={k:v.detach().cpu() for k,v in decoder.state_dict().items()},
                      dec_config=config,training_scope='all',evaluation_scope='training_diagnostic',
                      scratch_training=provenance,epoch=epoch+1,steps=steps,
-                     recovery='model-only; optimizer/RNG resume not supported')
-        budget.save(saved,destination/'decoder_latest.pt')
+                     recovery='complete epoch boundary; optimizer and RNG retained',
+                     training_state=training_state(optimizer,sampler))
+        budget.save(saved,checkpoint_path)
+        write_json(destination/'training.json',provenance)
+        del saved
         print(json.dumps(dict(mode=args.mode,variant=variant,**epochs[-1])),flush=True)
-    del optimizer,saved;gc.collect()
+    del optimizer,previous;gc.collect();decoder.eval()
     report=dict(schema='audiolab-alignment-audit-v1',mode=args.mode,rows=[],status='running',
                 checkpoint=dict(path=str((destination/'decoder_latest.pt').resolve()),sha256=sha256(destination/'decoder_latest.pt')),
                 scratch_training=provenance,no_postprocessing=True)
@@ -138,6 +181,7 @@ def main():
     p.add_argument('--model-root',type=Path,default=Path('checkpoints/full300_history'))
     p.add_argument('--device',default='cuda:0');p.add_argument('--epochs',type=int,default=10)
     p.add_argument('--seed',type=int,default=42);p.add_argument('--lr',type=float,default=3e-4)
+    p.add_argument('--resume',action='store_true',help='preserve completed models; resume training at saved epoch boundaries')
     add_resource_args(p);args=p.parse_args()
     if args.epochs<1 or not math.isfinite(args.lr) or args.lr<=0:raise ValueError('positive epochs and learning rate required')
     torch.set_num_threads(2);args.output.mkdir(parents=True,exist_ok=True)

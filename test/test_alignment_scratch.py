@@ -1,7 +1,9 @@
 import torch
+import random
+from copy import deepcopy
 
 from script.audit_decoder_alignment import configure, oracle_condition
-from script.train_alignment_scratch import silent_samples
+from script.train_alignment_scratch import silent_samples, training_state, restore_training
 from src.models.chart_decoder import ChartDecoder
 from src.models.transcriber import TranscriberNet
 from src.soft_onset import MEMORY_SECONDS, state_hash
@@ -40,3 +42,17 @@ def test_oracle_condition_preserves_subframe_clock():
     recovered=(indices+condition[indices,1])*MEMORY_SECONDS
     assert torch.allclose(recovered,torch.tensor(times),atol=1e-6)
     assert len(indices)==3
+
+
+def test_resumption_preserves_next_update_and_sample_order():
+    torch.manual_seed(42)
+    model=torch.nn.Sequential(torch.nn.Linear(3,3),torch.nn.Dropout(.2))
+    opt=torch.optim.AdamW(model.parameters(),lr=.001);rng=random.Random(42)
+    def step():
+        opt.zero_grad();loss=model(torch.ones(2,3)).square().mean();loss.backward();opt.step()
+        return float(loss.detach())
+    step();snapshot=deepcopy(training_state(opt,rng));weights=deepcopy(model.state_dict())
+    expected_loss=step();expected_weights=deepcopy(model.state_dict());expected_order=rng.sample(range(20),20)
+    model.load_state_dict(weights);restore_training(snapshot,opt,rng)
+    assert step()==expected_loss and rng.sample(range(20),20)==expected_order
+    assert all(torch.equal(value,expected_weights[name]) for name,value in model.state_dict().items())
