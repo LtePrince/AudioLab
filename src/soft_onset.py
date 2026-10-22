@@ -85,7 +85,8 @@ def initialize_decoder(checkpoint, seed=42, *, with_history=False, with_relation
                                  initialized_state_sha256=state_hash(decoder.state_dict()),
                                  added_parameters=['soft_onset_proj.weight']+(['history_proj.weight'] if with_history else [])+
                                     (['relation_head.weight','relation_head.bias'] if with_relation_aux else []),
-                                 initialization='zero, no bias')
+                                 initialization='soft/history projections: zero weights, no bias; '
+                                     'optional relation head: zero weights and zero bias')
 
 
 def load_decoder(checkpoint, device):
