@@ -124,7 +124,7 @@ if(review.has('end'))audio.addEventListener('timeupdate',()=>{if(audio.currentTi
                 for condition,label in [('baseline','原基线'),('candidate','候选稿')]:
                     links.append(f'<a href="{condition}/preview.html#t={segment["start_seconds"]}&end={segment["end_seconds"]}&mode={mode}">{mode} {label}</a> ')
             links.append('</p>')
-        (output/'index.html').write_text('<!doctype html><meta charset="utf-8"><title>候选取舍试听</title><style>body{font:18px system-ui;margin:36px;line-height:2}a{margin-right:16px}</style><h1>候选取舍试听</h1><p>点击链接后播放，片段末尾暂停。比较删点是否漏掉音乐，以及之后保留点的布局变化；两份谱的后续采样历史会不同。</p>'+''.join(links)+'<p><a href="baseline/preview.html">原基线整曲</a><a href="candidate/preview.html">候选稿整曲</a><a href="report.json">候选来源与差异</a></p>')
+        (output/'index.html').write_text('<!doctype html><meta charset="utf-8"><title>候选取舍试听</title><style>body{font:18px system-ui;margin:36px;line-height:2}a{margin-right:16px}</style><h1>候选取舍试听</h1><p>唯一实验改动为取音分数阈值0.7→0.8，尚未判断哪份更好。</p><p>点击链接后播放，片段末尾暂停。比较删点是否漏掉音乐，以及之后保留点的布局变化；两份谱的后续采样历史会不同。</p>'+''.join(links)+'<p><a href="baseline/preview.html">原基线整曲</a><a href="candidate/preview.html">候选稿整曲</a><a href="report.json">候选来源与差异</a></p>')
         report.update(status='completed',resources=budget.log_state())
         write_json(output/'report.json',report);check_output(output,budget)
         if json.loads((output/'report.json').read_text())!=report:raise ValueError('report readback mismatch')
