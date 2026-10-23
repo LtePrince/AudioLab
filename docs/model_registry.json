@@ -1,7 +1,7 @@
 {
   "schema": "audiolab-model-registry-v1",
   "registered_at_utc": "2026-10-23T09:09:27.110480+00:00",
-  "version_policy": "Retrospective catalog IDs, not upstream release claims. 0.x denotes development. Minor identifies architecture/conditioning/data stages; patch identifies same-architecture continuation or fixes. Variants and checkpoint epochs are separate. No weight bytes or existing paths are renamed.",
+  "version_policy": "Retrospective catalog IDs, not upstream release claims. 0.x denotes development. Minor identifies architecture/conditioning/data stages; patch identifies same-architecture continuation or fixes. Variants and checkpoint epochs are separate. No weight bytes or existing paths are renamed. Extending the epoch budget within an unchanged experiment keeps the version and experiment ID; record the phase, parent checkpoint and epoch.",
   "families": [
     {
       "id": "AL-Onset",
@@ -891,43 +891,64 @@
         "AL-AR4K@0.5.1"
       ],
       "status": "running",
-      "question": "保持结构/损失/采样，继续到300轮观察拟合与自由生成",
-      "result": "截至280轮，Eltaw/seed42局部F1为A=0.75388、S=0.69384，网格加分0.56913/0.60095；12次自然曲生成全部尾部失败，第260轮A的终止结果未稳定复现。训练帧定位约98.83%，三音和跨窗口仍未通过。",
+      "question": "保持结构/损失/采样，完成300轮后按下降趋势续到500轮，观察拟合与自由生成",
+      "result": "截至300轮，Eltaw/seed42局部F1为A=0.76197、S=0.79266，网格加分0.59233/0.57117；12次自然曲生成全部尾部失败。训练帧定位约98.96%，三音额外出音和跨窗口仍未解决。最近20轮平均损失继续下降，两组已独立续训到500轮。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
           "id": "E14-A",
           "model": "AL-AR4K@0.5.1",
           "variant": "audio",
-          "checkpoint": "out/ar_saturation_20261023/audio/model_latest.pt",
+          "checkpoint": "out/ar_saturation_20261023/continued500/audio/model_latest.pt",
           "parent_run": "E13-A",
-          "progress_file": "out/ar_saturation_20261023/audio/training.json",
-          "log_file": "out/ar_saturation_20261023/audio_resume185.log",
-          "evaluation_root": "out/ar_saturation_20261023/audio",
+          "progress_file": "out/ar_saturation_20261023/continued500/audio/training.json",
+          "log_file": "out/ar_saturation_20261023/continued500/audio.log",
+          "evaluation_root": "out/ar_saturation_20261023/continued500/audio",
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/audio/model_e0040.pt",
             "out/ar_saturation_20261023/audio/model_e0100.pt",
             "out/ar_saturation_20261023/audio/model_e0220.pt",
             "out/ar_saturation_20261023/audio/model_e0240.pt",
             "out/ar_saturation_20261023/audio/model_e0260.pt",
-            "out/ar_saturation_20261023/audio/model_e0280.pt"
+            "out/ar_saturation_20261023/audio/model_e0280.pt",
+            "out/ar_saturation_20261023/audio/model_e0300.pt"
           ],
           "training": {
             "songs": 300,
             "from_epoch": 10,
-            "target_epoch": 300,
+            "target_epoch": 500,
             "optimizer_and_rng_restored": true,
             "learning_rate": 3e-05,
-            "code_commit": "37a3650"
+            "code_commit": "37a3650",
+            "phases": [
+              {
+                "from_epoch": 10,
+                "target_epoch": 300,
+                "status": "completed",
+                "output": "out/ar_saturation_20261023/audio"
+              },
+              {
+                "from_epoch": 300,
+                "target_epoch": 500,
+                "status": "running",
+                "output": "out/ar_saturation_20261023/continued500/audio",
+                "parent_checkpoint": "out/ar_saturation_20261023/audio/model_latest.pt",
+                "parent_sha256": "df8e32da135f453f730ee2bd11b80f5bb15610d1b82217d8bc3ee701e13e5e00",
+                "optimizer_and_rng_restored": true,
+                "learning_rate": 3e-05,
+                "launched_at_utc": "2026-10-23T13:26:59.171479+00:00"
+              }
+            ]
           },
           "snapshot": {
-            "recorded_epoch": 283,
-            "recorded_steps": 84900,
-            "latest_completed_evaluation": 280,
-            "frame_accuracy": 0.9884937083641747,
-            "layout_ce": 1.1182025573770784,
+            "recorded_epoch": 308,
+            "recorded_steps": 92400,
+            "latest_completed_evaluation": 300,
+            "frame_accuracy": 0.9899037749814952,
+            "layout_ce": 1.1022256120284615,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T12:50:51.673902+00:00"
+            "recorded_at_utc": "2026-10-23T13:40:46.077695+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/audio/evaluation-e0300"
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -937,7 +958,8 @@
           "schema": "audiolab-absolute-time-group-ar-v1",
           "parameters": 6626691,
           "previous_logs": [
-            "out/ar_saturation_20261023/audio_resume100.log"
+            "out/ar_saturation_20261023/audio_resume100.log",
+            "out/ar_saturation_20261023/audio_resume185.log"
           ],
           "recovery_checkpoint": {
             "epoch": 185,
@@ -985,42 +1007,76 @@
               "sha256": "1664dcfabaefb592646ce2a5bae95eea567882301726f8a525864599a1d3262e",
               "source_checkpoint_sha256": "49e6f02615da68573ca8a3c389f8dbaf57148e0c3ca641dc5645e17c2fb244e1",
               "recorded_utc": "2026-10-23T12:44:22.462004+00:00"
+            },
+            {
+              "variant": "audio",
+              "epoch": 300,
+              "steps": 90000,
+              "path": "out/ar_saturation_20261023/audio/model_e0300.pt",
+              "bytes": 26630865,
+              "sha256": "93073e65860b33e1b8711ed9e9d4b9e09b6acfd17b63195e04d71e58ccfd0539",
+              "source_checkpoint_sha256": "df8e32da135f453f730ee2bd11b80f5bb15610d1b82217d8bc3ee701e13e5e00",
+              "recorded_utc": "2026-10-23T13:19:30.841365+00:00"
             }
+          ],
+          "previous_evaluation_roots": [
+            "out/ar_saturation_20261023/audio"
           ]
         },
         {
           "id": "E14-S",
           "model": "AL-AR4K@0.5.1",
           "variant": "soft",
-          "checkpoint": "out/ar_saturation_20261023/soft/model_latest.pt",
+          "checkpoint": "out/ar_saturation_20261023/continued500/soft/model_latest.pt",
           "parent_run": "E13-S",
-          "progress_file": "out/ar_saturation_20261023/soft/training.json",
-          "log_file": "out/ar_saturation_20261023/soft_resume183.log",
-          "evaluation_root": "out/ar_saturation_20261023/soft",
+          "progress_file": "out/ar_saturation_20261023/continued500/soft/training.json",
+          "log_file": "out/ar_saturation_20261023/continued500/soft.log",
+          "evaluation_root": "out/ar_saturation_20261023/continued500/soft",
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/soft/model_e0040.pt",
             "out/ar_saturation_20261023/soft/model_e0100.pt",
             "out/ar_saturation_20261023/soft/model_e0220.pt",
             "out/ar_saturation_20261023/soft/model_e0240.pt",
             "out/ar_saturation_20261023/soft/model_e0260.pt",
-            "out/ar_saturation_20261023/soft/model_e0280.pt"
+            "out/ar_saturation_20261023/soft/model_e0280.pt",
+            "out/ar_saturation_20261023/soft/model_e0300.pt"
           ],
           "training": {
             "songs": 300,
             "from_epoch": 10,
-            "target_epoch": 300,
+            "target_epoch": 500,
             "optimizer_and_rng_restored": true,
             "learning_rate": 3e-05,
-            "code_commit": "37a3650"
+            "code_commit": "37a3650",
+            "phases": [
+              {
+                "from_epoch": 10,
+                "target_epoch": 300,
+                "status": "completed",
+                "output": "out/ar_saturation_20261023/soft"
+              },
+              {
+                "from_epoch": 300,
+                "target_epoch": 500,
+                "status": "running",
+                "output": "out/ar_saturation_20261023/continued500/soft",
+                "parent_checkpoint": "out/ar_saturation_20261023/soft/model_latest.pt",
+                "parent_sha256": "ea96c65b9cc29e708af29e5e44aab1f8d358e3d302cb63b67b8a8a0006f85e24",
+                "optimizer_and_rng_restored": true,
+                "learning_rate": 3e-05,
+                "launched_at_utc": "2026-10-23T13:27:00.594827+00:00"
+              }
+            ]
           },
           "snapshot": {
-            "recorded_epoch": 282,
-            "recorded_steps": 84600,
-            "latest_completed_evaluation": 280,
-            "frame_accuracy": 0.9884826054774242,
-            "layout_ce": 1.1181149642414834,
+            "recorded_epoch": 308,
+            "recorded_steps": 92400,
+            "latest_completed_evaluation": 300,
+            "frame_accuracy": 0.9897668393782384,
+            "layout_ce": 1.1019648429847027,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T12:50:51.673902+00:00"
+            "recorded_at_utc": "2026-10-23T13:40:46.077695+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/soft/evaluation-e0300"
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -1030,7 +1086,8 @@
           "schema": "audiolab-absolute-time-group-ar-v1",
           "parameters": 6626691,
           "previous_logs": [
-            "out/ar_saturation_20261023/soft_resume100.log"
+            "out/ar_saturation_20261023/soft_resume100.log",
+            "out/ar_saturation_20261023/soft_resume183.log"
           ],
           "recovery_checkpoint": {
             "epoch": 183,
@@ -1078,7 +1135,20 @@
               "sha256": "f33982fd0b713cd9e752b20de41567fe5885996b2e5c4eedb86657c4ea240fee",
               "source_checkpoint_sha256": "f2e78b0beb9bdb32b4b890be7e2f1717fda00fb659607295d8c5d7b0e0c08252",
               "recorded_utc": "2026-10-23T12:45:28.920297+00:00"
+            },
+            {
+              "variant": "soft",
+              "epoch": 300,
+              "steps": 90000,
+              "path": "out/ar_saturation_20261023/soft/model_e0300.pt",
+              "bytes": 26630801,
+              "sha256": "21b0bddaa0a2b77c576215b7e698d43163a9de8eee181c47b06638cc2c4cb486",
+              "source_checkpoint_sha256": "ea96c65b9cc29e708af29e5e44aab1f8d358e3d302cb63b67b8a8a0006f85e24",
+              "recorded_utc": "2026-10-23T13:22:02.762348+00:00"
             }
+          ],
+          "previous_evaluation_roots": [
+            "out/ar_saturation_20261023/soft"
           ]
         }
       ],
@@ -1097,9 +1167,10 @@
         "joint_condition_training": false,
         "soft_route": "candidate_for_retirement_after_current_comparison",
         "reason": "No stable benefit from additional soft onset has been demonstrated; user may abandon this route.",
-        "current_training_target_unchanged": 300
+        "original_training_target": 300,
+        "current_training_target": 500
       },
-      "updated_at_utc": "2026-10-23T12:50:51.673902+00:00",
+      "updated_at_utc": "2026-10-23T13:40:46.077695+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
@@ -1115,7 +1186,22 @@
           "status": "unverified; defer any changes until after current run",
           "specific_loss_or_condition_change": "not decided"
         }
-      ]
+      ],
+      "conditional_extension": {
+        "status": "running",
+        "current_target_epoch": 500,
+        "proposed_target_epoch": 500,
+        "decision_rule": "At epoch 300 inspect the latest 20-40 epoch average frame/layout/objective trends. Continue unchanged if losses remain steadily decreasing; otherwise review before more training.",
+        "purpose": "test fitting capacity and reduce undertraining uncertainty; not a guaranteed termination fix",
+        "separate_weights_and_optimizer_rng": true,
+        "estimated_additional_parallel_hours": 6,
+        "model_identity_policy": "budget extension of E14; no new architecture or product family",
+        "decision_at_utc": "2026-10-23T13:24:25.257224+00:00",
+        "launched_at_utc": "2026-10-23T13:27:01.595154+00:00",
+        "audit_path": "out/ar_saturation_20261023/extension_500_decision.json",
+        "decision": "both variants satisfied the declining-loss criterion; continue unchanged to 500",
+        "source_code_changed": false
+      }
     },
     {
       "id": "E15",
