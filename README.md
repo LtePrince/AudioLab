@@ -1,5 +1,9 @@
 # AudioLab：产品定义与技术方案讨论稿
 
+模型与实验入口：[模型产品名、版本沿革及实验总表](docs/model_catalog.md) · [结构化资产索引](docs/model_registry.json)。
+当前在训为 **AudioLab AR4K v0.5.1 / A、S（E14）**；`full300_history` 是此前交付的 AR4K/FreeX v0.2.0 H 组，
+三月 diffusion v2 对应 **AudioLab Diff4K v0.1.0**。运行进度及质量结论以各实验记录为准。
+
 更新日期：2026-10-17。本文覆盖旧 README，作为本次讨论的持续记录及下一会话的开发交接入口。旧说明保留在 Git 历史，实验档案保留在 `docs/`。
 
 **首个实际播放器已确认为 Phira，使用手机／平板触屏；首版交付定轨四位置与静态 free-x，学习式动态表演放在后续。** 两种玩法保留 Tap／Drag／Hold／Flick 和多指，不给 Hold 数量配额。用户已授权设计／审查与开发两个 agent 持续协作；本地上传、自动时基候选、双模式整曲生成、预览及完整 Phira ZIP 下载的工程链路已通过检查。下一步在个人 PC 运行，再将校准包与两种整谱传到移动设备，记录真实导入和触屏反馈。模型质量和真人认可仍待证据，候选数值未因此自动获批。验收与恢复入口见 [交付记录](docs/product_delivery.md)和[Phira 首版交付](docs/phira_delivery_contract.md)。

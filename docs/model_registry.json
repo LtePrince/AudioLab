@@ -1,0 +1,1291 @@
+{
+  "schema": "audiolab-model-registry-v1",
+  "registered_at_utc": "2026-10-23T09:09:27.110480+00:00",
+  "version_policy": "Retrospective catalog IDs, not upstream release claims. 0.x denotes development. Minor identifies architecture/conditioning/data stages; patch identifies same-architecture continuation or fixes. Variants and checkpoint epochs are separate. No weight bytes or existing paths are renamed.",
+  "families": [
+    {
+      "id": "AL-Onset",
+      "name": "AudioLab Onset",
+      "role": "共享音频起音/时序特征；现有监督是谱面起点",
+      "branch": "feature/transcription-baseline"
+    },
+    {
+      "id": "AL-Rhythm",
+      "name": "AudioLab Rhythm",
+      "role": "全局节奏提议头；与 Onset 分开登记",
+      "branch": "feature/transcription-baseline"
+    },
+    {
+      "id": "AL-Diff4K",
+      "name": "AudioLab Diff4K",
+      "role": "定轨4K扩散：Wave + VAE + DiT",
+      "branch": "feature/variable-length-inference"
+    },
+    {
+      "id": "AL-AR4K",
+      "name": "AudioLab AR4K",
+      "role": "定轨4K自回归",
+      "branch": "feature/4k-generation"
+    },
+    {
+      "id": "AL-FreeX",
+      "name": "AudioLab FreeX",
+      "role": "静态无轨：64个横坐标bin加连续残差",
+      "branch": "feature/freeform-gameplay"
+    }
+  ],
+  "versions": [
+    {
+      "id": "AL-Onset@0.1.0",
+      "family": "AL-Onset",
+      "version": "0.1.0",
+      "title": "timing_v1 冻结起音前端",
+      "output_protocol": "chart_onset probability + subframe offset",
+      "delivery": "shared_frozen",
+      "evidence": "docs/audio_understanding.md"
+    },
+    {
+      "id": "AL-Rhythm@0.1.0",
+      "family": "AL-Rhythm",
+      "version": "0.1.0",
+      "title": "global rhythm v1",
+      "output_protocol": "global chart_onset",
+      "delivery": "research_only",
+      "evidence": "docs/freeform_design.md"
+    },
+    {
+      "id": "AL-Rhythm@0.2.0",
+      "family": "AL-Rhythm",
+      "version": "0.2.0",
+      "title": "global rhythm v2",
+      "output_protocol": "global chart_onset",
+      "delivery": "research_only",
+      "evidence": "docs/freeform_design.md"
+    },
+    {
+      "id": "AL-Diff4K@0.1.0",
+      "family": "AL-Diff4K",
+      "version": "0.1.0",
+      "title": "三月2000轮；精确复现用户 Eltaw v2",
+      "output_protocol": "original March fixed 4096 frames / legacy 2x timing",
+      "delivery": "historical_reference",
+      "evidence": "docs/evaluations/diffusion_march_20260314.md"
+    },
+    {
+      "id": "AL-Diff4K@0.2.0",
+      "family": "AL-Diff4K",
+      "version": "0.2.0",
+      "title": "八月 Release 留存权重，已撤下 Release",
+      "output_protocol": "August legacy diffusion",
+      "delivery": "archived_reference",
+      "evidence": "docs/evaluations/diffusion_release_20261022.md"
+    },
+    {
+      "id": "AL-Diff4K@0.0.0-local",
+      "family": "AL-Diff4K",
+      "version": "0.0.0-local",
+      "title": "服务器原有权重，不能确认为三月来源",
+      "output_protocol": "legacy / provenance incomplete",
+      "delivery": "unverified_legacy",
+      "evidence": "docs/evaluations/diffusion_benchmark_20261022.md"
+    },
+    {
+      "id": "AL-AR4K@0.1.0",
+      "family": "AL-AR4K",
+      "version": "0.1.0",
+      "title": "timing_v1 产品基线",
+      "output_protocol": "audio-offset-post-token-v1",
+      "delivery": "web_baseline",
+      "evidence": "docs/runtime_model_manifest.json"
+    },
+    {
+      "id": "AL-AR4K@0.1.1",
+      "family": "AL-AR4K",
+      "version": "0.1.1",
+      "title": "24首 A/B/H/D 小规模训练",
+      "output_protocol": "DT/NOTE; optional soft/history/aux",
+      "delivery": "research_only",
+      "evidence": "docs/evaluations/soft_onset_training_v1.md"
+    },
+    {
+      "id": "AL-AR4K@0.2.0",
+      "family": "AL-AR4K",
+      "version": "0.2.0",
+      "title": "全300首 H/D；H 已打包给用户测试",
+      "output_protocol": "audiolab-soft-onset-runtime-v1 for H delivery",
+      "delivery": "experimental_bundle_H_only",
+      "evidence": "docs/evaluations/full_corpus_training_v1.md"
+    },
+    {
+      "id": "AL-AR4K@0.3.0",
+      "family": "AL-AR4K",
+      "version": "0.3.0",
+      "title": "local/global/time_bias 从零训练",
+      "output_protocol": "DT/NOTE + soft/history",
+      "delivery": "research_only",
+      "evidence": "docs/evaluations/4k_attention_scratch_20261022.md"
+    },
+    {
+      "id": "AL-FreeX@0.1.0",
+      "family": "AL-FreeX",
+      "version": "0.1.0",
+      "title": "timing_v1 产品基线",
+      "output_protocol": "audio-offset-post-token-v1",
+      "delivery": "web_baseline",
+      "evidence": "docs/runtime_model_manifest.json"
+    },
+    {
+      "id": "AL-FreeX@0.1.1",
+      "family": "AL-FreeX",
+      "version": "0.1.1",
+      "title": "24首 A/B/H/D 小规模训练",
+      "output_protocol": "DT/NOTE; optional soft/history/aux",
+      "delivery": "research_only",
+      "evidence": "docs/evaluations/soft_onset_training_v1.md"
+    },
+    {
+      "id": "AL-FreeX@0.2.0",
+      "family": "AL-FreeX",
+      "version": "0.2.0",
+      "title": "全300首 H/D；H 已打包给用户测试",
+      "output_protocol": "audiolab-soft-onset-runtime-v1 for H delivery",
+      "delivery": "experimental_bundle_H_only",
+      "evidence": "docs/evaluations/full_corpus_training_v1.md"
+    },
+    {
+      "id": "AL-FreeX@0.3.0",
+      "family": "AL-FreeX",
+      "version": "0.3.0",
+      "title": "local/global/time_bias 从零训练",
+      "output_protocol": "DT/NOTE + soft/history",
+      "delivery": "research_only",
+      "evidence": "docs/evaluations/freex_attention_scratch_20261022.md"
+    },
+    {
+      "id": "AL-AR4K@0.4.0",
+      "family": "AL-AR4K",
+      "version": "0.4.0",
+      "title": "VLM思路：continued/data/rank 条件训练",
+      "output_protocol": "DT/NOTE + global audio + soft/history",
+      "delivery": "research_only",
+      "evidence": "docs/evaluations/ar_vlm_grounding_20261023.md"
+    },
+    {
+      "id": "AL-AR4K@0.5.0",
+      "family": "AL-AR4K",
+      "version": "0.5.0",
+      "title": "绝对时间锚点 A/S：10轮初训",
+      "output_protocol": "audiolab-absolute-time-group-ar-v1",
+      "delivery": "research_loader_only",
+      "evidence": "docs/evaluations/ar_time_pointer_20261023.md"
+    },
+    {
+      "id": "AL-AR4K@0.5.1",
+      "family": "AL-AR4K",
+      "version": "0.5.1",
+      "title": "绝对时间锚点 A/S：保留状态长训",
+      "output_protocol": "audiolab-absolute-time-group-ar-v1",
+      "delivery": "research_loader_only",
+      "evidence": "docs/evaluations/ar_saturation_20261023.md"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "E01",
+      "title": "三月 diffusion 精确复现",
+      "kind": "historical_replay",
+      "models": [
+        "AL-Diff4K@0.1.0"
+      ],
+      "status": "completed",
+      "question": "找回并核实用户3月14日生成的v2",
+      "result": "531个音符逐项相同；三曲参考起点F1宏平均0.7673；钢琴正例探针未通过",
+      "evidence": "docs/evaluations/diffusion_march_20260314.md",
+      "runs": [
+        {
+          "id": "E01-MAR",
+          "model": "AL-Diff4K@0.1.0",
+          "variant": "seed42/cfg3/ddim50",
+          "checkpoint": "out/diffusion_march_20260314/assets/weights/dit_final.pt",
+          "assets": {
+            "dit": {
+              "path": "out/diffusion_march_20260314/assets/weights/dit_final.pt",
+              "sha256": "2aefc346f55bfb2ed41a6d7436fda078ac6b1e9d7a068bc086af15f58c5d2a3e"
+            },
+            "vae": {
+              "path": "out/diffusion_march_20260314/assets/weights/vae_final.pt",
+              "sha256": "fb14066c2b154f10e236d4804e2028c39ba44ab67003882952ea366516b56b29"
+            },
+            "wave": {
+              "path": "out/diffusion_march_20260314/assets/weights/wave_final.pt",
+              "sha256": "94da7322c70db84cdd6b404cec55400f10a2881cb645fc440282494d1eb16462"
+            }
+          },
+          "training": {
+            "epoch": 2000,
+            "steps": 74000,
+            "data": "Release称300样本，原清单未复核"
+          },
+          "code_commit": "20edd4d35b584dccd6608dafa92d7028bf41d80f",
+          "report": "out/diffusion_march_20260314/report.json"
+        }
+      ]
+    },
+    {
+      "id": "E02",
+      "title": "八月 diffusion 历史权重",
+      "kind": "historical_replay",
+      "models": [
+        "AL-Diff4K@0.2.0"
+      ],
+      "status": "completed",
+      "question": "区分八月权重与三月v2",
+      "result": "Eltaw F1=0.5197，不能代表三月v2；远端旧Release已撤下",
+      "evidence": "docs/evaluations/diffusion_release_20261022.md",
+      "runs": [
+        {
+          "id": "E02-AUG",
+          "model": "AL-Diff4K@0.2.0",
+          "variant": "epoch293",
+          "checkpoint": "out/diffusion_benchmark_20261022/release_assets/weights/dit_best.pt",
+          "assets": {
+            "checkpoints/dit/dit_best.pt": {
+              "path": "out/diffusion_benchmark_20261022/release_assets/weights/dit_best.pt",
+              "sha256": "030dc32dd29d95d61a37df33e9a8717a48f7ed974296408bb465c5061c04afa5",
+              "reused_existing": false,
+              "verified": true
+            },
+            "checkpoints/vae/vae_final.pt": {
+              "path": "checkpoints/vae/vae_final.pt",
+              "sha256": "885cfe7123deed8df30defd5b796002228f634da085d811af2c21e64538ba468",
+              "reused_existing": true,
+              "verified": true
+            },
+            "checkpoints/dit/wave_finetuned.pt": {
+              "path": "out/diffusion_benchmark_20261022/release_assets/weights/wave_finetuned.pt",
+              "sha256": "ff51ea2007efef99d1aa864062944d8cdafb40a558e9d66abe70e79c7285021c",
+              "reused_existing": false,
+              "verified": true
+            }
+          },
+          "report": "out/diffusion_benchmark_20261022/release_model/report.json"
+        }
+      ]
+    },
+    {
+      "id": "E03",
+      "title": "本地旧 diffusion 与固定长度消融",
+      "kind": "inference_ablation",
+      "models": [
+        "AL-Diff4K@0.0.0-local",
+        "AL-Diff4K@0.2.0"
+      ],
+      "status": "completed",
+      "question": "本地旧权重来源及八月推理长度能否解释差距",
+      "result": "本地旧权重不能视为三月；八月改固定长度三曲均值仅增加约0.0149",
+      "evidence": "docs/evaluations/diffusion_ar_attribution_20261023.md",
+      "runs": [
+        {
+          "id": "E03-LOCAL",
+          "model": "AL-Diff4K@0.0.0-local",
+          "variant": "native",
+          "checkpoint": "checkpoints/dit/dit_best.pt",
+          "report": "out/diffusion_benchmark_20261022/model/report.json"
+        },
+        {
+          "id": "E03-FIXED",
+          "model": "AL-Diff4K@0.2.0",
+          "variant": "fixed_length",
+          "checkpoint": "out/diffusion_benchmark_20261022/release_assets/weights/dit_best.pt",
+          "report": "out/diffusion_attribution_20261023/august_fixed/report.json"
+        }
+      ]
+    },
+    {
+      "id": "E04",
+      "title": "时间约定、定轨与静态无轨产品基线",
+      "kind": "engineering_delivery",
+      "models": [
+        "AL-Onset@0.1.0",
+        "AL-AR4K@0.1.0",
+        "AL-FreeX@0.1.0"
+      ],
+      "status": "completed",
+      "question": "建立音频秒/tick/offset、浏览器预览与Phira交付闭环",
+      "result": "工程链路可运行；音乐质量未认证",
+      "evidence": "docs/evaluations/product_pipeline_v1.md",
+      "runs": [
+        {
+          "id": "E04-ONSET",
+          "model": "AL-Onset@0.1.0",
+          "variant": "chart_onset",
+          "checkpoint": "checkpoints/timing_v1/transcriber/transcriber_best.pt",
+          "additional_onset_input": "not_applicable"
+        },
+        {
+          "id": "E04-4K",
+          "model": "AL-AR4K@0.1.0",
+          "variant": "baseline",
+          "checkpoint": "checkpoints/timing_v1/decoder/decoder_best.pt"
+        },
+        {
+          "id": "E04-FX",
+          "model": "AL-FreeX@0.1.0",
+          "variant": "baseline",
+          "checkpoint": "checkpoints/timing_v1/decoder_freex/decoder_best.pt"
+        }
+      ]
+    },
+    {
+      "id": "E05",
+      "title": "全局节奏头 v1/v2 与校准",
+      "kind": "training_and_calibration",
+      "models": [
+        "AL-Rhythm@0.1.0",
+        "AL-Rhythm@0.2.0"
+      ],
+      "status": "completed",
+      "question": "从全局时序特征提议谱面起点",
+      "result": "已有谱面起点评价；不是独立声学真值质量认证",
+      "evidence": "docs/freeform_design.md",
+      "runs": [
+        {
+          "id": "E05-V1",
+          "model": "AL-Rhythm@0.1.0",
+          "variant": "global_v1",
+          "checkpoint": "checkpoints/rhythm_global_v1/rhythm_best.pt"
+        },
+        {
+          "id": "E05-V2",
+          "model": "AL-Rhythm@0.2.0",
+          "variant": "global_v2",
+          "checkpoint": "checkpoints/rhythm_global_v2/rhythm_best.pt"
+        }
+      ],
+      "metadata_limitations": "本次未重新核定这两轮的完整训练清单与优化器谱系"
+    },
+    {
+      "id": "E06",
+      "title": "硬起音/NMS/skeleton推理解码对照",
+      "kind": "inference_ablation",
+      "models": [
+        "AL-AR4K@0.1.0",
+        "AL-FreeX@0.1.0"
+      ],
+      "status": "completed",
+      "question": "阈值和候选集合如何改变强制起点解码",
+      "result": "已做推理校准；不等于把阈值硬起音作为神经网络输入重新训练",
+      "evidence": "docs/model_optimization_plan.md",
+      "runs": [],
+      "artifact_roots": [
+        "out/skeleton_calibration_train32",
+        "out/decoder_nms35_val30",
+        "out/worktree_archive_20261022/AudioLab-skeleton-selection"
+      ],
+      "archive_tags": [
+        "archive/20261022/skeleton-selection-review"
+      ],
+      "adoption": "提高阈值的废弃试验未进入当前路径；当前长训没有硬起音组"
+    },
+    {
+      "id": "E07",
+      "title": "音频依赖与键型模式诊断",
+      "kind": "diagnostic",
+      "models": [
+        "AL-AR4K@0.1.0",
+        "AL-FreeX@0.1.0"
+      ],
+      "status": "completed",
+      "question": "清零/反排/错曲、图案统计能否暴露条件利用问题",
+      "result": "局部证明输出受音频影响，未证明编排理解或可玩性",
+      "evidence": "docs/evaluations/audio_conditioning_v2.md",
+      "runs": [],
+      "additional_evidence": [
+        "docs/evaluations/layout_feature_ablation_v1.md",
+        "docs/evaluations/pattern_diagnostics_v1.md"
+      ],
+      "artifact_roots": [
+        "out/worktree_archive_20261022/AudioLab-conditioning-audit",
+        "out/worktree_archive_20261022/AudioLab-layout-ablation",
+        "out/worktree_archive_20261022/AudioLab-pattern-diagnostics"
+      ]
+    },
+    {
+      "id": "E08",
+      "title": "软起音/因果历史/关系辅助首轮",
+      "kind": "training",
+      "models": [
+        "AL-AR4K@0.1.1",
+        "AL-FreeX@0.1.1"
+      ],
+      "status": "completed",
+      "question": "A音频、B软起音、H加历史、D加关系辅助是否有增益",
+      "result": "8组均完成；H弱探索信号，D无稳定收益，200步不足以判断上限",
+      "evidence": "docs/evaluations/soft_onset_training_v1.md",
+      "runs": [
+        {
+          "id": "E08-4k-A",
+          "model": "AL-AR4K@0.1.1",
+          "variant": "A",
+          "checkpoint": "out/worktree_archive_20261022/AudioLab-soft-onset-run/out/soft_onset_v1/4k-none/decoder_final.pt",
+          "report": "out/worktree_archive_20261022/AudioLab-soft-onset-run/out/soft_onset_v1/4k-none/report.json",
+          "additional_onset_input": "none",
+          "history": false,
+          "relation_aux": false,
+          "training": {
+            "songs": 24,
+            "development_holdout": 6,
+            "steps": 200,
+            "initialization": "same prior decoder"
+          }
+        },
+        {
+          "id": "E08-4k-B",
+          "model": "AL-AR4K@0.1.1",
+          "variant": "B",
+          "checkpoint": "out/worktree_archive_20261022/AudioLab-soft-onset-run/out/soft_onset_v1/4k-soft/decoder_final.pt",
+          "report": "out/worktree_archive_20261022/AudioLab-soft-onset-run/out/soft_onset_v1/4k-soft/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": false,
+          "relation_aux": false,
+          "training": {
+            "songs": 24,
+            "development_holdout": 6,
+            "steps": 200,
+            "initialization": "same prior decoder"
+          }
+        },
+        {
+          "id": "E08-4k-H",
+          "model": "AL-AR4K@0.1.1",
+          "variant": "H",
+          "checkpoint": "out/worktree_archive_20261022/AudioLab-history-run/out/history_v1/4k-soft-history/decoder_final.pt",
+          "report": "out/worktree_archive_20261022/AudioLab-history-run/out/history_v1/4k-soft-history/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "relation_aux": false,
+          "training": {
+            "songs": 24,
+            "development_holdout": 6,
+            "steps": 200,
+            "initialization": "same prior decoder"
+          }
+        },
+        {
+          "id": "E08-4k-D",
+          "model": "AL-AR4K@0.1.1",
+          "variant": "D",
+          "checkpoint": "out/worktree_archive_20261022/AudioLab-pattern-aux-run/out/pattern_aux_v1/4k-soft-history-aux/decoder_final.pt",
+          "report": "out/worktree_archive_20261022/AudioLab-pattern-aux-run/out/pattern_aux_v1/4k-soft-history-aux/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "relation_aux": true,
+          "training": {
+            "songs": 24,
+            "development_holdout": 6,
+            "steps": 200,
+            "initialization": "same prior decoder"
+          }
+        },
+        {
+          "id": "E08-freex-A",
+          "model": "AL-FreeX@0.1.1",
+          "variant": "A",
+          "checkpoint": "out/worktree_archive_20261022/AudioLab-soft-onset-run/out/soft_onset_v1/freex-none/decoder_final.pt",
+          "report": "out/worktree_archive_20261022/AudioLab-soft-onset-run/out/soft_onset_v1/freex-none/report.json",
+          "additional_onset_input": "none",
+          "history": false,
+          "relation_aux": false,
+          "training": {
+            "songs": 24,
+            "development_holdout": 6,
+            "steps": 200,
+            "initialization": "same prior decoder"
+          }
+        },
+        {
+          "id": "E08-freex-B",
+          "model": "AL-FreeX@0.1.1",
+          "variant": "B",
+          "checkpoint": "out/worktree_archive_20261022/AudioLab-soft-onset-run/out/soft_onset_v1/freex-soft/decoder_final.pt",
+          "report": "out/worktree_archive_20261022/AudioLab-soft-onset-run/out/soft_onset_v1/freex-soft/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": false,
+          "relation_aux": false,
+          "training": {
+            "songs": 24,
+            "development_holdout": 6,
+            "steps": 200,
+            "initialization": "same prior decoder"
+          }
+        },
+        {
+          "id": "E08-freex-H",
+          "model": "AL-FreeX@0.1.1",
+          "variant": "H",
+          "checkpoint": "out/worktree_archive_20261022/AudioLab-history-run/out/history_v1/freex-soft-history/decoder_final.pt",
+          "report": "out/worktree_archive_20261022/AudioLab-history-run/out/history_v1/freex-soft-history/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "relation_aux": false,
+          "training": {
+            "songs": 24,
+            "development_holdout": 6,
+            "steps": 200,
+            "initialization": "same prior decoder"
+          }
+        },
+        {
+          "id": "E08-freex-D",
+          "model": "AL-FreeX@0.1.1",
+          "variant": "D",
+          "checkpoint": "out/worktree_archive_20261022/AudioLab-pattern-aux-run/out/pattern_aux_v1/freex-soft-history-aux/decoder_final.pt",
+          "report": "out/worktree_archive_20261022/AudioLab-pattern-aux-run/out/pattern_aux_v1/freex-soft-history-aux/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "relation_aux": true,
+          "training": {
+            "songs": 24,
+            "development_holdout": 6,
+            "steps": 200,
+            "initialization": "same prior decoder"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E09",
+      "title": "300首全量 H/D 训练与H组交付",
+      "kind": "training",
+      "models": [
+        "AL-AR4K@0.2.0",
+        "AL-FreeX@0.2.0"
+      ],
+      "status": "completed",
+      "question": "全量数据能否改善拟合、历史与图案",
+      "result": "10轮损失仍在下降；H组已由用户测试，存在长条衔接、Tap集中和节奏不稳定反馈",
+      "evidence": "docs/evaluations/full_corpus_training_v1.md",
+      "runs": [
+        {
+          "id": "E09-4k-H",
+          "model": "AL-AR4K@0.2.0",
+          "variant": "H",
+          "checkpoint": "out/full_corpus_v1/4k-soft-history/decoder_final.pt",
+          "report": "out/full_corpus_v1/4k-soft-history/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "forced_skeleton": false,
+          "history": true,
+          "relation_aux": false,
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3000,
+            "exact_optimizer_resume": false
+          },
+          "delivered": true
+        },
+        {
+          "id": "E09-4k-D",
+          "model": "AL-AR4K@0.2.0",
+          "variant": "D",
+          "checkpoint": "out/full_corpus_v1/4k-soft-history-aux/decoder_final.pt",
+          "report": "out/full_corpus_v1/4k-soft-history-aux/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "forced_skeleton": false,
+          "history": true,
+          "relation_aux": true,
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3000,
+            "exact_optimizer_resume": false
+          },
+          "delivered": false
+        },
+        {
+          "id": "E09-freex-H",
+          "model": "AL-FreeX@0.2.0",
+          "variant": "H",
+          "checkpoint": "out/full_corpus_v1/freex-soft-history/decoder_final.pt",
+          "report": "out/full_corpus_v1/freex-soft-history/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "forced_skeleton": false,
+          "history": true,
+          "relation_aux": false,
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3000,
+            "exact_optimizer_resume": false
+          },
+          "delivered": true
+        },
+        {
+          "id": "E09-freex-D",
+          "model": "AL-FreeX@0.2.0",
+          "variant": "D",
+          "checkpoint": "out/full_corpus_v1/freex-soft-history-aux/decoder_final.pt",
+          "report": "out/full_corpus_v1/freex-soft-history-aux/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "forced_skeleton": false,
+          "history": true,
+          "relation_aux": true,
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3000,
+            "exact_optimizer_resume": false
+          },
+          "delivered": false
+        }
+      ],
+      "additional_evidence": [
+        "docs/full300_runtime.md",
+        "docs/evaluations/eltaw_user_feedback_20261022.md"
+      ]
+    },
+    {
+      "id": "E10",
+      "title": "取消局部窗/时间偏置的推理消融",
+      "kind": "inference_ablation",
+      "models": [
+        "AL-AR4K@0.2.0",
+        "AL-FreeX@0.2.0"
+      ],
+      "status": "completed",
+      "question": "现有权重直接改变音频可见范围会怎样",
+      "result": "各曲有升有降；没有重新训练，不据此判断架构优劣",
+      "evidence": "docs/evaluations/onset_attention_20261022.md",
+      "runs": [],
+      "artifact_roots": [
+        "out/onset_attention_20261022/4k-attention-before",
+        "out/onset_attention_20261022/freex-attention-before"
+      ]
+    },
+    {
+      "id": "E11",
+      "title": "三种注意力从零训练",
+      "kind": "training",
+      "models": [
+        "AL-AR4K@0.3.0",
+        "AL-FreeX@0.3.0"
+      ],
+      "status": "completed",
+      "question": "相同初始化与预算下比较local/global/time_bias",
+      "result": "4K global单种子三曲F1较高；双方仍未通过三音探针；free-x尚未接上后续时间pointer",
+      "evidence": "docs/evaluations/4k_attention_scratch_20261022.md",
+      "runs": [
+        {
+          "id": "E11-4k-local",
+          "model": "AL-AR4K@0.3.0",
+          "variant": "local",
+          "checkpoint": "out/onset_attention_20261022/4k-scratch/local/decoder_latest.pt",
+          "report": "out/onset_attention_20261022/4k-scratch/local/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3300,
+            "initialization": "from_scratch; frozen acoustic frontends"
+          }
+        },
+        {
+          "id": "E11-4k-global",
+          "model": "AL-AR4K@0.3.0",
+          "variant": "global",
+          "checkpoint": "out/onset_attention_20261022/4k-scratch/global/decoder_latest.pt",
+          "report": "out/onset_attention_20261022/4k-scratch/global/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3300,
+            "initialization": "from_scratch; frozen acoustic frontends"
+          }
+        },
+        {
+          "id": "E11-4k-time_bias",
+          "model": "AL-AR4K@0.3.0",
+          "variant": "time_bias",
+          "checkpoint": "out/onset_attention_20261022/4k-scratch/time_bias/decoder_latest.pt",
+          "report": "out/onset_attention_20261022/4k-scratch/time_bias/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3300,
+            "initialization": "from_scratch; frozen acoustic frontends"
+          }
+        },
+        {
+          "id": "E11-freex-local",
+          "model": "AL-FreeX@0.3.0",
+          "variant": "local",
+          "checkpoint": "out/onset_attention_20261022/freex-scratch/local/decoder_latest.pt",
+          "report": "out/onset_attention_20261022/freex-scratch/local/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3300,
+            "initialization": "from_scratch; frozen acoustic frontends"
+          }
+        },
+        {
+          "id": "E11-freex-global",
+          "model": "AL-FreeX@0.3.0",
+          "variant": "global",
+          "checkpoint": "out/onset_attention_20261022/freex-scratch/global/decoder_latest.pt",
+          "report": "out/onset_attention_20261022/freex-scratch/global/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3300,
+            "initialization": "from_scratch; frozen acoustic frontends"
+          }
+        },
+        {
+          "id": "E11-freex-time_bias",
+          "model": "AL-FreeX@0.3.0",
+          "variant": "time_bias",
+          "checkpoint": "out/onset_attention_20261022/freex-scratch/time_bias/decoder_latest.pt",
+          "report": "out/onset_attention_20261022/freex-scratch/time_bias/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3300,
+            "initialization": "from_scratch; frozen acoustic frontends"
+          }
+        }
+      ],
+      "additional_evidence": [
+        "docs/evaluations/freex_attention_scratch_20261022.md"
+      ]
+    },
+    {
+      "id": "E12",
+      "title": "VLM类条件训练：旧配方/配对数据/条件排序",
+      "kind": "training",
+      "models": [
+        "AL-AR4K@0.4.0"
+      ],
+      "status": "completed",
+      "question": "真实平移和等长静音、条件排序能否改善音频依赖",
+      "result": "排序组开始跟随平移，但仍错位；未证明整体成谱提升",
+      "evidence": "docs/evaluations/ar_vlm_grounding_20261023.md",
+      "runs": [
+        {
+          "id": "E12-continued",
+          "model": "AL-AR4K@0.4.0",
+          "variant": "continued",
+          "checkpoint": "out/grounded_ar_20261023/continued/decoder_latest.pt",
+          "report": "out/grounded_ar_20261023/continued/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "parent_run": "E11-4k-global",
+          "training": {
+            "songs": 300,
+            "additional_epochs": 10,
+            "steps": 3300
+          }
+        },
+        {
+          "id": "E12-data",
+          "model": "AL-AR4K@0.4.0",
+          "variant": "data",
+          "checkpoint": "out/grounded_ar_20261023/data/decoder_latest.pt",
+          "report": "out/grounded_ar_20261023/data/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "parent_run": "E11-4k-global",
+          "training": {
+            "songs": 300,
+            "additional_epochs": 10,
+            "steps": 3000
+          }
+        },
+        {
+          "id": "E12-rank",
+          "model": "AL-AR4K@0.4.0",
+          "variant": "rank",
+          "checkpoint": "out/grounded_ar_20261023/rank/decoder_latest.pt",
+          "report": "out/grounded_ar_20261023/rank/report.json",
+          "additional_onset_input": "dense_probability_and_offset",
+          "history": true,
+          "parent_run": "E11-4k-global",
+          "training": {
+            "songs": 300,
+            "additional_epochs": 10,
+            "steps": 3000
+          }
+        }
+      ]
+    },
+    {
+      "id": "E13",
+      "title": "时间pointer A/S从零对照",
+      "kind": "training",
+      "models": [
+        "AL-AR4K@0.5.0"
+      ],
+      "status": "completed",
+      "question": "连续时间定位与显式软起音输入的作用",
+      "result": "10轮未充分训练；A/S差异不明显；整曲均尾部失败",
+      "evidence": "docs/evaluations/ar_time_pointer_20261023.md",
+      "runs": [
+        {
+          "id": "E13-A",
+          "model": "AL-AR4K@0.5.0",
+          "variant": "audio",
+          "checkpoint": "out/anchored_ar_20261023/audio/model_latest.pt",
+          "report": "out/anchored_ar_20261023/audio/report.json",
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3000,
+            "initialization": "from_scratch"
+          },
+          "additional_onset_input": "none_zeroed_channel",
+          "hard_onset_threshold": null,
+          "forced_skeleton": false,
+          "history": true,
+          "acoustic_frontend": "frozen cache; no new frontend training",
+          "schema": "audiolab-absolute-time-group-ar-v1",
+          "parameters": 6626691
+        },
+        {
+          "id": "E13-S",
+          "model": "AL-AR4K@0.5.0",
+          "variant": "soft",
+          "checkpoint": "out/anchored_ar_20261023/soft/model_latest.pt",
+          "report": "out/anchored_ar_20261023/soft/report.json",
+          "training": {
+            "songs": 300,
+            "epochs": 10,
+            "steps": 3000,
+            "initialization": "from_scratch"
+          },
+          "additional_onset_input": "dense_probability_and_offset",
+          "hard_onset_threshold": null,
+          "forced_skeleton": false,
+          "history": true,
+          "acoustic_frontend": "frozen cache; no new frontend training",
+          "schema": "audiolab-absolute-time-group-ar-v1",
+          "parameters": 6626691
+        }
+      ]
+    },
+    {
+      "id": "E14",
+      "title": "时间pointer A/S充分训练",
+      "kind": "continuation",
+      "models": [
+        "AL-AR4K@0.5.1"
+      ],
+      "status": "running",
+      "question": "保持结构/损失/采样，继续到300轮观察拟合与自由生成",
+      "result": "截至160轮训练定位继续改善；整谱仍不稳定，尚未收敛，未作为产品发布",
+      "evidence": "docs/evaluations/ar_saturation_20261023.md",
+      "runs": [
+        {
+          "id": "E14-A",
+          "model": "AL-AR4K@0.5.1",
+          "variant": "audio",
+          "checkpoint": "out/ar_saturation_20261023/audio/model_latest.pt",
+          "parent_run": "E13-A",
+          "progress_file": "out/ar_saturation_20261023/audio/training.json",
+          "log_file": "out/ar_saturation_20261023/audio_resume100.log",
+          "evaluation_root": "out/ar_saturation_20261023/audio",
+          "immutable_checkpoints": [
+            "out/ar_saturation_20261023/audio/model_e0040.pt",
+            "out/ar_saturation_20261023/audio/model_e0100.pt"
+          ],
+          "training": {
+            "songs": 300,
+            "from_epoch": 10,
+            "target_epoch": 300,
+            "optimizer_and_rng_restored": true,
+            "learning_rate": 3e-05,
+            "code_commit": "37a3650"
+          },
+          "snapshot": {
+            "recorded_epoch": 177,
+            "recorded_steps": 53100,
+            "latest_completed_evaluation": 160,
+            "frame_accuracy": 0.9704626202812732,
+            "layout_ce": 1.172730460800084,
+            "scope": "training-file snapshot; not a live process guarantee",
+            "recorded_at_utc": "2026-10-23T09:09:27.110480+00:00"
+          },
+          "additional_onset_input": "none_zeroed_channel",
+          "hard_onset_threshold": null,
+          "forced_skeleton": false,
+          "history": true,
+          "acoustic_frontend": "frozen cache; no new frontend training",
+          "schema": "audiolab-absolute-time-group-ar-v1",
+          "parameters": 6626691
+        },
+        {
+          "id": "E14-S",
+          "model": "AL-AR4K@0.5.1",
+          "variant": "soft",
+          "checkpoint": "out/ar_saturation_20261023/soft/model_latest.pt",
+          "parent_run": "E13-S",
+          "progress_file": "out/ar_saturation_20261023/soft/training.json",
+          "log_file": "out/ar_saturation_20261023/soft_resume100.log",
+          "evaluation_root": "out/ar_saturation_20261023/soft",
+          "immutable_checkpoints": [
+            "out/ar_saturation_20261023/soft/model_e0040.pt",
+            "out/ar_saturation_20261023/soft/model_e0100.pt"
+          ],
+          "training": {
+            "songs": 300,
+            "from_epoch": 10,
+            "target_epoch": 300,
+            "optimizer_and_rng_restored": true,
+            "learning_rate": 3e-05,
+            "code_commit": "37a3650"
+          },
+          "snapshot": {
+            "recorded_epoch": 175,
+            "recorded_steps": 52500,
+            "latest_completed_evaluation": 160,
+            "frame_accuracy": 0.9691968911917098,
+            "layout_ce": 1.1732522791912323,
+            "scope": "training-file snapshot; not a live process guarantee",
+            "recorded_at_utc": "2026-10-23T09:09:27.110480+00:00"
+          },
+          "additional_onset_input": "dense_probability_and_offset",
+          "hard_onset_threshold": null,
+          "forced_skeleton": false,
+          "history": true,
+          "acoustic_frontend": "frozen cache; no new frontend training",
+          "schema": "audiolab-absolute-time-group-ar-v1",
+          "parameters": 6626691
+        }
+      ],
+      "sampling_changes": "deferred_by_user",
+      "full_cache": {
+        "path": "out/full_corpus_v1/cache/cache.json",
+        "sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91"
+      },
+      "pair_cache": {
+        "path": "out/grounded_ar_20261023/pairs/pairs.json",
+        "sha256": "0c859f21b65b1142a0e3e238b1d6892978c4bc30e754430d89d9324cfc4c3955"
+      },
+      "frontend_provenance": "out/full_corpus_v1/cache/cache.json",
+      "user_decision": {
+        "independent_weights": true,
+        "joint_condition_training": false,
+        "soft_route": "candidate_for_retirement_after_current_comparison",
+        "reason": "No stable benefit from additional soft onset has been demonstrated; user may abandon this route.",
+        "current_training_target_unchanged": 300
+      }
+    },
+    {
+      "id": "E15",
+      "title": "Hold/接触点/谱面修复与演出解释器",
+      "kind": "postprocessing_diagnostic",
+      "models": [
+        "AL-AR4K@0.1.0",
+        "AL-FreeX@0.1.0"
+      ],
+      "status": "completed",
+      "question": "检查动作冲突、长条衔接与工程导出",
+      "result": "规则或审计工具，不产生新神经网络；不以Hold配额/双指上限作为产品目标",
+      "evidence": "docs/evaluations/hold_repair_v1.md",
+      "runs": [],
+      "additional_evidence": [
+        "docs/evaluations/4k_contacts_v1.md",
+        "docs/evaluations/freex_contacts_v1.md",
+        "docs/evaluations/performance_interpretation_v1.md"
+      ]
+    },
+    {
+      "id": "E16",
+      "title": "定长单起音到复杂编谱的归因计划",
+      "kind": "plan",
+      "models": [],
+      "status": "not_started",
+      "question": "先建立明确变量与结构对应，再逐级增加复杂度",
+      "result": "方案已保存；按用户要求先完成E14，不声称已实现新diffusion或课程训练",
+      "evidence": "docs/fixed_length_attribution_plan.md",
+      "runs": []
+    },
+    {
+      "id": "E17",
+      "title": "学习式动态无轨表演",
+      "kind": "plan",
+      "models": [],
+      "status": "not_started",
+      "question": "由静态free-x推进判定线运动与表演",
+      "result": "已有设计/挖掘/确定性解释器；尚无可交付的学习式动态模型",
+      "evidence": "docs/freeform_performance_contract.md",
+      "runs": []
+    }
+  ],
+  "bundles": [
+    {
+      "id": "B01",
+      "legacy_id": "timing-v1-baseline-20261017",
+      "models": [
+        "AL-Onset@0.1.0",
+        "AL-AR4K@0.1.0",
+        "AL-FreeX@0.1.0"
+      ],
+      "model_root": "checkpoints/timing_v1",
+      "user_tested": true,
+      "status": "web_baseline_quality_unverified",
+      "manifest": "docs/runtime_model_manifest.json",
+      "sha256": "64b7e43b82564c6a400cec38431918ea8f27c240ddf884471ae2d7d981a823f4",
+      "assets": {
+        "decoder/decoder_best.pt": {
+          "bytes": 52916773,
+          "role": "4k_layout",
+          "sha256": "62d6a385c3b15ec330df284b0ad1e031ee4053c310babde2f628f50bb038b7b0"
+        },
+        "decoder_freex/decoder_best.pt": {
+          "bytes": 53745049,
+          "role": "freex_static_layout",
+          "sha256": "e72c77995fa0b4710a451c77ad519017c6db188b84e60bcf858d66f3ffa30392"
+        },
+        "transcriber/transcriber_best.pt": {
+          "bytes": 26789255,
+          "role": "audio_candidates",
+          "sha256": "cdc148382f9015901ad62444db02c8c43de5e34b08fbbac34f6507b0fb66e213"
+        }
+      }
+    },
+    {
+      "id": "B02",
+      "legacy_id": "full300-history-20261022",
+      "models": [
+        "AL-Onset@0.1.0",
+        "AL-AR4K@0.2.0/H",
+        "AL-FreeX@0.2.0/H"
+      ],
+      "model_root": "checkpoints/full300_history",
+      "user_tested": true,
+      "status": "experimental_user_feedback_recorded",
+      "archive": "out/runtime_delivery_full300/audiolab-full300-history-20261022.zip",
+      "sha256": "be354e2acc358c09e6a790499e0e12639aa860f6f39f487f077e88aec1a596d8",
+      "assets": {
+        "decoder/decoder_best.pt": {
+          "bytes": 52949514,
+          "role": "4k_layout",
+          "sha256": "0aa38bda6c2c50ae9195369252523bf582a03fa27690ae5d67d3dde7f545596f"
+        },
+        "decoder_freex/decoder_best.pt": {
+          "bytes": 53777692,
+          "role": "freex_static_layout",
+          "sha256": "067de89a82d892c9a921a1248c80f7646926304b980a384127bb7e1ca772c6c5"
+        },
+        "transcriber/transcriber_best.pt": {
+          "bytes": 26789255,
+          "role": "audio_candidates",
+          "sha256": "cdc148382f9015901ad62444db02c8c43de5e34b08fbbac34f6507b0fb66e213"
+        }
+      },
+      "evidence": "docs/full300_runtime.md"
+    }
+  ],
+  "not_run": [
+    "同等设置下阈值硬起音作为网络输入 vs 连续soft输入的重训对照",
+    "将当前absolute-time协议迁移并充分训练到free-x",
+    "新版定长diffusion课程训练",
+    "学习式动态判定线生成",
+    "当前长训后的采样策略搜索（用户要求后置）"
+  ],
+  "legacy_inventory": [
+    {
+      "path": "checkpoints/decoder/dec_e0040.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder/dec_e0050.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder/decoder_best.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder/decoder_final.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_freex/dec_e0050.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_freex/dec_e0060.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_freex/decoder_best.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_freex/decoder_final.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_freex_r1_global/dec_e0060.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_freex_r1_global/dec_e0070.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_freex_r1_global/decoder_best.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_freex_r1_global/decoder_final.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_r1_global/dec_e0050.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_r1_global/dec_e0060.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_r1_global/decoder_best.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/decoder_r1_global/decoder_final.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/dit/dit_best.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/dit/wave_finetuned.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/dit_round1_frozen/dit_best.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/transcriber/transcriber_best.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/transcriber/transcriber_final.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/transcriber/tsc_e0040_s0000640.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/transcriber/tsc_e0060_s0000960.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/transcriber_r1_unweighted/transcriber_best.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/transcriber_r1_unweighted/transcriber_final.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/transcriber_r1_unweighted/tsc_e0040_s0000640.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/transcriber_r1_unweighted/tsc_e0060_s0000960.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/vae/vae_best.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/vae/vae_e0590_s0019470.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/vae/vae_e0600_s0019800.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/vae/vae_final.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/wave/wave_best.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/wave/wave_e0190_s0006270.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/wave/wave_e0200_s0006600.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    },
+    {
+      "path": "checkpoints/wave/wave_final.pt",
+      "status": "legacy_asset_not_a_new_product_version",
+      "provenance": "参见已有源码/历史评测；本次未根据文件名或mtime推断训练来源"
+    }
+  ],
+  "scope_notes": [
+    "版本号为本次追溯登记，未重命名或覆盖历史权重。",
+    "训练完成不等于质量通过；未通过的输出指标保留partial scope。",
+    "epoch/step不能跨AR与diffusion直接当作等计算预算。",
+    "硬候选推理解码、连续条件输入、真实历史监督和生成时采样为不同维度。",
+    "legacy_inventory中旧R1/R2等资产保留待核定谱系，不冒充已确认版本。"
+  ]
+}
