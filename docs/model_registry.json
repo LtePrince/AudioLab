@@ -892,7 +892,7 @@
       ],
       "status": "running",
       "question": "保持结构/损失/采样，完成300轮后按下降趋势续到500轮，观察拟合与自由生成",
-      "result": "截至400轮，A/S的Eltaw/seed42均尾部失败，局部F1=0.65738/0.63082、网格0.57917/0.58518；12次自然曲生成仅2次EOS。380轮A的较好结果未稳定复现，独立快照已保留。训练帧定位约99.3%，继续原配方到500轮。",
+      "result": "截至420轮，A/Eltaw/seed42自然结束，F1=0.78825、网格0.60221，首末起点接近参考；S同曲尾部失败，局部F1=0.76085、网格0.57392。12次自然曲生成仅2次EOS；训练帧定位约99.4%，继续原配方到500轮。380轮A的较高分结果已留档。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
@@ -916,7 +916,8 @@
             "out/ar_saturation_20261023/continued500/audio/model_e0340.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0360.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0380.pt",
-            "out/ar_saturation_20261023/continued500/audio/model_e0400.pt"
+            "out/ar_saturation_20261023/continued500/audio/model_e0400.pt",
+            "out/ar_saturation_20261023/continued500/audio/model_e0420.pt"
           ],
           "training": {
             "songs": 300,
@@ -946,14 +947,14 @@
             ]
           },
           "snapshot": {
-            "recorded_epoch": 401,
-            "recorded_steps": 120300,
-            "latest_completed_evaluation": 400,
-            "frame_accuracy": 0.9931162102146558,
-            "layout_ce": 1.0359548294163883,
+            "recorded_epoch": 421,
+            "recorded_steps": 126300,
+            "latest_completed_evaluation": 420,
+            "frame_accuracy": 0.9937934863064397,
+            "layout_ce": 1.0201045970681983,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T16:27:54.816030+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0400"
+            "recorded_at_utc": "2026-10-23T17:03:35.860010+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0420"
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -1072,6 +1073,16 @@
               "sha256": "3e830a8778ae7cdb2e517c73d91cd34f4867115b63bb99698abbb34efbc3e964",
               "source_checkpoint_sha256": "3f2e21eb5b67243894a2c858e81050b0352d636ac989129499cf069e149d2136",
               "recorded_utc": "2026-10-23T16:23:49.933951+00:00"
+            },
+            {
+              "variant": "audio",
+              "epoch": 420,
+              "steps": 126000,
+              "path": "out/ar_saturation_20261023/continued500/audio/model_e0420.pt",
+              "bytes": 26661393,
+              "sha256": "98bd592963bfcc8f271f26ca8466212165dce837374e48f1076bd1b608764119",
+              "source_checkpoint_sha256": "94c92a01565e496cb2d624e720f593bf4467075cfda82dd4be58468e4a51d8e9",
+              "recorded_utc": "2026-10-23T16:59:23.814000+00:00"
             }
           ],
           "previous_evaluation_roots": [
@@ -1099,7 +1110,8 @@
             "out/ar_saturation_20261023/continued500/soft/model_e0340.pt",
             "out/ar_saturation_20261023/continued500/soft/model_e0360.pt",
             "out/ar_saturation_20261023/continued500/soft/model_e0380.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0400.pt"
+            "out/ar_saturation_20261023/continued500/soft/model_e0400.pt",
+            "out/ar_saturation_20261023/continued500/soft/model_e0420.pt"
           ],
           "training": {
             "songs": 300,
@@ -1129,14 +1141,14 @@
             ]
           },
           "snapshot": {
-            "recorded_epoch": 403,
-            "recorded_steps": 120900,
-            "latest_completed_evaluation": 400,
-            "frame_accuracy": 0.9931421169504071,
-            "layout_ce": 1.0338617103225174,
+            "recorded_epoch": 423,
+            "recorded_steps": 126900,
+            "latest_completed_evaluation": 420,
+            "frame_accuracy": 0.9936935603256847,
+            "layout_ce": 1.018624777393618,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T16:27:54.816030+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0400"
+            "recorded_at_utc": "2026-10-23T17:03:35.860010+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0420"
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -1255,6 +1267,16 @@
               "sha256": "ea3dd3f1eb0d67362fe7182648bd0482a6dc2cbd6238b705cb0eb2510d95f0f4",
               "source_checkpoint_sha256": "de5a46c54ace82687e788ddd7be22aa4530dec3ade485d6551ef0e22848d7c4f",
               "recorded_utc": "2026-10-23T16:21:01.765095+00:00"
+            },
+            {
+              "variant": "soft",
+              "epoch": 420,
+              "steps": 126000,
+              "path": "out/ar_saturation_20261023/continued500/soft/model_e0420.pt",
+              "bytes": 26661393,
+              "sha256": "54e8002b465ea220620e1d96562b7b2016f6a0d1fc3e1e829aec96f92b90346c",
+              "source_checkpoint_sha256": "f30ab9e2e483e7100a8b85c7ce2e05d0051f327643f47def943f95f9b8904011",
+              "recorded_utc": "2026-10-23T16:56:35.736618+00:00"
             }
           ],
           "previous_evaluation_roots": [
@@ -1280,7 +1302,7 @@
         "original_training_target": 300,
         "current_training_target": 500
       },
-      "updated_at_utc": "2026-10-23T16:27:54.816030+00:00",
+      "updated_at_utc": "2026-10-23T17:03:35.860010+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
@@ -1357,7 +1379,9 @@
         ],
         "history_input_clarification": "One fused token/time/28D-summary input per chart-token step; key/time history are diagnostic field interventions, not independent model states.",
         "manual_history_ablation": "Proposed, not executed: fully train matched token/time/tempo inputs with vs without 28D handcrafted summaries. Inference-only zeroing measures dependence, not retrained capability; current E14 unchanged.",
-        "sequence_level_training": "Proposed, not executed: distinguish existing whole-sequence teacher-forced loss from MTP, sampled-rollout sequence objectives (MRT/MIXER), and block diffusion. No teacher distillation; mixed discrete/continuous gradient paths and multi-criteria evaluation must be specified; E14 unchanged."
+        "sequence_level_training": "Proposed, not executed: distinguish existing whole-sequence teacher-forced loss from MTP, sampled-rollout sequence objectives (MRT/MIXER), and block diffusion. No teacher distillation; mixed discrete/continuous gradient paths and multi-criteria evaluation must be specified; E14 unchanged.",
+        "evidence_priority": "Prioritize modern Transformer/LLM experiments and implementations; older RNN/optimization work is mechanism background, not a demonstrated fix for this model.",
+        "optimization_caveat": "No local-minimum diagnosis established; declining teacher-forced loss and fluctuating rollout metrics do not identify the cause. No optimizer, LR or architecture change in E14."
       }
     },
     {
