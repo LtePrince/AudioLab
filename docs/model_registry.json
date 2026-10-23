@@ -892,7 +892,7 @@
       ],
       "status": "running",
       "question": "保持结构/损失/采样，继续到300轮观察拟合与自由生成",
-      "result": "截至260轮，A/Eltaw/seed42能触发EOS，F1=0.73916、网格加分0.57243，但末起点比参考早0.66s；S同曲失败，局部F1=0.63028、网格加分0.56743。12次自然曲生成仅1次触发EOS，仍不稳定；真实历史下两组三曲均已能判停。",
+      "result": "截至280轮，Eltaw/seed42局部F1为A=0.75388、S=0.69384，网格加分0.56913/0.60095；12次自然曲生成全部尾部失败，第260轮A的终止结果未稳定复现。训练帧定位约98.83%，三音和跨窗口仍未通过。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
@@ -909,7 +909,8 @@
             "out/ar_saturation_20261023/audio/model_e0100.pt",
             "out/ar_saturation_20261023/audio/model_e0220.pt",
             "out/ar_saturation_20261023/audio/model_e0240.pt",
-            "out/ar_saturation_20261023/audio/model_e0260.pt"
+            "out/ar_saturation_20261023/audio/model_e0260.pt",
+            "out/ar_saturation_20261023/audio/model_e0280.pt"
           ],
           "training": {
             "songs": 300,
@@ -920,13 +921,13 @@
             "code_commit": "37a3650"
           },
           "snapshot": {
-            "recorded_epoch": 263,
-            "recorded_steps": 78900,
-            "latest_completed_evaluation": 260,
-            "frame_accuracy": 0.9866987416728349,
-            "layout_ce": 1.1294967069940522,
+            "recorded_epoch": 283,
+            "recorded_steps": 84900,
+            "latest_completed_evaluation": 280,
+            "frame_accuracy": 0.9884937083641747,
+            "layout_ce": 1.1182025573770784,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T12:15:15.291410+00:00"
+            "recorded_at_utc": "2026-10-23T12:50:51.673902+00:00"
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -974,6 +975,16 @@
               "sha256": "a35b5ffcb9e347d24654bf9c29f81c8c048e9af5b20d2961867dfcf0f1c8d6af",
               "source_checkpoint_sha256": "44fd773ebbdfbc19110800074e0510ab918cde4a2d957b1ba25f45510a1fb8c9",
               "recorded_utc": "2026-10-23T12:07:51.477484+00:00"
+            },
+            {
+              "variant": "audio",
+              "epoch": 280,
+              "steps": 84000,
+              "path": "out/ar_saturation_20261023/audio/model_e0280.pt",
+              "bytes": 26625873,
+              "sha256": "1664dcfabaefb592646ce2a5bae95eea567882301726f8a525864599a1d3262e",
+              "source_checkpoint_sha256": "49e6f02615da68573ca8a3c389f8dbaf57148e0c3ca641dc5645e17c2fb244e1",
+              "recorded_utc": "2026-10-23T12:44:22.462004+00:00"
             }
           ]
         },
@@ -991,7 +1002,8 @@
             "out/ar_saturation_20261023/soft/model_e0100.pt",
             "out/ar_saturation_20261023/soft/model_e0220.pt",
             "out/ar_saturation_20261023/soft/model_e0240.pt",
-            "out/ar_saturation_20261023/soft/model_e0260.pt"
+            "out/ar_saturation_20261023/soft/model_e0260.pt",
+            "out/ar_saturation_20261023/soft/model_e0280.pt"
           ],
           "training": {
             "songs": 300,
@@ -1002,13 +1014,13 @@
             "code_commit": "37a3650"
           },
           "snapshot": {
-            "recorded_epoch": 262,
-            "recorded_steps": 78600,
-            "latest_completed_evaluation": 260,
-            "frame_accuracy": 0.9865766099185789,
-            "layout_ce": 1.1300336751713194,
+            "recorded_epoch": 282,
+            "recorded_steps": 84600,
+            "latest_completed_evaluation": 280,
+            "frame_accuracy": 0.9884826054774242,
+            "layout_ce": 1.1181149642414834,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T12:15:15.291410+00:00"
+            "recorded_at_utc": "2026-10-23T12:50:51.673902+00:00"
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -1056,6 +1068,16 @@
               "sha256": "8eaa8823d23fa387f7f40a1c9310fb0b038c558ee352492a3808e157f49eb1f3",
               "source_checkpoint_sha256": "a32f82010921184f1709dc8ffe0f32dfac57250dac775e5a1a992c394862f9e1",
               "recorded_utc": "2026-10-23T12:10:55.203496+00:00"
+            },
+            {
+              "variant": "soft",
+              "epoch": 280,
+              "steps": 84000,
+              "path": "out/ar_saturation_20261023/soft/model_e0280.pt",
+              "bytes": 26625873,
+              "sha256": "f33982fd0b713cd9e752b20de41567fe5885996b2e5c4eedb86657c4ea240fee",
+              "source_checkpoint_sha256": "f2e78b0beb9bdb32b4b890be7e2f1717fda00fb659607295d8c5d7b0e0c08252",
+              "recorded_utc": "2026-10-23T12:45:28.920297+00:00"
             }
           ]
         }
@@ -1077,7 +1099,7 @@
         "reason": "No stable benefit from additional soft onset has been demonstrated; user may abandon this route.",
         "current_training_target_unchanged": 300
       },
-      "updated_at_utc": "2026-10-23T12:15:15.291410+00:00",
+      "updated_at_utc": "2026-10-23T12:50:51.673902+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
