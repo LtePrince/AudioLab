@@ -892,7 +892,7 @@
       ],
       "status": "running",
       "question": "保持结构/损失/采样，继续到300轮观察拟合与自由生成",
-      "result": "截至160轮训练定位继续改善；整谱仍不稳定，尚未收敛，未作为产品发布",
+      "result": "截至180轮训练帧定位约97%；三曲两种解码共12次全部尾部失败。Eltaw/seed42局部F1为A=0.56642、S=0.68774，均较160轮下降；额外soft起音仍未形成稳定成谱优势。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
@@ -917,13 +917,13 @@
             "code_commit": "37a3650"
           },
           "snapshot": {
-            "recorded_epoch": 177,
-            "recorded_steps": 53100,
-            "latest_completed_evaluation": 160,
-            "frame_accuracy": 0.9704626202812732,
-            "layout_ce": 1.172730460800084,
+            "recorded_epoch": 183,
+            "recorded_steps": 54900,
+            "latest_completed_evaluation": 180,
+            "frame_accuracy": 0.9716950407105848,
+            "layout_ce": 1.170682599281822,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T09:09:27.110480+00:00"
+            "recorded_at_utc": "2026-10-23T09:21:43.411236+00:00"
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -955,13 +955,13 @@
             "code_commit": "37a3650"
           },
           "snapshot": {
-            "recorded_epoch": 175,
-            "recorded_steps": 52500,
-            "latest_completed_evaluation": 160,
-            "frame_accuracy": 0.9691968911917098,
-            "layout_ce": 1.1732522791912323,
+            "recorded_epoch": 181,
+            "recorded_steps": 54300,
+            "latest_completed_evaluation": 180,
+            "frame_accuracy": 0.9711658031088083,
+            "layout_ce": 1.170466617558154,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T09:09:27.110480+00:00"
+            "recorded_at_utc": "2026-10-23T09:21:43.411236+00:00"
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -988,7 +988,8 @@
         "soft_route": "candidate_for_retirement_after_current_comparison",
         "reason": "No stable benefit from additional soft onset has been demonstrated; user may abandon this route.",
         "current_training_target_unchanged": 300
-      }
+      },
+      "updated_at_utc": "2026-10-23T09:21:43.411236+00:00"
     },
     {
       "id": "E15",
