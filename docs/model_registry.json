@@ -902,7 +902,7 @@
           "checkpoint": "out/ar_saturation_20261023/audio/model_latest.pt",
           "parent_run": "E13-A",
           "progress_file": "out/ar_saturation_20261023/audio/training.json",
-          "log_file": "out/ar_saturation_20261023/audio_resume100.log",
+          "log_file": "out/ar_saturation_20261023/audio_resume185.log",
           "evaluation_root": "out/ar_saturation_20261023/audio",
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/audio/model_e0040.pt",
@@ -931,7 +931,16 @@
           "history": true,
           "acoustic_frontend": "frozen cache; no new frontend training",
           "schema": "audiolab-absolute-time-group-ar-v1",
-          "parameters": 6626691
+          "parameters": 6626691,
+          "previous_logs": [
+            "out/ar_saturation_20261023/audio_resume100.log"
+          ],
+          "recovery_checkpoint": {
+            "epoch": 185,
+            "steps": 55500,
+            "sha256": "11a836b4bf9ae2758df1cfa58601497296f71cd8ce3f7dde08717fd7f14fdf34",
+            "sources_unchanged": true
+          }
         },
         {
           "id": "E14-S",
@@ -940,7 +949,7 @@
           "checkpoint": "out/ar_saturation_20261023/soft/model_latest.pt",
           "parent_run": "E13-S",
           "progress_file": "out/ar_saturation_20261023/soft/training.json",
-          "log_file": "out/ar_saturation_20261023/soft_resume100.log",
+          "log_file": "out/ar_saturation_20261023/soft_resume183.log",
           "evaluation_root": "out/ar_saturation_20261023/soft",
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/soft/model_e0040.pt",
@@ -969,7 +978,16 @@
           "history": true,
           "acoustic_frontend": "frozen cache; no new frontend training",
           "schema": "audiolab-absolute-time-group-ar-v1",
-          "parameters": 6626691
+          "parameters": 6626691,
+          "previous_logs": [
+            "out/ar_saturation_20261023/soft_resume100.log"
+          ],
+          "recovery_checkpoint": {
+            "epoch": 183,
+            "steps": 54900,
+            "sha256": "c47187ec8e43f0e02f4983b3c68cf016915d359459607b089c025f7afa6dd7b1",
+            "sources_unchanged": true
+          }
         }
       ],
       "sampling_changes": "deferred_by_user",
@@ -989,7 +1007,23 @@
         "reason": "No stable benefit from additional soft onset has been demonstrated; user may abandon this route.",
         "current_training_target_unchanged": 300
       },
-      "updated_at_utc": "2026-10-23T09:21:43.411236+00:00"
+      "updated_at_utc": "2026-10-23T09:21:43.411236+00:00",
+      "interruption_recovery": {
+        "observed_utc": "2026-10-23T09:52:35.949892+00:00",
+        "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
+        "cause": "unknown; no Python error or normal completion in old logs; processes absent",
+        "audit_path": "out/ar_saturation_20261023/resume_audit_185_183.json",
+        "recipe_changed": false,
+        "verified_training_advancing": true
+      },
+      "deferred_hypotheses": [
+        {
+          "source": "user",
+          "hypothesis": "Free-running nontermination may reflect excessive dependence on context; consider strengthening chart-related training weight.",
+          "status": "unverified; defer any changes until after current run",
+          "specific_loss_or_condition_change": "not decided"
+        }
+      ]
     },
     {
       "id": "E15",
