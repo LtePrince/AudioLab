@@ -892,7 +892,7 @@
       ],
       "status": "running",
       "question": "保持结构/损失/采样，完成300轮后按下降趋势续到500轮，观察拟合与自由生成",
-      "result": "截至340轮，Eltaw/seed42的A尾部失败（局部F1=0.82138、网格0.58636）；S触发EOS（F1=0.78837、网格0.62915）但末键比参考早8.23秒。12次自然曲生成仅3次EOS，均提前于参考尾键。训练帧定位约99.1%，三音额外出音和跨窗口仍未解决。两组继续原配方到500轮。",
+      "result": "截至360轮，Eltaw/seed42的A尾部失败（局部F1=0.70730、网格0.55479）；S触发EOS（F1=0.83735、网格0.61769）但末键比参考早6.68秒。12次自然曲生成仅2次EOS，尾段覆盖仍需检查。训练帧定位约99.2%，三音额外出音和跨窗口仍未解决；继续原配方到500轮。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
@@ -913,7 +913,8 @@
             "out/ar_saturation_20261023/audio/model_e0280.pt",
             "out/ar_saturation_20261023/audio/model_e0300.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0320.pt",
-            "out/ar_saturation_20261023/continued500/audio/model_e0340.pt"
+            "out/ar_saturation_20261023/continued500/audio/model_e0340.pt",
+            "out/ar_saturation_20261023/continued500/audio/model_e0360.pt"
           ],
           "training": {
             "songs": 300,
@@ -943,14 +944,14 @@
             ]
           },
           "snapshot": {
-            "recorded_epoch": 341,
-            "recorded_steps": 102300,
-            "latest_completed_evaluation": 340,
-            "frame_accuracy": 0.9911658031088083,
-            "layout_ce": 1.0810614338283555,
+            "recorded_epoch": 361,
+            "recorded_steps": 108300,
+            "latest_completed_evaluation": 360,
+            "frame_accuracy": 0.9922686898593635,
+            "layout_ce": 1.0661725267454831,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T14:40:35.583539+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0340"
+            "recorded_at_utc": "2026-10-23T15:15:47.227231+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0360"
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -1039,6 +1040,16 @@
               "sha256": "58554e6989caf342a9b0fe795be2aee436ec22c50fe2f8142c3c0898cffe56b5",
               "source_checkpoint_sha256": "e04b02706049eeaf9e5846d32cb49505c733e5ddfca961b447220fb0a47e8052",
               "recorded_utc": "2026-10-23T14:36:01.414906+00:00"
+            },
+            {
+              "variant": "audio",
+              "epoch": 360,
+              "steps": 108000,
+              "path": "out/ar_saturation_20261023/continued500/audio/model_e0360.pt",
+              "bytes": 26646417,
+              "sha256": "65581c6606d4d8c6c39c73311f83da17dd497626d188dfc93d3365068adfdc4f",
+              "source_checkpoint_sha256": "cbcafa9daaebba1271a8d3711ef6bedba205083a72f2a75578a39d659587acf5",
+              "recorded_utc": "2026-10-23T15:12:21.716709+00:00"
             }
           ],
           "previous_evaluation_roots": [
@@ -1063,7 +1074,8 @@
             "out/ar_saturation_20261023/soft/model_e0280.pt",
             "out/ar_saturation_20261023/soft/model_e0300.pt",
             "out/ar_saturation_20261023/continued500/soft/model_e0320.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0340.pt"
+            "out/ar_saturation_20261023/continued500/soft/model_e0340.pt",
+            "out/ar_saturation_20261023/continued500/soft/model_e0360.pt"
           ],
           "training": {
             "songs": 300,
@@ -1093,14 +1105,14 @@
             ]
           },
           "snapshot": {
-            "recorded_epoch": 342,
-            "recorded_steps": 102600,
-            "latest_completed_evaluation": 340,
-            "frame_accuracy": 0.9916395262768319,
-            "layout_ce": 1.0800443990663826,
+            "recorded_epoch": 362,
+            "recorded_steps": 108600,
+            "latest_completed_evaluation": 360,
+            "frame_accuracy": 0.9921613619541081,
+            "layout_ce": 1.0649646522623726,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T14:40:35.583539+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0340"
+            "recorded_at_utc": "2026-10-23T15:15:47.227231+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0360"
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -1189,6 +1201,16 @@
               "sha256": "82b3c6ae0c34477ba07e3665ac646281f63543be9f57146b06937c6ddbb1b768",
               "source_checkpoint_sha256": "a41d04ddf46a937fb1827ce8b2d57bee087045bbf693331bd1552c90ad508d3a",
               "recorded_utc": "2026-10-23T14:35:03.568943+00:00"
+            },
+            {
+              "variant": "soft",
+              "epoch": 360,
+              "steps": 108000,
+              "path": "out/ar_saturation_20261023/continued500/soft/model_e0360.pt",
+              "bytes": 26646417,
+              "sha256": "e4beef449715c54f6e8c980675936f6825ba08531c716e15e6d26d0e83ee0d3d",
+              "source_checkpoint_sha256": "9c76f0689675ebfa89808977c7a3d5ce1422ce957a36854088d54cbf15a88739",
+              "recorded_utc": "2026-10-23T15:10:28.624814+00:00"
             }
           ],
           "previous_evaluation_roots": [
@@ -1214,7 +1236,7 @@
         "original_training_target": 300,
         "current_training_target": 500
       },
-      "updated_at_utc": "2026-10-23T14:40:35.583539+00:00",
+      "updated_at_utc": "2026-10-23T15:15:47.227231+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
@@ -1285,7 +1307,12 @@
           "multi-token prediction"
         ],
         "evidence": "docs/fixed_length_attribution_plan.md",
-        "current_run_unchanged": "E14: independent A/S continuation to epoch 500"
+        "current_run_unchanged": "E14: independent A/S continuation to epoch 500",
+        "excluded_by_user": [
+          "GKD/distillation: no reliable chart-generation teacher; retain citation only"
+        ],
+        "history_input_clarification": "One fused token/time/28D-summary input per chart-token step; key/time history are diagnostic field interventions, not independent model states.",
+        "manual_history_ablation": "Proposed, not executed: fully train matched token/time/tempo inputs with vs without 28D handcrafted summaries. Inference-only zeroing measures dependence, not retrained capability; current E14 unchanged."
       }
     },
     {
