@@ -892,7 +892,7 @@
       ],
       "status": "running",
       "question": "保持结构/损失/采样，完成300轮后按下降趋势续到500轮，观察拟合与自由生成",
-      "result": "截至420轮，A/Eltaw/seed42自然结束，F1=0.78825、网格0.60221，首末起点接近参考；S同曲尾部失败，局部F1=0.76085、网格0.57392。12次自然曲生成仅2次EOS；训练帧定位约99.4%，继续原配方到500轮。380轮A的较高分结果已留档。",
+      "result": "截至440轮，A/S的Eltaw/seed42均尾部失败，局部F1=0.67860/0.71804、网格0.48177/0.62717。12次自然曲生成仅2次EOS，末键均提前约5.4秒；训练帧定位约99.4%，继续原配方到500轮。380轮A的较高分结果已留档。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
@@ -917,7 +917,8 @@
             "out/ar_saturation_20261023/continued500/audio/model_e0360.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0380.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0400.pt",
-            "out/ar_saturation_20261023/continued500/audio/model_e0420.pt"
+            "out/ar_saturation_20261023/continued500/audio/model_e0420.pt",
+            "out/ar_saturation_20261023/continued500/audio/model_e0440.pt"
           ],
           "training": {
             "songs": 300,
@@ -947,14 +948,14 @@
             ]
           },
           "snapshot": {
-            "recorded_epoch": 421,
-            "recorded_steps": 126300,
-            "latest_completed_evaluation": 420,
-            "frame_accuracy": 0.9937934863064397,
-            "layout_ce": 1.0201045970681983,
+            "recorded_epoch": 440,
+            "recorded_steps": 132000,
+            "latest_completed_evaluation": 440,
+            "frame_accuracy": 0.9938749074759438,
+            "layout_ce": 1.0035600980959414,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T17:03:35.860010+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0420"
+            "recorded_at_utc": "2026-10-23T17:39:09.838287+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0440"
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -1083,6 +1084,16 @@
               "sha256": "98bd592963bfcc8f271f26ca8466212165dce837374e48f1076bd1b608764119",
               "source_checkpoint_sha256": "94c92a01565e496cb2d624e720f593bf4467075cfda82dd4be58468e4a51d8e9",
               "recorded_utc": "2026-10-23T16:59:23.814000+00:00"
+            },
+            {
+              "variant": "audio",
+              "epoch": 440,
+              "steps": 132000,
+              "path": "out/ar_saturation_20261023/continued500/audio/model_e0440.pt",
+              "bytes": 26666385,
+              "sha256": "450195a5b1839d4a6414c56be623b184cf36e7f8b2efbefb68f07cdfd72c780c",
+              "source_checkpoint_sha256": "a4cdb30b63c7c7aa91e1ecbbbec53a19e21a8b1cd5013ead3ab08e496258d9ae",
+              "recorded_utc": "2026-10-23T17:35:03.702546+00:00"
             }
           ],
           "previous_evaluation_roots": [
@@ -1111,7 +1122,8 @@
             "out/ar_saturation_20261023/continued500/soft/model_e0360.pt",
             "out/ar_saturation_20261023/continued500/soft/model_e0380.pt",
             "out/ar_saturation_20261023/continued500/soft/model_e0400.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0420.pt"
+            "out/ar_saturation_20261023/continued500/soft/model_e0420.pt",
+            "out/ar_saturation_20261023/continued500/soft/model_e0440.pt"
           ],
           "training": {
             "songs": 300,
@@ -1141,14 +1153,14 @@
             ]
           },
           "snapshot": {
-            "recorded_epoch": 423,
-            "recorded_steps": 126900,
-            "latest_completed_evaluation": 420,
-            "frame_accuracy": 0.9936935603256847,
-            "layout_ce": 1.018624777393618,
+            "recorded_epoch": 443,
+            "recorded_steps": 132900,
+            "latest_completed_evaluation": 440,
+            "frame_accuracy": 0.9942450037009622,
+            "layout_ce": 1.0000050468985318,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T17:03:35.860010+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0420"
+            "recorded_at_utc": "2026-10-23T17:39:09.838287+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0440"
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -1277,6 +1289,16 @@
               "sha256": "54e8002b465ea220620e1d96562b7b2016f6a0d1fc3e1e829aec96f92b90346c",
               "source_checkpoint_sha256": "f30ab9e2e483e7100a8b85c7ce2e05d0051f327643f47def943f95f9b8904011",
               "recorded_utc": "2026-10-23T16:56:35.736618+00:00"
+            },
+            {
+              "variant": "soft",
+              "epoch": 440,
+              "steps": 132000,
+              "path": "out/ar_saturation_20261023/continued500/soft/model_e0440.pt",
+              "bytes": 26666385,
+              "sha256": "6af53ad80693efd9ade314af1129e3be27cce6ad8552c5fc7dc93b69b6dc6b3f",
+              "source_checkpoint_sha256": "266b1047c278c93cdd0eee7f5e10e0984e66e587576b27a017b2e2aac12cf81d",
+              "recorded_utc": "2026-10-23T17:31:20.356754+00:00"
             }
           ],
           "previous_evaluation_roots": [
@@ -1302,7 +1324,7 @@
         "original_training_target": 300,
         "current_training_target": 500
       },
-      "updated_at_utc": "2026-10-23T17:03:35.860010+00:00",
+      "updated_at_utc": "2026-10-23T17:39:09.838287+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
