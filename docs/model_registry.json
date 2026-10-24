@@ -892,7 +892,7 @@
       ],
       "status": "running",
       "question": "保持结构/损失/采样，500轮后按用户授权续到700轮，继续观察拟合与自由生成",
-      "result": "原配方续到700轮，最新完整评测540轮：Eltaw/seed42的A/S均尾部失败，局部F1=0.80508/0.78755、网格0.54804/0.56750；自然曲EOS为1/6、0/6，唯一EOS末键提前6.04秒。Eltaw贪心仍能输出部分非Tap，但自主生成不稳定，历史关联假设尚未做因果对照。两组520/540轮快照已保存核验。",
+      "result": "原配方续到700轮，最新完整评测560轮：S/Eltaw贪心自然结束，F1=0.85569、网格0.60419，末起点早9.58ms，Tap714/Drag164/Flick5。统一seed42下A/S的Eltaw F1为0.75417/0.78370、网格0.55014/0.60271，A失败、S结束。自然曲EOS仅1/6、2/6，仍不稳定，尚未证明历史注意力不足的因果归因；两组520–560轮快照已核验保留。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
@@ -922,7 +922,8 @@
             "out/ar_saturation_20261023/continued500/audio/model_e0460.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0500.pt",
             "out/ar_saturation_20261023/continued700/audio/model_e0520.pt",
-            "out/ar_saturation_20261023/continued700/audio/model_e0540.pt"
+            "out/ar_saturation_20261023/continued700/audio/model_e0540.pt",
+            "out/ar_saturation_20261023/continued700/audio/model_e0560.pt"
           ],
           "training": {
             "songs": 300,
@@ -966,14 +967,14 @@
             "status": "running"
           },
           "snapshot": {
-            "recorded_epoch": 541,
-            "recorded_steps": 162300,
-            "latest_completed_evaluation": 540,
-            "frame_accuracy": 0.9952220577350112,
-            "layout_ce": 0.900853066182349,
+            "recorded_epoch": 561,
+            "recorded_steps": 168300,
+            "latest_completed_evaluation": 560,
+            "frame_accuracy": 0.9953960029607698,
+            "layout_ce": 0.8766834244109044,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-24T01:39:55.719356+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued700/audio/evaluation-e0540"
+            "recorded_at_utc": "2026-10-24T02:15:51.701403+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued700/audio/evaluation-e0560"
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -1153,6 +1154,16 @@
               "sha256": "e3a2b3076212f26021650d23d80b74ae15f0c59f901c7efdb3a8646f121d0ec3",
               "source_checkpoint_sha256": "7ae15aa4187dc1078c5c3650707ff8d368862e8ce3a90480ac054a091063d4df",
               "recorded_utc": "2026-10-24T01:35:24.916507+00:00"
+            },
+            {
+              "variant": "audio",
+              "epoch": 560,
+              "steps": 168000,
+              "path": "out/ar_saturation_20261023/continued700/audio/model_e0560.pt",
+              "bytes": 26697169,
+              "sha256": "b5e26d5c313ae7bb5ada55ff3041b21caecc40a8d60d69206bd7bddaca85dd72",
+              "source_checkpoint_sha256": "3254d347a54bd4681c5367e777766fc79e02a892d4d93c19e653fb2f8bb1f107",
+              "recorded_utc": "2026-10-24T02:10:13.267947+00:00"
             }
           ],
           "previous_evaluation_roots": [
@@ -1214,7 +1225,8 @@
             "out/ar_saturation_20261023/continued500/soft/model_e0460.pt",
             "out/ar_saturation_20261023/continued500/soft/model_e0500.pt",
             "out/ar_saturation_20261023/continued700/soft/model_e0520.pt",
-            "out/ar_saturation_20261023/continued700/soft/model_e0540.pt"
+            "out/ar_saturation_20261023/continued700/soft/model_e0540.pt",
+            "out/ar_saturation_20261023/continued700/soft/model_e0560.pt"
           ],
           "training": {
             "songs": 300,
@@ -1258,14 +1270,14 @@
             "status": "running"
           },
           "snapshot": {
-            "recorded_epoch": 540,
-            "recorded_steps": 162000,
-            "latest_completed_evaluation": 540,
-            "frame_accuracy": 0.9952220577350112,
-            "layout_ce": 0.9028491086480388,
+            "recorded_epoch": 561,
+            "recorded_steps": 168300,
+            "latest_completed_evaluation": 560,
+            "frame_accuracy": 0.9955588452997779,
+            "layout_ce": 0.8766924490665535,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-24T01:39:55.719356+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued700/soft/evaluation-e0540"
+            "recorded_at_utc": "2026-10-24T02:15:51.701403+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued700/soft/evaluation-e0560"
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -1445,6 +1457,16 @@
               "sha256": "a269022915e23cd276d12498cc99cc004fee7cb25f05a10383b71953d4f42069",
               "source_checkpoint_sha256": "c888928b499abcd1dc16e9f238a721ef6887f4dccb41b42f8322ec2a0cdffd9f",
               "recorded_utc": "2026-10-24T01:36:25.573736+00:00"
+            },
+            {
+              "variant": "soft",
+              "epoch": 560,
+              "steps": 168000,
+              "path": "out/ar_saturation_20261023/continued700/soft/model_e0560.pt",
+              "bytes": 26697169,
+              "sha256": "d00bdf29727e354f2c2dc4b5a9c9fff444c20e71cbcd44629deaa435fd51a006",
+              "source_checkpoint_sha256": "c5f4a2c6305acbcbf5d2656614088ac345878f25c9069a058d26b2fee35ee983",
+              "recorded_utc": "2026-10-24T02:11:43.967971+00:00"
             }
           ],
           "previous_evaluation_roots": [
@@ -1498,7 +1520,7 @@
         "original_training_target": 300,
         "current_training_target": 700
       },
-      "updated_at_utc": "2026-10-24T01:39:55.719356+00:00",
+      "updated_at_utc": "2026-10-24T02:15:51.701403+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
@@ -1563,7 +1585,23 @@
         "source_code_changed": false,
         "architecture_loss_sampling_changed": false,
         "checkpoint_retention": "independent CPU watcher; every evaluation epoch; about 0.51 GiB for 20 compact snapshots"
-      }
+      },
+      "noteworthy_outputs": [
+        {
+          "run": "E14-S",
+          "epoch": 560,
+          "decoding": "greedy",
+          "case": "Eltaw_IN",
+          "split": "seen_training",
+          "f1_50ms": 0.8556851311953353,
+          "grid_bonus": 0.6041897331346452,
+          "last_onset_minus_reference_seconds": -0.009577788939139964,
+          "status": "completed",
+          "snapshot": "out/ar_saturation_20261023/continued700/soft/model_e0560.pt",
+          "evidence": "out/ar_saturation_20261023/continued700/soft/evaluation-e0560/inputs.json",
+          "scope": "single seen-song output; not a quality or stability pass"
+        }
+      ]
     },
     {
       "id": "E15",
