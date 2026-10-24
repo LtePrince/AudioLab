@@ -890,9 +890,9 @@
       "models": [
         "AL-AR4K@0.5.1"
       ],
-      "status": "running",
+      "status": "completed",
       "question": "保持结构/损失/采样，完成300轮后按下降趋势续到500轮，观察拟合与自由生成",
-      "result": "截至460轮，A/S的Eltaw/seed42均尾部失败，局部F1=0.74085/0.73285、网格0.59236/0.58471。12次自然曲生成仅A/ABYSS贪心触发EOS，末键比参考早0.193秒；训练帧定位约99.4%，继续原配方到500轮。380轮A的较高分结果已留档。",
+      "result": "A/S均完成500轮、150000步，正常退出，质量未通过。S/Eltaw/seed42自然结束，F1=0.84983、网格0.60523，末起点比参考晚0.318秒；A同曲尾部失败，局部F1=0.75765、网格0.56014。12次自然曲生成仅2次EOS。最后20轮损失仍下降，不能宣称达到架构上限；三音额外出音和跨窗口失败仍在。保留A/e0380作对照，下一轮方案未执行。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
@@ -919,7 +919,8 @@
             "out/ar_saturation_20261023/continued500/audio/model_e0400.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0420.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0440.pt",
-            "out/ar_saturation_20261023/continued500/audio/model_e0460.pt"
+            "out/ar_saturation_20261023/continued500/audio/model_e0460.pt",
+            "out/ar_saturation_20261023/continued500/audio/model_e0500.pt"
           ],
           "training": {
             "songs": 300,
@@ -938,25 +939,30 @@
               {
                 "from_epoch": 300,
                 "target_epoch": 500,
-                "status": "running",
+                "status": "completed",
                 "output": "out/ar_saturation_20261023/continued500/audio",
                 "parent_checkpoint": "out/ar_saturation_20261023/audio/model_latest.pt",
                 "parent_sha256": "df8e32da135f453f730ee2bd11b80f5bb15610d1b82217d8bc3ee701e13e5e00",
                 "optimizer_and_rng_restored": true,
                 "learning_rate": 3e-05,
-                "launched_at_utc": "2026-10-23T13:26:59.171479+00:00"
+                "launched_at_utc": "2026-10-23T13:26:59.171479+00:00",
+                "finished_file_mtime_utc": "2026-10-23T19:24:52.401644+00:00",
+                "completion_verified_at_utc": "2026-10-24T00:11:55.918447+00:00"
               }
-            ]
+            ],
+            "status": "completed",
+            "completed_epoch": 500,
+            "completed_steps": 150000
           },
           "snapshot": {
-            "recorded_epoch": 460,
-            "recorded_steps": 138000,
-            "latest_completed_evaluation": 460,
-            "frame_accuracy": 0.9942820133234641,
-            "layout_ce": 0.98466956410879,
+            "recorded_epoch": 500,
+            "recorded_steps": 150000,
+            "latest_completed_evaluation": 500,
+            "frame_accuracy": 0.9947483345669874,
+            "layout_ce": 0.946036662801944,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T18:14:51.425446+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0460"
+            "recorded_at_utc": "2026-10-24T00:11:55.918447+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0500"
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -1105,11 +1111,48 @@
               "sha256": "fc30268355b3b87ad21b3ce4b1344580250f57a16e3925ec6a5f333472548798",
               "source_checkpoint_sha256": "319e19b1b6ffac1b6d2437ca1c30de224ef45e95b6304e43606263d1198f7ee2",
               "recorded_utc": "2026-10-23T18:11:26.752185+00:00"
+            },
+            {
+              "variant": "audio",
+              "epoch": 500,
+              "steps": 150000,
+              "path": "out/ar_saturation_20261023/continued500/audio/model_e0500.pt",
+              "bytes": 26681297,
+              "sha256": "c7bb8d3979f1fae9eacff97fe66f71d6092340e3d0f5729a421ccb118841ab31",
+              "source_checkpoint_sha256": "a62332a0420b3c400bd89fbe9a40f4dc416a86a9253ab585fdf6ab3d9a91c756",
+              "recorded_utc": "2026-10-24T00:08:57.905848+00:00"
             }
           ],
           "previous_evaluation_roots": [
             "out/ar_saturation_20261023/audio"
-          ]
+          ],
+          "status": "completed",
+          "quality_status": "not_passed",
+          "final_training_trend": {
+            "comparison": "epochs 481-500 vs 461-480 means",
+            "percent_change": {
+              "frame_ce": -3.5748066592988015,
+              "layout_ce": -2.0333732363383095,
+              "objective": -2.181451629013953
+            },
+            "convergence_established": false
+          },
+          "checkpoint_gaps": [
+            {
+              "epoch": 480,
+              "evaluation_retained": true,
+              "weights_retained": false,
+              "evaluation_checkpoint_sha256": "4b2cf3535881ffcf86b1e00778306bce1f7d5177017e2e459a72bb31af865f27",
+              "reason": "monitor resumed after rolling checkpoint had advanced to epoch 500; no epoch 480 weights retained"
+            }
+          ],
+          "completion_resources": {
+            "disk_free_gib": 14.907905578613281,
+            "ram_available_gib": 36.59949493408203,
+            "rss_gib": 2.184795379638672,
+            "gpu_peak_allocated_gib": 0.30823755264282227,
+            "gpu_peak_reserved_gib": 0.583984375
+          }
         },
         {
           "id": "E14-S",
@@ -1135,7 +1178,8 @@
             "out/ar_saturation_20261023/continued500/soft/model_e0400.pt",
             "out/ar_saturation_20261023/continued500/soft/model_e0420.pt",
             "out/ar_saturation_20261023/continued500/soft/model_e0440.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0460.pt"
+            "out/ar_saturation_20261023/continued500/soft/model_e0460.pt",
+            "out/ar_saturation_20261023/continued500/soft/model_e0500.pt"
           ],
           "training": {
             "songs": 300,
@@ -1154,25 +1198,30 @@
               {
                 "from_epoch": 300,
                 "target_epoch": 500,
-                "status": "running",
+                "status": "completed",
                 "output": "out/ar_saturation_20261023/continued500/soft",
                 "parent_checkpoint": "out/ar_saturation_20261023/soft/model_latest.pt",
                 "parent_sha256": "ea96c65b9cc29e708af29e5e44aab1f8d358e3d302cb63b67b8a8a0006f85e24",
                 "optimizer_and_rng_restored": true,
                 "learning_rate": 3e-05,
-                "launched_at_utc": "2026-10-23T13:27:00.594827+00:00"
+                "launched_at_utc": "2026-10-23T13:27:00.594827+00:00",
+                "finished_file_mtime_utc": "2026-10-23T19:19:10.794317+00:00",
+                "completion_verified_at_utc": "2026-10-24T00:11:55.918447+00:00"
               }
-            ]
+            ],
+            "status": "completed",
+            "completed_epoch": 500,
+            "completed_steps": 150000
           },
           "snapshot": {
-            "recorded_epoch": 463,
-            "recorded_steps": 138900,
-            "latest_completed_evaluation": 460,
-            "frame_accuracy": 0.9947853441894893,
-            "layout_ce": 0.9826010859476277,
+            "recorded_epoch": 500,
+            "recorded_steps": 150000,
+            "latest_completed_evaluation": 500,
+            "frame_accuracy": 0.9947076239822353,
+            "layout_ce": 0.9458881939613465,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-23T18:14:51.425446+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0460"
+            "recorded_at_utc": "2026-10-24T00:11:55.918447+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0500"
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -1321,11 +1370,48 @@
               "sha256": "8eda63025cfe7bf39c5b3d595662d296d074ab6430d2c59f313e674b273b90d5",
               "source_checkpoint_sha256": "1adaf66b5e4f3b6cb2795b104e9e465f1ce92dcfc06cef116e13d8ebc7cbb6ee",
               "recorded_utc": "2026-10-23T18:06:48.423776+00:00"
+            },
+            {
+              "variant": "soft",
+              "epoch": 500,
+              "steps": 150000,
+              "path": "out/ar_saturation_20261023/continued500/soft/model_e0500.pt",
+              "bytes": 26681297,
+              "sha256": "49943cdde5ebfcfe2bc0635856c652c7dac3e7468add1ee2019a6c91f8824a1e",
+              "source_checkpoint_sha256": "a6a9ed4aab219dbb15d15f20df5a71158c1a8c8381eb90135364c1ee2017c69d",
+              "recorded_utc": "2026-10-24T00:08:58.253303+00:00"
             }
           ],
           "previous_evaluation_roots": [
             "out/ar_saturation_20261023/soft"
-          ]
+          ],
+          "status": "completed",
+          "quality_status": "not_passed",
+          "final_training_trend": {
+            "comparison": "epochs 481-500 vs 461-480 means",
+            "percent_change": {
+              "frame_ce": -3.7195589858048383,
+              "layout_ce": -2.0044278357094436,
+              "objective": -2.158377163812031
+            },
+            "convergence_established": false
+          },
+          "checkpoint_gaps": [
+            {
+              "epoch": 480,
+              "evaluation_retained": true,
+              "weights_retained": false,
+              "evaluation_checkpoint_sha256": "09fbcad98185941458f288b6795fc4f26e3843c9ddbfe46f1d584b1e9f0b8b4f",
+              "reason": "monitor resumed after rolling checkpoint had advanced to epoch 500; no epoch 480 weights retained"
+            }
+          ],
+          "completion_resources": {
+            "disk_free_gib": 14.909439086914062,
+            "ram_available_gib": 35.03257369995117,
+            "rss_gib": 2.0920257568359375,
+            "gpu_peak_allocated_gib": 0.30823755264282227,
+            "gpu_peak_reserved_gib": 0.583984375
+          }
         }
       ],
       "sampling_changes": "deferred_by_user",
@@ -1346,7 +1432,7 @@
         "original_training_target": 300,
         "current_training_target": 500
       },
-      "updated_at_utc": "2026-10-23T18:14:51.425446+00:00",
+      "updated_at_utc": "2026-10-24T00:11:55.918447+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
@@ -1364,7 +1450,7 @@
         }
       ],
       "conditional_extension": {
-        "status": "running",
+        "status": "completed",
         "current_target_epoch": 500,
         "proposed_target_epoch": 500,
         "decision_rule": "At epoch 300 inspect the latest 20-40 epoch average frame/layout/objective trends. Continue unchanged if losses remain steadily decreasing; otherwise review before more training.",
@@ -1376,8 +1462,16 @@
         "launched_at_utc": "2026-10-23T13:27:01.595154+00:00",
         "audit_path": "out/ar_saturation_20261023/extension_500_decision.json",
         "decision": "both variants satisfied the declining-loss criterion; continue unchanged to 500",
-        "source_code_changed": false
-      }
+        "source_code_changed": false,
+        "completed_epoch": 500,
+        "completed_at_utc": "2026-10-23T19:24:52.401644+00:00",
+        "verified_at_utc": "2026-10-24T00:11:55.918447+00:00"
+      },
+      "quality_status": "not_passed",
+      "completed_at_utc": "2026-10-23T19:24:52.401644+00:00",
+      "completion_verified_at_utc": "2026-10-24T00:11:55.918447+00:00",
+      "completion_assessment": "out/ar_saturation_20261023/completion500_assessment.json",
+      "completion_scope": "500-epoch budget completed; declining loss does not establish convergence or architecture ceiling"
     },
     {
       "id": "E15",
@@ -1417,7 +1511,7 @@
           "multi-token prediction"
         ],
         "evidence": "docs/fixed_length_attribution_plan.md",
-        "current_run_unchanged": "E14: independent A/S continuation to epoch 500",
+        "current_run_unchanged": "E14 completed 500 epochs with independent A/S weights and unchanged recipe; proposed follow-up experiments remain unexecuted.",
         "excluded_by_user": [
           "GKD/distillation: no reliable chart-generation teacher; retain citation only"
         ],
