@@ -890,20 +890,20 @@
       "models": [
         "AL-AR4K@0.5.1"
       ],
-      "status": "completed",
+      "status": "running",
       "question": "保持结构/损失/采样，500轮后按用户授权续到700轮，继续观察拟合与自由生成",
-      "result": "两组完成700轮/210000步，训练进程正常退出，结构、损失和解码未变。Eltaw两种解码均尾部失败，seed42的A/S局部F1=0.76198/0.74926、网格=0.61335/0.55630；12次自然曲生成4次EOS，三音额外出音和跨窗口失败仍存在。最后20轮总目标下降3.87%/3.73%，自主生成未稳定改善。20份520–700轮快照均已核验；实验执行完成、质量未通过，未自动追加训练。",
+      "result": "已完成700轮；排布和总损失仍下降而自主生成不稳定。2026-10-24按用户授权恢复各自700轮完整断点，保持结构、数据、损失、学习率和采样设置，继续到1000轮；每20轮评测并保留独立权重，继续观察键型拟合、整曲结束和首尾覆盖。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
           "id": "E14-A",
           "model": "AL-AR4K@0.5.1",
           "variant": "audio",
-          "checkpoint": "out/ar_saturation_20261023/continued700/audio/model_latest.pt",
+          "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_latest.pt",
           "parent_run": "E13-A",
-          "progress_file": "out/ar_saturation_20261023/continued700/audio/training.json",
-          "log_file": "out/ar_saturation_20261023/continued700/audio.log",
-          "evaluation_root": "out/ar_saturation_20261023/continued700/audio",
+          "progress_file": "out/ar_saturation_20261023/continued1000/audio/training.json",
+          "log_file": "out/ar_saturation_20261023/continued1000/audio.log",
+          "evaluation_root": "out/ar_saturation_20261023/continued1000/audio",
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/audio/model_e0040.pt",
             "out/ar_saturation_20261023/audio/model_e0100.pt",
@@ -935,7 +935,7 @@
           "training": {
             "songs": 300,
             "from_epoch": 10,
-            "target_epoch": 700,
+            "target_epoch": 1000,
             "optimizer_and_rng_restored": true,
             "learning_rate": 3e-05,
             "code_commit": "37a3650",
@@ -971,18 +971,29 @@
                 "launched_at_utc": "2026-10-24T00:28:47.024138+00:00",
                 "finished_file_mtime_utc": "2026-10-24T06:17:45.873313+00:00",
                 "completion_verified_at_utc": "2026-10-24T06:23:23.303321+00:00"
+              },
+              {
+                "from_epoch": 700,
+                "target_epoch": 1000,
+                "status": "running",
+                "output": "out/ar_saturation_20261023/continued1000/audio",
+                "parent_checkpoint": "out/ar_saturation_20261023/continued700/audio/model_latest.pt",
+                "parent_sha256": "35c04d5c238ed82e77eb6e8e40af6782ae07689f2655228ead6899fc8940054d",
+                "optimizer_and_rng_restored": true,
+                "learning_rate": 3e-05,
+                "launched_at_utc": "2026-10-24T06:59:27.451507+00:00"
               }
             ],
-            "status": "completed"
+            "status": "running"
           },
           "snapshot": {
-            "recorded_epoch": 700,
-            "recorded_steps": 210000,
+            "recorded_epoch": 701,
+            "recorded_steps": 210300,
             "latest_completed_evaluation": 700,
-            "frame_accuracy": 0.9960325684678016,
-            "layout_ce": 0.6835021763801695,
+            "frame_accuracy": 0.9958253145817912,
+            "layout_ce": 0.6809370687460745,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-24T06:23:23.303321+00:00",
+            "recorded_at_utc": "2026-10-24T07:02:12.085878+00:00",
             "latest_evaluation_path": "out/ar_saturation_20261023/continued700/audio/evaluation-e0700"
           },
           "additional_onset_input": "none_zeroed_channel",
@@ -995,7 +1006,8 @@
           "previous_logs": [
             "out/ar_saturation_20261023/audio_resume100.log",
             "out/ar_saturation_20261023/audio_resume185.log",
-            "out/ar_saturation_20261023/continued500/audio.log"
+            "out/ar_saturation_20261023/continued500/audio.log",
+            "out/ar_saturation_20261023/continued700/audio.log"
           ],
           "recovery_checkpoint": {
             "epoch": 185,
@@ -1247,9 +1259,10 @@
           ],
           "previous_evaluation_roots": [
             "out/ar_saturation_20261023/audio",
-            "out/ar_saturation_20261023/continued500/audio"
+            "out/ar_saturation_20261023/continued500/audio",
+            "out/ar_saturation_20261023/continued700/audio"
           ],
-          "status": "completed",
+          "status": "running",
           "quality_status": "not_passed",
           "checkpoint_gaps": [
             {
@@ -1276,14 +1289,14 @@
             "gpu_peak_allocated_gib": 0.30823755264282227,
             "gpu_peak_reserved_gib": 0.583984375
           },
-          "completion_resources": {
+          "phase700_completion_resources": {
             "disk_free_gib": 14.118148803710938,
             "ram_available_gib": 34.56755447387695,
             "rss_gib": 2.1664581298828125,
             "gpu_peak_allocated_gib": 0.30844736099243164,
             "gpu_peak_reserved_gib": 0.572265625
           },
-          "final_training_trend": {
+          "phase700_final_training_trend": {
             "blocks": [
               {
                 "from_epoch": 481,
@@ -1342,11 +1355,11 @@
           "id": "E14-S",
           "model": "AL-AR4K@0.5.1",
           "variant": "soft",
-          "checkpoint": "out/ar_saturation_20261023/continued700/soft/model_latest.pt",
+          "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_latest.pt",
           "parent_run": "E13-S",
-          "progress_file": "out/ar_saturation_20261023/continued700/soft/training.json",
-          "log_file": "out/ar_saturation_20261023/continued700/soft.log",
-          "evaluation_root": "out/ar_saturation_20261023/continued700/soft",
+          "progress_file": "out/ar_saturation_20261023/continued1000/soft/training.json",
+          "log_file": "out/ar_saturation_20261023/continued1000/soft.log",
+          "evaluation_root": "out/ar_saturation_20261023/continued1000/soft",
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/soft/model_e0040.pt",
             "out/ar_saturation_20261023/soft/model_e0100.pt",
@@ -1378,7 +1391,7 @@
           "training": {
             "songs": 300,
             "from_epoch": 10,
-            "target_epoch": 700,
+            "target_epoch": 1000,
             "optimizer_and_rng_restored": true,
             "learning_rate": 3e-05,
             "code_commit": "37a3650",
@@ -1414,18 +1427,29 @@
                 "launched_at_utc": "2026-10-24T00:28:47.024138+00:00",
                 "finished_file_mtime_utc": "2026-10-24T06:20:06.885212+00:00",
                 "completion_verified_at_utc": "2026-10-24T06:23:23.303321+00:00"
+              },
+              {
+                "from_epoch": 700,
+                "target_epoch": 1000,
+                "status": "running",
+                "output": "out/ar_saturation_20261023/continued1000/soft",
+                "parent_checkpoint": "out/ar_saturation_20261023/continued700/soft/model_latest.pt",
+                "parent_sha256": "f1bb51c54b8d3b7d00570c49721d2667a0de9f162d02c62aad42887ef5861edf",
+                "optimizer_and_rng_restored": true,
+                "learning_rate": 3e-05,
+                "launched_at_utc": "2026-10-24T06:59:27.451507+00:00"
               }
             ],
-            "status": "completed"
+            "status": "running"
           },
           "snapshot": {
-            "recorded_epoch": 700,
-            "recorded_steps": 210000,
+            "recorded_epoch": 701,
+            "recorded_steps": 210300,
             "latest_completed_evaluation": 700,
-            "frame_accuracy": 0.9960140636565507,
-            "layout_ce": 0.6835498991139282,
+            "frame_accuracy": 0.9957772020725388,
+            "layout_ce": 0.6813835191142817,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-24T06:23:23.303321+00:00",
+            "recorded_at_utc": "2026-10-24T07:02:12.085878+00:00",
             "latest_evaluation_path": "out/ar_saturation_20261023/continued700/soft/evaluation-e0700"
           },
           "additional_onset_input": "dense_probability_and_offset",
@@ -1438,7 +1462,8 @@
           "previous_logs": [
             "out/ar_saturation_20261023/soft_resume100.log",
             "out/ar_saturation_20261023/soft_resume183.log",
-            "out/ar_saturation_20261023/continued500/soft.log"
+            "out/ar_saturation_20261023/continued500/soft.log",
+            "out/ar_saturation_20261023/continued700/soft.log"
           ],
           "recovery_checkpoint": {
             "epoch": 183,
@@ -1690,9 +1715,10 @@
           ],
           "previous_evaluation_roots": [
             "out/ar_saturation_20261023/soft",
-            "out/ar_saturation_20261023/continued500/soft"
+            "out/ar_saturation_20261023/continued500/soft",
+            "out/ar_saturation_20261023/continued700/soft"
           ],
-          "status": "completed",
+          "status": "running",
           "quality_status": "not_passed",
           "checkpoint_gaps": [
             {
@@ -1719,14 +1745,14 @@
             "gpu_peak_allocated_gib": 0.30823755264282227,
             "gpu_peak_reserved_gib": 0.583984375
           },
-          "completion_resources": {
+          "phase700_completion_resources": {
             "disk_free_gib": 14.091938018798828,
             "ram_available_gib": 36.23478698730469,
             "rss_gib": 2.216827392578125,
             "gpu_peak_allocated_gib": 0.30844736099243164,
             "gpu_peak_reserved_gib": 0.572265625
           },
-          "final_training_trend": {
+          "phase700_final_training_trend": {
             "blocks": [
               {
                 "from_epoch": 481,
@@ -1800,7 +1826,7 @@
         "original_training_target": 300,
         "current_training_target": 700
       },
-      "updated_at_utc": "2026-10-24T06:23:23.303321+00:00",
+      "updated_at_utc": "2026-10-24T07:02:12.085878+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
@@ -1853,7 +1879,7 @@
         "verified_at_utc": "2026-10-24T00:11:55.918447+00:00"
       },
       "quality_status": "not_passed",
-      "completion_scope": "Authorized unchanged A/S training to 700 epochs completed; quality not passed; no automatic further training or architecture experiments.",
+      "completion_scope": "700-epoch phase completed; user authorized unchanged independent A/S continuation to 1000; quality remains unpassed.",
       "phase500_completed_at_utc": "2026-10-23T19:24:52.401644+00:00",
       "phase500_completion_verified_at_utc": "2026-10-24T00:11:55.918447+00:00",
       "phase500_completion_assessment": "out/ar_saturation_20261023/completion500_assessment.json",
@@ -1899,9 +1925,20 @@
           "scope": "single seen-song output; early last onset; not a quality or stability pass"
         }
       ],
-      "completed_at_utc": "2026-10-24T06:20:06.885212+00:00",
-      "completion_verified_at_utc": "2026-10-24T06:23:23.303321+00:00",
-      "completion_assessment": "out/ar_saturation_20261023/completion700_assessment.json"
+      "phase700_completed_at_utc": "2026-10-24T06:20:06.885212+00:00",
+      "phase700_completion_verified_at_utc": "2026-10-24T06:23:23.303321+00:00",
+      "phase700_completion_assessment": "out/ar_saturation_20261023/completion700_assessment.json",
+      "phase700_result": "两组完成700轮/210000步，训练进程正常退出，结构、损失和解码未变。Eltaw两种解码均尾部失败，seed42的A/S局部F1=0.76198/0.74926、网格=0.61335/0.55630；12次自然曲生成4次EOS，三音额外出音和跨窗口失败仍存在。最后20轮总目标下降3.87%/3.73%，自主生成未稳定改善。20份520–700轮快照均已核验；实验执行完成、质量未通过，未自动追加训练。",
+      "extension_1000": {
+        "status": "running",
+        "target_epoch": 1000,
+        "launched_at_utc": "2026-10-24T06:59:27.451507+00:00",
+        "audit_path": "out/ar_saturation_20261023/extension_1000_decision.json",
+        "source_code_changed": false,
+        "architecture_loss_sampling_changed": false,
+        "checkpoint_retention": "independent CPU watcher; epochs720–1000 every20; 30 compact snapshots about0.76GiB",
+        "user_decision": "Continue the recommended A/S 700-to-1000 unchanged training; no new architecture or sampling experiment."
+      }
     },
     {
       "id": "E15",
@@ -1941,7 +1978,7 @@
           "multi-token prediction"
         ],
         "evidence": "docs/fixed_length_attribution_plan.md",
-        "current_run_unchanged": "E14 independent A/S training completed 700 epochs unchanged; fit objective still declines but autonomous generation remains unstable. No further training or proposed recipe/architecture experiments executed.",
+        "current_run_unchanged": "E14 completed700; user authorized unchanged independent A/S continuation from700 to1000. Proposed history, architecture and training-recipe experiments remain unexecuted.",
         "excluded_by_user": [
           "GKD/distillation: no reliable chart-generation teacher; retain citation only"
         ],
