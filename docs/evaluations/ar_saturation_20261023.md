@@ -4,7 +4,13 @@
 
 ## 运行状态
 
-当前状态为 **running**：两组已完成 100 轮及评测，并从断点进入 101–300 轮，尚无收敛结论。训练脚本 commit `37a3650`。原 epoch-10 的 `out/anchored_ar_20261023/{audio,soft}/model_latest.pt` 只读保留；新结果在 `out/ar_saturation_20261023/{audio,soft}`。
+当前状态为 **completed**：两组均完成500轮、150,000步并正常退出，质量尚未通过，不能宣称已收敛。训练脚本 commit `37a3650`。原 epoch-10 的 `out/anchored_ar_20261023/{audio,soft}/model_latest.pt` 只读保留；10→300轮结果在 `out/ar_saturation_20261023/{audio,soft}`，300→500轮在 `out/ar_saturation_20261023/continued500/{audio,soft}`。下文保留各阶段观察，最终结论见[500轮收尾](#500轮收尾与本轮结论)。
+
+![A/S训练与生成曲线](assets/ar_saturation_20261023/comparison.png)
+
+[高清PDF](assets/ar_saturation_20261023/comparison.pdf) · [评测数据CSV](assets/ar_saturation_20261023/evaluation.csv) · [逐轮训练CSV](assets/ar_saturation_20261023/training.csv) · [数据来源与SHA](assets/ar_saturation_20261023/provenance.json)
+
+上排为Eltaw、seed42/top-p=.95的第20–500轮评测，每20轮一个实测点；下排为两组第1–500轮训练损失。实心点仅表示自然结束，空心点为尾部失败的局部诊断，连线不代表中间轮次也做了评测。50条评测共用同一音频、参考起点和时基，网格由保存的原始预测按原benchmark计算；训练共1,000条逐轮记录，未平滑或补造缺失指标。两组拟合曲线接近，生成分数仍明显波动，不能从最后一轮或单曲峰值认定某一路线稳定胜出。480轮评测记录可用于作图，但该轮权重未留存。
 
 两组各从累计 epoch 10 / step 3000 继续：
 

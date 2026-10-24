@@ -19,6 +19,8 @@
 
 `greedy` 与 `seed42` 是同一权重的两种推理解码设置，不是另两款模型。用户已要求采样优化后置，本轮保持原配置。
 
+[A/S逐轮曲线](evaluations/assets/ar_saturation_20261023/comparison.png)：1–500轮训练损失，以及每20轮的Eltaw F1、网格加分和生成结束状态；[评测CSV](evaluations/assets/ar_saturation_20261023/evaluation.csv)、[训练CSV](evaluations/assets/ar_saturation_20261023/training.csv)保留数值。
+
 ## 五个模型家族
 
 | 产品名／固定ID | 职责 | 当前对应版本／状态 | 分支 |

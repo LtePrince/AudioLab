@@ -1,0 +1,279 @@
+{
+  "schema": "audiolab-ar-as-curve-v1",
+  "created_utc": "2026-10-24T00:20:23.428079+00:00",
+  "models": {
+    "A": "AL-AR4K v0.5.1 / E14-A",
+    "S": "AL-AR4K v0.5.1 / E14-S"
+  },
+  "evaluation_epochs": [
+    20,
+    40,
+    60,
+    80,
+    100,
+    120,
+    140,
+    160,
+    180,
+    200,
+    220,
+    240,
+    260,
+    280,
+    300,
+    320,
+    340,
+    360,
+    380,
+    400,
+    420,
+    440,
+    460,
+    480,
+    500
+  ],
+  "training_epochs": [
+    1,
+    500
+  ],
+  "evaluation": "Eltaw_IN; seed42/top-p 0.95; raw predictions; failed generations are partial diagnostics",
+  "clock": {
+    "bpm": 193,
+    "beat_zero_seconds": 0,
+    "independently_verified": false
+  },
+  "scope": "Training-set fit diagnostics, not independent test performance or gameplay quality",
+  "reference_fingerprint": "be30a11d1e7a3c227d473d5bfea5d9fce5180e2761332acd09301e008b6fe782",
+  "protocol_sha256": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5",
+  "benchmark_implementation_sha256": "c7257da6cb65d8522ae376ecbb23acf5db696cb879a30818a326a780146cf250",
+  "plot_script": "out/ar_saturation_20261023/plot_comparison.py",
+  "plot_script_sha256": "cbb3ee7c7bdc5e9a83b141c06fd022aef60b252ed60ed8156115abf13f8c026a",
+  "sources": [
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/training.json",
+      "sha256": "11d15832b6c77e361fb1d93dc3b9f20abc1c484501f25e59634e0ec2ce575b37"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0020/inputs.json",
+      "sha256": "38a48364fd9d907921cad1afe7675b24d566fc5fa1baaa1b797bc2948dfedddf"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0040/inputs.json",
+      "sha256": "13f2028a848fec205b0ae549650d4f36e1d35f86f53c8ddd34df8a61ba515008"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0060/inputs.json",
+      "sha256": "e8bcca268873c7519d7e8e3a410d98c535993a288137bc85aea4c0d5817eac6d"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0080/inputs.json",
+      "sha256": "bafdc9e468fb7f6677fed3eab13450ee4ff1a5d291902f2d13d69ce1e9c006e4"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0100/inputs.json",
+      "sha256": "58218c7bff7d5949d43929cee1fe30b1cd450f185716bbcc4ac4d1b8008c1d2d"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0120/inputs.json",
+      "sha256": "cfa35b3478df6bd3b1274d3dd07c1d28986b614d8b043bf1c5a58c3c6448ee72"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0140/inputs.json",
+      "sha256": "a050e608b62f98971924d3de3103b914ee9158c17576286f3b119ac0160e05d6"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0160/inputs.json",
+      "sha256": "7060fad813be1e26734b4539dc2caf6f25d8bb35bd4a6e5f8b1120d629757f3a"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0180/inputs.json",
+      "sha256": "cc6ce9d356702c729c0ad8140f685d5685945dbded3251ae668ee226ad312c78"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0200/inputs.json",
+      "sha256": "6319ae134fd1f53fc8731288f4eba0fbe8fd107b2d7bfd3e4f2be951bf047db5"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0220/inputs.json",
+      "sha256": "31780c32fcd7356dc2368fd7d394ed01b1f75010a7427113518dc0d4cdfd8040"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0240/inputs.json",
+      "sha256": "6a84921674fe8caa1629f9430cee76e0fc090ba2ba812a029296443f1105260d"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0260/inputs.json",
+      "sha256": "a071a56ae021d3a68fc51b6ce3cab163cd60bf90984e99efd997805bcbce55b4"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0280/inputs.json",
+      "sha256": "07ab28f61bfb5242778a7506a431a10ccb449f677696f14d076a9b6923f5ee8b"
+    },
+    {
+      "path": "out/ar_saturation_20261023/audio/evaluation-e0300/inputs.json",
+      "sha256": "e4ec724017bcef5e4bbbe0654b43f851f5bd52275029db39970930b63c1c332a"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0320/inputs.json",
+      "sha256": "6b8cfb6f08cef61fb8e866b4bbc7e632602490c3b415ced738577b1b424a7a45"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0340/inputs.json",
+      "sha256": "b96bc04abcda96ad8bba64b67cceb64e96f6064439c72caa10adf69ed752f431"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0360/inputs.json",
+      "sha256": "b4d8ba04399000722500480b90953d2bbe982b559352ac4b43b9cce6d37b64d9"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0380/inputs.json",
+      "sha256": "578007a7d458fb9a8abe4c85261c10cfd6844cb507ad646c2fd0a20f5c5b0e24"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0400/inputs.json",
+      "sha256": "0282b1656e12ea05a6d17c73aa8d6b1b121bd26a4a5ed242b54796310ebdc4c9"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0420/inputs.json",
+      "sha256": "45f6e54aadfe4f949a339cc847f18ff2f04d9c48c92f0719b5b3eeca8e705eb1"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0440/inputs.json",
+      "sha256": "1fbf639d9f9246dc0a08a7997865179c6e6a758cf5c97e5375b9dd3c82b6634a"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0460/inputs.json",
+      "sha256": "58dc23fe06f3e91ec10c7563e04861606d60f7600c9ed52ed433562a7960bc26"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0480/inputs.json",
+      "sha256": "5561cce4d7bf425f21aca229c4a47a2cd6b9a8b93d5b3e85d62a86fccfa5bc45"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0500/inputs.json",
+      "sha256": "8340a8e6d06f911ec2fd9b71a98ed25b7f9ebd4056f2a02e6bcf9413d9f3b17c"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/training.json",
+      "sha256": "635b7fe89b39c4e572793583eb56192199de1e00a9ccbe067f9512bd55032a46"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0020/inputs.json",
+      "sha256": "1a7b707da66c4308d4bfefb22d6b0ecaf2a322e64271cdf3eaccbc77bb4e7ede"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0040/inputs.json",
+      "sha256": "5219bc9c4e9fbe6a2f3a5c3801d00b230b626ab80a657645bd7e21049133ce94"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0060/inputs.json",
+      "sha256": "be2c59fdbe6f1da6e73a23ca3b46e9866cccd844c77e973ae83afbeaa19b3d79"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0080/inputs.json",
+      "sha256": "8dccccd25dbd424ad7c42c65071e661c3045586644929c7c82a4bcda233ac7f7"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0100/inputs.json",
+      "sha256": "54d2c0b568804b4364deab354519f2b2819dcaefb1725997155680572a872518"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0120/inputs.json",
+      "sha256": "7a392e1cb91141c5460c11b71187953b0e9a37a3994566a59ec5d95b8f81cdca"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0140/inputs.json",
+      "sha256": "c087c3af309ea4cf593bf2dc4f6ace85aed3483a4df11c193f215e247efd1c65"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0160/inputs.json",
+      "sha256": "c5fde9a583054d40a57cd07f10305e29d0ace6d74031fd20dc8983427c40975d"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0180/inputs.json",
+      "sha256": "6830bbaab7163398dc68c567102204289014303bdf3647ff2730533f68758cd8"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0200/inputs.json",
+      "sha256": "9c40d78ca387fb7ba276ddf1eb0b417135167aca15126dc846a165fab12ff9f4"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0220/inputs.json",
+      "sha256": "8ae56868038fb10258a7c092794b60ed22446a767d426e0cc88369e2b3438cb9"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0240/inputs.json",
+      "sha256": "5395c909a92e5a765b63e1d9f57898244d0be8dc43a53caa8ba54b504b3f27f5"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0260/inputs.json",
+      "sha256": "b8093f39de58e023b5e3f2e96cb1995582878cac69c4e29f50e60aa6a3cbeb7f"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0280/inputs.json",
+      "sha256": "2f2734d22c13ecda5a6c03f2cff682479623e9153ca719ca6569cdece2530991"
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/evaluation-e0300/inputs.json",
+      "sha256": "2110c59aef96a79527628824c7a994f9fa5735480200ca0600bf993aac3bfcec"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0320/inputs.json",
+      "sha256": "403f589098f5aad13a0c2497c3bc4d9a8c77ff34f55d93f6e31ad563ccb82c25"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0340/inputs.json",
+      "sha256": "f18e8cf96de877966da2b132f9c007c83521e4c0825283b5637aa7efac41ac28"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0360/inputs.json",
+      "sha256": "98497c0ba5a1c2378d88951539ce17c0f48abeb184ad2761c08e168803543c2d"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0380/inputs.json",
+      "sha256": "6542b5f7f973b06ba55cc24a3561d340a74a792d2885f158241d652b3913dc8e"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0400/inputs.json",
+      "sha256": "08600c7a71178078dafba42e3817776a2f99285ecace6e8029e99fa85c998704"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0420/inputs.json",
+      "sha256": "9f435bcc9ff4d4edff87d1adec29594b2ac7ec64a7e8217e2847656c37699a86"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0440/inputs.json",
+      "sha256": "8921d41d9f98e8e0357f85905296052cc98ff15cfdd2059a690aa862acd48965"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0460/inputs.json",
+      "sha256": "67cb0889aaea3a02f9f7f3557b83b560494cea8e37658daa6241b9f11ea36d4c"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0480/inputs.json",
+      "sha256": "73097c066cab294ea4df5e21636c5820ea25b0c4e4cc6e1c846c287089f84f07"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0500/inputs.json",
+      "sha256": "df73d61dc3f8059e0305c85da5b3e700a7abac24c39baff3fc4c7ab031e6b130"
+    }
+  ],
+  "outputs": {
+    "comparison.pdf": {
+      "bytes": 84407,
+      "sha256": "52024e9c6da270f37fda1bbff7cd72b9a5a7dd16f8970f7a3823b0ddccf9dd57"
+    },
+    "comparison.png": {
+      "bytes": 460145,
+      "sha256": "7f4a25c1e4a875fc8d9973d410e9407274d83fdedcd8b3a08a32a313e21af7c2"
+    },
+    "evaluation.csv": {
+      "bytes": 18361,
+      "sha256": "3f62f81be65b8d0ed14083225bff0da88f59e7cf5389561d8f5b9f90d621c5b2"
+    },
+    "training.csv": {
+      "bytes": 144978,
+      "sha256": "c3c7981b4b76ed0f08b1517a06fa216818c4c8c1ea8d269014f9e1934d2321a4"
+    }
+  }
+}
