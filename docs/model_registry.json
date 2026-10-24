@@ -2641,7 +2641,29 @@
       },
       "completed_at_utc": "2026-10-24T16:01:43.055871+00:00",
       "completion_verified_at_utc": "2026-10-24T16:03:11.367937+00:00",
-      "completion_assessment": "out/ar_saturation_20261023/completion1000_assessment.json"
+      "completion_assessment": "out/ar_saturation_20261023/completion1000_assessment.json",
+      "layout_replay": {
+        "kind": "saved-output analysis",
+        "status": "completed",
+        "recorded_at_utc": "2026-10-24T21:38:02.608567+00:00",
+        "training_or_inference_changed": false,
+        "original_benchmark_changed": false,
+        "epochs": [
+          920,
+          960,
+          1000
+        ],
+        "songs": [
+          "Eltaw_IN",
+          "-SURREALISM-_IN",
+          "ABYSS MOTION 192.333_IN"
+        ],
+        "outputs_analyzed": 36,
+        "evidence": "docs/evaluations/ar_layout_1000_20261025.md",
+        "metrics_path": "docs/evaluations/assets/ar_layout_1000_20261025/summary.json",
+        "metrics_sha256": "55a5dc01710b50ac752caf5f66348bfc41df152ec67bc0670351d2addf7c2756",
+        "result": "e1000 Eltaw greedy joint time/lane/type F1 A=0.80165,S=0.99646; exact four-group reproduction59.17%/98.28%. S has3 lane mismatches and41 exact matched Hold lengths. Sampling and other seen songs remain substantially less reliable; no gameplay/generalization pass."
+      }
     },
     {
       "id": "E15",

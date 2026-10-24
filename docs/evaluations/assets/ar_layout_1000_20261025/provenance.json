@@ -1,0 +1,26 @@
+{
+  "created_at_utc": "2026-10-24T21:38:02.608567+00:00",
+  "scope": "saved-output layout analysis, no training/inference changes",
+  "analysis_script": {
+    "path": "out/ar_layout_1000_20261025/analyze.py",
+    "sha256": "41c659bce80ba280258b28e9943badcee33f67f409420f1e513430c70735ad44"
+  },
+  "plot_script": {
+    "path": "out/ar_layout_1000_20261025/plot.py",
+    "sha256": "beeccb0f8fcef71c18e409b3fb97ff07dccc76780674e3e3ea85cd0a3764e2d4"
+  },
+  "artifacts": {
+    "eltaw_intro.pdf": {
+      "bytes": 62202,
+      "sha256": "9d7d40c454f0b2279856e8d76b33cb2bd2ab350dfa4c8a63e5dd9550f91cefdb"
+    },
+    "eltaw_intro.png": {
+      "bytes": 351113,
+      "sha256": "080f5f9b0457ecfc4899b6092267c29bc2ae3789b267fe01322c23530faf21ad"
+    },
+    "summary.json": {
+      "bytes": 697359,
+      "sha256": "55a5dc01710b50ac752caf5f66348bfc41df152ec67bc0670351d2addf7c2756"
+    }
+  }
+}
