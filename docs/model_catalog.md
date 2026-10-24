@@ -21,7 +21,7 @@
 
 [A/S逐轮曲线](evaluations/assets/ar_saturation_20261023/comparison.png)：1–500轮训练损失，以及每20轮的Eltaw F1、网格加分和生成结束状态；[评测CSV](evaluations/assets/ar_saturation_20261023/evaluation.csv)、[训练CSV](evaluations/assets/ar_saturation_20261023/training.csv)保留数值。
 
-700轮阶段最新完整评测为520轮：Eltaw/seed42的A/S均尾部失败，局部F1=0.80000/0.71569、网格0.60917/0.56531；自然曲EOS为0/6、1/6。Eltaw贪心已出现部分非Tap，仍未验证键型与音乐对应正确。520轮快照已核验保留，训练配置不变。
+700轮阶段最新完整评测为540轮：Eltaw/seed42的A/S均尾部失败，局部F1=0.80508/0.78755、网格0.54804/0.56750；自然曲EOS为1/6、0/6，唯一EOS末键提前6.04秒。Eltaw贪心仍能输出部分非Tap，尚未验证键型与音乐对应正确。520/540轮快照已核验保留，训练配置不变。
 
 ## 五个模型家族
 
