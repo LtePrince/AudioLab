@@ -892,7 +892,7 @@
       ],
       "status": "running",
       "question": "保持结构/损失/采样，500轮后按用户授权续到700轮，继续观察拟合与自由生成",
-      "result": "截至760轮，E14-A：Eltaw/seed42 F1=0.81154、网格=0.53563，尾部失败，分数为局部诊断，自然曲EOS 2/6；E14-S：Eltaw/seed42 F1=0.89855、网格=0.63755，自然结束，自然曲EOS 4/6。持续原配方到1000轮，单曲峰值不代表稳定质量通过。",
+      "result": "截至780轮，E14-A：Eltaw/seed42 F1=0.74105、网格=0.52617，尾部失败，分数为局部诊断，自然曲EOS 3/6；E14-S：Eltaw/seed42 F1=0.90249、网格=0.62525，自然结束，自然曲EOS 2/6。持续原配方到1000轮，单曲峰值不代表稳定质量通过。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
@@ -933,7 +933,8 @@
             "out/ar_saturation_20261023/continued700/audio/model_e0700.pt",
             "out/ar_saturation_20261023/continued1000/audio/model_e0720.pt",
             "out/ar_saturation_20261023/continued1000/audio/model_e0740.pt",
-            "out/ar_saturation_20261023/continued1000/audio/model_e0760.pt"
+            "out/ar_saturation_20261023/continued1000/audio/model_e0760.pt",
+            "out/ar_saturation_20261023/continued1000/audio/model_e0780.pt"
           ],
           "training": {
             "songs": 300,
@@ -990,14 +991,14 @@
             "status": "running"
           },
           "snapshot": {
-            "recorded_epoch": 762,
-            "recorded_steps": 228600,
-            "latest_completed_evaluation": 760,
-            "frame_accuracy": 0.9960214655810511,
-            "layout_ce": 0.5833017271555314,
+            "recorded_epoch": 782,
+            "recorded_steps": 234600,
+            "latest_completed_evaluation": 780,
+            "frame_accuracy": 0.9962842339008142,
+            "layout_ce": 0.5514771222987072,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-24T08:47:59.135232+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0760"
+            "recorded_at_utc": "2026-10-24T09:23:46.211630+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0780"
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -1288,6 +1289,16 @@
               "sha256": "ce8b92fcf69c9e139890984e2fe4433596d332e91491400ee963d0c72206c9b0",
               "source_checkpoint_sha256": "1defdf912e2c4b44a0af5c24ce687b80578b1bc6a041d3e049ec28dacbb47a8f",
               "recorded_utc": "2026-10-24T08:41:25.194337+00:00"
+            },
+            {
+              "variant": "audio",
+              "epoch": 780,
+              "steps": 234000,
+              "path": "out/ar_saturation_20261023/continued1000/audio/model_e0780.pt",
+              "bytes": 26752849,
+              "sha256": "b89112a0b015eb9534ccc7ba4a12b5245579c71b16abc0e71949c7b27efe0622",
+              "source_checkpoint_sha256": "b6ad2f4b713260c359a1b6484373fe6c7edb6a72a5938a535c5ff77742a4f25d",
+              "recorded_utc": "2026-10-24T09:16:44.457526+00:00"
             }
           ],
           "previous_evaluation_roots": [
@@ -1422,7 +1433,8 @@
             "out/ar_saturation_20261023/continued700/soft/model_e0700.pt",
             "out/ar_saturation_20261023/continued1000/soft/model_e0720.pt",
             "out/ar_saturation_20261023/continued1000/soft/model_e0740.pt",
-            "out/ar_saturation_20261023/continued1000/soft/model_e0760.pt"
+            "out/ar_saturation_20261023/continued1000/soft/model_e0760.pt",
+            "out/ar_saturation_20261023/continued1000/soft/model_e0780.pt"
           ],
           "training": {
             "songs": 300,
@@ -1479,14 +1491,14 @@
             "status": "running"
           },
           "snapshot": {
-            "recorded_epoch": 760,
-            "recorded_steps": 228000,
-            "latest_completed_evaluation": 760,
-            "frame_accuracy": 0.9960066617320503,
-            "layout_ce": 0.5883251835226616,
+            "recorded_epoch": 780,
+            "recorded_steps": 234000,
+            "latest_completed_evaluation": 780,
+            "frame_accuracy": 0.9962065136935603,
+            "layout_ce": 0.5565963224367463,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-24T08:47:59.135232+00:00",
-            "latest_evaluation_path": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0760"
+            "recorded_at_utc": "2026-10-24T09:23:46.211630+00:00",
+            "latest_evaluation_path": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0780"
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -1777,6 +1789,16 @@
               "sha256": "91735be7ba3d87bf9697ef40cb84adbf6f8e819c5c2b9f5edd1d6de59fac41e2",
               "source_checkpoint_sha256": "0cf12ebeab6fb94461a68a7dd5133ee642db5e24f26c309505a29e87410908dc",
               "recorded_utc": "2026-10-24T08:44:41.090019+00:00"
+            },
+            {
+              "variant": "soft",
+              "epoch": 780,
+              "steps": 234000,
+              "path": "out/ar_saturation_20261023/continued1000/soft/model_e0780.pt",
+              "bytes": 26752849,
+              "sha256": "c7b6531c61fdfc1ba5c10bd26b0aea5544407f8571e2f8e49f32edb8a639b648",
+              "source_checkpoint_sha256": "79d60e3bc44df895a92d40e218c3b5436c62700b6cab2bc243655de7ffcbba34",
+              "recorded_utc": "2026-10-24T09:20:45.535135+00:00"
             }
           ],
           "previous_evaluation_roots": [
@@ -1892,7 +1914,7 @@
         "original_training_target": 300,
         "current_training_target": 700
       },
-      "updated_at_utc": "2026-10-24T08:47:59.135232+00:00",
+      "updated_at_utc": "2026-10-24T09:23:46.211630+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
