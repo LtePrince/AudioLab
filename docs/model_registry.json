@@ -890,20 +890,20 @@
       "models": [
         "AL-AR4K@0.5.1"
       ],
-      "status": "completed",
-      "question": "保持结构/损失/采样，完成300轮后按下降趋势续到500轮，观察拟合与自由生成",
-      "result": "A/S均完成500轮、150000步，正常退出，质量未通过。S/Eltaw/seed42自然结束，F1=0.84983、网格0.60523，末起点比参考晚0.318秒；A同曲尾部失败，局部F1=0.75765、网格0.56014。12次自然曲生成仅2次EOS。最后20轮损失仍下降，不能宣称达到架构上限；三音额外出音和跨窗口失败仍在。保留A/e0380作对照，下一轮方案未执行。",
+      "status": "running",
+      "question": "保持结构/损失/采样，500轮后按用户授权续到700轮，继续观察拟合与自由生成",
+      "result": "两组完成500轮后原配方续到700轮；最新质量评测仍为500轮，S/Eltaw采样F1=0.84983、网格0.60523并自然结束，A同曲尾部失败。Eltaw贪心A全Tap、S约99%Tap；历史关联学习不足为待检验假设，未改训练。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
           "id": "E14-A",
           "model": "AL-AR4K@0.5.1",
           "variant": "audio",
-          "checkpoint": "out/ar_saturation_20261023/continued500/audio/model_latest.pt",
+          "checkpoint": "out/ar_saturation_20261023/continued700/audio/model_latest.pt",
           "parent_run": "E13-A",
-          "progress_file": "out/ar_saturation_20261023/continued500/audio/training.json",
-          "log_file": "out/ar_saturation_20261023/continued500/audio.log",
-          "evaluation_root": "out/ar_saturation_20261023/continued500/audio",
+          "progress_file": "out/ar_saturation_20261023/continued700/audio/training.json",
+          "log_file": "out/ar_saturation_20261023/continued700/audio.log",
+          "evaluation_root": "out/ar_saturation_20261023/continued700/audio",
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/audio/model_e0040.pt",
             "out/ar_saturation_20261023/audio/model_e0100.pt",
@@ -925,7 +925,7 @@
           "training": {
             "songs": 300,
             "from_epoch": 10,
-            "target_epoch": 500,
+            "target_epoch": 700,
             "optimizer_and_rng_restored": true,
             "learning_rate": 3e-05,
             "code_commit": "37a3650",
@@ -948,20 +948,29 @@
                 "launched_at_utc": "2026-10-23T13:26:59.171479+00:00",
                 "finished_file_mtime_utc": "2026-10-23T19:24:52.401644+00:00",
                 "completion_verified_at_utc": "2026-10-24T00:11:55.918447+00:00"
+              },
+              {
+                "from_epoch": 500,
+                "target_epoch": 700,
+                "status": "running",
+                "output": "out/ar_saturation_20261023/continued700/audio",
+                "parent_checkpoint": "out/ar_saturation_20261023/continued500/audio/model_latest.pt",
+                "parent_sha256": "a62332a0420b3c400bd89fbe9a40f4dc416a86a9253ab585fdf6ab3d9a91c756",
+                "optimizer_and_rng_restored": true,
+                "learning_rate": 3e-05,
+                "launched_at_utc": "2026-10-24T00:28:47.024138+00:00"
               }
             ],
-            "status": "completed",
-            "completed_epoch": 500,
-            "completed_steps": 150000
+            "status": "running"
           },
           "snapshot": {
-            "recorded_epoch": 500,
-            "recorded_steps": 150000,
+            "recorded_epoch": 502,
+            "recorded_steps": 150600,
             "latest_completed_evaluation": 500,
-            "frame_accuracy": 0.9947483345669874,
-            "layout_ce": 0.946036662801944,
+            "frame_accuracy": 0.9951147298297557,
+            "layout_ce": 0.94348251760819,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-24T00:11:55.918447+00:00",
+            "recorded_at_utc": "2026-10-24T00:32:46.424488+00:00",
             "latest_evaluation_path": "out/ar_saturation_20261023/continued500/audio/evaluation-e0500"
           },
           "additional_onset_input": "none_zeroed_channel",
@@ -973,7 +982,8 @@
           "parameters": 6626691,
           "previous_logs": [
             "out/ar_saturation_20261023/audio_resume100.log",
-            "out/ar_saturation_20261023/audio_resume185.log"
+            "out/ar_saturation_20261023/audio_resume185.log",
+            "out/ar_saturation_20261023/continued500/audio.log"
           ],
           "recovery_checkpoint": {
             "epoch": 185,
@@ -1124,19 +1134,11 @@
             }
           ],
           "previous_evaluation_roots": [
-            "out/ar_saturation_20261023/audio"
+            "out/ar_saturation_20261023/audio",
+            "out/ar_saturation_20261023/continued500/audio"
           ],
-          "status": "completed",
+          "status": "running",
           "quality_status": "not_passed",
-          "final_training_trend": {
-            "comparison": "epochs 481-500 vs 461-480 means",
-            "percent_change": {
-              "frame_ce": -3.5748066592988015,
-              "layout_ce": -2.0333732363383095,
-              "objective": -2.181451629013953
-            },
-            "convergence_established": false
-          },
           "checkpoint_gaps": [
             {
               "epoch": 480,
@@ -1146,7 +1148,16 @@
               "reason": "monitor resumed after rolling checkpoint had advanced to epoch 500; no epoch 480 weights retained"
             }
           ],
-          "completion_resources": {
+          "phase500_training_trend": {
+            "comparison": "epochs 481-500 vs 461-480 means",
+            "percent_change": {
+              "frame_ce": -3.5748066592988015,
+              "layout_ce": -2.0333732363383095,
+              "objective": -2.181451629013953
+            },
+            "convergence_established": false
+          },
+          "phase500_completion_resources": {
             "disk_free_gib": 14.907905578613281,
             "ram_available_gib": 36.59949493408203,
             "rss_gib": 2.184795379638672,
@@ -1158,11 +1169,11 @@
           "id": "E14-S",
           "model": "AL-AR4K@0.5.1",
           "variant": "soft",
-          "checkpoint": "out/ar_saturation_20261023/continued500/soft/model_latest.pt",
+          "checkpoint": "out/ar_saturation_20261023/continued700/soft/model_latest.pt",
           "parent_run": "E13-S",
-          "progress_file": "out/ar_saturation_20261023/continued500/soft/training.json",
-          "log_file": "out/ar_saturation_20261023/continued500/soft.log",
-          "evaluation_root": "out/ar_saturation_20261023/continued500/soft",
+          "progress_file": "out/ar_saturation_20261023/continued700/soft/training.json",
+          "log_file": "out/ar_saturation_20261023/continued700/soft.log",
+          "evaluation_root": "out/ar_saturation_20261023/continued700/soft",
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/soft/model_e0040.pt",
             "out/ar_saturation_20261023/soft/model_e0100.pt",
@@ -1184,7 +1195,7 @@
           "training": {
             "songs": 300,
             "from_epoch": 10,
-            "target_epoch": 500,
+            "target_epoch": 700,
             "optimizer_and_rng_restored": true,
             "learning_rate": 3e-05,
             "code_commit": "37a3650",
@@ -1207,20 +1218,29 @@
                 "launched_at_utc": "2026-10-23T13:27:00.594827+00:00",
                 "finished_file_mtime_utc": "2026-10-23T19:19:10.794317+00:00",
                 "completion_verified_at_utc": "2026-10-24T00:11:55.918447+00:00"
+              },
+              {
+                "from_epoch": 500,
+                "target_epoch": 700,
+                "status": "running",
+                "output": "out/ar_saturation_20261023/continued700/soft",
+                "parent_checkpoint": "out/ar_saturation_20261023/continued500/soft/model_latest.pt",
+                "parent_sha256": "a6a9ed4aab219dbb15d15f20df5a71158c1a8c8381eb90135364c1ee2017c69d",
+                "optimizer_and_rng_restored": true,
+                "learning_rate": 3e-05,
+                "launched_at_utc": "2026-10-24T00:28:47.024138+00:00"
               }
             ],
-            "status": "completed",
-            "completed_epoch": 500,
-            "completed_steps": 150000
+            "status": "running"
           },
           "snapshot": {
-            "recorded_epoch": 500,
-            "recorded_steps": 150000,
+            "recorded_epoch": 502,
+            "recorded_steps": 150600,
             "latest_completed_evaluation": 500,
-            "frame_accuracy": 0.9947076239822353,
-            "layout_ce": 0.9458881939613465,
+            "frame_accuracy": 0.9950740192450037,
+            "layout_ce": 0.9431019209412624,
             "scope": "training-file snapshot; not a live process guarantee",
-            "recorded_at_utc": "2026-10-24T00:11:55.918447+00:00",
+            "recorded_at_utc": "2026-10-24T00:32:46.424488+00:00",
             "latest_evaluation_path": "out/ar_saturation_20261023/continued500/soft/evaluation-e0500"
           },
           "additional_onset_input": "dense_probability_and_offset",
@@ -1232,7 +1252,8 @@
           "parameters": 6626691,
           "previous_logs": [
             "out/ar_saturation_20261023/soft_resume100.log",
-            "out/ar_saturation_20261023/soft_resume183.log"
+            "out/ar_saturation_20261023/soft_resume183.log",
+            "out/ar_saturation_20261023/continued500/soft.log"
           ],
           "recovery_checkpoint": {
             "epoch": 183,
@@ -1383,19 +1404,11 @@
             }
           ],
           "previous_evaluation_roots": [
-            "out/ar_saturation_20261023/soft"
+            "out/ar_saturation_20261023/soft",
+            "out/ar_saturation_20261023/continued500/soft"
           ],
-          "status": "completed",
+          "status": "running",
           "quality_status": "not_passed",
-          "final_training_trend": {
-            "comparison": "epochs 481-500 vs 461-480 means",
-            "percent_change": {
-              "frame_ce": -3.7195589858048383,
-              "layout_ce": -2.0044278357094436,
-              "objective": -2.158377163812031
-            },
-            "convergence_established": false
-          },
           "checkpoint_gaps": [
             {
               "epoch": 480,
@@ -1405,7 +1418,16 @@
               "reason": "monitor resumed after rolling checkpoint had advanced to epoch 500; no epoch 480 weights retained"
             }
           ],
-          "completion_resources": {
+          "phase500_training_trend": {
+            "comparison": "epochs 481-500 vs 461-480 means",
+            "percent_change": {
+              "frame_ce": -3.7195589858048383,
+              "layout_ce": -2.0044278357094436,
+              "objective": -2.158377163812031
+            },
+            "convergence_established": false
+          },
+          "phase500_completion_resources": {
             "disk_free_gib": 14.909439086914062,
             "ram_available_gib": 35.03257369995117,
             "rss_gib": 2.0920257568359375,
@@ -1430,9 +1452,9 @@
         "soft_route": "candidate_for_retirement_after_current_comparison",
         "reason": "No stable benefit from additional soft onset has been demonstrated; user may abandon this route.",
         "original_training_target": 300,
-        "current_training_target": 500
+        "current_training_target": 700
       },
-      "updated_at_utc": "2026-10-24T00:11:55.918447+00:00",
+      "updated_at_utc": "2026-10-24T00:32:46.424488+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
@@ -1447,6 +1469,23 @@
           "hypothesis": "Free-running nontermination may reflect excessive dependence on context; consider strengthening chart-related training weight.",
           "status": "unverified; defer any changes until after current run",
           "specific_loss_or_condition_change": "not decided"
+        },
+        {
+          "source": "user",
+          "hypothesis": "Greedy Tap concentration may reflect insufficient learning/use of chart history, revising the earlier over-reliance hypothesis. Self-attention should learn dynamic history relevance.",
+          "status": "unverified; no training recipe changes in 500-to-700 continuation",
+          "observation_epoch": 500,
+          "Eltaw_greedy_types": {
+            "A": {
+              "tap": 1133
+            },
+            "S": {
+              "tap": 1142,
+              "hold": 11,
+              "flick": 1
+            }
+          },
+          "implementation_note": "Learned causal self-attention and projected 28D history exist. Token dropout 0.15 masks selected token+summary inputs during training; layout loss coefficient 0.25 is not an attention/history weight."
         }
       ],
       "conditional_extension": {
@@ -1468,10 +1507,19 @@
         "verified_at_utc": "2026-10-24T00:11:55.918447+00:00"
       },
       "quality_status": "not_passed",
-      "completed_at_utc": "2026-10-23T19:24:52.401644+00:00",
-      "completion_verified_at_utc": "2026-10-24T00:11:55.918447+00:00",
-      "completion_assessment": "out/ar_saturation_20261023/completion500_assessment.json",
-      "completion_scope": "500-epoch budget completed; declining loss does not establish convergence or architecture ceiling"
+      "completion_scope": "Target extended to epoch 700; epoch 500 completion remains a historical stage, not final experiment completion",
+      "phase500_completed_at_utc": "2026-10-23T19:24:52.401644+00:00",
+      "phase500_completion_verified_at_utc": "2026-10-24T00:11:55.918447+00:00",
+      "phase500_completion_assessment": "out/ar_saturation_20261023/completion500_assessment.json",
+      "extension_700": {
+        "status": "running",
+        "target_epoch": 700,
+        "launched_at_utc": "2026-10-24T00:28:47.024138+00:00",
+        "audit_path": "out/ar_saturation_20261023/extension_700_decision.json",
+        "source_code_changed": false,
+        "architecture_loss_sampling_changed": false,
+        "checkpoint_retention": "independent CPU watcher; every evaluation epoch; about 0.51 GiB for 20 compact snapshots"
+      }
     },
     {
       "id": "E15",
@@ -1511,7 +1559,7 @@
           "multi-token prediction"
         ],
         "evidence": "docs/fixed_length_attribution_plan.md",
-        "current_run_unchanged": "E14 completed 500 epochs with independent A/S weights and unchanged recipe; proposed follow-up experiments remain unexecuted.",
+        "current_run_unchanged": "E14: completed 500 epochs, then user authorized unchanged independent A/S continuation to 700; proposed recipe/architecture experiments remain unexecuted.",
         "excluded_by_user": [
           "GKD/distillation: no reliable chart-generation teacher; retain citation only"
         ],

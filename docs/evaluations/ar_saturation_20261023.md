@@ -4,7 +4,7 @@
 
 ## 运行状态
 
-当前状态为 **completed**：两组均完成500轮、150,000步并正常退出，质量尚未通过，不能宣称已收敛。训练脚本 commit `37a3650`。原 epoch-10 的 `out/anchored_ar_20261023/{audio,soft}/model_latest.pt` 只读保留；10→300轮结果在 `out/ar_saturation_20261023/{audio,soft}`，300→500轮在 `out/ar_saturation_20261023/continued500/{audio,soft}`。下文保留各阶段观察，最终结论见[500轮收尾](#500轮收尾与本轮结论)。
+当前状态为 **running**：两组已完成500轮、150,000步，用户于2026-10-24授权继续原配方到700轮，质量尚未通过。训练脚本 commit `37a3650`。原 epoch-10 的 `out/anchored_ar_20261023/{audio,soft}/model_latest.pt` 只读保留；10→300轮结果在原根目录，300→500轮在 `continued500/{audio,soft}`，当前500→700轮在 `continued700/{audio,soft}`。下文保留各阶段观察；图表当前截至500轮，新的进展另行追加。
 
 ![A/S训练与生成曲线](assets/ar_saturation_20261023/comparison.png)
 
@@ -325,3 +325,21 @@ A/S均完成500轮、150,000步，日志以 `trained` 正常结束，进程已�
 本轮训练执行完成，质量尚未通过，不自动续到500轮以后、不改损失/采样/架构。后续方案维持待决状态。诊断仍只覆盖3首已见训练曲，不是全部300首或独立测试集；网格是匹配加分，不是固定排布或节奏正确率。
 
 证据：`out/ar_saturation_20261023/completion500_assessment.json`、`rhythm_e0480.json`、`rhythm_e0500.json`、`checkpoint_snapshots.json` 与两组 `continued500/*/evaluation-e0500/`。收尾时磁盘剩余约14.9GiB，RAM可用约38GiB；两个训练进程终态RSS为2.18/2.09GiB，PyTorch峰值allocated约0.31GiB、reserved约0.58GiB（不含全部CUDA上下文/驱动开销，不作为服务最低显存承诺）。
+
+## 500→700轮续训与贪心键型复核
+
+2026-10-24 00:28 UTC按用户新授权，从A/S各自500轮完整断点启动到700轮，输出分别为 `continued700/audio`、`continued700/soft`。模型、训练源码、数据缓存、优化器/RNG与实际学习率3e-5已核验；损失、历史输入、采样设置均保持一致。500轮父断点只读保留，仍属v0.5.1/E14的预算延长，不新增模型方向或版本。
+
+为减少交互监测中断导致的漏存，独立CPU进程每15秒检查并原子保存评测轮次的紧凑权重，使用同一文件句柄计算父断点SHA并读取，核对epoch后入账，不影响训练RNG。计划额外保留520–700轮共20份A/S快照，约0.51GiB；沿用磁盘8GiB、可用RAM8GiB、训练进程RSS4GiB预算。启动审计及命令在 `extension_700_decision.json`，保留进程状态在 `continued700/retention_status.json`，完整断点仍含优化器/RNG。
+
+复核第500轮的原始贪心输出（数目仅作诊断，不作键型配额）：
+
+| 曲目 | A键型数 | S键型数 |
+| --- | --- | --- |
+| Eltaw | Tap 1133，其余0 | Tap 1142、Hold 11、Flick 1 |
+| SURREALISM | Tap 409、Drag 37、Hold 69 | Tap 895、Drag 66 |
+| ABYSS | Tap 637、Drag 3、Hold 28、Flick 17 | Tap 430、Drag 231、Hold 55 |
+
+Eltaw的贪心Tap集中仍存在，其他曲目能输出部分非Tap。用户将此前“过度依赖历史”的猜测修正为“没有充分学习历史键型关联”；两种解释目前都未被因果对照证实。**因果self-attention本来就会按当前状态、层和注意力头学习对历史token的动态权重**；没有一个单独手动标量，不意味着模型不能学习历史重要性。历史注意力权重也不直接等于下一键型概率，后者由整个网络的隐藏状态与输出头计算。
+
+目前输入为token嵌入＋学习投影后的28维历史摘要，再加时间嵌入；训练有15%的token dropout，会同时屏蔽被抽中位置的token与摘要，时间输入保留，其余历史位置仍可通过self-attention读取。排布损失系数0.25不是“历史注意力权重”。历史利用不足、Tap条件概率持续占优、生成历史自我强化等均为待检验假设；本次700轮续训不据此改变配方，也不通过调整采样或键型配额掩盖问题。
