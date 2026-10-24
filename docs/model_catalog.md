@@ -4,6 +4,8 @@
 
 ## 本轮训练与当前状态
 
+**2026-10-25转向全300首静态free-x：AL-FreeX v0.4.0 / E18-A、E18-S**，A/S两套独立权重从零训练；先10轮再保留优化器/RNG续到1000轮，不留出验证歌曲。已启动；运行记录见[free-x训练记录](evaluations/freex_anchored_20261025.md)。泛用性等用户另提供新数据后检查。**4K停在1000轮，不再自动加训。**
+
 **AudioLab AR4K v0.5.1** 两组已完成1000轮、300,000步，2026-10-24 15:46/16:01 UTC正常结束；参数与优化器保持独立，质量尚未通过，没有自动追加训练：
 
 | 完整称呼 | 实验编号 | 额外起音输入 | 共同设置 |
@@ -35,7 +37,7 @@
 | **AudioLab Rhythm** / `AL-Rhythm` | 全局节奏提议头 | v0.1.0、v0.2.0，历史训练与校准；不是当前A/S对照中的新训练组 | `feature/transcription-baseline` |
 | **AudioLab Diff4K** / `AL-Diff4K` | 定轨扩散，Wave＋VAE＋DiT | 三月v0.1.0为历史效果参照；八月v0.2.0较差 | `feature/variable-length-inference` |
 | **AudioLab AR4K** / `AL-AR4K` | 定轨自回归 | v0.5.1 A/S已完成1000轮，质量未通过；网页实验包仍是v0.2.0 H | `feature/4k-generation` |
-| **AudioLab FreeX** / `AL-FreeX` | 静态无轨，64个位置bin＋连续残差 | 网页实验包v0.2.0 H；v0.3.0注意力对照已完成；尚未迁移当前时间pointer | `feature/freeform-gameplay` |
+| **AudioLab FreeX** / `AL-FreeX` | 静态无轨，64个位置bin＋连续残差 | 网页实验包v0.2.0 H；v0.4.0 / E18时间pointer，全300首A/S独立训练中 | `feature/freeform-gameplay` |
 
 Wave、VAE和各解码器内的冻结音频编码器按组件记录在所属版本中，以路径和SHA区分，不能随意混配。学习式动态判定线目前只有路线与工程准备，**尚无已训练的动态模型**，不提前编造模型版本。
 
@@ -46,7 +48,7 @@ Wave、VAE和各解码器内的冻结音频编码器按组件记录在所属版�
 | 三月 diffusion／`Eltaw_4k_generate_v2.zip` | `AL-Diff4K v0.1.0`，`E01-MAR` | `out/diffusion_march_20260314/assets/weights/` | 已精确复现531个音符；文件名中的v2沿用历史别名 |
 | 旧网页基线 `timing_v1` | `B01`：Onset v0.1.0＋AR4K v0.1.0＋FreeX v0.1.0 | `checkpoints/timing_v1` | 旧默认服务包；尝试部署不等于质量认可 |
 | 全300首 `full300_history` | `B02`：Onset v0.1.0＋AR4K v0.2.0/H＋FreeX v0.2.0/H | `checkpoints/full300_history` | 你反馈长条衔接、Tap集中和节奏不稳的那轮实验包 |
-| 本次长训的 `audio`／`soft` | `AL-AR4K v0.5.1 / A或S`，`E14` | `out/ar_saturation_20261023/continued1000/audio/`、`soft/` | 700→1000轮运行中；`continued700`中保留700轮父断点；旧网页DT加载器不能直接加载 |
+| 本次长训的 `audio`／`soft` | `AL-AR4K v0.5.1 / A或S`，`E14` | `out/ar_saturation_20261023/continued1000/audio/`、`soft/` | 已完成1000轮，4K暂停加训；`continued700`中保留700轮父断点；旧网页DT加载器不能直接加载 |
 
 B02运输包在 `out/runtime_delivery_full300/audiolab-full300-history-20261022.zip`，SHA以[安装说明](full300_runtime.md)和JSON索引为准。克隆Git不包含这些权重。当前没有将v0.5.1悄悄替换到B02，也没有将实验模型标成稳定版。
 
@@ -58,9 +60,9 @@ B02运输包在 `out/runtime_delivery_full300/audiolab-full300-history-20261022.
 | v0.1.1 | 24首、200步 A/B/H/D 对照 | 同样四组 | E08 |
 | v0.2.0 | 300首、10轮 H/D | 300首、10轮 H/D | E09；只有H组打包给用户 |
 | v0.3.0 | local/global/time_bias 从零训练 | 同样三组 | E11；各10轮 |
-| v0.4.0 | continued/data/rank 三组条件训练 | 未做对应训练 | E12 |
+| v0.4.0 | continued/data/rank 三组条件训练 | 时间pointer、连续坐标，全300首A/S从零训练及长训 | 4K E12；FreeX E18（版本独立） |
 | v0.5.0 | 绝对时间pointer A/S从零训练10轮 | 未做对应训练 | E13 |
-| v0.5.1 | 从v0.5.0继续长训，保留优化器/RNG | 未做对应训练 | E14，700→1000轮运行中，质量未通过 |
+| v0.5.1 | 从v0.5.0继续长训，保留优化器/RNG | 未做对应训练 | E14，1000轮已完成，质量未通过 |
 
 历史字母只在所属实验内解释：E08的A=音频、B=加soft、H=再加历史、D=再加关系辅助；E09只保留H/D；E13/E14的A/S都已有历史，比较的是显式soft通道。完整称呼必须带实验号，不能只说“H模型”或“soft模型”。
 
@@ -83,10 +85,11 @@ B02运输包在 `out/runtime_delivery_full300/audiolab-full300-history-20261022.
 | E11 | local/global/time_bias，双模式共6组 | 从零训练，完成 | 4K global有单种子优势；均未解决三音探针 |
 | E12 | continued/data/rank，4K三组 | 条件训练，完成 | 排序组开始跟随平移，定位仍不准 |
 | E13 | 绝对时间pointer A/S，两组 | 从零训练，完成 | 学到部分首音；10轮仍不充分，停止失败 |
-| **E14** | **A/S保持结构与损失继续长训** | **700→1000轮运行中** | **拟合仍有进展；自主整谱仍不稳定，质量未通过** |
+| **E14** | **4K A/S保持结构与损失继续长训** | **1000轮已完成，暂停加训** | **拟合仍有进展；自主整谱仍不稳定，质量未通过** |
 | E15 | Hold修复、接触点约束、演出解释 | 后处理/诊断，完成 | 工程规则与统计，不算新增神经网络能力 |
 | E16 | 定长单起音→复杂音频/键型的数学归因 | 已保存计划，未执行 | 等本轮长训观察后再推进 |
 | E17 | 学习式动态无轨演出 | 规划，未训练 | 有挖掘/确定性解释器准备，没有可交付动态模型 |
+| **E18** | **静态free-x时间pointer，A/S独立充分训练** | **全300首、无留出集，训练中** | **64bin＋连续坐标，先10轮再续到1000；质量待评测** |
 
 尚未做的关键对照也明确保留：**同条件下“阈值硬起音作为网络输入”与“连续soft输入”分别重训**。E06、E08、E13都不能冒充这一实验。未来若执行，应建立新实验号。
 

@@ -187,6 +187,15 @@
       "output_protocol": "audiolab-absolute-time-group-ar-v1",
       "delivery": "research_loader_only",
       "evidence": "docs/evaluations/ar_saturation_20261023.md"
+    },
+    {
+      "id": "AL-FreeX@0.4.0",
+      "family": "AL-FreeX",
+      "version": "0.4.0",
+      "title": "全300首时间pointer、连续坐标、独立A/S充分训练",
+      "output_protocol": "audiolab-absolute-time-group-freex-ar-v1",
+      "delivery": "research_only_not_runtime_compatible",
+      "evidence": "docs/evaluations/freex_anchored_20261025.md"
     }
   ],
   "experiments": [
@@ -2724,6 +2733,149 @@
       "result": "已有设计/挖掘/确定性解释器；尚无可交付的学习式动态模型",
       "evidence": "docs/freeform_performance_contract.md",
       "runs": []
+    },
+    {
+      "id": "E18",
+      "title": "全300首静态free-x时间pointer A/S充分训练",
+      "kind": "from_scratch_then_continuation",
+      "models": [
+        "AL-FreeX@0.4.0"
+      ],
+      "status": "running",
+      "question": "沿用4K时间结构，完整训练静态free-x的64bin和连续坐标；先检查全部训练曲拟合",
+      "result": "已启动全300首A/S独立训练。300首整曲及606个平移视图通过标签检查，45项测试通过；质量尚待首次整谱评测。",
+      "evidence": "docs/evaluations/freex_anchored_20261025.md",
+      "training_scope": {
+        "songs": 300,
+        "held_out_songs": 0,
+        "generalization": "用户另提供新歌曲后再检查",
+        "four_k": "E14 completed1000; stopped as requested",
+        "target_epoch": 1000,
+        "schedule": "10-epoch warmup/cosine 3e-4 to3e-5, then preserve AdamW/RNG and continue at3e-5",
+        "keep_all_four_types": true,
+        "hold_quota": null,
+        "two_finger_cap": null
+      },
+      "full_cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+      "runs": [
+        {
+          "id": "E18-A",
+          "model": "AL-FreeX@0.4.0",
+          "variant": "audio",
+          "gpu": 0,
+          "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_latest.pt",
+          "pilot_checkpoint": "out/freex_anchored_20261025/pilot/audio/model_latest.pt",
+          "progress_file": "out/freex_anchored_20261025/continued1000/audio/training.json",
+          "log_file": "out/freex_anchored_20261025/audio-continued1000.log",
+          "evaluation_root": "out/freex_anchored_20261025/continued1000/audio",
+          "supervisor": "out/freex_anchored_20261025/supervisor.json",
+          "parent_run": null,
+          "initialization": "from_scratch; independent parameters and AdamW; identical seed42",
+          "additional_onset_input": "none_zeroed_channel",
+          "hard_onset_threshold": null,
+          "forced_skeleton": false,
+          "history": true,
+          "acoustic_frontend": "frozen original free-x encoder from full cache, not 4K encoder",
+          "schema": "audiolab-absolute-time-group-freex-ar-v1",
+          "training": {
+            "songs": 300,
+            "held_out_songs": 0,
+            "target_epoch": 1000,
+            "status": "running",
+            "phases": [
+              {
+                "name": "pilot",
+                "from_epoch": 0,
+                "target_epoch": 10,
+                "status_at_launch": "running"
+              },
+              {
+                "name": "continued1000",
+                "from_epoch": 10,
+                "target_epoch": 1000,
+                "status_at_launch": "queued_after_successful_pilot"
+              }
+            ]
+          },
+          "parameters": 6815860,
+          "initial_state_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
+          "launched_at_utc": "2026-10-24T22:39:55.545825+00:00",
+          "pid_at_launch": 2046932,
+          "pilot_progress_file": "out/freex_anchored_20261025/pilot/audio/training.json",
+          "pilot_log_file": "out/freex_anchored_20261025/audio-pilot.log"
+        },
+        {
+          "id": "E18-S",
+          "model": "AL-FreeX@0.4.0",
+          "variant": "soft",
+          "gpu": 1,
+          "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_latest.pt",
+          "pilot_checkpoint": "out/freex_anchored_20261025/pilot/soft/model_latest.pt",
+          "progress_file": "out/freex_anchored_20261025/continued1000/soft/training.json",
+          "log_file": "out/freex_anchored_20261025/soft-continued1000.log",
+          "evaluation_root": "out/freex_anchored_20261025/continued1000/soft",
+          "supervisor": "out/freex_anchored_20261025/supervisor.json",
+          "parent_run": null,
+          "initialization": "from_scratch; independent parameters and AdamW; identical seed42",
+          "additional_onset_input": "continuous_probability_and_subframe_offset",
+          "hard_onset_threshold": null,
+          "forced_skeleton": false,
+          "history": true,
+          "acoustic_frontend": "frozen original free-x encoder from full cache, not 4K encoder",
+          "schema": "audiolab-absolute-time-group-freex-ar-v1",
+          "training": {
+            "songs": 300,
+            "held_out_songs": 0,
+            "target_epoch": 1000,
+            "status": "running",
+            "phases": [
+              {
+                "name": "pilot",
+                "from_epoch": 0,
+                "target_epoch": 10,
+                "status_at_launch": "running"
+              },
+              {
+                "name": "continued1000",
+                "from_epoch": 10,
+                "target_epoch": 1000,
+                "status_at_launch": "queued_after_successful_pilot"
+              }
+            ]
+          },
+          "parameters": 6815860,
+          "initial_state_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
+          "launched_at_utc": "2026-10-24T22:39:55.547673+00:00",
+          "pid_at_launch": 2046933,
+          "pilot_progress_file": "out/freex_anchored_20261025/pilot/soft/training.json",
+          "pilot_log_file": "out/freex_anchored_20261025/soft-pilot.log"
+        }
+      ],
+      "launched_at_utc": "2026-10-24T22:39:55.541311+00:00",
+      "pair_cache_sha256": "e0deb8269336075534b4b4e2e308e0439a461de587e169b106980d8bd6433754",
+      "source_sha256": {
+        "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+        "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+        "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2",
+        "src/conditional_training.py": "7229cd6dfa83745b46ba236bb486348b34ba969a9948efcab924486cbb018ddc",
+        "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+        "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+        "src/data/chart_tokenizer.py": "466eaeb75600cde2449b8282aae5ff3fb1b6d68f3981e16e7dc33109fe21ae99",
+        "src/soft_onset.py": "5dfbb511ff0e058b25a6e00d65f479c1a176f12e8b2919b166f4c68101ccb73f",
+        "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45",
+        "script/train_alignment_scratch.py": "fbe986e1ee0d78def6c09a9300c5e153de241f120b808dd4ed96484859404eed",
+        "script/train_models.py": "6aca0ae974d12416ce4fb81e2bddd0bb4541a2d5cf60643b95eed36205d92cd2",
+        "src/resource_budget.py": "b26ae4c3608a223b144d93de88e32fce02ce63f75c85277c91b6ae0432220c91",
+        "src/model_benchmark.py": "c7257da6cb65d8522ae376ecbb23acf5db696cb879a30818a326a780146cf250",
+        "benchmarks/v1/protocol.json": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5"
+      },
+      "supervisor": "out/freex_anchored_20261025/supervisor.json",
+      "preflight": {
+        "songs": 300,
+        "held_out_songs": 0,
+        "pair_views_checked": 606,
+        "tests_passed": 45
+      }
     }
   ],
   "bundles": [

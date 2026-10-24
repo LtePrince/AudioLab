@@ -1,4 +1,4 @@
-"""Experimental 4K AR with supervised absolute-time pointers.
+"""Experimental 4K / static free-x AR with supervised absolute-time pointers.
 
 Versioned group protocol, not the product DT tokenizer: BOS / END_GROUP predict
 stop or a time anchor; ANCHOR then predicts NOTE/DUR members and END_GROUP.
@@ -15,26 +15,53 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-from src.data.chart_tokenizer import BOS, EOS, ChartTokenizer, GrammarState
+from src.data.chart_tokenizer import BOS, EOS, ChartTokenizer, GrammarState, bin_to_hit
 from src.models.chart_decoder import ChartDecoder, nucleus_probs
 from src.models.chart_history import CausalChartHistory, history_features
 from src.pattern_diagnostics import KINDS, LANE_X
 from src.soft_onset import MEMORY_SECONDS
 
 SCHEMA = 'audiolab-absolute-time-group-ar-v1'
+FREEX_SCHEMA = 'audiolab-absolute-time-group-freex-ar-v1'
 # Existing unused slots; their new meaning is bound to SCHEMA, never inferred
 # by the legacy model loader or product tokenizer.
 ANCHOR, END_GROUP = 113, 114
 MIN_PROGRESS_SECONDS = 1e-6  # Numerical strict ordering, not musical spacing.
 
 
-def encode_target(route, duration):
-    tk = ChartTokenizer(4)
+def residuals_by_note(route):
+    """Read residuals at NOTE positions in the original 64-bin DT stream."""
+    tk = ChartTokenizer(64)
+    tokens = route['tokens'].tolist()
+    offsets, mask = route['offsets'], route['offset_mask']
+    if len(offsets) != len(tokens) or len(mask) != len(tokens):
+        raise ValueError('free-x residual arrays must match the original token stream')
+    result = {}
+    for i, (token, tick) in enumerate(zip(tokens, tk.ticks_per_position(tokens))):
+        is_note = tk.kind(token) == 'NOTE'
+        if bool(mask[i]) != is_note:
+            raise ValueError('free-x residual mask must mark exactly the NOTE positions')
+        if is_note:
+            value = float(offsets[i])
+            if not math.isfinite(value) or not 0 <= value <= 1:
+                raise ValueError('free-x residual must be finite and normalized to [0,1]')
+            key = (tick, tk.value(token)//4)
+            if key in result:
+                raise ValueError('duplicate free-x time/bin target')
+            result[key] = value
+    return result
+
+
+def encode_target(route, duration, *, n_lanes=4):
+    tk = ChartTokenizer(n_lanes)
+    anchor, end_group = tk.cond(0), tk.cond(1)
+    residuals = residuals_by_note(route) if n_lanes == 64 else {}
     bpm = route['reference']['timebase_bpm']
     offset = route['reference']['offset_seconds']
     scale = 60 / (32*bpm)
     notes = tk.decode_tokens(route['tokens'].tolist(), strict=True)
     tokens, seconds = [BOS], [0.]
+    offsets, offset_mask = [0.], [False]
     decisions, next_seconds, stops = [], [], []
     groups = []
     for tick, members in groupby(notes, key=lambda n:n.tick):
@@ -44,24 +71,33 @@ def encode_target(route, duration):
             raise ValueError('reference onset/Hold exceeds physical audio bounds')
         decisions.append(len(tokens)-1);next_seconds.append(onset);stops.append(0.)
         groups.append(dict(time_seconds=onset, notes=members))
-        tokens.append(ANCHOR);seconds.append(onset)
+        tokens.append(anchor);seconds.append(onset)
+        offsets.append(0.);offset_mask.append(False)
         for n in members:
             span = [tk.note(n.lane,n.type)]
             if n.type == 3:tk._emit_span(span,n.dur,tk.durb,tk.durt,16,31)
             tokens.extend(span);seconds.extend([onset]*len(span))
-        tokens.append(END_GROUP);seconds.append(onset)
+            offsets.extend([residuals.get((n.tick,n.lane),0.)]+[0.]*(len(span)-1))
+            offset_mask.extend([n_lanes==64]+[False]*(len(span)-1))
+        tokens.append(end_group);seconds.append(onset)
+        offsets.append(0.);offset_mask.append(False)
     decisions.append(len(tokens)-1);next_seconds.append(0.);stops.append(1.)
     frames = torch.tensor(seconds,dtype=torch.float32)/MEMORY_SECONDS
     labels = torch.full((len(tokens),),-100,dtype=torch.long)
     for i in range(len(tokens)-1):
-        if tokens[i] not in (BOS,END_GROUP):labels[i]=tokens[i+1]
-    history = history_features(tokens,frames,n_lanes=4,frames_per_beat=60/bpm/MEMORY_SECONDS)
-    lower = [seconds[i]+(MIN_PROGRESS_SECONDS if tokens[i]==END_GROUP else 0.) for i in decisions]
-    return dict(tokens=torch.tensor(tokens),frames=frames,history=history,layout_targets=labels,
+        if tokens[i] not in (BOS,end_group):labels[i]=tokens[i+1]
+    history = history_features(tokens,frames,n_lanes=n_lanes,frames_per_beat=60/bpm/MEMORY_SECONDS,
+                               offsets=offsets if n_lanes==64 else None)
+    lower = [seconds[i]+(MIN_PROGRESS_SECONDS if tokens[i]==end_group else 0.) for i in decisions]
+    result = dict(tokens=torch.tensor(tokens),frames=frames,history=history,layout_targets=labels,
         decisions=torch.tensor(decisions),next_seconds=torch.tensor(next_seconds,dtype=torch.float64),
         stop_targets=torch.tensor(stops),lower_seconds=torch.tensor(lower,dtype=torch.float64),duration=float(duration),
         time_count=len(groups),layout_count=int((labels!=-100).sum()),stop_count=1,
         continue_count=len(groups),reference_times=[g['time_seconds'] for g in groups],bpm=bpm)
+    if n_lanes==64:
+        result.update(offsets=torch.tensor(offsets),offset_mask=torch.tensor(offset_mask),
+                      coordinate_count=sum(offset_mask))
+    return result
 
 
 def time_intervals(lower, length, duration, valid):
@@ -81,9 +117,11 @@ class AnchoredAR(nn.Module):
     def __init__(self, decoder_config, *, pointer_dim=64):
         super().__init__()
         self.decoder=ChartDecoder(**decoder_config)
-        if self.decoder.n_lanes!=4 or self.decoder.history_dim!=28 or self.decoder.soft_onset_dim!=2 \
+        if self.decoder.n_lanes not in (4,64) or self.decoder.history_dim!=28 or self.decoder.soft_onset_dim!=2 \
                 or self.decoder.cross_window is not None or self.decoder.cross_time_scale is not None:
-            raise ValueError('anchored experiment requires global 4K decoder with causal history')
+            raise ValueError('anchored experiment requires global 4K/free-x decoder with causal history')
+        if self.decoder.n_lanes==64 and self.decoder.offset_head is None:
+            raise ValueError('free-x requires a continuous coordinate residual head')
         dim=decoder_config['hidden_dim']
         self.time_query=nn.Linear(dim,pointer_dim)
         self.time_key=nn.Linear(dim,pointer_dim)
@@ -130,11 +168,18 @@ class AnchoredAR(nn.Module):
             subframe=(fraction-target_fraction).square().sum()
             accuracy=float((scores.argmax(-1)==bins).sum())
             offset_error=float(((a+fraction*(b-a)-truth).abs()).sum().detach())
-        return dict(frame_ce=frame_ce,subframe_mse=subframe,layout_ce=layout,
+        result = dict(frame_ce=frame_ce,subframe_mse=subframe,layout_ce=layout,
                     stop_bce=stop[~positive].sum(),continue_bce=stop[positive].sum(),
                     false_stops=float(((self.stop_head(h).squeeze(-1)>=0)&positive).sum()),
                     correct_stops=float(((self.stop_head(h).squeeze(-1)>=0)&~positive).sum()),
                     frame_correct=accuracy,conditional_offset_absolute_seconds=offset_error)
+        if self.decoder.n_lanes==64:
+            mask=target['offset_mask'].to(device)
+            predicted=self.decoder.predict_offset(hidden)[0,mask]
+            error=predicted-target['offsets'].to(device)[mask]
+            result.update(coordinate_mse=error.square().sum(),
+                          coordinate_absolute_screen=float(error.abs().sum().detach())*.9/64)
+        return result
 
 
 def normalized_loss(components, totals):
@@ -142,20 +187,22 @@ def normalized_loss(components, totals):
             components['subframe_mse']/max(1,totals['time_count'])+
             .25*components['layout_ce']/max(1,totals['layout_count'])+
             .5*(components['stop_bce']+components['continue_bce'])/
-            max(1,totals['stop_count']+totals['continue_count']))
+            max(1,totals['stop_count']+totals['continue_count'])+
+            components.get('coordinate_mse',0.)/max(1,totals.get('coordinate_count',0)))
 
 
 @torch.no_grad()
 def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=12000,check=lambda:None):
     """Free rollout; predicted anchors stay continuous through exported notes."""
     started=time.monotonic();device=next(model.parameters()).device
-    decoder=model.decoder;tk=ChartTokenizer(4);duration=float(condition['duration'])
+    decoder=model.decoder;tk=ChartTokenizer(decoder.n_lanes);duration=float(condition['duration'])
+    anchor,end_group=tk.cond(0),tk.cond(1)
     soft=condition['soft_onsets'].to(device)
     if not use_soft:soft=torch.zeros_like(soft)
     memory=decoder.prepare_memory(condition['features'].float().to(device),soft)
     valid=condition['valid'].to(device);caches=decoder.init_cache(memory)
     rng=torch.Generator(device=device).manual_seed(seed)
-    history=CausalChartHistory(4,60/bpm/MEMORY_SECONDS)
+    history=CausalChartHistory(tk.n_lanes,60/bpm/MEMORY_SECONDS)
     token,clock=BOS,0.;notes=[];onsets=[];group=None;pending=None
     scale=60/(32*bpm);trace=[]
 
@@ -166,13 +213,15 @@ def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=1200
     def finish(status,error=None):
         # Derive benchmark events from exported notes, including for an
         # explicitly failed partial rollout; never count an unused anchor.
-        actual=sorted({n['time_seconds'] for n in notes})
+        exported=[n for n in notes if n['screen_x'] is not None]
+        actual=sorted({n['time_seconds'] for n in exported})
         result=dict(status=status,greedy=greedy,seed=seed,seconds=time.monotonic()-started,
-            notes=notes,onsets_seconds=actual,note_count=len(notes),generated_onsets=len(actual),
-            types=dict(Counter(n['type'] for n in notes)),eos_clock_seconds=clock if status=='completed' else None,
+            notes=exported,onsets_seconds=actual,note_count=len(exported),generated_onsets=len(actual),
+            types=dict(Counter(n['type'] for n in exported)),eos_clock_seconds=clock if status=='completed' else None,
             last_onset_seconds=actual[-1] if actual else None,
             termination='learned_stop' if status=='completed' else 'failed',trace=trace)
         if error:result['error']=error
+        if len(exported)!=len(notes):result['incomplete_coordinate_notes']=len(notes)-len(exported)
         return result
 
     for position in range(max_tokens):
@@ -181,13 +230,18 @@ def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=1200
         state=torch.tensor([history.features(frame)],device=device)
         logits,hidden=decoder.step(torch.tensor([token],device=device),torch.tensor([frame],device=device),
             position,caches,memory.shape[1],valid,history=state)
-        history.observe(token,frame)
+        residual=None
+        if tk.n_lanes==64 and tk.kind(token)=='NOTE':
+            residual=float(decoder.predict_offset(hidden[:,None])[0,0])
+            notes[-1]['screen_x']=bin_to_hit(notes[-1]['position'],residual)
+            notes[-1]['residual']=residual
+        history.observe(token,frame,residual)
         trace.append([int(token),clock])
-        if token in (BOS,END_GROUP):
+        if token in (BOS,end_group):
             stop=model.stop_head(hidden).squeeze()
             if select(torch.stack([torch.zeros_like(stop),stop]))==1:
                 return finish('completed')
-            lower=torch.tensor([clock+(MIN_PROGRESS_SECONDS if token==END_GROUP else 0.)],device=device,dtype=torch.float64)
+            lower=torch.tensor([clock+(MIN_PROGRESS_SECONDS if token==end_group else 0.)],device=device,dtype=torch.float64)
             lo,hi,allowed=time_intervals(lower,memory.shape[1],duration,valid)
             if not allowed.any():
                 return finish('failed','continued with no future audio interval')
@@ -199,11 +253,11 @@ def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=1200
             # interval half-open without moving to a different frame or grid.
             clock=min(a+fraction*(b-a),math.nextafter(b,a))
             if not (float(lower[0])<=clock<duration):raise RuntimeError('nonfinite/out-of-bounds predicted time')
-            onsets.append(clock);token=ANCHOR
+            onsets.append(clock);token=anchor
             group=GrammarState(tk);group.step(BOS);pending=None
             continue
         allowed=torch.zeros(tk.vocab_size,dtype=torch.bool,device=device)
-        for candidate in range(50,113):
+        for candidate in range(50,anchor):
             if not group.is_allowed(candidate):continue
             kind=tk.kind(candidate)
             if kind=='NOTE':
@@ -212,15 +266,15 @@ def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=1200
             elif kind in ('DURB','DURT'):
                 extra=tk.value(candidate)*(32 if kind=='DURB' else 1)*scale
                 allowed[candidate]=pending is not None and notes[pending]['end_seconds']+extra<=duration
-        allowed[END_GROUP]=bool(group.used_lanes) and not group.in_dur
+        allowed[end_group]=bool(group.used_lanes) and not group.in_dur
         if not allowed.any():return finish('failed','no valid group continuation')
         token=select(logits[0].masked_fill(~allowed,float('-inf')))
-        if token==END_GROUP:continue
+        if token==end_group:continue
         group.step(token);kind=tk.kind(token)
         if kind=='NOTE':
             lane,index=divmod(tk.value(token),4)
             notes.append(dict(time_seconds=clock,end_seconds=clock,position=lane,
-                              type=KINDS[index+1],screen_x=LANE_X[lane]))
+                              type=KINDS[index+1],screen_x=LANE_X[lane] if tk.n_lanes==4 else None))
             pending=len(notes)-1 if index==2 else None
         else:
             notes[pending]['end_seconds']+=tk.value(token)*(32 if kind=='DURB' else 1)*scale

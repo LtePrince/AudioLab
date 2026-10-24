@@ -69,13 +69,15 @@ def shifted_waveform(waveform, plan, shift_samples):
     return output
 
 
-def shifted_targets(notes, bpm, offset, plan, shift_samples):
+def shifted_targets(notes, bpm, offset, plan, shift_samples, *, n_lanes=4, residuals=None):
     """Re-encode all four note types at shifted physical audio times."""
     scale = 60/(32*bpm)
     lo = plan['start_sample']/SAMPLE_RATE
     hi = (plan['start_sample']+plan['content_samples'])/SAMPLE_RATE
     shift = shift_samples/SAMPLE_RATE
-    selected = []
+    selected, shifted_residuals = [], {}
+    if n_lanes==64 and residuals is None:
+        raise ValueError('free-x translation requires original coordinate residuals')
     for n in notes:
         a, b = n.tick*scale+offset, (n.tick+n.dur)*scale+offset
         if n.type == 3 and (a < lo < b or a < hi < b):
@@ -83,7 +85,8 @@ def shifted_targets(notes, bpm, offset, plan, shift_samples):
         if lo <= a < hi:
             tick = round((a-lo+shift)/scale)
             selected.append(TokenNote(tick,n.lane,n.type,n.dur))
-    tk = ChartTokenizer(4)
+            if n_lanes==64:shifted_residuals[tick,n.lane]=residuals[n.tick,n.lane]
+    tk = ChartTokenizer(n_lanes)
     tokens = torch.tensor(tk.encode_notes(selected))
     decoded = tk.decode_tokens(tokens.tolist(),strict=True)
     if len(decoded) != len(selected):
@@ -93,8 +96,12 @@ def shifted_targets(notes, bpm, offset, plan, shift_samples):
     frames = torch.tensor(tk.ticks_per_position(tokens.tolist()),dtype=torch.float32)*scale/MEMORY_SECONDS
     if any((n.tick+n.dur)*scale > plan['total_samples']/SAMPLE_RATE for n in decoded):
         raise ValueError('quantized target outside waveform')
-    return dict(tokens=tokens,frames=frames,offsets=torch.zeros(len(tokens)),
-                offset_mask=torch.zeros(len(tokens),dtype=torch.bool),
+    offsets=torch.zeros(len(tokens));mask=torch.zeros(len(tokens),dtype=torch.bool)
+    if n_lanes==64:
+        for i,(token,tick) in enumerate(zip(tokens.tolist(),tk.ticks_per_position(tokens.tolist()))):
+            if tk.kind(token)=='NOTE':
+                offsets[i]=shifted_residuals[tick,tk.value(token)//4];mask[i]=True
+    return dict(tokens=tokens,frames=frames,offsets=offsets,offset_mask=mask,
                 reference=dict(timebase_bpm=bpm,offset_seconds=0.))
 
 

@@ -16,7 +16,7 @@ import torch
 from script.train_alignment_scratch import training_state, restore_training
 from script.train_grounded_ar import (checked_pairs, load_inputs, encode_waveform, read, SONGS)
 from script.train_soft_onset import cache_inputs, load_sample
-from src.anchored_ar import SCHEMA, AnchoredAR, encode_target, normalized_loss, generate
+from src.anchored_ar import SCHEMA, FREEX_SCHEMA, AnchoredAR, encode_target, normalized_loss, generate
 from src.audio_understanding.evaluation import match_events
 from src.audio_understanding.inference import sha256
 from src.conditional_training import empty_targets
@@ -37,7 +37,7 @@ def continuation_config(parent, config, *, parent_path, parent_sha256):
     A continuation is a new run with its own provenance, not a rewrite of the
     pilot's cosine horizon. Keep the actual terminal AdamW learning rates.
     """
-    if parent.get('schema') != SCHEMA:
+    if parent.get('schema') not in (SCHEMA,FREEX_SCHEMA) or parent.get('schema')!=config['schema']:
         raise ValueError('continuation requires an absolute-time AR checkpoint')
     previous=parent['config']
     for key in ('schema','variant','decoder_config','seed','parameters',
@@ -70,21 +70,25 @@ def epoch_objective(record):
     counts=record['counts']
     stop=(record['stop_bce']*counts['stop_count']+
           record['continue_bce']*counts['continue_count'])/max(1,counts['stop_count']+counts['continue_count'])
-    return record['frame_ce']+record['subframe_mse']+.25*record['layout_ce']+.5*stop
+    return record['frame_ce']+record['subframe_mse']+.25*record['layout_ce']+.5*stop+record.get('coordinate_mse',0.)
 
 
-def condition(sample):
-    return dict(features=sample['routes']['4k']['features'],soft_onsets=sample['soft_onsets'],
+def condition(sample, mode='4k'):
+    return dict(features=sample['routes'][mode]['features'],soft_onsets=sample['soft_onsets'],
                 valid=sample['valid'],duration=sample['duration'])
 
 
 def train(args,budget,device):
+    mode=getattr(args,'mode','4k');n_lanes=64 if mode=='freex' else 4
+    schema=FREEX_SCHEMA if mode=='freex' else SCHEMA
+    counts=COUNTS+(('coordinate_count',) if mode=='freex' else ())
     cache=cache_inputs(args.cache);pairs=checked_pairs(args)
     decoder_config=read('docs/evaluations/diffusion_ar_attribution_20261023.json')['ar']['config']
+    if mode=='freex':decoder_config.update(n_lanes=64,vocab_size=369,offset_head=True)
     torch.manual_seed(args.seed)
     model=AnchoredAR(decoder_config).to(device)
     model.decoder.gradient_checkpointing=True
-    config=dict(schema=SCHEMA,variant=args.variant,decoder_config=decoder_config,
+    config=dict(schema=schema,variant=args.variant,decoder_config=decoder_config,
         initialization='all decoder and pointer weights from scratch; frozen original acoustic frontends',
         initial_state_sha256=state_hash(model.state_dict()),seed=args.seed,epochs=args.epochs,lr=args.lr,
         parameters=sum(p.numel() for p in model.parameters()),
@@ -92,6 +96,9 @@ def train(args,budget,device):
         source_sha256={p:sha256(p) for p in SOURCES},
         loss='frame CE + conditional normalized subframe MSE + .25 layout CE + .5 event-normalized stop/continue BCE; joint update denominators',
         policy='global audio; pointer output chronological intervals; no grid snapping/onset threshold/type quota; continuous seconds export')
+    if mode=='freex':
+        config['loss']+=' + NOTE-normalized coordinate residual MSE (weight 1, original FreeX convention)'
+        config['policy']+='; static free-x 64 bins + residual in [0,1]; screen_x=.05+.9*(bin+residual)/64'
     optimizer=torch.optim.AdamW(model.parameters(),lr=args.lr)
     rng=random.Random(args.seed);curves=[];steps=0;started=time.monotonic()
     path=args.output/'model_latest.pt'
@@ -117,7 +124,7 @@ def train(args,budget,device):
     for row in cache['rows']:
         budget.check()
         sample=load_sample(args.cache,row)
-        try:targets[row['id']]=encode_target(sample['routes']['4k'],sample['duration'])
+        try:targets[row['id']]=encode_target(sample['routes'][mode],sample['duration'],n_lanes=n_lanes)
         except ValueError as exc:raise ValueError(f"{row['id']}: {exc}") from exc
         del sample
     quiet={float(k):torch.load(args.pairs/v['file'],map_location='cpu',weights_only=True)
@@ -132,11 +139,11 @@ def train(args,budget,device):
         for i,row in enumerate(order):
             sample=load_sample(args.cache,row)
             pair=torch.load(args.pairs/by_id[row['id']]['file'],map_location='cpu',weights_only=True)
-            crops=[encode_target(t,pair['duration']) for t in pair['targets']]
-            silent=encode_target(empty_targets(crops[0]['bpm']),pair['duration'])
-            batch=[(targets[row['id']],condition(sample)),*zip(crops,pair['views']),
+            crops=[encode_target(t,pair['duration'],n_lanes=n_lanes) for t in pair['targets']]
+            silent=encode_target(empty_targets(crops[0]['bpm']),pair['duration'],n_lanes=n_lanes)
+            batch=[(targets[row['id']],condition(sample,mode)),*zip(crops,pair['views']),
                    (silent,quiet[pair['duration']])]
-            totals={k:sum(t[k] for t,_ in batch) for k in COUNTS}
+            totals={k:sum(t[k] for t,_ in batch) for k in counts}
             if 'continuation' in config:
                 for group,rate in zip(optimizer.param_groups,config['continuation']['learning_rates'],strict=True):
                     group['lr']=rate
@@ -145,8 +152,8 @@ def train(args,budget,device):
                 for group in optimizer.param_groups:group['lr']=args.lr*factor
             optimizer.zero_grad(set_to_none=True)
             for target,view in batch:
-                fake=dict(routes={'4k':dict(tokens=target['tokens'],features=view['features'])})
-                estimate=training_preflight(model.decoder,fake,'4k',budget,device)
+                fake=dict(routes={mode:dict(tokens=target['tokens'],features=view['features'])})
+                estimate=training_preflight(model.decoder,fake,mode,budget,device)
                 extra=target['time_count']*view['features'].shape[1]*32
                 if device.type=='cuda':
                     free,total=torch.cuda.mem_get_info(device)
@@ -157,14 +164,14 @@ def train(args,budget,device):
                 if not torch.isfinite(loss):raise RuntimeError('nonfinite anchored loss')
                 loss.backward()
                 for key,value in components.items():stats[key]+=float(value.detach()) if torch.is_tensor(value) else value
-                for key in COUNTS:stats[key]+=target[key]
+                for key in counts:stats[key]+=target[key]
                 del components,loss
             torch.nn.utils.clip_grad_norm_(model.parameters(),1.,error_if_nonfinite=True)
             optimizer.step();steps+=1
             del batch,sample,pair,crops
             if (i+1)%100==0:print(json.dumps(dict(stage='train',variant=args.variant,epoch=epoch+1,songs=i+1,steps=steps)),flush=True)
         record=dict(epoch=epoch+1,steps=steps,elapsed_seconds=time.monotonic()-started,
-            counts={k:stats[k] for k in COUNTS},
+            counts={k:stats[k] for k in counts},
             frame_ce=stats['frame_ce']/stats['time_count'],
             frame_accuracy=stats['frame_correct']/stats['time_count'],
             conditional_offset_mae_seconds=stats['conditional_offset_absolute_seconds']/stats['time_count'],
@@ -174,11 +181,21 @@ def train(args,budget,device):
             false_stop_rate=stats['false_stops']/stats['continue_count'],
             end_stop_recall=stats['correct_stops']/stats['stop_count'],
             learning_rates=[g['lr'] for g in optimizer.param_groups])
+        if mode=='freex':
+            record.update(coordinate_mse=stats['coordinate_mse']/max(1,stats['coordinate_count']),
+                          conditional_coordinate_mae_screen=stats['coordinate_absolute_screen']/max(1,stats['coordinate_count']))
         record['objective']=epoch_objective(record)
         curves.append(record)
-        saved=dict(schema=SCHEMA,config=config,curves=curves,epoch=epoch+1,steps=steps,
+        saved=dict(schema=schema,config=config,curves=curves,epoch=epoch+1,steps=steps,
             model={k:v.detach().cpu() for k,v in model.state_dict().items()},training_state=training_state(optimizer,rng))
         budget.save(saved,path)
+        snapshot_every=getattr(args,'snapshot_every',0)
+        if snapshot_every and ((epoch+1)%snapshot_every==0 or epoch+1==last_epoch):
+            snapshot=args.output/f'model_e{epoch+1:04d}.pt'
+            if snapshot.exists():raise ValueError('refusing to overwrite an immutable epoch snapshot')
+            budget.save({k:v for k,v in saved.items() if k!='training_state'},snapshot)
+            write_json(snapshot.with_suffix('.json'),dict(epoch=epoch+1,steps=steps,sha256=sha256(snapshot),
+                source_checkpoint_sha256=sha256(path),schema=schema,variant=args.variant))
         if record['objective']<best_objective:
             best_objective=record['objective']
             # A compact inference snapshot, never a substitute for the latest
@@ -219,23 +236,32 @@ def score_rollout(model,view,bpm,reference,args,budget,greedy):
 
 @torch.no_grad()
 def evaluate(args,budget,device):
+    mode=getattr(args,'mode','4k');n_lanes=64 if mode=='freex' else 4
+    schema=FREEX_SCHEMA if mode=='freex' else SCHEMA
+    counts=COUNTS+(('coordinate_count',) if mode=='freex' else ())
     checkpoint=args.checkpoint or args.output/'model_latest.pt'
     ck=torch.load(checkpoint,map_location='cpu',weights_only=True)
-    if ck['schema']!=SCHEMA or ck['config']['variant']!=args.variant:raise ValueError('wrong anchored schema/variant')
+    if ck['schema']!=schema or ck['config']['variant']!=args.variant:raise ValueError('wrong anchored schema/variant')
     checkpoint_epoch,checkpoint_steps=ck['epoch'],ck['steps']
     model=AnchoredAR(ck['config']['decoder_config']).to(device).eval();model.load_state_dict(ck['model'],strict=True);del ck
     cache=cache_inputs(args.cache);pairs=checked_pairs(args)
-    source=read(args.baseline_input);baseline=next(r for r in source['runs'] if r['id']=='4k/global/seed42')
-    runs=[dict(id=f'4k/anchored-{args.variant}/{suffix}',cases=deepcopy(baseline['cases']),predictions={},
-        metadata=dict(stage='raw_layout',mode='4k',variant=args.variant,greedy=greedy,seed=42,
+    source=read(args.baseline_input);baseline=next(r for r in source['runs'] if r['id']==f'{mode}/global/seed42')
+    runs=[dict(id=f'{mode}/anchored-{args.variant}/{suffix}',cases=deepcopy(baseline['cases']),predictions={},
+        metadata=dict(stage='raw_layout',mode=mode,variant=args.variant,greedy=greedy,seed=42,
             checkpoint_sha256=sha256(checkpoint),checkpoint_epoch=checkpoint_epoch,checkpoint_steps=checkpoint_steps,
             sources={p:sha256(p) for p in SOURCES},
-            repairs='none',time_representation='predicted continuous seconds',schema=SCHEMA))
+            repairs='none',time_representation='predicted continuous seconds',schema=schema))
           for greedy,suffix in ((True,'greedy'),(False,'seed42'))]
     cases={c['id']:c for c in baseline['cases']};teacher=[]
     for row in cache['rows']:
         if row['id'] not in SONGS:continue
-        sample=load_sample(args.cache,row);view=condition(sample);target=encode_target(sample['routes']['4k'],sample['duration'])
+        sample=load_sample(args.cache,row);view=condition(sample,mode)
+        target=encode_target(sample['routes'][mode],sample['duration'],n_lanes=n_lanes)
+        if target['reference_times']!=cases[row['id']]['events_seconds']:
+            # Same canonical labels; allow only floating-point arithmetic noise.
+            if len(target['reference_times'])!=len(cases[row['id']]['events_seconds']) or any(
+                    abs(a-b)>1e-8 for a,b in zip(target['reference_times'],cases[row['id']]['events_seconds'])):
+                raise ValueError('benchmark reference differs from selected training route')
         diagnostic={}
         for name,acoustic,soft in (('matched',True,True),('zero_audio',False,True),('zero_soft',True,False)):
             v=dict(view)
@@ -243,7 +269,7 @@ def evaluate(args,budget,device):
             if not soft:v['soft_onsets']=torch.zeros_like(v['soft_onsets'])
             component=model.components(target,v,use_soft=args.variant=='soft')
             diagnostic[name]={k:float(v) for k,v in component.items()}
-        teacher.append(dict(id=row['id'],counts={k:target[k] for k in COUNTS},components=diagnostic))
+        teacher.append(dict(id=row['id'],counts={k:target[k] for k in counts},components=diagnostic))
         for run in runs:
             result=score_rollout(model,view,target['bpm'],cases[row['id']]['events_seconds'],args,budget,run['metadata']['greedy'])
             run['predictions'][row['id']]=result
@@ -263,7 +289,7 @@ def evaluate(args,budget,device):
     for row in pairs['diagnostics']:
         pair=torch.load(args.pairs/row['file'],map_location='cpu',weights_only=True)
         for index,(route,view) in enumerate(zip(pair['targets'],pair['views'])):
-            target=encode_target(route,pair['duration'])
+            target=encode_target(route,pair['duration'],n_lanes=n_lanes)
             result=score_rollout(model,view,target['bpm'],target['reference_times'],args,budget,False)
             shifts.append(dict(id=row['id'],view=index,reference_first_seconds=target['reference_times'][0],
                 generated_first_seconds=(result.get('onsets_seconds') or [None])[0],
@@ -277,11 +303,13 @@ def evaluate(args,budget,device):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('stage',choices=('train','evaluate'));p.add_argument('--variant',choices=('audio','soft'),required=True)
+    p.add_argument('--mode',choices=('4k','freex'),default='4k')
     p.add_argument('--output',type=Path,required=True);p.add_argument('--epochs',type=int,default=10)
     p.add_argument('--lr',type=float,default=3e-4);p.add_argument('--seed',type=int,default=42);p.add_argument('--resume',action='store_true')
     p.add_argument('--continue-from',type=Path,help='continue a completed pilot, retaining AdamW/RNG and terminal LR')
     p.add_argument('--until-epoch',type=int,help='stop at this cumulative epoch without changing the configured schedule')
     p.add_argument('--eval-every',type=int,default=0,help='evaluate free generation at cumulative epoch intervals; no RNG change')
+    p.add_argument('--snapshot-every',type=int,default=0,help='retain compact epoch snapshots at this interval and phase end')
     p.add_argument('--checkpoint',type=Path,help='evaluation checkpoint, allowing reports outside its training directory')
     p.add_argument('--cache',type=Path,default=Path('out/full_corpus_v1/cache'))
     p.add_argument('--pairs',type=Path,default=Path('out/grounded_ar_20261023/pairs'))
@@ -292,7 +320,7 @@ def main():
     p.add_argument('--device',default='cuda:0');add_resource_args(p);p.set_defaults(max_rss_gib=4.)
     args=p.parse_args()
     if args.epochs<1 or not math.isfinite(args.lr) or args.lr<=0:raise ValueError('positive epochs/lr required')
-    if args.eval_every<0 or (args.until_epoch is not None and args.until_epoch<1):raise ValueError('invalid evaluation/stop interval')
+    if args.eval_every<0 or args.snapshot_every<0 or (args.until_epoch is not None and args.until_epoch<1):raise ValueError('invalid evaluation/stop interval')
     torch.set_num_threads(2);args.output.mkdir(parents=True,exist_ok=True)
     budget=ResourceBudget(args,torch.device(args.device),args.output)
     {'train':train,'evaluate':evaluate}[args.stage](args,budget,budget.device)

@@ -46,7 +46,8 @@ def read(path):
 
 
 def load_inputs(args, device):
-    encoder, unused = load_models(args.model_root/'decoder/decoder_best.pt',device)
+    route='decoder_freex' if getattr(args,'mode','4k')=='freex' else 'decoder'
+    encoder, unused = load_models(args.model_root/route/'decoder_best.pt',device)
     del unused
     onset, _ = load_model(args.model_root/'transcriber/transcriber_best.pt',device)
     return encoder.requires_grad_(False).eval(), onset.requires_grad_(False).eval()
@@ -66,6 +67,7 @@ def encode_waveform(waveform, encoder, onset, budget, device):
 
 
 def prepare(args, budget, device):
+    mode=getattr(args,'mode','4k');n_lanes=64 if mode=='freex' else 4
     dest = args.pairs
     manifest_path = dest/'pairs.json'
     if manifest_path.exists():
@@ -79,12 +81,12 @@ def prepare(args, budget, device):
     cache = cache_inputs(args.cache)
     encoder, onset = load_inputs(args,device)
     expected = cache['models']
-    for key, path in (('4k',args.model_root/'decoder/decoder_best.pt'),
+    for key, path in ((mode,args.model_root/('decoder_freex' if mode=='freex' else 'decoder')/'decoder_best.pt'),
                       ('onset',args.model_root/'transcriber/transcriber_best.pt')):
         if sha256(path) != expected[key]['sha256']:
             raise ValueError('pair frontend must be identical to full-song cache frontend')
-    manifest = dict(schema=PAIR_SCHEMA,status='running',seed=args.seed,
-        full_cache_sha256=sha256(args.cache/'cache.json'),models={k:expected[k] for k in ('4k','onset')},
+    manifest = dict(schema=PAIR_SCHEMA,status='running',seed=args.seed,mode=mode,
+        full_cache_sha256=sha256(args.cache/'cache.json'),models={k:expected[k] for k in (mode,'onset')},
         source_sha256={p:sha256(p) for p in SOURCES},lengths=list(LENGTHS),rows=[],diagnostics=[],silence={},
         contract=dict(input='raw cropped waveform, both translated views re-encoded',
           label='all four types; complete Holds; physical sample clock, then original tick quantization',
@@ -92,15 +94,22 @@ def prepare(args, budget, device):
           negative='same content, same duration/BPM/mask, different physical time shift',
           shift_overlap='less than 50 percent of unique onsets matched at 25 ms',
           diagnostic_scope='new transformations of three trained songs; not unseen songs'))
+    if mode=='freex':
+        manifest['source_sha256']['src/anchored_ar.py']=sha256('src/anchored_ar.py')
+        manifest['contract']['coordinate']='original 64-bin residuals retained through translation; no position re-quantization'
     for duration in LENGTHS:
         condition = encode_waveform(torch.zeros(1,1,round(duration*SAMPLE_RATE)),encoder,onset,budget,device)
         path = dest/f'silence-{duration:g}.pt';budget.save(condition,path)
         manifest['silence'][str(duration)] = dict(file=path.name,sha256=sha256(path))
-    proc = AudioGPUprocessor(device='cpu');tk = ChartTokenizer(4)
+    proc = AudioGPUprocessor(device='cpu');tk = ChartTokenizer(n_lanes)
     for i,row in enumerate(cache['rows']):
         budget.check(force=True)
         sample = load_sample(args.cache,row)
-        route = sample['routes']['4k'];ref=route['reference']
+        route = sample['routes'][mode];ref=route['reference']
+        residuals=None
+        if mode=='freex':
+            from src.anchored_ar import residuals_by_note
+            residuals=residuals_by_note(route)
         if sha256(row['audio']['path']) != row['audio']['sha256']:
             raise ValueError('source waveform fingerprint changed')
         waveform = proc.load_from_path(row['audio']['path'])
@@ -115,7 +124,8 @@ def prepare(args, budget, device):
             for shift in plan['shift_samples']:
                 wave = shifted_waveform(waveform,plan,shift)
                 pair['views'].append(encode_waveform(wave,encoder,onset,budget,device))
-                pair['targets'].append(shifted_targets(notes,ref['timebase_bpm'],ref['offset_seconds'],plan,shift))
+                pair['targets'].append(shifted_targets(notes,ref['timebase_bpm'],ref['offset_seconds'],plan,shift,
+                                                      n_lanes=n_lanes,residuals=residuals))
             path = dest/f'pair-{i:03d}{"-diagnostic" if diagnostic else ""}.pt'
             budget.save(pair,path)
             manifest['diagnostics' if diagnostic else 'rows'].append(dict(id=row['id'],file=path.name,
@@ -132,8 +142,15 @@ def prepare(args, budget, device):
 def checked_pairs(args):
     index = read(args.pairs/'pairs.json')
     if index['schema'] != PAIR_SCHEMA or index['status'] != 'completed' or index['seed'] != args.seed \
-            or index['full_cache_sha256'] != sha256(args.cache/'cache.json') or len(index['rows']) != 300:
+            or index['full_cache_sha256'] != sha256(args.cache/'cache.json') or len(index['rows']) != 300 \
+            or index.get('mode','4k') != getattr(args,'mode','4k'):
         raise ValueError('complete matching 300-song pair cache required')
+    if getattr(args,'mode','4k')=='freex':
+        cache=cache_inputs(args.cache)
+        if {r['id'] for r in index['rows']}!={r['id'] for r in cache['rows']}:
+            raise ValueError('pair cache must cover every training song exactly once')
+        if index['models']!={k:cache['models'][k] for k in ('freex','onset')}:
+            raise ValueError('free-x pair encoder differs from full-song encoder')
     for row in index['rows']+index['diagnostics']+list(index['silence'].values()):
         path=(args.pairs/row['file']).resolve()
         if path.parent != args.pairs.resolve() or sha256(path)!=row['sha256']:
@@ -323,6 +340,7 @@ def evaluate(args,budget,device):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('stage',choices=('prepare','train','evaluate'))
+    p.add_argument('--mode',choices=('4k','freex'),default='4k',help='free-x supports pair preparation; use train_anchored_ar to train')
     p.add_argument('--variant',choices=('continued','data','rank'),default='data')
     p.add_argument('--cache',type=Path,default=Path('out/full_corpus_v1/cache'))
     p.add_argument('--pairs',type=Path,default=Path('out/grounded_ar_20261023/pairs'))
@@ -337,6 +355,7 @@ def main():
     p.add_argument('--rank-beta',type=float,default=2.);p.add_argument('--resume',action='store_true')
     p.add_argument('--device',default='cuda:0');add_resource_args(p);p.set_defaults(max_rss_gib=4.)
     args=p.parse_args()
+    if args.mode=='freex' and args.stage!='prepare':raise ValueError('use train_anchored_ar --mode freex for training/evaluation')
     if args.epochs<1 or not math.isfinite(args.lr) or args.lr<=0:raise ValueError('positive epochs/lr required')
     torch.set_num_threads(2)
     args.output.mkdir(parents=True,exist_ok=True)
