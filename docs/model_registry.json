@@ -916,29 +916,11 @@
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/audio/model_e0040.pt",
             "out/ar_saturation_20261023/audio/model_e0100.pt",
-            "out/ar_saturation_20261023/audio/model_e0220.pt",
-            "out/ar_saturation_20261023/audio/model_e0240.pt",
-            "out/ar_saturation_20261023/audio/model_e0260.pt",
-            "out/ar_saturation_20261023/audio/model_e0280.pt",
             "out/ar_saturation_20261023/audio/model_e0300.pt",
-            "out/ar_saturation_20261023/continued500/audio/model_e0320.pt",
-            "out/ar_saturation_20261023/continued500/audio/model_e0340.pt",
-            "out/ar_saturation_20261023/continued500/audio/model_e0360.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0380.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0400.pt",
-            "out/ar_saturation_20261023/continued500/audio/model_e0420.pt",
-            "out/ar_saturation_20261023/continued500/audio/model_e0440.pt",
-            "out/ar_saturation_20261023/continued500/audio/model_e0460.pt",
             "out/ar_saturation_20261023/continued500/audio/model_e0500.pt",
-            "out/ar_saturation_20261023/continued700/audio/model_e0520.pt",
-            "out/ar_saturation_20261023/continued700/audio/model_e0540.pt",
-            "out/ar_saturation_20261023/continued700/audio/model_e0560.pt",
-            "out/ar_saturation_20261023/continued700/audio/model_e0580.pt",
             "out/ar_saturation_20261023/continued700/audio/model_e0600.pt",
-            "out/ar_saturation_20261023/continued700/audio/model_e0620.pt",
-            "out/ar_saturation_20261023/continued700/audio/model_e0640.pt",
-            "out/ar_saturation_20261023/continued700/audio/model_e0660.pt",
-            "out/ar_saturation_20261023/continued700/audio/model_e0680.pt",
             "out/ar_saturation_20261023/continued700/audio/model_e0700.pt",
             "out/ar_saturation_20261023/continued1000/audio/model_e0720.pt",
             "out/ar_saturation_20261023/continued1000/audio/model_e0740.pt",
@@ -1050,7 +1032,9 @@
               "bytes": 26610961,
               "sha256": "22a8e534abb6848a3d6d3544670dafa73a888e19277072637f2f7124c1146f7d",
               "source_checkpoint_sha256": "1cdb2256aaf60a6846998f0a82b4fbd6329e6640cb37e29b34db66e63eebde01",
-              "recorded_utc": "2026-10-23T10:57:02.847579+00:00"
+              "recorded_utc": "2026-10-23T10:57:02.847579+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1060,7 +1044,9 @@
               "bytes": 26615889,
               "sha256": "eaf908cbc5e90bdef8fd2083be67277854a604020a4160050050d1f3c406b3bd",
               "source_checkpoint_sha256": "77ef8bd35f4cdac9832fb5d6d6024666d343c5d0499e85ee0574504eda30a6f4",
-              "recorded_utc": "2026-10-23T11:32:12.054203+00:00"
+              "recorded_utc": "2026-10-23T11:32:12.054203+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1070,7 +1056,9 @@
               "bytes": 26620881,
               "sha256": "a35b5ffcb9e347d24654bf9c29f81c8c048e9af5b20d2961867dfcf0f1c8d6af",
               "source_checkpoint_sha256": "44fd773ebbdfbc19110800074e0510ab918cde4a2d957b1ba25f45510a1fb8c9",
-              "recorded_utc": "2026-10-23T12:07:51.477484+00:00"
+              "recorded_utc": "2026-10-23T12:07:51.477484+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1080,7 +1068,9 @@
               "bytes": 26625873,
               "sha256": "1664dcfabaefb592646ce2a5bae95eea567882301726f8a525864599a1d3262e",
               "source_checkpoint_sha256": "49e6f02615da68573ca8a3c389f8dbaf57148e0c3ca641dc5645e17c2fb244e1",
-              "recorded_utc": "2026-10-23T12:44:22.462004+00:00"
+              "recorded_utc": "2026-10-23T12:44:22.462004+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1100,7 +1090,9 @@
               "bytes": 26636497,
               "sha256": "d6b29d0537aab6edfc884aefe083c0c2fd8a6975eef30c1ab58ca69ddafc839e",
               "source_checkpoint_sha256": "aad3cd6d0b4825c56b929a61bbdfb633a0f91c0fe46432e2441b59a3224fea66",
-              "recorded_utc": "2026-10-23T14:00:53.309196+00:00"
+              "recorded_utc": "2026-10-23T14:00:53.309196+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1110,7 +1102,9 @@
               "bytes": 26641489,
               "sha256": "58554e6989caf342a9b0fe795be2aee436ec22c50fe2f8142c3c0898cffe56b5",
               "source_checkpoint_sha256": "e04b02706049eeaf9e5846d32cb49505c733e5ddfca961b447220fb0a47e8052",
-              "recorded_utc": "2026-10-23T14:36:01.414906+00:00"
+              "recorded_utc": "2026-10-23T14:36:01.414906+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1120,7 +1114,9 @@
               "bytes": 26646417,
               "sha256": "65581c6606d4d8c6c39c73311f83da17dd497626d188dfc93d3365068adfdc4f",
               "source_checkpoint_sha256": "cbcafa9daaebba1271a8d3711ef6bedba205083a72f2a75578a39d659587acf5",
-              "recorded_utc": "2026-10-23T15:12:21.716709+00:00"
+              "recorded_utc": "2026-10-23T15:12:21.716709+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1150,7 +1146,9 @@
               "bytes": 26661393,
               "sha256": "98bd592963bfcc8f271f26ca8466212165dce837374e48f1076bd1b608764119",
               "source_checkpoint_sha256": "94c92a01565e496cb2d624e720f593bf4467075cfda82dd4be58468e4a51d8e9",
-              "recorded_utc": "2026-10-23T16:59:23.814000+00:00"
+              "recorded_utc": "2026-10-23T16:59:23.814000+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1160,7 +1158,9 @@
               "bytes": 26666385,
               "sha256": "450195a5b1839d4a6414c56be623b184cf36e7f8b2efbefb68f07cdfd72c780c",
               "source_checkpoint_sha256": "a4cdb30b63c7c7aa91e1ecbbbec53a19e21a8b1cd5013ead3ab08e496258d9ae",
-              "recorded_utc": "2026-10-23T17:35:03.702546+00:00"
+              "recorded_utc": "2026-10-23T17:35:03.702546+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1170,7 +1170,9 @@
               "bytes": 26671313,
               "sha256": "fc30268355b3b87ad21b3ce4b1344580250f57a16e3925ec6a5f333472548798",
               "source_checkpoint_sha256": "319e19b1b6ffac1b6d2437ca1c30de224ef45e95b6304e43606263d1198f7ee2",
-              "recorded_utc": "2026-10-23T18:11:26.752185+00:00"
+              "recorded_utc": "2026-10-23T18:11:26.752185+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1190,7 +1192,9 @@
               "bytes": 26687185,
               "sha256": "7f61e3b51fc335b26a896a9e4b08160aa4d007b2ec23267d6b20a4540fa66d9f",
               "source_checkpoint_sha256": "445dff04ebaf76ca3610fe9836f267bd1f5a8123588a4e183f1aa085619806c5",
-              "recorded_utc": "2026-10-24T01:01:06.614455+00:00"
+              "recorded_utc": "2026-10-24T01:01:06.614455+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1200,7 +1204,9 @@
               "bytes": 26692177,
               "sha256": "e3a2b3076212f26021650d23d80b74ae15f0c59f901c7efdb3a8646f121d0ec3",
               "source_checkpoint_sha256": "7ae15aa4187dc1078c5c3650707ff8d368862e8ce3a90480ac054a091063d4df",
-              "recorded_utc": "2026-10-24T01:35:24.916507+00:00"
+              "recorded_utc": "2026-10-24T01:35:24.916507+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1210,7 +1216,9 @@
               "bytes": 26697169,
               "sha256": "b5e26d5c313ae7bb5ada55ff3041b21caecc40a8d60d69206bd7bddaca85dd72",
               "source_checkpoint_sha256": "3254d347a54bd4681c5367e777766fc79e02a892d4d93c19e653fb2f8bb1f107",
-              "recorded_utc": "2026-10-24T02:10:13.267947+00:00"
+              "recorded_utc": "2026-10-24T02:10:13.267947+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1220,7 +1228,9 @@
               "bytes": 26702161,
               "sha256": "84cd63a60c66f0393cf5cec9dbc2894418c9e781f03a7261715f613369090f44",
               "source_checkpoint_sha256": "d9aca7f1f251788f4410248bcf8accee454557453b4fd7d024381dafffbe8ba8",
-              "recorded_utc": "2026-10-24T02:45:31.726509+00:00"
+              "recorded_utc": "2026-10-24T02:45:31.726509+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1240,7 +1250,9 @@
               "bytes": 26712081,
               "sha256": "ee4f072d89bb54dcbeb6380a002f6dc6bed06db46b5219234b94aa80c1cff908",
               "source_checkpoint_sha256": "06e5d3c7f1cf5f7a3252d9ace9d3cde04f024a5a5b5166c9fc8587c95b34de21",
-              "recorded_utc": "2026-10-24T03:55:24.046089+00:00"
+              "recorded_utc": "2026-10-24T03:55:24.046089+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1250,7 +1262,9 @@
               "bytes": 26717073,
               "sha256": "882495885b435a26e6e9eec8a6c44f85775882255988ed15ecde97f05a26e09a",
               "source_checkpoint_sha256": "dcc6f366ede213f4c622c52ba8cd70f630c2f4aca7a43f2d665cdc3b4f4e8c40",
-              "recorded_utc": "2026-10-24T04:30:12.850658+00:00"
+              "recorded_utc": "2026-10-24T04:30:12.850658+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1260,7 +1274,9 @@
               "bytes": 26722065,
               "sha256": "682eea4887c21c8aa27e7e49093a8f117dbedb1308e967299a7413d0ee182d63",
               "source_checkpoint_sha256": "27bb1a583e8db331d6372eaa456955ff28ab81f9bf815545f7b6b1cede9600aa",
-              "recorded_utc": "2026-10-24T05:05:01.482199+00:00"
+              "recorded_utc": "2026-10-24T05:05:01.482199+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1270,7 +1286,9 @@
               "bytes": 26727057,
               "sha256": "9e7314ca30a300835d7bcded337474ee8a180ba7c556d9ceaeb5707fc5ef73e3",
               "source_checkpoint_sha256": "06fc2c8e68653b99262ffa13b11546d1ec72ae3cd8a2e2b7990df29f54c5a9bb",
-              "recorded_utc": "2026-10-24T05:39:50.224353+00:00"
+              "recorded_utc": "2026-10-24T05:39:50.224353+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "audio",
@@ -1600,29 +1618,11 @@
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/soft/model_e0040.pt",
             "out/ar_saturation_20261023/soft/model_e0100.pt",
-            "out/ar_saturation_20261023/soft/model_e0220.pt",
-            "out/ar_saturation_20261023/soft/model_e0240.pt",
-            "out/ar_saturation_20261023/soft/model_e0260.pt",
-            "out/ar_saturation_20261023/soft/model_e0280.pt",
             "out/ar_saturation_20261023/soft/model_e0300.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0320.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0340.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0360.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0380.pt",
             "out/ar_saturation_20261023/continued500/soft/model_e0400.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0420.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0440.pt",
-            "out/ar_saturation_20261023/continued500/soft/model_e0460.pt",
             "out/ar_saturation_20261023/continued500/soft/model_e0500.pt",
-            "out/ar_saturation_20261023/continued700/soft/model_e0520.pt",
-            "out/ar_saturation_20261023/continued700/soft/model_e0540.pt",
             "out/ar_saturation_20261023/continued700/soft/model_e0560.pt",
-            "out/ar_saturation_20261023/continued700/soft/model_e0580.pt",
             "out/ar_saturation_20261023/continued700/soft/model_e0600.pt",
-            "out/ar_saturation_20261023/continued700/soft/model_e0620.pt",
-            "out/ar_saturation_20261023/continued700/soft/model_e0640.pt",
-            "out/ar_saturation_20261023/continued700/soft/model_e0660.pt",
-            "out/ar_saturation_20261023/continued700/soft/model_e0680.pt",
             "out/ar_saturation_20261023/continued700/soft/model_e0700.pt",
             "out/ar_saturation_20261023/continued1000/soft/model_e0720.pt",
             "out/ar_saturation_20261023/continued1000/soft/model_e0740.pt",
@@ -1734,7 +1734,9 @@
               "bytes": 26610961,
               "sha256": "86e50b7665bf863f0c8ebb7f1310d293850691b98a271df51e39d45fdf2962a4",
               "source_checkpoint_sha256": "083dc0e80151daedaa776fc621b9f5aa3a4affe60495c66e148cb0f0dfe64dbd",
-              "recorded_utc": "2026-10-23T10:59:41.893901+00:00"
+              "recorded_utc": "2026-10-23T10:59:41.893901+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1744,7 +1746,9 @@
               "bytes": 26615889,
               "sha256": "780120462a2e615064ba62908bee920857ecc91164bf241445c1dbfe0c381df1",
               "source_checkpoint_sha256": "ebf473b4dacb1f323a1ec3fddf30b58f8e84027052ebfd9a812977c7977e6fb8",
-              "recorded_utc": "2026-10-23T11:35:12.887377+00:00"
+              "recorded_utc": "2026-10-23T11:35:12.887377+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1754,7 +1758,9 @@
               "bytes": 26620881,
               "sha256": "8eaa8823d23fa387f7f40a1c9310fb0b038c558ee352492a3808e157f49eb1f3",
               "source_checkpoint_sha256": "a32f82010921184f1709dc8ffe0f32dfac57250dac775e5a1a992c394862f9e1",
-              "recorded_utc": "2026-10-23T12:10:55.203496+00:00"
+              "recorded_utc": "2026-10-23T12:10:55.203496+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1764,7 +1770,9 @@
               "bytes": 26625873,
               "sha256": "f33982fd0b713cd9e752b20de41567fe5885996b2e5c4eedb86657c4ea240fee",
               "source_checkpoint_sha256": "f2e78b0beb9bdb32b4b890be7e2f1717fda00fb659607295d8c5d7b0e0c08252",
-              "recorded_utc": "2026-10-23T12:45:28.920297+00:00"
+              "recorded_utc": "2026-10-23T12:45:28.920297+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1784,7 +1792,9 @@
               "bytes": 26636497,
               "sha256": "4408f76f22803f8ebbf11438413dcbc3a5254e9791cdf95cd3f21ca58ffdb95e",
               "source_checkpoint_sha256": "1c4e42ae56fb6aaa322300bdf871507cdbe33d8e30fedada06e0a4d55d2fe056",
-              "recorded_utc": "2026-10-23T13:59:55.633195+00:00"
+              "recorded_utc": "2026-10-23T13:59:55.633195+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1794,7 +1804,9 @@
               "bytes": 26641489,
               "sha256": "82b3c6ae0c34477ba07e3665ac646281f63543be9f57146b06937c6ddbb1b768",
               "source_checkpoint_sha256": "a41d04ddf46a937fb1827ce8b2d57bee087045bbf693331bd1552c90ad508d3a",
-              "recorded_utc": "2026-10-23T14:35:03.568943+00:00"
+              "recorded_utc": "2026-10-23T14:35:03.568943+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1804,7 +1816,9 @@
               "bytes": 26646417,
               "sha256": "e4beef449715c54f6e8c980675936f6825ba08531c716e15e6d26d0e83ee0d3d",
               "source_checkpoint_sha256": "9c76f0689675ebfa89808977c7a3d5ce1422ce957a36854088d54cbf15a88739",
-              "recorded_utc": "2026-10-23T15:10:28.624814+00:00"
+              "recorded_utc": "2026-10-23T15:10:28.624814+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1814,7 +1828,9 @@
               "bytes": 26651409,
               "sha256": "88deb487d876aa0cf6bcba33d3bdb77e0dd9726c9ed8b9cb90a30146e0b31e43",
               "source_checkpoint_sha256": "eb9028eacee4131ee9bf92f71d88046bb0bbab14a254b957d71e15f9ed003b17",
-              "recorded_utc": "2026-10-23T15:46:07.923778+00:00"
+              "recorded_utc": "2026-10-23T15:46:07.923778+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1834,7 +1850,9 @@
               "bytes": 26661393,
               "sha256": "54e8002b465ea220620e1d96562b7b2016f6a0d1fc3e1e829aec96f92b90346c",
               "source_checkpoint_sha256": "f30ab9e2e483e7100a8b85c7ce2e05d0051f327643f47def943f95f9b8904011",
-              "recorded_utc": "2026-10-23T16:56:35.736618+00:00"
+              "recorded_utc": "2026-10-23T16:56:35.736618+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1844,7 +1862,9 @@
               "bytes": 26666385,
               "sha256": "6af53ad80693efd9ade314af1129e3be27cce6ad8552c5fc7dc93b69b6dc6b3f",
               "source_checkpoint_sha256": "266b1047c278c93cdd0eee7f5e10e0984e66e587576b27a017b2e2aac12cf81d",
-              "recorded_utc": "2026-10-23T17:31:20.356754+00:00"
+              "recorded_utc": "2026-10-23T17:31:20.356754+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1854,7 +1874,9 @@
               "bytes": 26671313,
               "sha256": "8eda63025cfe7bf39c5b3d595662d296d074ab6430d2c59f313e674b273b90d5",
               "source_checkpoint_sha256": "1adaf66b5e4f3b6cb2795b104e9e465f1ce92dcfc06cef116e13d8ebc7cbb6ee",
-              "recorded_utc": "2026-10-23T18:06:48.423776+00:00"
+              "recorded_utc": "2026-10-23T18:06:48.423776+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1874,7 +1896,9 @@
               "bytes": 26687185,
               "sha256": "427e8142ec051e5639c4195a8be26248c560ea99d5ecf9406e166d7add969c82",
               "source_checkpoint_sha256": "e4e3c17892d530ab044db0443c08622e5595c3b998b0b8d2fa603d75024cc798",
-              "recorded_utc": "2026-10-24T01:01:07.229802+00:00"
+              "recorded_utc": "2026-10-24T01:01:07.229802+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1884,7 +1908,9 @@
               "bytes": 26692177,
               "sha256": "a269022915e23cd276d12498cc99cc004fee7cb25f05a10383b71953d4f42069",
               "source_checkpoint_sha256": "c888928b499abcd1dc16e9f238a721ef6887f4dccb41b42f8322ec2a0cdffd9f",
-              "recorded_utc": "2026-10-24T01:36:25.573736+00:00"
+              "recorded_utc": "2026-10-24T01:36:25.573736+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1904,7 +1930,9 @@
               "bytes": 26702161,
               "sha256": "2ca5c733b9bcdd15f9c5740971c4f14198caa724703c1a486342a3ba31447a7c",
               "source_checkpoint_sha256": "cc40b3007e2c710684483cd562a63267e794b855d544dd6643459d87497d48fd",
-              "recorded_utc": "2026-10-24T02:46:47.596079+00:00"
+              "recorded_utc": "2026-10-24T02:46:47.596079+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1924,7 +1952,9 @@
               "bytes": 26712081,
               "sha256": "ccbd43042552e65c39fea6fbe316549ec020e0131445556f74289608c55b6645",
               "source_checkpoint_sha256": "622d034280be28df0d590877170032555c9b1574976ab6b1a034fe86cd23106c",
-              "recorded_utc": "2026-10-24T03:57:09.878204+00:00"
+              "recorded_utc": "2026-10-24T03:57:09.878204+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1934,7 +1964,9 @@
               "bytes": 26717073,
               "sha256": "425b3865eab005d4975ef7f8fa988eee6cf7b84ad433404da19ba55de1bd67e2",
               "source_checkpoint_sha256": "2101f36c1e7362339fe9a0e6937ca0ef532ed5ee83cc676e76a1cabe74f11b1b",
-              "recorded_utc": "2026-10-24T04:31:58.768736+00:00"
+              "recorded_utc": "2026-10-24T04:31:58.768736+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1944,7 +1976,9 @@
               "bytes": 26722065,
               "sha256": "57ab9a33d29ce283bad0a7eddb3f5cd04c6e6894316ac59fba7230671f52e8da",
               "source_checkpoint_sha256": "1b2b3ba912f12d2f9c624e8b24bd29b6f157d9efea41017785a75d7ff450b565",
-              "recorded_utc": "2026-10-24T05:07:47.439144+00:00"
+              "recorded_utc": "2026-10-24T05:07:47.439144+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -1954,7 +1988,9 @@
               "bytes": 26727057,
               "sha256": "5422f634e53980ef14c2a39b4fdc2ee4c9a4b01964dc454eab2934f890eaf976",
               "source_checkpoint_sha256": "166a57e358e9768043a2f556f6aeee89f305fda4701c6fc442a8f4b136481a35",
-              "recorded_utc": "2026-10-24T05:42:36.051271+00:00"
+              "recorded_utc": "2026-10-24T05:42:36.051271+00:00",
+              "weights_retained": false,
+              "removed_at_utc": "2026-10-25T07:51:48.329030+00:00"
             },
             {
               "variant": "soft",
@@ -2672,6 +2708,14 @@
         "metrics_path": "docs/evaluations/assets/ar_layout_1000_20261025/summary.json",
         "metrics_sha256": "55a5dc01710b50ac752caf5f66348bfc41df152ec67bc0670351d2addf7c2756",
         "result": "e1000 Eltaw greedy joint time/lane/type F1 A=0.80165,S=0.99646; exact four-group reproduction59.17%/98.28%. S has3 lane mismatches and41 exact matched Hold lengths. Sampling and other seen songs remain substantially less reliable; no gameplay/generalization pass."
+      },
+      "storage_cleanup": {
+        "completed_at_utc": "2026-10-25T07:51:48.329030+00:00",
+        "reason": "User requested pruning early 4K checkpoints to reserve space for ongoing free-x training.",
+        "record": "docs/evaluations/ar4k_checkpoint_cleanup_20261025.json",
+        "deleted_count": 36,
+        "deleted_bytes": 960062372,
+        "retained_policy": "Only unremarkable numbered E14 4K snapshots below epoch700; retain every100, epoch40, A380, S560, noteworthy candidates, all latest/best-fit checkpoints and every snapshot >=700. Evaluation outputs and logs retained."
       }
     },
     {
