@@ -2720,7 +2720,24 @@
         "manual_history_ablation": "Proposed, not executed: fully train matched token/time/tempo inputs with vs without 28D handcrafted summaries. Inference-only zeroing measures dependence, not retrained capability; current E14 unchanged.",
         "sequence_level_training": "Proposed, not executed: distinguish existing whole-sequence teacher-forced loss from MTP, sampled-rollout sequence objectives (MRT/MIXER), and block diffusion. No teacher distillation; mixed discrete/continuous gradient paths and multi-criteria evaluation must be specified; E14 unchanged.",
         "evidence_priority": "Prioritize modern Transformer/LLM experiments and implementations; older RNN/optimization work is mechanism background, not a demonstrated fix for this model.",
-        "optimization_caveat": "No local-minimum diagnosis established; declining teacher-forced loss and fluctuating rollout metrics do not identify the cause. No optimizer, LR or architecture change in E14."
+        "optimization_caveat": "No local-minimum diagnosis established; declining teacher-forced loss and fluctuating rollout metrics do not identify the cause. No optimizer, LR or architecture change in E14.",
+        "mapperatorinator_code_review": {
+          "date": "2026-10-25",
+          "status": "reviewed; recommendations not executed",
+          "upstream_commit": "0e2b0e387aab4b35c64b0b11b12d47578dea7587",
+          "upstream_configuration": "V32",
+          "evidence": "docs/mapperatorinator_architecture_review_20261025.md",
+          "original_context": "docs/AudioLab_chart_generation_context_2026-10-25.md",
+          "topics": [
+            "noisy historical time inputs with clean targets",
+            "overlapping windows and explicit block boundaries",
+            "event attribute representation and conditions",
+            "encoder adaptation and controlled model scaling",
+            "DiT coordinate refinement as a separate free-x experiment"
+          ],
+          "current_training": "E18 full300 independent A/S unchanged; E14 4K stopped at1000",
+          "generalization": "deferred until user supplies new songs"
+        }
       }
     },
     {
