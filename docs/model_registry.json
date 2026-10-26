@@ -2936,6 +2936,77 @@
         "held_out_songs": 0,
         "pair_views_checked": 606,
         "tests_passed": 45
+      },
+      "layout_replay": {
+        "kind": "saved_output_replay",
+        "observed_at_utc": "2026-10-26T03:09:19.144471+00:00",
+        "evidence": "docs/evaluations/freex_layout_best_20261026.md",
+        "summary": "docs/evaluations/assets/freex_layout_best_20261026/summary.json",
+        "scope": "One seen training song. Ranking stored greedy and seed42 outputs only; no inference or time snapping. Does not rank generalization or musical quality.",
+        "cutoffs": {
+          "audio": 900,
+          "soft": 880
+        },
+        "compared_outputs": 178,
+        "selection": "Only completed outputs; maximize full-song time+64-bin+type note F1, then consecutive-four-group reproduction, onset F1, smaller tail error, later epoch.",
+        "selected": [
+          {
+            "variant": "audio",
+            "epoch": 900,
+            "decoding": "greedy",
+            "snapshot": "out/freex_anchored_20261025/continued1000/audio/model_e0900.pt",
+            "snapshot_sha256": "d7dbeeb8bd5fccad3f4b5f867cebb9bd0e2567d1587621c0fb47daa877e112a0",
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 944,
+              "matched_notes": 435,
+              "onset_f1": 0.9481792717086834,
+              "joint_time_bin_type_f1": 0.4844097995545657,
+              "exact_groups_given_matched": 0.45790251107828656,
+              "four_group_reproduction": 0.27311522048364156,
+              "matched_coordinate_mae_screen": 0.0009546794735530911,
+              "matched_holds": 9,
+              "matched_hold_duration_mae_ms": 133.8514680483628,
+              "type_counts": {
+                "tap": 691,
+                "drag": 132,
+                "hold": 34,
+                "flick": 87
+              },
+              "grid_bonus": 0.6597274422899561,
+              "last_onset_delta_seconds": -0.02093129750565481
+            }
+          },
+          {
+            "variant": "soft",
+            "epoch": 860,
+            "decoding": "seed42",
+            "snapshot": "out/freex_anchored_20261025/continued1000/soft/model_e0860.pt",
+            "snapshot_sha256": "b28b6f1f4aeb210cabc5cc3d4bae88026297b2b9a2aa0234cebbbbf6f4233845",
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 889,
+              "matched_notes": 349,
+              "onset_f1": 0.9736279401282965,
+              "joint_time_bin_type_f1": 0.4009190120620333,
+              "exact_groups_given_matched": 0.3601756954612006,
+              "four_group_reproduction": 0.14935988620199148,
+              "matched_coordinate_mae_screen": 0.0010035246334807143,
+              "matched_holds": 12,
+              "matched_hold_duration_mae_ms": 194.3005181347189,
+              "type_counts": {
+                "tap": 664,
+                "drag": 149,
+                "hold": 24,
+                "flick": 52
+              },
+              "grid_bonus": 0.6912861765662165,
+              "last_onset_delta_seconds": -0.01250420600661073
+            }
+          }
+        ],
+        "training_changed": false,
+        "quality_passed": false
       }
     }
   ],
