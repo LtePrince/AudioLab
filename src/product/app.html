@@ -60,7 +60,7 @@ function setError(error,job=null){
 }
 function actionLink(label,url){const a=document.createElement('a');a.textContent=label;a.href=url;a.className='button';a.target='_blank';a.rel='noopener';return a;}
 function statusText(job){return job.status==='completed'&&job.warnings?.length?'已生成（有截断警告）':statusNames[job.status]||job.status;}
-function packageLinks(job,primary=false){return Object.entries(job.packages||{}).map(([mode,pkg])=>{const a=actionLink('下载 Phira '+(mode==='4k'?'4K':'free-x')+' 谱包',pkg.url);a.removeAttribute('target');a.download='';a.dataset.mode=mode;if(primary)a.id='download-'+mode;return a;});}
+function packageLinks(job,primary=false){return Object.entries(job.packages||{}).map(([mode,pkg])=>{const a=actionLink('下载 Phira '+(mode==='4k'?'4K':'free-x')+' 谱包',pkg.url);a.removeAttribute('target');a.download=pkg.download_name||'';a.dataset.mode=mode;if(primary)a.id='download-'+mode;return a;});}
 function show(job){
   current=job.id;const done=terminal.has(job.status);
   $('status').textContent=job.status==='running'?(stageNames[job.stage]||'生成中'):statusText(job);

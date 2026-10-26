@@ -25,7 +25,7 @@ audio{flex:1;min-width:220px;width:100%}.legend span{margin-right:16px;white-spa
 <div class="row"><audio id="audio" controls preload="metadata"></audio><button id="restart">回到开头</button></div>
 <div class="row"><span id="time">0.00 秒</span><label for="rate">播放速度</label><select id="rate"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option selected value="1">1×</option></select></div>
 <div class="legend row"><span class="tap">━ Tap 单击</span><span class="drag">◆ Drag 接触</span><span class="hold">▰ Hold 持续</span><span class="flick">⌃ Flick 滑动</span></div>
-<div class="row"><a id="phira-package" class="download" download hidden>下载 Phira 谱包 ZIP</a><a id="export" class="download" download>导出谱面 JSON</a><a id="events" class="download" download>下载事件记录</a><a class="download" href="manifest.json" download>下载生成报告</a></div>
+<div class="row"><a id="phira-package" class="download" download hidden>下载 Phira 谱包 ZIP</a><a id="export" class="download" download>导出谱面 JSON</a><a id="events" class="download" download>下载事件记录</a><a id="report" class="download" href="manifest.json" download>下载生成报告</a></div>
 <p id="message" role="status"></p>
 <footer class="muted">4K 使用四个固定触屏位置；free-x 使用静态单判定线自由布局。两个模式均保留四种键型与多指。谱包尚未完成手机／平板真机验证，难度未定级。</footer>
 <script id="data" type="application/json">__AUDIOLAB_DATA__</script>
@@ -40,6 +40,7 @@ const colors = {tap:'#8cd8ff',drag:'#ffd97c',hold:'#be9cff',flick:'#ff92b8'};
 const labels = {'4k':'定轨 4K','freex':'无轨 free-x'};
 let route;
 document.getElementById('song').textContent = data.title;
+document.getElementById('report').download = data.download_names?.['manifest.json'] || '';
 if(data.tempo){document.getElementById('tempo').textContent='速度设置：'+data.tempo.timebase_bpm.toFixed(1)+' BPM · '+(data.tempo.source==='provided'?'手动设置':'自动估计，尚未确认；可在新任务中手动调整。');}
 audio.src = data.audio;
 for (const mode of Object.keys(data.routes)) {
@@ -54,7 +55,10 @@ function changeMode() {
   document.getElementById('count').textContent = route.events.length+' 个音符 · 基线谱';
   document.getElementById('export').href = route.chart_file;
   document.getElementById('events').href = route.events_file;
+  document.getElementById('export').download = data.download_names?.[route.chart_file] || '';
+  document.getElementById('events').download = data.download_names?.[route.events_file] || '';
   const packageLink=document.getElementById('phira-package');packageLink.hidden=!route.package_file;
+  packageLink.download = data.download_names?.[route.package_file] || '';
   if(route.package_file){packageLink.href=route.package_file;packageLink.dataset.mode=select.value;}else packageLink.removeAttribute('href');
   render();
 }

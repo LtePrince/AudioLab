@@ -9,11 +9,26 @@ from copy import deepcopy
 import json
 import math
 import os
+import re
 from pathlib import Path
 
 from src.data.chart2array import LANE_CENTERS, save_phigros_notes
 from src.data.timing import tick_seconds
 from . import EVENT_SCHEMA
+
+
+def download_names(audio_name, modes, date):
+    """Portable user-facing names; internal artifact paths remain stable."""
+    if not re.fullmatch(r'[0-9]{8}', date) or not modes or any(m not in ('4k', 'freex') for m in modes):
+        raise ValueError('invalid export date or mode')
+    stem = re.sub(r'[<>:"/\\|?*\x00-\x1f\x7f]', '_', Path(audio_name).stem).strip(' .')[:48] or 'audio'
+    names = {}
+    for mode in modes:
+        for suffix in ('json', 'events.json', 'phira.zip'):
+            names[f'{mode}.{suffix}'] = f'{stem}_{mode}_{date}.{suffix}'
+    mode = modes[0] if len(modes) == 1 else 'both'
+    names['manifest.json'] = f'{stem}_{mode}_{date}.report.json'
+    return names
 
 
 def write_json(path, value):
@@ -112,9 +127,10 @@ def repair_log(raw, final):
     return changes
 
 
-def write_preview(path, *, title, audio_name, routes, duration, tempo=None):
+def write_preview(path, *, title, audio_name, routes, duration, tempo=None, download_names=None):
     """Embed chart data, not executable user text; requires no HTTP/CDN/fetch."""
-    payload = json.dumps(dict(title=title, audio=audio_name, duration=duration, routes=routes,tempo=tempo),
+    payload = json.dumps(dict(title=title, audio=audio_name, duration=duration, routes=routes,tempo=tempo,
+                             download_names=download_names or {}),
                          ensure_ascii=False, allow_nan=False).replace('<', '\\u003c').replace('>', '\\u003e')
     template = Path(__file__).with_name('preview.html').read_text(encoding='utf-8')
     Path(path).write_text(template.replace('__AUDIOLAB_DATA__', payload), encoding='utf-8')

@@ -7,6 +7,7 @@ from pathlib import Path
 import stat
 from types import SimpleNamespace
 import zipfile
+from urllib.parse import unquote
 
 import numpy as np
 from PIL import Image
@@ -238,6 +239,16 @@ def test_completed_api_exposes_only_finished_packages_and_attachment_header(tmp_
     assert headers['Content-Type']=='application/zip'
     assert headers['Content-Disposition']=='attachment; filename="4k.phira.zip"'
     assert handler.wfile.getvalue()==b'zip fixture'
+    manifest=json.loads((folder/'manifest.json').read_text())
+    expected_name='测试曲_4k_20261026.phira.zip'
+    manifest['download_names']={package.name:expected_name}
+    write_json(folder/'manifest.json',manifest)
+    assert jobs.status(identifier)['packages']['4k']['download_name']==expected_name
+    handler.wfile=io.BytesIO()
+    handler.send_file(package,jobs.download_name(identifier,package.name))
+    disposition=headers['Content-Disposition']
+    assert disposition.isascii()  # HTTP headers must not contain raw Chinese characters.
+    assert unquote(disposition.split("filename*=UTF-8''",1)[1])==expected_name
     jobs.records[identifier]['status']='failed'
     assert 'packages' not in jobs.status(identifier)
     with pytest.raises(FileNotFoundError):jobs.artifact(identifier,package.name)

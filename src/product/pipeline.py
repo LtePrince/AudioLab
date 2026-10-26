@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import gc
+from datetime import datetime
 import json
 import math
 from pathlib import Path
@@ -22,7 +23,7 @@ from src.models.chart_decoder import generate_tokens
 from src.resource_budget import GIB, ResourceBudget, resource_snapshot
 from .experimental_models import load_models, runtime_contract
 from . import JOB_SCHEMA
-from .artifacts import chart_document, repair_log, validate_chart, write_json, write_preview
+from .artifacts import chart_document, repair_log, validate_chart, write_json, write_preview, download_names
 from .tempo import estimate_tempo, provided_tempo, TempoRequired
 from .phira import build_phira_package
 from .limits import validate_ram_reserve
@@ -259,6 +260,7 @@ def run_job(args):
     directory = Path(args.output).resolve()
     directory.mkdir(parents=True, exist_ok=False)
     started = time.monotonic()
+    export_date = datetime.now().astimezone().strftime('%Y%m%d')
     control = None
     resource_limits = None
     try:
@@ -308,7 +310,8 @@ def run_job(args):
                                   resource_limits=resource_limits,
                                   max_seconds=args.max_seconds, timeout_seconds=args.timeout_seconds),
                       model_sha256={mode: sha256(checkpoints[mode]) for mode in modes},
-                      stages={}, routes={}, warnings=[])
+                      stages={}, routes={}, warnings=[], export_date=export_date,
+                      download_names=download_names(source.name, modes, export_date))
         report['implementation']['product_source_sha256'] = {
             path.name: sha256(path) for path in sorted(Path(__file__).parent.glob('*')) if path.is_file()}
         report['runtime']['device_name'] = torch.cuda.get_device_name(device) if device.type == 'cuda' else 'CPU'
@@ -417,7 +420,7 @@ def run_job(args):
         control.update('preview', progress=None)
         budget.check(force=True, extra_bytes=16*1024**2)
         write_preview(directory/'preview.html', title=source.stem, audio_name=audio_path.name,
-                      routes=routes, duration=duration,tempo=tempo)
+                      routes=routes, duration=duration,tempo=tempo, download_names=report['download_names'])
         control.check()
         report.update(status='completed', elapsed_seconds=time.monotonic()-started,
                       preview='preview.html', resources=budget.log_state())

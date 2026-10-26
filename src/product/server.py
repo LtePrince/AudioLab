@@ -15,7 +15,7 @@ import subprocess
 import sys
 import threading
 import time
-from urllib.parse import parse_qs, unquote, urlsplit
+from urllib.parse import parse_qs, quote, unquote, urlsplit
 import uuid
 
 from src.product.artifacts import write_json
@@ -180,7 +180,8 @@ class LocalJobs:
             manifest=json.loads((self.root/'jobs'/identifier/'manifest.json').read_text())
             record['warnings']=manifest.get('warnings', [])
             record['packages']={mode:dict(url=f'/jobs/{identifier}/{package["file"]}',
-                                         sha256=package['sha256'],bytes=package['bytes'])
+                                         sha256=package['sha256'],bytes=package['bytes'],
+                                         download_name=manifest.get('download_names', {}).get(package['file']))
                                 for mode,package in manifest.get('packages',{}).items()}
         return record
 
@@ -200,6 +201,10 @@ class LocalJobs:
         path=folder/name
         if path.resolve().parent!=folder.resolve():raise FileNotFoundError()
         return path
+
+    def download_name(self, identifier, name):
+        manifest = json.loads((self.root/'jobs'/identifier/'manifest.json').read_text())
+        return manifest.get('download_names', {}).get(name)
 
     def close(self):
         with self.lock:
@@ -231,7 +236,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Content-Length',str(len(body)));self.send_header('Cache-Control','no-store')
         self.send_header('Connection','close');self.end_headers();self.wfile.write(body);self.close_connection=True
 
-    def send_file(self,path):
+    def send_file(self,path,download_name=None):
         size=path.stat().st_size
         try:start,end,partial=parse_range(self.headers.get('Range'),size)
         except ValueError:
@@ -241,7 +246,10 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Content-Type',mimetypes.guess_type(path.name)[0] or 'application/octet-stream')
         self.send_header('Content-Length',str(end-start+1));self.send_header('Accept-Ranges','bytes')
         self.send_header('X-Content-Type-Options','nosniff')
-        if path.suffix=='.zip':self.send_header('Content-Disposition',f'attachment; filename="{path.name}"')
+        if download_name:
+            disposition='attachment' if path.suffix=='.zip' else 'inline'
+            self.send_header('Content-Disposition',f'{disposition}; filename="{path.name}"; filename*=UTF-8\'\'{quote(download_name, safe="")}')
+        elif path.suffix=='.zip':self.send_header('Content-Disposition',f'attachment; filename="{path.name}"')
         if partial:self.send_header('Content-Range',f'bytes {start}-{end}/{size}')
         self.end_headers()
         with path.open('rb') as stream:
@@ -262,7 +270,9 @@ class Handler(BaseHTTPRequestHandler):
             elif path.startswith('/api/jobs/'):
                 identifier=path.removeprefix('/api/jobs/');self.reply(200,self.jobs.status(identifier))
             elif path.startswith('/jobs/'):
-                _,_,identifier,name=path.split('/',3);self.send_file(self.jobs.artifact(identifier,name))
+                _,_,identifier,name=path.split('/',3)
+                artifact=self.jobs.artifact(identifier,name)
+                self.send_file(artifact,self.jobs.download_name(identifier,name))
             else:self.reply(404,dict(error='not found'))
         except (ValueError,KeyError,OSError):self.reply(404,dict(error='not found'))
 

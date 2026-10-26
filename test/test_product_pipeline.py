@@ -80,6 +80,9 @@ def test_real_small_models_complete_both_routes_and_record_identity(tmp_path, in
     assert set(report['routes']) == {'4k', 'freex'}
     assert report['audio']['label_source'] == 'chart_onset'
     assert report['config']['timing_source'] == 'provided'
+    assert report['download_names']['4k.phira.zip'] == f"song_4k_{report['export_date']}.phira.zip"
+    assert report['download_names']['freex.json'] == f"song_freex_{report['export_date']}.json"
+    assert report['download_names']['4k.phira.zip'] in (root/'preview.html').read_text()
     for mode, checks in report['routes'].items():
         assert checks['note_count'] > 0 and checks['complete_candidate_coverage']
         assert checks['human_playability'] == 'unverified' and checks['chord_size_cap'] is None
