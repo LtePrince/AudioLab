@@ -3125,7 +3125,35 @@
           },
           "evidence": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0980/inputs.json"
         }
-      ]
+      ],
+      "layout_figure_current": {
+        "kind": "saved_output_visualization",
+        "observed_at_utc": "2026-10-26T08:35:29.091482+00:00",
+        "evidence": "docs/evaluations/freex_layout_e0980_20261026.md",
+        "summary": "docs/evaluations/assets/freex_layout_e0980_20261026/summary.json",
+        "cutoffs": {
+          "audio": 1000,
+          "soft": 1000
+        },
+        "compared_outputs": 200,
+        "selected": [
+          {
+            "variant": "audio",
+            "epoch": 980,
+            "decoding": "greedy",
+            "snapshot": "out/freex_anchored_20261025/continued1000/audio/model_e0980.pt",
+            "snapshot_sha256": "ebd6c8ed934d77ce116d1147a01c554f40df5bb48670270a1a2e2b242b21e2dd"
+          },
+          {
+            "variant": "soft",
+            "epoch": 980,
+            "decoding": "greedy",
+            "snapshot": "out/freex_anchored_20261025/continued1000/soft/model_e0980.pt",
+            "snapshot_sha256": "cba4c3a63c74c1e4f5d4224e9361b9d89d220b0a116e81dbec4356bd696c916c"
+          }
+        ],
+        "new_training": false
+      }
     }
   ],
   "bundles": [
