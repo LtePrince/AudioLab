@@ -195,7 +195,9 @@
       "title": "全300首时间pointer、连续坐标、独立A/S充分训练",
       "output_protocol": "audiolab-absolute-time-group-freex-ar-v1",
       "delivery": "research_only_not_runtime_compatible",
-      "evidence": "docs/evaluations/freex_anchored_20261025.md"
+      "evidence": "docs/evaluations/freex_anchored_20261025.md",
+      "training_status": "completed",
+      "quality_status": "not_passed"
     }
   ],
   "experiments": [
@@ -2802,9 +2804,9 @@
       "models": [
         "AL-FreeX@0.4.0"
       ],
-      "status": "running",
+      "status": "completed",
       "question": "沿用4K时间结构，完整训练静态free-x的64bin和连续坐标；先检查全部训练曲拟合",
-      "result": "已启动全300首A/S独立训练。300首整曲及606个平移视图通过标签检查，45项测试通过；质量尚待首次整谱评测。",
+      "result": "A/S各完成1000轮、300000步；三首自然曲两种解码均4/6自行结束。Eltaw最佳完成排布均为e0980贪心，联合F1 A0.8449/S0.7516；最终e1000的S在Eltaw结束失败。跨曲排布与稀疏探针未通过，全部100份快照SHA已核验。后续加训由用户安排。",
       "evidence": "docs/evaluations/freex_anchored_20261025.md",
       "training_scope": {
         "songs": 300,
@@ -2842,28 +2844,53 @@
             "songs": 300,
             "held_out_songs": 0,
             "target_epoch": 1000,
-            "status": "running",
+            "status": "completed",
             "phases": [
               {
                 "name": "pilot",
                 "from_epoch": 0,
                 "target_epoch": 10,
-                "status_at_launch": "running"
+                "status_at_launch": "running",
+                "status": "completed",
+                "epoch": 10,
+                "returncode": 0,
+                "finished_at_utc": "2026-10-24T23:01:25.613741+00:00"
               },
               {
                 "name": "continued1000",
                 "from_epoch": 10,
                 "target_epoch": 1000,
-                "status_at_launch": "queued_after_successful_pilot"
+                "status_at_launch": "queued_after_successful_pilot",
+                "status": "completed",
+                "epoch": 1000,
+                "returncode": 0,
+                "finished_at_utc": "2026-10-26T05:58:43.560570+00:00"
               }
-            ]
+            ],
+            "epoch": 1000,
+            "steps": 300000
           },
           "parameters": 6815860,
           "initial_state_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
           "launched_at_utc": "2026-10-24T22:39:55.545825+00:00",
           "pid_at_launch": 2046932,
           "pilot_progress_file": "out/freex_anchored_20261025/pilot/audio/training.json",
-          "pilot_log_file": "out/freex_anchored_20261025/audio-pilot.log"
+          "pilot_log_file": "out/freex_anchored_20261025/audio-pilot.log",
+          "status": "completed",
+          "quality_status": "not_passed",
+          "completed_at_utc": "2026-10-26T05:58:43.560570+00:00",
+          "checkpoint_sha256": "4ab99fe2872b1cde5cca83466384c6019a6288eed35f48eb072c790d8751a756",
+          "completion_resources": {
+            "disk_free_gib": 10.389022827148438,
+            "ram_available_gib": 34.941184997558594,
+            "rss_gib": 2.126842498779297,
+            "gpu_peak_allocated_gib": 0.326509952545166,
+            "gpu_peak_reserved_gib": 0.638671875
+          },
+          "final_training_trend": {
+            "objective_change_percent_last20_vs_previous20": -3.3499941490686136
+          },
+          "compact_snapshots_verified": 50
         },
         {
           "id": "E18-S",
@@ -2888,28 +2915,53 @@
             "songs": 300,
             "held_out_songs": 0,
             "target_epoch": 1000,
-            "status": "running",
+            "status": "completed",
             "phases": [
               {
                 "name": "pilot",
                 "from_epoch": 0,
                 "target_epoch": 10,
-                "status_at_launch": "running"
+                "status_at_launch": "running",
+                "status": "completed",
+                "epoch": 10,
+                "returncode": 0,
+                "finished_at_utc": "2026-10-24T23:02:55.917610+00:00"
               },
               {
                 "name": "continued1000",
                 "from_epoch": 10,
                 "target_epoch": 1000,
-                "status_at_launch": "queued_after_successful_pilot"
+                "status_at_launch": "queued_after_successful_pilot",
+                "status": "completed",
+                "epoch": 1000,
+                "returncode": 0,
+                "finished_at_utc": "2026-10-26T06:47:16.517613+00:00"
               }
-            ]
+            ],
+            "epoch": 1000,
+            "steps": 300000
           },
           "parameters": 6815860,
           "initial_state_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
           "launched_at_utc": "2026-10-24T22:39:55.547673+00:00",
           "pid_at_launch": 2046933,
           "pilot_progress_file": "out/freex_anchored_20261025/pilot/soft/training.json",
-          "pilot_log_file": "out/freex_anchored_20261025/soft-pilot.log"
+          "pilot_log_file": "out/freex_anchored_20261025/soft-pilot.log",
+          "status": "completed",
+          "quality_status": "not_passed",
+          "completed_at_utc": "2026-10-26T06:47:16.517613+00:00",
+          "checkpoint_sha256": "cd27d84233ea281d9ade83ccd29db1728f5af5b2afc3fb251fc807f00a95b225",
+          "completion_resources": {
+            "disk_free_gib": 10.33157730102539,
+            "ram_available_gib": 36.59160614013672,
+            "rss_gib": 2.1185264587402344,
+            "gpu_peak_allocated_gib": 0.326509952545166,
+            "gpu_peak_reserved_gib": 0.638671875
+          },
+          "final_training_trend": {
+            "objective_change_percent_last20_vs_previous20": -3.319783293624534
+          },
+          "compact_snapshots_verified": 50
         }
       ],
       "launched_at_utc": "2026-10-24T22:39:55.541311+00:00",
@@ -3007,7 +3059,73 @@
         ],
         "training_changed": false,
         "quality_passed": false
-      }
+      },
+      "quality_status": "not_passed",
+      "completed_at_utc": "2026-10-26T06:47:16.846357+00:00",
+      "completion_verified_at_utc": "2026-10-26T08:23:29.435263+00:00",
+      "completion_assessment": "docs/evaluations/assets/freex_completion1000_20261026/summary.json",
+      "noteworthy_outputs": [
+        {
+          "run": "E18-A",
+          "case": "Eltaw_IN",
+          "epoch": 980,
+          "decoding": "greedy",
+          "selection": "best completed Eltaw joint time+64-bin+type F1 among saved epochs20-1000 and greedy/seed42 outputs",
+          "snapshot": "out/freex_anchored_20261025/continued1000/audio/model_e0980.pt",
+          "sha256": "ebd6c8ed934d77ce116d1147a01c554f40df5bb48670270a1a2e2b242b21e2dd",
+          "metrics": {
+            "reference_notes": 852,
+            "predicted_notes": 850,
+            "matched_notes": 719,
+            "onset_f1": 0.9957567185289957,
+            "joint_time_bin_type_f1": 0.8448883666274971,
+            "exact_groups_given_matched": 0.8181818181818182,
+            "four_group_reproduction": 0.6827880512091038,
+            "matched_coordinate_mae_screen": 0.000998485634351206,
+            "matched_holds": 35,
+            "matched_hold_duration_mae_ms": 22.205773501114656,
+            "type_counts": {
+              "tap": 592,
+              "drag": 174,
+              "hold": 40,
+              "flick": 44
+            },
+            "grid_bonus": 0.71826101242939,
+            "last_onset_delta_seconds": -0.012901297134732204
+          },
+          "evidence": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0980/inputs.json"
+        },
+        {
+          "run": "E18-S",
+          "case": "Eltaw_IN",
+          "epoch": 980,
+          "decoding": "greedy",
+          "selection": "best completed Eltaw joint time+64-bin+type F1 among saved epochs20-1000 and greedy/seed42 outputs",
+          "snapshot": "out/freex_anchored_20261025/continued1000/soft/model_e0980.pt",
+          "sha256": "cba4c3a63c74c1e4f5d4224e9361b9d89d220b0a116e81dbec4356bd696c916c",
+          "metrics": {
+            "reference_notes": 852,
+            "predicted_notes": 875,
+            "matched_notes": 649,
+            "onset_f1": 0.9761570827489481,
+            "joint_time_bin_type_f1": 0.7515923566878981,
+            "exact_groups_given_matched": 0.7298850574712644,
+            "four_group_reproduction": 0.5817923186344239,
+            "matched_coordinate_mae_screen": 0.00104235697452387,
+            "matched_holds": 16,
+            "matched_hold_duration_mae_ms": 262.3056994818713,
+            "type_counts": {
+              "tap": 593,
+              "drag": 183,
+              "hold": 26,
+              "flick": 73
+            },
+            "grid_bonus": 0.6933730303703807,
+            "last_onset_delta_seconds": -0.010961480843633353
+          },
+          "evidence": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0980/inputs.json"
+        }
+      ]
     }
   ],
   "bundles": [
