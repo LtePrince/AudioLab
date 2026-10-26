@@ -178,6 +178,7 @@ class LocalJobs:
             record['preview']=f'/jobs/{identifier}/preview.html'
             record['report']=f'/jobs/{identifier}/manifest.json'
             manifest=json.loads((self.root/'jobs'/identifier/'manifest.json').read_text())
+            record['warnings']=manifest.get('warnings', [])
             record['packages']={mode:dict(url=f'/jobs/{identifier}/{package["file"]}',
                                          sha256=package['sha256'],bytes=package['bytes'])
                                 for mode,package in manifest.get('packages',{}).items()}

@@ -1,0 +1,76 @@
+{
+  "schema": "audiolab-cutoff-preview-verification-v1",
+  "verified_at_utc": "2026-10-26T11:00:34.726528+00:00",
+  "tests": {
+    "passed": 98
+  },
+  "browser_status": "passed",
+  "browser_checks": [
+    "unfinished output remains downloadable; warning visible in result, selected preview route and persisted history",
+    "real audio upload and automatic generation finish both modes with Phira packages",
+    "both ZIP files saved by Firefox match completed job hashes and sizes; HTTP partial download works",
+    "preview package links track selected mode; history survives refresh; 390px viewport stays within screen",
+    "preview native audio plays, seeks to mid-song, and preserves audio clock across mode switch"
+  ],
+  "audio_sha256": "253c107a59aae0c7e027511ddb66025d6c831649d2ce584edde8ef56ea166708",
+  "bpm": 129.19921875,
+  "duration_seconds": 135.55083900226757,
+  "elapsed_seconds": 53.71574629843235,
+  "routes": {
+    "4k": {
+      "model_label": "AL-AR4K v0.5.1 / S / E14-S / e1000",
+      "note_count": 952,
+      "termination": "audio_end_cutoff",
+      "generation_status": "failed",
+      "model_completed": false,
+      "warnings": [
+        {
+          "code": "audio_end_cutoff",
+          "mode": "4k",
+          "message": "定轨 4K：模型未正常结束，已在音频末尾截断。已生成部分可预览和下载。"
+        }
+      ],
+      "cutoff_changes": {
+        "notes_after_audio": 0,
+        "shortened_holds": 0,
+        "incomplete_notes": 0
+      }
+    },
+    "freex": {
+      "model_label": "AL-FreeX v0.4.0 / A / E18-A / e1000",
+      "note_count": 872,
+      "termination": "learned_stop",
+      "generation_status": "completed",
+      "model_completed": true,
+      "warnings": [],
+      "cutoff_changes": null
+    }
+  },
+  "preview_playback": {
+    "native_play": true,
+    "seek_seconds": 67.7754195,
+    "mode_switch_preserves_clock": true
+  },
+  "narrow_viewport": {
+    "width": 390,
+    "scrollWidth": 378
+  },
+  "source_hashes": {
+    "__init__.py": "d0a57354fffda1db27e5a691062a10808f4aaa59fbb3cb27862ebed711a95737",
+    "anchored_models.py": "94df079fd6c4a2ebd49b518c240a06d2759c48a690f1deff137c9918aca53f95",
+    "app.html": "1d550b768c3db35e1e68942a7f537694c61e48bc17c0988ba3595b688de28d62",
+    "artifacts.py": "90d86622cb20eed75b9d1ca209bd416c37dbbe1315e2e2e72b8d9607889965e3",
+    "experimental_models.py": "3a2dcf70013e6dffda8d694396ac7641504b8d1f8dec20a85848d1a6276f5408",
+    "limits.py": "60e9cbfbf9641571b53d0f25b1ff1709c66f7fcb10050ce3e5372955a9ee04a1",
+    "model_bundle.py": "de5649a13d362da0d51c096bc462e9575f4ffdbd5570b713c5126bf5cbf225be",
+    "phira.py": "2ab7c6902243aa6011aae6844aafab2fd3cf8216a8596d44264191f5a3630fd6",
+    "pipeline.py": "8fea6e4c76935dccad5e5b953e87cedc412ec705d983e5950d658e5d6e1d1c17",
+    "preview.html": "ce09284179a03da94ed495096021dd50be6aa3b621f8167cc3d12b81d0b72a4f",
+    "runtime.py": "3f5db0f8bfa91a43736452682db7e45da8048df7adb929492acbf4da013fea6a",
+    "server.py": "47b76e979e7b2e83ab5a2610694a6cc8c55d2ae9bad25195cbd13ae5686daf49",
+    "tempo.py": "4c7e1e370d86c1d053afc134287fdd391cec528122c0fabf995cb7a0ff770f47"
+  },
+  "research_generator_sha256": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+  "weights_changed": false,
+  "raw_research_eos_metrics_changed": false
+}

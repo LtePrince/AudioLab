@@ -4,6 +4,10 @@
 沿用此前的 ZIP → `script.model_bundle install` → `script.run_product` 工作流。
 **只发布权重和校验文件；15 首评测歌曲及谱包不上传 Release。**
 
+**运行端已支持截断预览。** 已安装本页权重的用户不用重新下载：停止服务，更新
+`develop` 后按原命令重启，并重新生成。模型到音频末尾仍未结束时，保留已有音符，
+结果页、预览页及任务历史显示警告，仍可下载 Phira 包。之前失败的任务需重新生成。
+
 | 包 | 4K | 静态 free-x | 下载 |
 | --- | --- | --- | --- |
 | B03，平均表现优选 | AL-AR4K v0.5.1 / S / E14-S / e1000 | AL-FreeX v0.4.0 / A / E18-A / e1000 | [audiolab-anchored15-20261026.zip](https://github.com/LtePrince/AudioLab/releases/download/anchored-ar-20261026/audiolab-anchored15-20261026.zip) |
@@ -83,7 +87,10 @@ Rainy Heart、Re_Nascence Psystyle Ver.、GOODBOUNCE。训练目录 ID、音频�
 E14/E18 使用绝对时间 anchor/group 协议，不能直接替换旧 DT 解码器文件。
 新运输合同严格加载原参数及冻结前端，复现全局音频、fp16 缓存往返、因果历史和连续坐标。
 交付默认沿用本次贪心解码；音符起止时间不取整，且不启用旧产品的 Hold 裁剪或和弦位置修补。
-失败生成不会获得完整谱包或成功标记，不用后处理掩盖停止失败。
+当模型到音频末尾、解码步数上限或无法继续生成键型时，运行端保留可用前缀并提示警告。
+截断时丢弃音频之外及尚未完成的音符，越过音频末尾的 Hold 尾裁到末尾；其余音符保留。
+生成报告分别记录任务产物完成与模型未正常停止，保留原始错误、截断原因及修改数量。
+原研究生成器和上述 benchmark 的自然停止指标保持不变；未产生有效音符仍不发布空谱。
 
 100 项相关自动检查通过。两包均经过真实安装、文件校验和原检查点参数逐张量比对。
 开发机 RTX 3090 上，B03 在 Firefox 实际上传 Eltaw 后完成两路线、播放、拖动、玩法切换、
@@ -93,3 +100,8 @@ E14/E18 使用绝对时间 anchor/group 协议，不能直接替换旧 DT 解码
 [runtime_verification.json](evaluations/assets/runtime_selection15_20261026/runtime_verification.json)。
 B04 的 4K A/e0920 另经实际安装后的整曲推理校验，847 个音符也与评测逐项一致；
 B04 的 free-x 权重与 B03 文件哈希完全相同。
+
+截断修复另经98项相关检查及Firefox实测：Eltaw自动估速129.19921875 BPM时，
+4K未自然结束的952个音符可预览下载并显示警告，free-x正常结束的872个音符保留。
+刷新后历史警告仍可见，切换玩法时显示对应警告；见
+[cutoff_preview.json](evaluations/assets/runtime_selection15_20261026/cutoff_preview.json)。

@@ -3348,7 +3348,13 @@
       },
       "release": "https://github.com/LtePrince/AudioLab/releases/tag/anchored-ar-20261026",
       "evidence": "docs/anchored15_runtime.md",
-      "publication_evidence": "docs/evaluations/assets/runtime_selection15_20261026/published_release.json"
+      "publication_evidence": "docs/evaluations/assets/runtime_selection15_20261026/published_release.json",
+      "runtime_update": {
+        "policy": "learned-stop-or-bounded-prefix-v1",
+        "requires_new_weights": false,
+        "unfinished_output": "bounded preview and Phira download with visible warnings; raw EOS metrics unchanged",
+        "evidence": "docs/evaluations/assets/runtime_selection15_20261026/cutoff_preview.json"
+      }
     },
     {
       "id": "B04",
@@ -3393,7 +3399,13 @@
       },
       "release": "https://github.com/LtePrince/AudioLab/releases/tag/anchored-ar-20261026",
       "evidence": "docs/anchored15_runtime.md",
-      "publication_evidence": "docs/evaluations/assets/runtime_selection15_20261026/published_release.json"
+      "publication_evidence": "docs/evaluations/assets/runtime_selection15_20261026/published_release.json",
+      "runtime_update": {
+        "policy": "learned-stop-or-bounded-prefix-v1",
+        "requires_new_weights": false,
+        "unfinished_output": "bounded preview and Phira download with visible warnings; raw EOS metrics unchanged",
+        "evidence": "docs/evaluations/assets/runtime_selection15_20261026/cutoff_preview.json"
+      }
     }
   ],
   "not_run": [

@@ -26,7 +26,7 @@ from .artifacts import chart_document, repair_log, validate_chart, write_json, w
 from .tempo import estimate_tempo, provided_tempo, TempoRequired
 from .phira import build_phira_package
 from .limits import validate_ram_reserve
-from .anchored_models import SCHEMA as ANCHORED_SCHEMA, phigros_notes
+from .anchored_models import SCHEMA as ANCHORED_SCHEMA, export_prediction
 
 
 class JobCancelled(Exception):
@@ -89,8 +89,8 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
     """Keep the AR state for the entire song; bound only encoder attention.
 
     Encoder windows are explicitly versioned and require quality calibration.
-    Each protocol must finish naturally; legacy skeleton routes also require
-    exact candidate coverage. Anchored outputs retain continuous audio seconds.
+    Legacy routes require natural EOS and exact skeleton coverage. Anchored
+    routes can export a bounded prefix with an explicit truncation warning.
     """
     if feature_condition not in (None, 'matched', 'zero_acoustic_features'):
         raise ValueError('unsupported experimental layout feature condition')
@@ -188,14 +188,14 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
                     last_update = time.monotonic()
             predicted = generate(dec, condition, bpm, use_soft=contract['variant']=='soft',
                 greedy=contract['decoding']=='greedy', seed=seed, max_tokens=max_tokens, check=anchored_check)
-            notes = phigros_notes(predicted, mode, bpm, offset, duration)
+            notes, completion = export_prediction(predicted, mode, bpm, offset, duration)
             return notes, dict(runtime_contract=contract, model_label=contract['model_label'],
                 generation_policy='absolute-time-group-ar-v1', quality_status='experimental',
                 encoded_frames=features.shape[1], max_decoder_steps=max_tokens,
                 encoding_preflight=preflight, model_load_and_encoding_seconds=encoding_seconds,
                 decoding_seconds=predicted['seconds'], encoder='full-attention-v1',
                 seed=seed, sampling_policy=contract['decoding'], top_p=.95,
-                termination_policy=contract['termination_policy'], termination=predicted['termination'],
+                **completion,
                 eos_clock_seconds=predicted['eos_clock_seconds'], repair_profile=contract['repair_profile'])
         memory = dec.prepare_memory(features, dense_condition(soft_arrays, features.shape[1]).to(device))
     else:
@@ -308,7 +308,7 @@ def run_job(args):
                                   resource_limits=resource_limits,
                                   max_seconds=args.max_seconds, timeout_seconds=args.timeout_seconds),
                       model_sha256={mode: sha256(checkpoints[mode]) for mode in modes},
-                      stages={}, routes={})
+                      stages={}, routes={}, warnings=[])
         report['implementation']['product_source_sha256'] = {
             path.name: sha256(path) for path in sorted(Path(__file__).parent.glob('*')) if path.is_file()}
         report['runtime']['device_name'] = torch.cuda.get_device_name(device) if device.type == 'cuda' else 'CPU'
@@ -369,8 +369,8 @@ def run_job(args):
                                          bpm, args.offset, args.seed, device, control,
                                          max_tokens=args.max_decoder_steps, encoder_mode=args.layout_encoder,
                                          soft_arrays=soft_arrays if contracts[mode] else None)
-            # Raw artifacts remain diagnostic only; an over-budget decoder may
-            # contain an early EOS and must never receive a completion marker.
+            # A usable bounded prefix retains its model-failure status and
+            # warning even though artifact generation itself can complete.
             raw_name, chart_name, events_name = f'{mode}.raw.json', f'{mode}.json', f'{mode}.events.json'
             chart_document(raw, bpm, args.offset, directory/raw_name)
             end_tick = (duration-args.offset)/tick_seconds(1, bpm)
@@ -391,8 +391,9 @@ def run_job(args):
                                          changed_notes=len(changes), chart_file=chart_name,
                                          raw_file=raw_name, events_file=events_name,
                                          elapsed_seconds=time.monotonic()-phase)
+            report['warnings'].extend(decoding.get('warnings', []))
             routes[mode] = dict(events=events['events'], chart_file=chart_name, events_file=events_name,
-                                model_label=decoding.get('model_label'))
+                                model_label=decoding.get('model_label'), warnings=decoding.get('warnings', []))
             control.check()
             gc.collect()
             if device.type == 'cuda':
@@ -406,7 +407,9 @@ def run_job(args):
                             model_sha256=report['model_sha256'][mode],
                             audio_checkpoint_sha256=metadata['checkpoint_sha256'],
                             timebase_source=tempo['source'],seed=args.seed,
-                            repair_profile=report['routes'][mode].get('repair_profile', 'static-v1')),
+                            repair_profile=report['routes'][mode].get('repair_profile', 'static-v1'),
+                            termination=report['routes'][mode].get('termination'),
+                            warnings=report['routes'][mode].get('warnings', [])),
                 check=control.check,min_available_ram_gib=args.min_available_ram_gib)
             report['packages'][mode]=package
             report['routes'][mode]['package_file']=package['file']
@@ -422,7 +425,8 @@ def run_job(args):
         report['artifacts'] = {path.name: dict(sha256=sha256(path), bytes=path.stat().st_size)
                                for path in sorted(directory.iterdir()) if path.is_file() and path.name != 'job.json'}
         write_json(directory/'manifest.json', report)  # sole completion marker
-        control.update('complete', status='completed', progress=None, manifest='manifest.json')
+        control.update('complete', status='completed', progress=None, manifest='manifest.json',
+                       warnings=report['warnings'])
         return report
     except BaseException as error:
         (directory/'manifest.json').unlink(missing_ok=True)

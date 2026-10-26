@@ -9,6 +9,20 @@ from src.data.chart2array import LANE_CENTERS
 from src.data.timing import tick_seconds
 
 SCHEMA = 'audiolab-anchored-ar-runtime-v1'
+EXPORT_POLICY = 'learned-stop-or-bounded-prefix-v1'
+PARTIAL_TERMINATIONS = {
+    'continued with no future audio interval': ('audio_end_cutoff',
+        '模型未正常结束，已在音频末尾截断。已生成部分可预览和下载。'),
+    'anchored decoder exhausted token budget before learned stop': ('token_limit_cutoff',
+        '生成达到步骤上限，已保留前面生成的谱面，可预览和下载；后续音符可能缺失。'),
+    'no valid group continuation': ('group_cutoff',
+        '模型未能继续生成，已保留前面生成的谱面，可预览和下载；后续音符可能缺失。'),
+}
+
+
+def _partial(prediction):
+    return (prediction['status'] == 'failed' and prediction['termination'] == 'failed'
+            and prediction.get('error') in PARTIAL_TERMINATIONS)
 
 
 def validate_contract(ck):
@@ -32,11 +46,12 @@ def validate_contract(ck):
     return c
 
 
-def phigros_notes(prediction, mode, bpm, offset, duration):
+def phigros_notes(prediction, mode, bpm, offset, duration, *, allow_partial=False):
     """Change units only: no tick rounding, onset filtering or type/position repair."""
-    if prediction['status'] != 'completed' or prediction['termination'] != 'learned_stop':
+    if not ((prediction['status'] == 'completed' and prediction['termination'] == 'learned_stop')
+            or (allow_partial and _partial(prediction))):
         raise ValueError('anchored generation did not finish: ' + prediction.get('error', 'missing learned stop'))
-    if prediction.get('incomplete_coordinate_notes', 0):
+    if prediction.get('incomplete_coordinate_notes', 0) and not (allow_partial and _partial(prediction)):
         raise ValueError('anchored generation has incomplete coordinates')
     scale = tick_seconds(1, bpm)
     kinds = {'tap': 1, 'drag': 2, 'hold': 3, 'flick': 4}
@@ -60,6 +75,50 @@ def phigros_notes(prediction, mode, bpm, offset, duration):
             if not .05 <= x <= .95:
                 raise ValueError('anchored coordinate outside visible interval')
             position = (x - .5) / .05625
-        result.append(dict(type=kind, time=(start-offset)/scale, holdTime=(end-start)/scale,
-                           positionX=position, speed=1., floorPosition=(start-offset)))
+        tick = (start-offset)/scale
+        # The last representable audio second may round back to duration after
+        # converting units. Keep this sub-ULP boundary inside the audio.
+        while tick*scale+offset >= duration:
+            tick = math.nextafter(tick, -math.inf)
+        result.append(dict(type=kind, time=tick, holdTime=(end-start)/scale,
+                           positionX=position, speed=1., floorPosition=tick*scale))
     return result
+
+
+def export_prediction(prediction, mode, bpm, offset, duration):
+    """Retain a valid prefix after a controlled stop, without changing research results."""
+    details = dict(termination_policy=EXPORT_POLICY, generation_status=prediction['status'],
+        generator_termination=prediction['termination'], generator_error=prediction.get('error'),
+        termination=prediction['termination'], model_completed=prediction['status']=='completed',
+        truncated=False, warnings=[])
+    if not _partial(prediction):
+        return phigros_notes(prediction, mode, bpm, offset, duration), details
+    kept = []
+    changes = dict(notes_after_audio=0, shortened_holds=0,
+                   incomplete_notes=prediction.get('incomplete_coordinate_notes', 0))
+    for original in prediction['notes']:
+        n = dict(original)
+        start, end = n['time_seconds'], n['end_seconds']
+        if not all(math.isfinite(t) for t in (start, end)) or start < offset or end < start:
+            raise ValueError('invalid anchored partial note timeline')
+        if start >= duration:
+            changes['notes_after_audio'] += 1
+            continue
+        if n['type'] == 'hold':
+            if end == start:  # Interrupted before the first Hold-duration token.
+                changes['incomplete_notes'] += 1
+                continue
+            if end > duration:
+                n['end_seconds'] = duration
+                changes['shortened_holds'] += 1
+        kept.append(n)
+    bounded = dict(prediction, notes=kept)
+    notes = phigros_notes(bounded, mode, bpm, offset, duration, allow_partial=True)
+    if not notes:
+        raise ValueError('anchored generation did not finish and has no complete notes to preview')
+    termination, message = PARTIAL_TERMINATIONS[prediction['error']]
+    label = '定轨 4K' if mode == '4k' else '无轨 free-x'
+    warning = dict(code=termination, mode=mode, message=f'{label}：{message}')
+    details.update(termination=termination, truncated=True, model_completed=False,
+                   audio_end_seconds=duration, cutoff_changes=changes, warnings=[warning])
+    return notes, details

@@ -11,6 +11,7 @@ input[type=file]{max-width:100%;padding:14px 0}button,a.button{display:inline-bl
 button:disabled{opacity:.5;cursor:default}button.secondary{background:#354762;color:#edf4ff}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
 small,.muted{color:#a7b8ce}details{margin-top:20px}summary{cursor:pointer}#status{font-size:18px;margin:0 0 10px}#error{color:#ffc0a7;white-space:pre-wrap}a{color:#9ecbff}
 #error-raw{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;color:#b7c5da}
+#warnings{color:#ffd18c;white-space:pre-wrap}
 table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:12px 8px;border-bottom:1px solid #34465e}th{font-size:13px;color:#a7b8ce}td{overflow-wrap:anywhere}
 </style>
 <h1>AudioLab <span class="muted">快速成谱</span></h1>
@@ -22,7 +23,7 @@ table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:12px 8px
   <details id="settings"><summary>可选设置</summary><label for="bpm">手动速度（BPM）</label><input id="bpm" type="number" min="1" max="1000" step="any" placeholder="留空，自动估计"><p><small>自动估计尚未校准。若节奏不稳定或试听不合适，可填写已知速度后重新生成。</small></p></details>
   <div class="actions"><button id="submit" type="submit">生成谱面</button><button id="cancel" class="secondary" type="button" disabled>取消任务</button></div>
 </form>
-<section class="panel" aria-live="polite"><p id="status">等待选择音乐</p><div id="progress" class="muted"></div><p id="error"></p><details id="error-details" hidden><summary>查看原始错误</summary><pre id="error-raw"></pre></details><div id="result" class="actions"></div></section>
+<section class="panel" aria-live="polite"><p id="status">等待选择音乐</p><div id="progress" class="muted"></div><p id="warnings" hidden></p><p id="error"></p><details id="error-details" hidden><summary>查看原始错误</summary><pre id="error-raw"></pre></details><div id="result" class="actions"></div></section>
 <h2>最近任务</h2><table><thead><tr><th>音乐</th><th>状态</th><th>结果</th></tr></thead><tbody id="history"></tbody></table>
 <p><small>下载 ZIP 后传到手机或平板，在 Phira 的本地谱面中导入。基线谱尚未定级，真机导入与手感仍需确认；网页预览不提供击打判定。</small></p>
 <script>
@@ -58,10 +59,12 @@ function setError(error,job=null){
   if(!error)details.open=false;
 }
 function actionLink(label,url){const a=document.createElement('a');a.textContent=label;a.href=url;a.className='button';a.target='_blank';a.rel='noopener';return a;}
+function statusText(job){return job.status==='completed'&&job.warnings?.length?'已生成（有截断警告）':statusNames[job.status]||job.status;}
 function packageLinks(job,primary=false){return Object.entries(job.packages||{}).map(([mode,pkg])=>{const a=actionLink('下载 Phira '+(mode==='4k'?'4K':'free-x')+' 谱包',pkg.url);a.removeAttribute('target');a.download='';a.dataset.mode=mode;if(primary)a.id='download-'+mode;return a;});}
 function show(job){
   current=job.id;const done=terminal.has(job.status);
-  $('status').textContent=job.status==='running'?(stageNames[job.stage]||'生成中'):(statusNames[job.status]||job.status);
+  $('status').textContent=job.status==='running'?(stageNames[job.stage]||'生成中'):statusText(job);
+  $('warnings').textContent=(job.warnings||[]).map(w=>w.message).join('\n');$('warnings').hidden=!$('warnings').textContent;
   $('progress').textContent=(job.elapsed_seconds?Math.floor(job.elapsed_seconds)+' 秒':'')+(job.progress&&job.progress.candidates_total?' · 已处理 '+job.progress.candidates_reached+' / '+job.progress.candidates_total+' 个事件':'');
   setError(job.error,job);$('cancel').disabled=done||job.status==='cancelling';$('submit').disabled=!done||Boolean(job.busy);
   if(job.status==='needs_tempo')$('settings').open=true;
@@ -72,7 +75,7 @@ function show(job){
 async function poll(){if(!current)return;try{const r=await fetch('/api/jobs/'+current);if(!r.ok)throw new Error('任务状态暂时无法读取');show(await r.json());}catch(e){setError(e.message);pollTimer=setTimeout(poll,1500);}}
 async function refreshHistory(){
   try{const response=await fetch('/api/jobs');const data=await response.json();$('history').replaceChildren();
-    for(const job of data.jobs){const tr=document.createElement('tr');for(const text of [job.name,statusNames[job.status]||job.status]){const td=document.createElement('td');td.textContent=text;tr.append(td);}const td=document.createElement('td');if(job.preview)td.append(...packageLinks(job),actionLink('预览',job.preview));
+    for(const job of data.jobs){const tr=document.createElement('tr');for(const text of [job.name,statusText(job)]){const td=document.createElement('td');td.textContent=text;tr.append(td);}const td=document.createElement('td');if(job.preview)td.append(...packageLinks(job),actionLink('预览',job.preview));
       if(job.error&&terminal.has(job.status)){const button=document.createElement('button');button.type='button';button.className='secondary';button.textContent='查看失败原因';button.addEventListener('click',async()=>{try{const response=await fetch('/api/jobs/'+job.id);if(!response.ok)throw new Error('任务状态暂时无法读取');show(await response.json());}catch(e){setError(e.message);}});td.append(button);}
       tr.append(td);$('history').append(tr);}
     const active=data.jobs.find(j=>!terminal.has(j.status));if(active&&!upload){current=active.id;clearTimeout(pollTimer);pollTimer=setTimeout(poll,100);$('submit').disabled=true;}
@@ -81,7 +84,7 @@ async function refreshHistory(){
 $('generate').addEventListener('submit',async event=>{
   event.preventDefault();const file=$('audio-file').files[0];if(!file)return;
   if(file.size>128*1024*1024){setError('文件超过 128 MiB，请选择较小的音频。');return;}
-  clearTimeout(pollTimer);current=null;$('submit').disabled=true;$('cancel').disabled=false;$('result').replaceChildren();setError(null);$('status').textContent='上传音乐';
+  clearTimeout(pollTimer);current=null;$('submit').disabled=true;$('cancel').disabled=false;$('result').replaceChildren();setError(null);$('warnings').hidden=true;$('warnings').textContent='';$('status').textContent='上传音乐';
   upload=new AbortController();const requestToken=crypto.randomUUID();const query=new URLSearchParams({name:file.name,mode:$('mode').value,bpm:$('bpm').value||'auto',request_token:requestToken});
   try{const response=await fetch('/api/jobs?'+query,{method:'POST',body:file,signal:upload.signal});const result=await response.json();if(!response.ok){const rejected=new Error('任务提交失败');rejected.originalError=result.error;rejected.jobId=result.id;throw rejected;}current=result.id;upload=null;await poll();}
   catch(e){upload=null;$('submit').disabled=false;$('cancel').disabled=true;$('status').textContent=e.name==='AbortError'?'上传已取消':'未能启动任务';setError(e.name==='AbortError'?null:e.originalError||e.message,{id:e.jobId});if(e.name==='AbortError'){try{const response=await fetch('/api/jobs');const data=await response.json();const own=data.jobs.find(j=>j.request_token===requestToken&&!terminal.has(j.status));if(own)await fetch('/api/jobs/'+own.id+'/cancel',{method:'POST'});}catch{}}await refreshHistory();}

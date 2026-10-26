@@ -1,5 +1,7 @@
 """Runtime packaging preserves the trained protocol, seconds and coordinates."""
 import json
+import math
+from copy import deepcopy
 
 import pytest
 import torch
@@ -7,7 +9,7 @@ import torch
 from script.export_anchored_bundle import portable_checkpoint
 from src.anchored_ar import AnchoredAR, SCHEMA, FREEX_SCHEMA
 from src.product import pipeline, runtime
-from src.product.anchored_models import phigros_notes
+from src.product.anchored_models import phigros_notes, export_prediction, PARTIAL_TERMINATIONS
 from src.product.artifacts import chart_document, validate_chart
 from src.product.experimental_models import load_models, runtime_contract
 from src.product.model_bundle import sha256
@@ -111,7 +113,7 @@ def test_runtime_preflight_accepts_portable_models(tmp_path, packed_inputs, monk
     assert result['freex']['decoder_positions'] == 64
 
 
-def test_unfinished_generation_has_no_success_artifacts(tmp_path, packed_inputs, monkeypatch):
+def test_unfinished_generation_without_any_notes_still_fails(tmp_path, packed_inputs, monkeypatch):
     pair, _, _ = packed_inputs
     from src import anchored_ar
     monkeypatch.setattr(anchored_ar, 'generate', lambda *a, **kw: dict(
@@ -121,6 +123,77 @@ def test_unfinished_generation_has_no_success_artifacts(tmp_path, packed_inputs,
     assert not (tmp_path/'job/manifest.json').exists()
     assert not list((tmp_path/'job').glob('*.phira.zip'))
     assert json.loads((tmp_path/'job/job.json').read_text())['status'] == 'failed'
+
+
+@pytest.mark.parametrize('mode', ['4k', 'freex'])
+@pytest.mark.parametrize('reason', list(PARTIAL_TERMINATIONS))
+def test_unfinished_route_keeps_preview_download_and_persistent_warning(
+        tmp_path, packed_inputs, monkeypatch, mode, reason):
+    from src import anchored_ar
+    from src.product.server import LocalJobs
+    pair, _, _ = packed_inputs
+    def predict(model, condition, bpm, **kw):
+        current = '4k' if model.n_lanes == 4 else 'freex'
+        note = dict(time_seconds=.12345678, end_seconds=.57345678, screen_x=.2890625,
+                    position=0 if current == '4k' else 17, type='hold')
+        result = dict(status='completed', termination='learned_stop', eos_clock_seconds=.6,
+                      seconds=.01, notes=[note])
+        if current == mode:
+            result.update(status='failed', termination='failed', error=reason, eos_clock_seconds=None)
+            result['notes'] += [dict(note, time_seconds=.7, end_seconds=1.3),
+                               dict(note, time_seconds=1.1, end_seconds=1.1, type='tap'),
+                               dict(note, time_seconds=.9, end_seconds=.9)]
+        return result
+    monkeypatch.setattr(anchored_ar, 'generate', predict)
+    jobs = LocalJobs(tmp_path/'server', pair[1], 'cpu')
+    identifier = 'a'*32
+    try:
+        report = pipeline.run_job(arguments(tmp_path, pair, output=str(jobs.root/'jobs'/identifier)))
+        jobs.records[identifier] = dict(id=identifier, status='completed', name='song.wav')
+        jobs.save(jobs.records[identifier])
+        assert len(report['warnings']) == 1 and report['warnings'][0]['mode'] == mode
+        route = report['routes'][mode]
+        assert not route['model_completed'] and route['truncated']
+        assert route['generation_status'] == 'failed' and route['generator_error'] == reason
+        assert route['termination'] == PARTIAL_TERMINATIONS[reason][0]
+        assert route['cutoff_changes'] == dict(notes_after_audio=1, shortened_holds=1, incomplete_notes=1)
+        events = json.loads((jobs.root/'jobs'/identifier/f'{mode}.events.json').read_text())['events']
+        assert len(events) == 2 and events[-1]['end_seconds'] == pytest.approx(1.)
+        assert all(n['time_seconds'] < 1. and n['end_seconds'] <= 1. for n in events)
+        other = 'freex' if mode == '4k' else '4k'
+        assert report['routes'][other]['model_completed'] and not report['routes'][other]['warnings']
+    finally:
+        jobs.close()
+    jobs = LocalJobs(tmp_path/'server', pair[1], 'cpu')
+    try:
+        status = jobs.status(identifier)
+        assert status['status'] == 'completed' and status['warnings'] == report['warnings']
+        assert set(status['packages']) == {'4k', 'freex'}
+        assert jobs.artifact(identifier, 'preview.html').is_file()
+        text = jobs.artifact(identifier, 'preview.html').read_text()
+        assert report['warnings'][0]['message'] in text
+        assert jobs.artifact(identifier, f'{mode}.phira.zip').is_file()
+    finally:
+        jobs.close()
+
+
+def test_partial_export_preserves_input_and_keeps_last_audio_instant_inside_bounds(tmp_path):
+    end = 135.55083900226757
+    n = dict(time_seconds=math.nextafter(end, 0.), end_seconds=math.nextafter(end, 0.),
+             screen_x=.2890625, position=0, type='tap')
+    prediction = dict(status='failed', termination='failed', error='continued with no future audio interval', notes=[n])
+    before = deepcopy(prediction)
+    raw, info = export_prediction(prediction, '4k', 193., 0., end)
+    chart = chart_document(raw, 193., 0., tmp_path/'end.json')
+    events, _ = validate_chart(chart, '4k', end, None)
+    assert events['events'][0]['time_seconds'] < end
+    assert prediction == before and info['truncated']
+
+
+def test_unknown_failures_are_not_published_as_partial_charts():
+    predicted = dict(status='failed', termination='failed', error='unexpected model corruption', notes=[])
+    with pytest.raises(ValueError, match='did not finish'):
+        export_prediction(predicted, '4k', 120., 0., 1.)
 
 
 def test_export_refuses_unmatched_training_cache(tmp_path, packed_inputs, inputs):
