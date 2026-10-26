@@ -3315,7 +3315,7 @@
       ],
       "model_root": "checkpoints/anchored15_20261026",
       "user_tested": false,
-      "status": "experimental_runtime_verified_user_test_pending",
+      "status": "published_experimental_user_test_pending",
       "archive": "out/runtime_delivery_20261026/audiolab-anchored15-20261026.zip",
       "sha256": "813c3722e5e463e215ed2cdfdfdc73d184de4b4819843761d8c2afb8d48ac944",
       "bytes": 134252695,
@@ -3347,7 +3347,8 @@
         }
       },
       "release": "https://github.com/LtePrince/AudioLab/releases/tag/anchored-ar-20261026",
-      "evidence": "docs/anchored15_runtime.md"
+      "evidence": "docs/anchored15_runtime.md",
+      "publication_evidence": "docs/evaluations/assets/runtime_selection15_20261026/published_release.json"
     },
     {
       "id": "B04",
@@ -3359,7 +3360,7 @@
       ],
       "model_root": "checkpoints/anchored15_a_20261026",
       "user_tested": false,
-      "status": "experimental_runtime_verified_user_test_pending",
+      "status": "published_experimental_user_test_pending",
       "archive": "out/runtime_delivery_20261026/audiolab-anchored15-a-20261026.zip",
       "sha256": "efc5531742fc45ca1b5770c64bf3850550692dce9e629440637de50dd8948027",
       "bytes": 134252697,
@@ -3391,7 +3392,8 @@
         }
       },
       "release": "https://github.com/LtePrince/AudioLab/releases/tag/anchored-ar-20261026",
-      "evidence": "docs/anchored15_runtime.md"
+      "evidence": "docs/anchored15_runtime.md",
+      "publication_evidence": "docs/evaluations/assets/runtime_selection15_20261026/published_release.json"
     }
   ],
   "not_run": [

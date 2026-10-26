@@ -1,0 +1,27 @@
+{
+  "url": "https://github.com/LtePrince/AudioLab/releases/tag/anchored-ar-20261026",
+  "tag": "anchored-ar-20261026",
+  "commit": "0ea85351bd7242eb1aedef1a50d5682ce40ff2dd",
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "audiolab-anchored15-20261026.zip",
+      "bytes": 134252695,
+      "sha256": "813c3722e5e463e215ed2cdfdfdc73d184de4b4819843761d8c2afb8d48ac944",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/anchored-ar-20261026/audiolab-anchored15-20261026.zip"
+    },
+    {
+      "name": "audiolab-anchored15-a-20261026.zip",
+      "bytes": 134252697,
+      "sha256": "efc5531742fc45ca1b5770c64bf3850550692dce9e629440637de50dd8948027",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/anchored-ar-20261026/audiolab-anchored15-a-20261026.zip"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 200,
+      "sha256": "2a153f8dcc1abe22501a707e504cafaf92a34fdebccb370c30e6e31268236848",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/anchored-ar-20261026/SHA256SUMS.txt"
+    }
+  ],
+  "public_checksum_download_verified": true
+}
