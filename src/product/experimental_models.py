@@ -15,9 +15,14 @@ SCHEMA = 'audiolab-soft-onset-runtime-v1'
 def _contract(ck):
     contract = ck.get('runtime_contract')
     if contract is None:
+        if str(ck.get('schema', '')).startswith('audiolab-absolute-time-group-'):
+            raise ValueError('export the experiment with script.export_anchored_bundle first')
         if ck.get('soft_onset_schema') or ck.get('dec_config', {}).get('soft_onset_dim', 0):
             raise ValueError('export the experiment with script.export_soft_onset_bundle first')
         return None
+    from .anchored_models import SCHEMA as ANCHORED_SCHEMA, validate_contract
+    if contract.get('schema') == ANCHORED_SCHEMA:
+        return validate_contract(ck)
     if (contract.get('schema') != SCHEMA or contract.get('mode') not in ('4k', 'freex')
             or ck.get('condition') not in ('soft', 'soft_history', 'soft_history_aux')
             or contract.get('mode') != ck.get('mode')
@@ -46,7 +51,15 @@ def load_models(checkpoint, device):
     if contract is None:
         del ck
         return load_legacy_models(checkpoint, device)
-    decoder = decoder_from_checkpoint(ck, device)
+    from .anchored_models import SCHEMA as ANCHORED_SCHEMA
+    if contract['schema'] == ANCHORED_SCHEMA:
+        from src.anchored_ar import AnchoredAR
+        decoder = AnchoredAR(ck['config']['decoder_config'])
+        decoder.load_state_dict(ck['model'], strict=True)
+        decoder.n_lanes = decoder.decoder.n_lanes
+        decoder = decoder.to(device).eval()
+    else:
+        decoder = decoder_from_checkpoint(ck, device)
     expected = 4 if contract['mode'] == '4k' else 64
     if decoder.n_lanes != expected:
         raise ValueError('runtime mode does not match decoder positions')

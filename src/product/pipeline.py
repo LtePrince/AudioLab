@@ -26,6 +26,7 @@ from .artifacts import chart_document, repair_log, validate_chart, write_json, w
 from .tempo import estimate_tempo, provided_tempo, TempoRequired
 from .phira import build_phira_package
 from .limits import validate_ram_reserve
+from .anchored_models import SCHEMA as ANCHORED_SCHEMA, phigros_notes
 
 
 class JobCancelled(Exception):
@@ -88,13 +89,16 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
     """Keep the AR state for the entire song; bound only encoder attention.
 
     Encoder windows are explicitly versioned and require quality calibration.
-    Natural EOS and exact candidate coverage are independently required.
+    Each protocol must finish naturally; legacy skeleton routes also require
+    exact candidate coverage. Anchored outputs retain continuous audio seconds.
     """
     if feature_condition not in (None, 'matched', 'zero_acoustic_features'):
         raise ValueError('unsupported experimental layout feature condition')
     encoding_start = time.monotonic()
     enc, dec = load_models(str(checkpoint), device)
     contract = getattr(dec, 'runtime_contract', None)
+    anchored = contract is not None and contract['schema'] == ANCHORED_SCHEMA
+    core_decoder = dec.decoder if anchored else dec
     if contract is not None and (encoder_mode != 'full' or skeleton is not None
                                  or soft_arrays is None or feature_condition is not None):
         raise ValueError('soft-onset runtime requires full encoder, dense inputs and free generation')
@@ -118,9 +122,9 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
             audit_tk._emit_span(chain,tick-previous_tick,audit_tk.dtb,audit_tk.dtt,N_DTB,N_DTT)
             extra_forced_steps+=max(0,len(chain)-1)
         previous_tick=tick
-    decoder_hidden=dec.tok_emb.embedding_dim
+    decoder_hidden=core_decoder.tok_emb.embedding_dim
     cache_tokens=max_tokens+extra_forced_steps+3
-    cache_bytes = 2*(cache_tokens+frames)*decoder_hidden*4*len(dec.blocks)
+    cache_bytes = 2*(cache_tokens+frames)*decoder_hidden*4*len(core_decoder.blocks)
     model_bytes = Path(checkpoint).stat().st_size
     cpu_extra = model_bytes*2 + frames*hidden*4*4
     device_extra = attention_bytes + work_bytes + cache_bytes
@@ -168,6 +172,31 @@ def decode_notes(mel, duration, skeleton, checkpoint, mode, bpm, offset, seed, d
         # Match the frozen training cache roundtrip, without quantizing onsets.
         if contract['feature_storage_dtype'] == 'float16':
             features = features.half().float()
+        if anchored:
+            from src.anchored_ar import generate
+            encoding_seconds = time.monotonic()-encoding_start
+            del enc
+            valid = torch.ones(1, features.shape[1], dtype=torch.bool, device=device)
+            condition = dict(features=features, valid=valid, duration=duration,
+                             soft_onsets=dense_condition(soft_arrays, features.shape[1]).to(device))
+            last_update = time.monotonic()
+            def anchored_check():
+                nonlocal last_update
+                control.check()
+                if time.monotonic()-last_update >= 1:
+                    control.update(progress=None)
+                    last_update = time.monotonic()
+            predicted = generate(dec, condition, bpm, use_soft=contract['variant']=='soft',
+                greedy=contract['decoding']=='greedy', seed=seed, max_tokens=max_tokens, check=anchored_check)
+            notes = phigros_notes(predicted, mode, bpm, offset, duration)
+            return notes, dict(runtime_contract=contract, model_label=contract['model_label'],
+                generation_policy='absolute-time-group-ar-v1', quality_status='experimental',
+                encoded_frames=features.shape[1], max_decoder_steps=max_tokens,
+                encoding_preflight=preflight, model_load_and_encoding_seconds=encoding_seconds,
+                decoding_seconds=predicted['seconds'], encoder='full-attention-v1',
+                seed=seed, sampling_policy=contract['decoding'], top_p=.95,
+                termination_policy=contract['termination_policy'], termination=predicted['termination'],
+                eos_clock_seconds=predicted['eos_clock_seconds'], repair_profile=contract['repair_profile'])
         memory = dec.prepare_memory(features, dense_condition(soft_arrays, features.shape[1]).to(device))
     else:
         memory = dec.prepare_memory(features)
@@ -345,20 +374,25 @@ def run_job(args):
             raw_name, chart_name, events_name = f'{mode}.raw.json', f'{mode}.json', f'{mode}.events.json'
             chart_document(raw, bpm, args.offset, directory/raw_name)
             end_tick = (duration-args.offset)/tick_seconds(1, bpm)
-            final, repairs = (constrain_4k_notes(raw, end_tick) if mode == '4k'
-                              else constrain_free_notes(raw, end_tick))
+            repair_profile = decoding.get('repair_profile', 'static-v1')
+            if repair_profile == 'none-model-output-v1':
+                final, repairs = raw, dict(applied=False)
+            else:
+                final, repairs = (constrain_4k_notes(raw, end_tick) if mode == '4k'
+                                  else constrain_free_notes(raw, end_tick))
             chart = chart_document(final, bpm, args.offset, directory/chart_name)
             events, checks = validate_chart(chart, mode, duration, route_skeleton)
             events['source_audio_sha256'] = source_hash
             write_json(directory/events_name, events)
             changes = repair_log(raw, final)
-            write_json(directory/f'{mode}.repairs.json', dict(profile='static-v1', summary=repairs,
+            write_json(directory/f'{mode}.repairs.json', dict(profile=repair_profile, summary=repairs,
                                                             changes=changes))
             report['routes'][mode] = dict(**checks, **decoding, repairs=repairs,
                                          changed_notes=len(changes), chart_file=chart_name,
                                          raw_file=raw_name, events_file=events_name,
                                          elapsed_seconds=time.monotonic()-phase)
-            routes[mode] = dict(events=events['events'], chart_file=chart_name, events_file=events_name)
+            routes[mode] = dict(events=events['events'], chart_file=chart_name, events_file=events_name,
+                                model_label=decoding.get('model_label'))
             control.check()
             gc.collect()
             if device.type == 'cuda':
@@ -371,7 +405,8 @@ def run_job(args):
                 source=dict(kind='model_generated',generation_commit=report['implementation']['git_commit'],
                             model_sha256=report['model_sha256'][mode],
                             audio_checkpoint_sha256=metadata['checkpoint_sha256'],
-                            timebase_source=tempo['source'],seed=args.seed,repair_profile='static-v1'),
+                            timebase_source=tempo['source'],seed=args.seed,
+                            repair_profile=report['routes'][mode].get('repair_profile', 'static-v1')),
                 check=control.check,min_available_ram_gib=args.min_available_ram_gib)
             report['packages'][mode]=package
             report['routes'][mode]['package_file']=package['file']

@@ -17,6 +17,7 @@ audio{flex:1;min-width:220px;width:100%}.legend span{margin-right:16px;white-spa
 <p id="song"></p>
 <p class="muted">音频同步视觉预览 · 基线谱面。下载完整谱包，转到手机或平板后在 Phira 本地导入并检查同步与手感。此页面不提供击打判定。</p>
 <p id="tempo" class="muted"></p>
+<p id="model" class="muted"></p>
 <div class="row"><label for="mode">玩法</label><select id="mode"></select><span id="count" class="muted"></span></div>
 <canvas id="chart" aria-label="谱面音符随音频时间移动的预览"></canvas>
 <div class="row"><audio id="audio" controls preload="metadata"></audio><button id="restart">回到开头</button></div>
@@ -44,6 +45,7 @@ for (const mode of Object.keys(data.routes)) {
 }
 function changeMode() {
   route = data.routes[select.value];
+  document.getElementById('model').textContent = route.model_label ? '模型：'+route.model_label : '';
   document.getElementById('mode-title').textContent = '· '+labels[select.value];
   document.getElementById('count').textContent = route.events.length+' 个音符 · 基线谱';
   document.getElementById('export').href = route.chart_file;

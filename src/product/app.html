@@ -38,6 +38,7 @@ function errorText(error){
   if(error.type==='LibsndfileError'||text.includes('Error opening '))return '无法读取这个音频文件。请确认它是可播放的 WAV / OGG，或重新导出后重试。';
   if(text.includes('tempo could not'))return '暂时无法估计这首音乐的速度。请在可选设置中填写 BPM 后重试。';
   if(text.includes('no audio candidates'))return '没有找到可用于生成的音乐事件，请检查音频或更换文件。';
+  if(text.includes('anchored generation did not finish'))return '模型未能正常结束谱面生成，本次没有完整谱包。可以尝试另一首音乐；原始错误中保留了具体原因。';
   if(text.includes('insufficient available RAM')){
     const available=text.match(/['"]ram_available_gib['"]\s*:\s*([0-9]+(?:\.[0-9]+)?)/);
     return '系统可用内存不足'+(available?'（当前约 '+Number(available[1]).toFixed(2)+' GiB）':'')+'。请关闭其他占用内存的程序，或调整启动服务时的内存保留量后重试。';
