@@ -1,0 +1,1918 @@
+{
+  "schema": "audiolab-runtime-selection15-v1",
+  "scope": "Eltaw + 14 unique songs drawn uniformly without replacement from the existing 300 training songs; not held-out generalization.",
+  "selection": "Screen retained E14/E18 checkpoints using existing three-song macro time+position-bin+type F1, failed generations score zero; retain best A, best S, and highest-ranked remaining distinct checkpoint. Select final mode winner by the same failed-as-zero macro F1 over fixed 15 songs. Greedy/seed42 setting is part of the candidate, not tuned on the 15.",
+  "seed": 20261026,
+  "songs": [
+    {
+      "id": "Eltaw_IN",
+      "audio_sha256": "253c107a59aae0c7e027511ddb66025d6c831649d2ce584edde8ef56ea166708",
+      "duration": 135.55083900226757
+    },
+    {
+      "id": "DESTRUCTION 321_IN",
+      "audio_sha256": "29f0492821a0753e2f6620144234ff9970779b98d19940a8f9ca9402ccf96db9",
+      "duration": 159.09587301587302
+    },
+    {
+      "id": "Incyde_IN",
+      "audio_sha256": "5682f7a3362691d7cf6ed958d6de55f71c281ca459f8925b02f9aa02c91c4fa8",
+      "duration": 200.58412698412698
+    },
+    {
+      "id": "Diamond Dust_IN",
+      "audio_sha256": "78288bb4aaeee18167ccd520e53793ede3316556a29b5f16caaa5b89881587c4",
+      "duration": 155.06
+    },
+    {
+      "id": "インフェルノシティ_IN",
+      "audio_sha256": "2b4b31ee6d9443ba0b1963994fd526337937f7dea04b1d5d859d75046be7f770",
+      "duration": 123.9107029478458
+    },
+    {
+      "id": "The Whole Rest_IN",
+      "audio_sha256": "e0194535ae79132976f368cfa1b23f6a60b501366b79e2c9bceebabc1cb4a11c",
+      "duration": 143.52979591836734
+    },
+    {
+      "id": "混乱-Confusion_IN",
+      "audio_sha256": "2059fe838fed1aada578ce219ebe7b92b9771403359492c21235d21e07ff7ff7",
+      "duration": 127.79537414965986
+    },
+    {
+      "id": "Cipher  20_IN",
+      "audio_sha256": "0221f7e70fe0bd4b76dcf13394e4366cedd0b3853d4e2beef227da45b91bf220",
+      "duration": 154.32126984126984
+    },
+    {
+      "id": "A journey to the moonlight_IN",
+      "audio_sha256": "21580c002216330e089cc310f299073009e82a5faf9591172ca0f60ff0e4f958",
+      "duration": 150.54802721088436
+    },
+    {
+      "id": "The Chariot REVIIVAL_IN",
+      "audio_sha256": "21b030f32312d37adcd6ef85d49c003dae62dde571fb82811e0b1fc4a44953b0",
+      "duration": 146.5280725623583
+    },
+    {
+      "id": "风屿_IN",
+      "audio_sha256": "a4550e4ebe4ba5ed58a8da85729b028705607e77fd48ea79329075c3e3babf40",
+      "duration": 179.34657596371883
+    },
+    {
+      "id": "Rrharil_IN",
+      "audio_sha256": "be44606ef4dbeca7820a3b0eaa05a7430dac5ee5bd310e0b39ce62f7668d41d0",
+      "duration": 132.63383219954648
+    },
+    {
+      "id": "Rainy Heart_IN",
+      "audio_sha256": "223185c5e4d48ab1103c88a418cb5790881781f2d99b41ca388279f4adfed3b0",
+      "duration": 152.55074829931974
+    },
+    {
+      "id": "Re_Nascence Psystyle Ver._IN",
+      "audio_sha256": "95b7ccfd49d43effea58d70483790850c91e60f0e9cbc6608cc3d2ead04e7f4d",
+      "duration": 147.1114739229025
+    },
+    {
+      "id": "GOODBOUNCE_IN",
+      "audio_sha256": "cb12fe172d5025421a35cd8db7ba07224cf9ae9b7636f10a9fc899e2bcdf091c",
+      "duration": 132.72090702947847
+    }
+  ],
+  "cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+  "metric_sha256": "d36420657a00b03459aead2bb8eb521d73373e3e2198d92532c6ed17ef6b9f11",
+  "plan_sha256": "04790f4fff9fd6c57be2381557ee62e364fdbb0dd9e5c7f651d9bdb2bc3d5419",
+  "quality_status": "experimental; generalization and playability unverified",
+  "metric_note": "Selection/onset mean scores count unfinished generations as zero; raw metrics include partial failed output and are diagnostics only. Grid is a positive matching bonus, never decoding/quantization.",
+  "grid_profile": {
+    "phase_ticks": [
+      0,
+      4,
+      8,
+      16,
+      24,
+      32
+    ],
+    "tolerance_ticks": 1.0,
+    "window_beats": 8,
+    "interpretation": "positive matching bonus only; no required ordering, quota, penalty or decoding constraint"
+  },
+  "candidates": [
+    {
+      "candidate": {
+        "mode": "4k",
+        "variant": "audio",
+        "epoch": 920,
+        "decoding": "greedy",
+        "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0920.pt",
+        "screen_mean_joint": 0.5251839995639641,
+        "screen_completed": 3,
+        "screen_mean_onset": 0.871566369048907,
+        "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0920/inputs.json",
+        "candidate_id": "4k-audio-e0920-greedy",
+        "sha256": "a720ad316c4194586793c5d60ef50cc2ce3c425a74bb68f4b099603399c60610"
+      },
+      "mean_joint_f1": 0.3562155305378444,
+      "mean_onset_f1": 0.554379394400338,
+      "completed": 9,
+      "total": 15,
+      "songs": [
+        {
+          "song": "Eltaw_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9985734664764622,
+          "joint_f1": 0.9268004722550177,
+          "selection_joint_f1": 0.9268004722550177,
+          "grid_bonus_per_onset": 0.7537279117451152,
+          "note_count": 847,
+          "types": {
+            "tap": 600,
+            "drag": 158,
+            "hold": 42,
+            "flick": 47
+          },
+          "reference_notes": 847,
+          "prediction_sha256": "fa8f435b83f9436940eb2289f0a17c38b031fc4b54ea45a042f24c3e73b919be"
+        },
+        {
+          "song": "DESTRUCTION 321_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.48092369477911645,
+          "joint_f1": 0.12935323383084577,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.29014260106587086,
+          "note_count": 772,
+          "types": {
+            "hold": 8,
+            "tap": 576,
+            "drag": 180,
+            "flick": 8
+          },
+          "reference_notes": 1439,
+          "prediction_sha256": "4626870758abdeb705a07c654adff524ffa9cf978bae6059b8d95c80241fe8ef"
+        },
+        {
+          "song": "Incyde_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.700594353640416,
+          "joint_f1": 0.17293729372937294,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.260474519201247,
+          "note_count": 1465,
+          "types": {
+            "drag": 201,
+            "tap": 1188,
+            "hold": 66,
+            "flick": 10
+          },
+          "reference_notes": 1565,
+          "prediction_sha256": "763abd25f1f8f2e75cbeb56b210540e6729b9879642c6ddc0f0f11e36dd5867f"
+        },
+        {
+          "song": "Diamond Dust_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8591304347826086,
+          "joint_f1": 0.4039506172839506,
+          "selection_joint_f1": 0.4039506172839506,
+          "grid_bonus_per_onset": 0.5132308056171465,
+          "note_count": 1052,
+          "types": {
+            "hold": 178,
+            "tap": 732,
+            "flick": 106,
+            "drag": 36
+          },
+          "reference_notes": 973,
+          "prediction_sha256": "9fd453f1efca699032aaa0f39f927edf4abe1cedaf4236758b4cfd46efce8db6"
+        },
+        {
+          "song": "インフェルノシティ_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9019830028328611,
+          "joint_f1": 0.4425531914893617,
+          "selection_joint_f1": 0.4425531914893617,
+          "grid_bonus_per_onset": 0.5119267179487159,
+          "note_count": 1208,
+          "types": {
+            "drag": 220,
+            "tap": 906,
+            "flick": 10,
+            "hold": 72
+          },
+          "reference_notes": 1142,
+          "prediction_sha256": "5a12bd57a7ffca3dcb4338a4a2d3e7e5cf1505c237de5cbc3ee2d903588c084f"
+        },
+        {
+          "song": "The Whole Rest_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9528228924980665,
+          "joint_f1": 0.7711640211640212,
+          "selection_joint_f1": 0.7711640211640212,
+          "grid_bonus_per_onset": 0.6647725248945338,
+          "note_count": 750,
+          "types": {
+            "tap": 403,
+            "flick": 55,
+            "hold": 148,
+            "drag": 144
+          },
+          "reference_notes": 762,
+          "prediction_sha256": "53a804da14562507e2b387001045d99e4fa5b82b6eda02655a37a56b1bb4d1b3"
+        },
+        {
+          "song": "混乱-Confusion_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.7387078330474557,
+          "joint_f1": 0.22478120681713495,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.5388577768844216,
+          "note_count": 1196,
+          "types": {
+            "tap": 676,
+            "drag": 502,
+            "flick": 17,
+            "hold": 1
+          },
+          "reference_notes": 975,
+          "prediction_sha256": "15ba64be0cba66e43b30a64abd599369faaee944a189f423c6b7b6498e32a074"
+        },
+        {
+          "song": "Cipher  20_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9320276497695853,
+          "joint_f1": 0.44295942720763726,
+          "selection_joint_f1": 0.44295942720763726,
+          "grid_bonus_per_onset": 0.6784921481481486,
+          "note_count": 1069,
+          "types": {
+            "drag": 455,
+            "tap": 517,
+            "flick": 45,
+            "hold": 52
+          },
+          "reference_notes": 1026,
+          "prediction_sha256": "ec2a77770678dd5cb977df5ac5252fca8f15f1b4f40e2af15957e3ec5465f2d6"
+        },
+        {
+          "song": "A journey to the moonlight_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.6366076221148685,
+          "joint_f1": 0.3798219584569733,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.4157457668246366,
+          "note_count": 879,
+          "types": {
+            "flick": 24,
+            "tap": 292,
+            "hold": 55,
+            "drag": 508
+          },
+          "reference_notes": 1143,
+          "prediction_sha256": "63174968af23985fc36a3305b8bc4e5a76dcf247a70b6862d0bd9900de0ce80d"
+        },
+        {
+          "song": "The Chariot REVIIVAL_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.9238329238329238,
+          "joint_f1": 0.6762886597938145,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.7337052090680503,
+          "note_count": 942,
+          "types": {
+            "hold": 122,
+            "tap": 599,
+            "flick": 60,
+            "drag": 161
+          },
+          "reference_notes": 998,
+          "prediction_sha256": "5ce7f90ae3a5a460a8ebcf365a9c7d3965fab762983a13ba42b35751f7739256"
+        },
+        {
+          "song": "风屿_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.9307125307125307,
+          "joint_f1": 0.5122549019607843,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.644581428661043,
+          "note_count": 1292,
+          "types": {
+            "tap": 804,
+            "drag": 471,
+            "hold": 9,
+            "flick": 8
+          },
+          "reference_notes": 1156,
+          "prediction_sha256": "9992f1f1c058d90b89f2f87da79d8ffe3a10f701b3013a6a6fd72bc00237ee24"
+        },
+        {
+          "song": "Rrharil_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8619560131024802,
+          "joint_f1": 0.38237738985868663,
+          "selection_joint_f1": 0.38237738985868663,
+          "grid_bonus_per_onset": 0.6108102361110894,
+          "note_count": 1269,
+          "types": {
+            "tap": 879,
+            "drag": 308,
+            "flick": 26,
+            "hold": 56
+          },
+          "reference_notes": 1137,
+          "prediction_sha256": "885d0115391df0de74e1e8f3ef6ca1ff73bccb72ca4024234f87ba887b910163"
+        },
+        {
+          "song": "Rainy Heart_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 1.0,
+          "joint_f1": 1.0,
+          "selection_joint_f1": 1.0,
+          "grid_bonus_per_onset": 0.8396561028684885,
+          "note_count": 437,
+          "types": {
+            "tap": 307,
+            "drag": 21,
+            "hold": 65,
+            "flick": 44
+          },
+          "reference_notes": 437,
+          "prediction_sha256": "ae1278ea0da3bb31d5910e92d8f185b417aaa49020df2f4bb83b0676c949bb48"
+        },
+        {
+          "song": "Re_Nascence Psystyle Ver._IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9883211678832117,
+          "joint_f1": 0.7642079806529625,
+          "selection_joint_f1": 0.7642079806529625,
+          "grid_bonus_per_onset": 0.7279388098693702,
+          "note_count": 831,
+          "types": {
+            "tap": 528,
+            "hold": 33,
+            "flick": 54,
+            "drag": 216
+          },
+          "reference_notes": 823,
+          "prediction_sha256": "644301ad882c9913000f7d16c9c158b463c42123fde39e2c2d7377cab5b97675"
+        },
+        {
+          "song": "GOODBOUNCE_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8208762886597938,
+          "joint_f1": 0.20921985815602837,
+          "selection_joint_f1": 0.20921985815602837,
+          "grid_bonus_per_onset": 0.7309978181818423,
+          "note_count": 805,
+          "types": {
+            "tap": 585,
+            "hold": 114,
+            "drag": 90,
+            "flick": 16
+          },
+          "reference_notes": 887,
+          "prediction_sha256": "f9c0c1ed2e918536741723908dc632a7cf1df6d31d145ba20c7240ffc8d8d212"
+        }
+      ],
+      "mean_raw_joint_f1": 0.4959113475104394,
+      "mean_raw_onset_f1": 0.8484713249421587,
+      "mean_raw_grid_bonus": 0.594337358472648
+    },
+    {
+      "candidate": {
+        "mode": "4k",
+        "variant": "soft",
+        "epoch": 960,
+        "decoding": "greedy",
+        "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0960.pt",
+        "screen_mean_joint": 0.8105374701469351,
+        "screen_completed": 3,
+        "screen_mean_onset": 0.9869478288387197,
+        "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0960/inputs.json",
+        "candidate_id": "4k-soft-e0960-greedy",
+        "sha256": "763af747243e43eb19f6aa5f23d4bfed2a7f2b9fdd427ac8e697a960e2abaa8d"
+      },
+      "mean_joint_f1": 0.3773058501081146,
+      "mean_onset_f1": 0.49877654116067177,
+      "completed": 8,
+      "total": 15,
+      "songs": [
+        {
+          "song": "Eltaw_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9971469329529244,
+          "joint_f1": 0.9227138643067847,
+          "selection_joint_f1": 0.9227138643067847,
+          "grid_bonus_per_onset": 0.7530796142653207,
+          "note_count": 848,
+          "types": {
+            "tap": 601,
+            "drag": 158,
+            "hold": 42,
+            "flick": 47
+          },
+          "reference_notes": 847,
+          "prediction_sha256": "98cfa24b545a9dfd56778fc567d372c4039f3825aa4c010e2f512ae4779c4129"
+        },
+        {
+          "song": "DESTRUCTION 321_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.5706079463858306,
+          "joint_f1": 0.18635607321131448,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.3017533448719991,
+          "note_count": 965,
+          "types": {
+            "hold": 15,
+            "tap": 795,
+            "drag": 129,
+            "flick": 26
+          },
+          "reference_notes": 1439,
+          "prediction_sha256": "f9a1bcdd455c5984f41e06b5de4062b5af65fa00aeabe19cd4d430311246cd30"
+        },
+        {
+          "song": "Incyde_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.6630810603150211,
+          "joint_f1": 0.15112994350282485,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.23593038087387053,
+          "note_count": 1267,
+          "types": {
+            "drag": 327,
+            "tap": 808,
+            "hold": 115,
+            "flick": 17
+          },
+          "reference_notes": 1565,
+          "prediction_sha256": "704f67fb82cf4c758e1ac5ab7335f79a1f71a041fd08656002db4ff4eb790863"
+        },
+        {
+          "song": "Diamond Dust_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.856473345049795,
+          "joint_f1": 0.4182091045522761,
+          "selection_joint_f1": 0.4182091045522761,
+          "grid_bonus_per_onset": 0.5101431070889966,
+          "note_count": 1026,
+          "types": {
+            "hold": 159,
+            "tap": 655,
+            "flick": 147,
+            "drag": 65
+          },
+          "reference_notes": 973,
+          "prediction_sha256": "373ccee3e345a100b4c3e733dc5baa1018345ed695559549fbcc21c1326bae36"
+        },
+        {
+          "song": "インフェルノシティ_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.6229290921139827,
+          "joint_f1": 0.2909090909090909,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.4557670063694242,
+          "note_count": 783,
+          "types": {
+            "drag": 182,
+            "tap": 543,
+            "hold": 50,
+            "flick": 8
+          },
+          "reference_notes": 1142,
+          "prediction_sha256": "10114f76cd2a9d2edc45ce37da364114084ad1e37ef47063765e5931fe0ce923"
+        },
+        {
+          "song": "The Whole Rest_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 1.0,
+          "joint_f1": 0.9914754098360655,
+          "selection_joint_f1": 0.9914754098360655,
+          "grid_bonus_per_onset": 0.6951618194654683,
+          "note_count": 763,
+          "types": {
+            "tap": 419,
+            "flick": 57,
+            "hold": 120,
+            "drag": 167
+          },
+          "reference_notes": 762,
+          "prediction_sha256": "ac3834a547c6de83b8da738b3e50bee43d16a5c3c8cca46c0cd3cdd7aa44349a"
+        },
+        {
+          "song": "混乱-Confusion_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.7971101745936183,
+          "joint_f1": 0.29300567107750475,
+          "selection_joint_f1": 0.29300567107750475,
+          "grid_bonus_per_onset": 0.5577473693495013,
+          "note_count": 1141,
+          "types": {
+            "tap": 786,
+            "drag": 345,
+            "flick": 10
+          },
+          "reference_notes": 975,
+          "prediction_sha256": "a85fd1f48815000681fa1a21cca1208d7cd2d52076c844a978db44ceb6ff8183"
+        },
+        {
+          "song": "Cipher  20_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.9436133486766398,
+          "joint_f1": 0.5820823244552058,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.6740450681904465,
+          "note_count": 1039,
+          "types": {
+            "drag": 432,
+            "tap": 519,
+            "flick": 58,
+            "hold": 30
+          },
+          "reference_notes": 1026,
+          "prediction_sha256": "8d9a7ef73f02e11144fdca4904f3b76923b1e127b78ef532b3a114eceb0bf289"
+        },
+        {
+          "song": "A journey to the moonlight_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.6844396082698585,
+          "joint_f1": 0.4772277227722772,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.46610802637361776,
+          "note_count": 877,
+          "types": {
+            "flick": 33,
+            "tap": 362,
+            "hold": 105,
+            "drag": 377
+          },
+          "reference_notes": 1143,
+          "prediction_sha256": "6bd81349df1972b4855eb78fa92f21f6dc60afac28d7310400e0270a8d934d9e"
+        },
+        {
+          "song": "The Chariot REVIIVAL_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9915966386554622,
+          "joint_f1": 0.9037111334002006,
+          "selection_joint_f1": 0.9037111334002006,
+          "grid_bonus_per_onset": 0.7509140769230712,
+          "note_count": 996,
+          "types": {
+            "hold": 134,
+            "tap": 603,
+            "flick": 55,
+            "drag": 204
+          },
+          "reference_notes": 998,
+          "prediction_sha256": "6f4f5607379a4ca0eabe7aba1b3e61391046fad38efde645d7c607d079f9b6d1"
+        },
+        {
+          "song": "风屿_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9519038076152304,
+          "joint_f1": 0.536144578313253,
+          "selection_joint_f1": 0.536144578313253,
+          "grid_bonus_per_onset": 0.6669126562500033,
+          "note_count": 1168,
+          "types": {
+            "tap": 738,
+            "drag": 407,
+            "hold": 21,
+            "flick": 2
+          },
+          "reference_notes": 1156,
+          "prediction_sha256": "548ae960e5cf74f34b974e136ca355bac96a978c6a27f7fb11022b53a1346632"
+        },
+        {
+          "song": "Rrharil_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.8939393939393939,
+          "joint_f1": 0.4666666666666667,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.623536544217692,
+          "note_count": 1293,
+          "types": {
+            "tap": 939,
+            "drag": 244,
+            "flick": 41,
+            "hold": 69
+          },
+          "reference_notes": 1137,
+          "prediction_sha256": "ca2f6232c45db3947af3ee340d4920142547327eb404d47cec04b7f898706395"
+        },
+        {
+          "song": "Rainy Heart_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 1.0,
+          "joint_f1": 1.0,
+          "selection_joint_f1": 1.0,
+          "grid_bonus_per_onset": 0.8463226429277749,
+          "note_count": 437,
+          "types": {
+            "tap": 307,
+            "drag": 21,
+            "hold": 65,
+            "flick": 44
+          },
+          "reference_notes": 437,
+          "prediction_sha256": "958d409f3949a0745c2caf4774b8d687b231200b0e35ed6e981121e5ca53654a"
+        },
+        {
+          "song": "Re_Nascence Psystyle Ver._IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8874172185430463,
+          "joint_f1": 0.594327990135635,
+          "selection_joint_f1": 0.594327990135635,
+          "grid_bonus_per_onset": 0.6545587020649192,
+          "note_count": 799,
+          "types": {
+            "tap": 643,
+            "hold": 41,
+            "flick": 45,
+            "drag": 70
+          },
+          "reference_notes": 823,
+          "prediction_sha256": "b88d844bdfeb8c69363ade0fe789ce65f2844ed433b2a1415daadf218de1ae7b"
+        },
+        {
+          "song": "GOODBOUNCE_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.9112207151664612,
+          "joint_f1": 0.4321055525013744,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.7440330953545327,
+          "note_count": 932,
+          "types": {
+            "tap": 730,
+            "hold": 118,
+            "drag": 60,
+            "flick": 24
+          },
+          "reference_notes": 887,
+          "prediction_sha256": "513d067dfd2cade8284ca786ff7a518f4b1847f7194d6f87979f172b8f944834"
+        }
+      ],
+      "mean_raw_joint_f1": 0.5497376750426982,
+      "mean_raw_onset_f1": 0.8514319521518177,
+      "mean_raw_grid_bonus": 0.5957342303057759
+    },
+    {
+      "candidate": {
+        "mode": "4k",
+        "variant": "soft",
+        "epoch": 1000,
+        "decoding": "greedy",
+        "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+        "screen_mean_joint": 0.7720937041292913,
+        "screen_completed": 3,
+        "screen_mean_onset": 0.959468019224022,
+        "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e1000/inputs.json",
+        "candidate_id": "4k-soft-e1000-greedy",
+        "sha256": "9c1b3518fb9db1691127cfca2912649d359e468db777e1cfc0b363a447943e01"
+      },
+      "mean_joint_f1": 0.49839140857199477,
+      "mean_onset_f1": 0.6362926920153604,
+      "completed": 10,
+      "total": 15,
+      "songs": [
+        {
+          "song": "Eltaw_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 1.0,
+          "joint_f1": 0.9964580873671782,
+          "selection_joint_f1": 0.9964580873671782,
+          "grid_bonus_per_onset": 0.7604819347598757,
+          "note_count": 847,
+          "types": {
+            "tap": 604,
+            "drag": 156,
+            "hold": 41,
+            "flick": 46
+          },
+          "reference_notes": 847,
+          "prediction_sha256": "45681a74631a7f7b3330ab1fd273c2d7f94e2a53f0c69845dc9bef1549cd0253"
+        },
+        {
+          "song": "DESTRUCTION 321_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.7256273138626079,
+          "joint_f1": 0.28355523569629365,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.3262072780067972,
+          "note_count": 1340,
+          "types": {
+            "hold": 17,
+            "tap": 994,
+            "drag": 324,
+            "flick": 5
+          },
+          "reference_notes": 1439,
+          "prediction_sha256": "bb87b3de03d797a04e1cbfb3f824e2c1a1f4bc12d7c7ae8c93b937ecaa4bada1"
+        },
+        {
+          "song": "Incyde_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.43529411764705883,
+          "joint_f1": 0.10929472209248015,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.25791353333335393,
+          "note_count": 576,
+          "types": {
+            "drag": 73,
+            "tap": 435,
+            "hold": 49,
+            "flick": 19
+          },
+          "reference_notes": 1565,
+          "prediction_sha256": "137cd5a4391740bf757d647ef26b6e263bf991a9890c7afd16f684849f308f16"
+        },
+        {
+          "song": "Diamond Dust_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8691218130311614,
+          "joint_f1": 0.465230166503428,
+          "selection_joint_f1": 0.465230166503428,
+          "grid_bonus_per_onset": 0.5245637933474984,
+          "note_count": 1069,
+          "types": {
+            "hold": 123,
+            "tap": 730,
+            "flick": 159,
+            "drag": 57
+          },
+          "reference_notes": 973,
+          "prediction_sha256": "c3cbc97a2ad98a5702204deabfc700024cf555f8d4eee63ea6a2294ecaca31da"
+        },
+        {
+          "song": "インフェルノシティ_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9755542922114838,
+          "joint_f1": 0.7548470486859112,
+          "selection_joint_f1": 0.7548470486859112,
+          "grid_bonus_per_onset": 0.5944461564160946,
+          "note_count": 1179,
+          "types": {
+            "drag": 250,
+            "tap": 860,
+            "flick": 10,
+            "hold": 59
+          },
+          "reference_notes": 1142,
+          "prediction_sha256": "29cb1be06c6ddd083a9515b6839623eefa0866ce165c46c4e4da2a396dbc76a9"
+        },
+        {
+          "song": "The Whole Rest_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9924242424242424,
+          "joint_f1": 0.9130150425114454,
+          "selection_joint_f1": 0.9130150425114454,
+          "grid_bonus_per_onset": 0.6721574442084057,
+          "note_count": 767,
+          "types": {
+            "tap": 415,
+            "flick": 58,
+            "hold": 133,
+            "drag": 161
+          },
+          "reference_notes": 762,
+          "prediction_sha256": "5bee08477e0df826fe5b4fb924d4f1d7ca2a21b05b3547330539a12b7301f530"
+        },
+        {
+          "song": "混乱-Confusion_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8597053171044202,
+          "joint_f1": 0.41144004014049174,
+          "selection_joint_f1": 0.41144004014049174,
+          "grid_bonus_per_onset": 0.6159589194547456,
+          "note_count": 1018,
+          "types": {
+            "tap": 693,
+            "drag": 305,
+            "flick": 19,
+            "hold": 1
+          },
+          "reference_notes": 975,
+          "prediction_sha256": "f9a442e3b8bc671d4a7abdd90ecf20af32d3012430f1726eddb3f8d48cb9fecb"
+        },
+        {
+          "song": "Cipher  20_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.882950293960449,
+          "joint_f1": 0.5084282460136674,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.6379531121692981,
+          "note_count": 1169,
+          "types": {
+            "drag": 509,
+            "tap": 588,
+            "flick": 39,
+            "hold": 33
+          },
+          "reference_notes": 1026,
+          "prediction_sha256": "729f22a80c3021abb237a2a478b533e535f9e8665b65000dbdfdbdacc36b8f88"
+        },
+        {
+          "song": "A journey to the moonlight_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.7063613231552163,
+          "joint_f1": 0.46593001841620624,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.44521164651162154,
+          "note_count": 1029,
+          "types": {
+            "flick": 51,
+            "tap": 370,
+            "hold": 98,
+            "drag": 510
+          },
+          "reference_notes": 1143,
+          "prediction_sha256": "50ee5964859d23607ce47f2b90497d62d2f3dfae252bedd366c7c20b09bf5cf6"
+        },
+        {
+          "song": "The Chariot REVIIVAL_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9952038369304557,
+          "joint_f1": 0.9525237381309345,
+          "selection_joint_f1": 0.9525237381309345,
+          "grid_bonus_per_onset": 0.7591279488409222,
+          "note_count": 1003,
+          "types": {
+            "hold": 124,
+            "tap": 606,
+            "flick": 58,
+            "drag": 215
+          },
+          "reference_notes": 998,
+          "prediction_sha256": "db7caf1670657735396c6b2bd40e2a47183d136fca835b7ef0352a033d24c01c"
+        },
+        {
+          "song": "风屿_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8845360824742268,
+          "joint_f1": 0.33917616126205086,
+          "selection_joint_f1": 0.33917616126205086,
+          "grid_bonus_per_onset": 0.6223960495867672,
+          "note_count": 1126,
+          "types": {
+            "tap": 748,
+            "drag": 373,
+            "hold": 5
+          },
+          "reference_notes": 1156,
+          "prediction_sha256": "369f3528bcdedfe05e903a3022e0465d8e21de1410d37046dd5357188290201b"
+        },
+        {
+          "song": "Rrharil_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9852866565195332,
+          "joint_f1": 0.752414398595259,
+          "selection_joint_f1": 0.752414398595259,
+          "grid_bonus_per_onset": 0.6998257254902199,
+          "note_count": 1141,
+          "types": {
+            "tap": 788,
+            "drag": 258,
+            "flick": 37,
+            "hold": 58
+          },
+          "reference_notes": 1137,
+          "prediction_sha256": "2ca507cf449eaecde33dd9492032b1703ea1176f8e4ac050d987b6265cd2b815"
+        },
+        {
+          "song": "Rainy Heart_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 1.0,
+          "joint_f1": 1.0,
+          "selection_joint_f1": 1.0,
+          "grid_bonus_per_onset": 0.847699465875349,
+          "note_count": 437,
+          "types": {
+            "tap": 307,
+            "drag": 21,
+            "hold": 65,
+            "flick": 44
+          },
+          "reference_notes": 437,
+          "prediction_sha256": "9a8ad30434022403632310338af44a04272b4b6d4dc5bac90358bd4f1a030699"
+        },
+        {
+          "song": "Re_Nascence Psystyle Ver._IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9825581395348837,
+          "joint_f1": 0.8907664453832227,
+          "selection_joint_f1": 0.8907664453832227,
+          "grid_bonus_per_onset": 0.7315982733812982,
+          "note_count": 834,
+          "types": {
+            "tap": 547,
+            "hold": 32,
+            "flick": 52,
+            "drag": 203
+          },
+          "reference_notes": 823,
+          "prediction_sha256": "d014f7e5af3ee02c37f7ac3a829dcb22e0fa0efb9595ffa8913b0c1d6414a86a"
+        },
+        {
+          "song": "GOODBOUNCE_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.6287425149700598,
+          "joint_f1": 0.24529616724738676,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.7178950977443563,
+          "note_count": 548,
+          "types": {
+            "tap": 434,
+            "hold": 68,
+            "drag": 46
+          },
+          "reference_notes": 887,
+          "prediction_sha256": "94c45b3e4dee5da5208819f094f8f5bc106e7b63d5a6efe58e7faabd65c1d293"
+        }
+      ],
+      "mean_raw_joint_f1": 0.6058917012030637,
+      "mean_raw_onset_f1": 0.8615577295883866,
+      "mean_raw_grid_bonus": 0.6142290919417736
+    },
+    {
+      "candidate": {
+        "mode": "freex",
+        "variant": "audio",
+        "epoch": 980,
+        "decoding": "greedy",
+        "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0980.pt",
+        "screen_mean_joint": 0.33619563153896725,
+        "screen_completed": 3,
+        "screen_mean_onset": 0.8048016777615806,
+        "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0980/inputs.json",
+        "candidate_id": "freex-audio-e0980-greedy",
+        "sha256": "ebd6c8ed934d77ce116d1147a01c554f40df5bb48670270a1a2e2b242b21e2dd"
+      },
+      "mean_joint_f1": 0.2134308164449534,
+      "mean_onset_f1": 0.4942868282543979,
+      "completed": 9,
+      "total": 15,
+      "songs": [
+        {
+          "song": "Eltaw_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9957567185289957,
+          "joint_f1": 0.8448883666274971,
+          "selection_joint_f1": 0.8448883666274971,
+          "grid_bonus_per_onset": 0.71826101242939,
+          "note_count": 850,
+          "types": {
+            "tap": 592,
+            "drag": 174,
+            "hold": 40,
+            "flick": 44
+          },
+          "reference_notes": 852,
+          "prediction_sha256": "a9f9f024b440bd7e8aa008d556069a06bdacdb0ec7e71ae688955cb77a93d475"
+        },
+        {
+          "song": "DESTRUCTION 321_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.2601823708206687,
+          "joint_f1": 0.011904761904761904,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.21726169345928392,
+          "note_count": 323,
+          "types": {
+            "tap": 311,
+            "drag": 11,
+            "hold": 1
+          },
+          "reference_notes": 1525,
+          "prediction_sha256": "d74a08a0e2f8364732b85c7e893a66bd1beba3ab696b787f45e7f1feca74aca5"
+        },
+        {
+          "song": "Incyde_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.6900188323917138,
+          "joint_f1": 0.026512576478585997,
+          "selection_joint_f1": 0.026512576478585997,
+          "grid_bonus_per_onset": 0.23611548833458013,
+          "note_count": 1318,
+          "types": {
+            "hold": 93,
+            "tap": 840,
+            "flick": 13,
+            "drag": 372
+          },
+          "reference_notes": 1624,
+          "prediction_sha256": "4e591a306c8ba35a6c9fc3798bd1a22dfc650e517a04774350ca6f47b6a7229b"
+        },
+        {
+          "song": "Diamond Dust_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8285714285714286,
+          "joint_f1": 0.2786016949152542,
+          "selection_joint_f1": 0.2786016949152542,
+          "grid_bonus_per_onset": 0.5206334777070175,
+          "note_count": 914,
+          "types": {
+            "hold": 125,
+            "tap": 711,
+            "flick": 56,
+            "drag": 22
+          },
+          "reference_notes": 974,
+          "prediction_sha256": "c4a231c374585d69d52489d7febd7b255f96dd408cdc68d04fb8306c571d966d"
+        },
+        {
+          "song": "インフェルノシティ_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.8917268184342032,
+          "joint_f1": 0.26239578762615184,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.48192935953419325,
+          "note_count": 1132,
+          "types": {
+            "drag": 145,
+            "tap": 892,
+            "hold": 91,
+            "flick": 4
+          },
+          "reference_notes": 1147,
+          "prediction_sha256": "db52976d38cac65a875918a2470420f9a1d37867c11c3f1c23a570b4b7f48870"
+        },
+        {
+          "song": "The Whole Rest_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.6892911010558069,
+          "joint_f1": 0.10475534114403859,
+          "selection_joint_f1": 0.10475534114403859,
+          "grid_bonus_per_onset": 0.4961861325312786,
+          "note_count": 684,
+          "types": {
+            "tap": 419,
+            "hold": 117,
+            "drag": 86,
+            "flick": 62
+          },
+          "reference_notes": 767,
+          "prediction_sha256": "f0b2d1d2df515a307dd2dd9e127892ff030777e0b258f65bea9c2520f77c1cc5"
+        },
+        {
+          "song": "混乱-Confusion_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.7439353099730458,
+          "joint_f1": 0.06041986687147977,
+          "selection_joint_f1": 0.06041986687147977,
+          "grid_bonus_per_onset": 0.5677976121045547,
+          "note_count": 975,
+          "types": {
+            "tap": 518,
+            "drag": 442,
+            "flick": 12,
+            "hold": 3
+          },
+          "reference_notes": 978,
+          "prediction_sha256": "e38db9ded6190990745e377ac3283e67113dad920ac1420eaf47e370451dcdea"
+        },
+        {
+          "song": "Cipher  20_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.8216728037874803,
+          "joint_f1": 0.2864816472694718,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.583519070817153,
+          "note_count": 1195,
+          "types": {
+            "drag": 449,
+            "tap": 673,
+            "flick": 46,
+            "hold": 27
+          },
+          "reference_notes": 1039,
+          "prediction_sha256": "fa2ebc7e26d2d1270d48d9ed9bf8cfaf22cbeb8fb30d310bb7d7c804c5fcdca4"
+        },
+        {
+          "song": "A journey to the moonlight_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.7415094339622641,
+          "joint_f1": 0.1595515308322553,
+          "selection_joint_f1": 0.1595515308322553,
+          "grid_bonus_per_onset": 0.3786243026217324,
+          "note_count": 1139,
+          "types": {
+            "flick": 66,
+            "tap": 412,
+            "hold": 105,
+            "drag": 556
+          },
+          "reference_notes": 1180,
+          "prediction_sha256": "afcbb40c3ac7272dad4089d05920b51f368f156aae39b879c6cc41972d4d562b"
+        },
+        {
+          "song": "The Chariot REVIIVAL_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9590504451038576,
+          "joint_f1": 0.6406796601699151,
+          "selection_joint_f1": 0.6406796601699151,
+          "grid_bonus_per_onset": 0.7211406619607953,
+          "note_count": 996,
+          "types": {
+            "hold": 120,
+            "tap": 626,
+            "flick": 58,
+            "drag": 192
+          },
+          "reference_notes": 1005,
+          "prediction_sha256": "ab87a72a88b0c8496bcdbaadea045e32f8d889f5854cbfa3bf3589dad785ee01"
+        },
+        {
+          "song": "风屿_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.6450867052023121,
+          "joint_f1": 0.05065856129685917,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.528333523306928,
+          "note_count": 818,
+          "types": {
+            "tap": 513,
+            "drag": 299,
+            "flick": 5,
+            "hold": 1
+          },
+          "reference_notes": 1156,
+          "prediction_sha256": "10e6772e4febe1a6abf3fe79f7ba7479bccaa88db82b50d38f6a6538bf1fa9a9"
+        },
+        {
+          "song": "Rrharil_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.7661691542288557,
+          "joint_f1": 0.08719346049046321,
+          "selection_joint_f1": 0.08719346049046321,
+          "grid_bonus_per_onset": 0.5414610491803291,
+          "note_count": 1367,
+          "types": {
+            "tap": 1030,
+            "drag": 286,
+            "hold": 39,
+            "flick": 12
+          },
+          "reference_notes": 1202,
+          "prediction_sha256": "21b6ab34966771dc23331196b1f89713125bad1df5dd896431922ac851c5d86d"
+        },
+        {
+          "song": "Rainy Heart_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 1.0,
+          "joint_f1": 0.9988597491448119,
+          "selection_joint_f1": 0.9988597491448119,
+          "grid_bonus_per_onset": 0.8395714658753283,
+          "note_count": 439,
+          "types": {
+            "tap": 308,
+            "drag": 21,
+            "hold": 65,
+            "flick": 45
+          },
+          "reference_notes": 438,
+          "prediction_sha256": "d327b38e117bbf677596db6fe912ae6eedcd0ef5e7e100cf15eac6c9d5fc595a"
+        },
+        {
+          "song": "Re_Nascence Psystyle Ver._IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.836986301369863,
+          "joint_f1": 0.2216838279830406,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.5923877792041158,
+          "note_count": 824,
+          "types": {
+            "tap": 683,
+            "hold": 16,
+            "flick": 53,
+            "drag": 72
+          },
+          "reference_notes": 827,
+          "prediction_sha256": "f9000875fe3e9920bf6d171a999e3ccb0149bb3d3312d1fe2f4de6b1d8efb75a"
+        },
+        {
+          "song": "GOODBOUNCE_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.8931475029036005,
+          "joint_f1": 0.16516675489677077,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.7247299346405579,
+          "note_count": 1000,
+          "types": {
+            "tap": 750,
+            "hold": 102,
+            "drag": 132,
+            "flick": 16
+          },
+          "reference_notes": 889,
+          "prediction_sha256": "4dafd3943e1b97e9993140ca7fc896a686a61729064ebd5e9f39ebcfaec5291d"
+        }
+      ],
+      "mean_raw_joint_f1": 0.2799835725100905,
+      "mean_raw_onset_f1": 0.7842069950889398,
+      "mean_raw_grid_bonus": 0.5431968375804825
+    },
+    {
+      "candidate": {
+        "mode": "freex",
+        "variant": "soft",
+        "epoch": 980,
+        "decoding": "greedy",
+        "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0980.pt",
+        "screen_mean_joint": 0.2777116854708053,
+        "screen_completed": 2,
+        "screen_mean_onset": 0.8180444925812256,
+        "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0980/inputs.json",
+        "candidate_id": "freex-soft-e0980-greedy",
+        "sha256": "cba4c3a63c74c1e4f5d4224e9361b9d89d220b0a116e81dbec4356bd696c916c"
+      },
+      "mean_joint_f1": 0.21148097479909747,
+      "mean_onset_f1": 0.564818679595442,
+      "completed": 10,
+      "total": 15,
+      "songs": [
+        {
+          "song": "Eltaw_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9761570827489481,
+          "joint_f1": 0.7515923566878981,
+          "selection_joint_f1": 0.7515923566878981,
+          "grid_bonus_per_onset": 0.6933730303703807,
+          "note_count": 875,
+          "types": {
+            "tap": 593,
+            "drag": 183,
+            "hold": 26,
+            "flick": 73
+          },
+          "reference_notes": 852,
+          "prediction_sha256": "2984a11a0bb46456a5bf683194e09a1ca49ce0431d32f7bf14c01b6fdf1bbe94"
+        },
+        {
+          "song": "DESTRUCTION 321_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.7186177715091678,
+          "joint_f1": 0.04755700325732899,
+          "selection_joint_f1": 0.04755700325732899,
+          "grid_bonus_per_onset": 0.2638844582035883,
+          "note_count": 1545,
+          "types": {
+            "tap": 1031,
+            "drag": 471,
+            "flick": 18,
+            "hold": 25
+          },
+          "reference_notes": 1525,
+          "prediction_sha256": "6cc0b86c766b1137c893b22cdcb185df00f58b48f56a01f2eeef579cb9b51145"
+        },
+        {
+          "song": "Incyde_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.2576112412177986,
+          "joint_f1": 0.014014014014014014,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.27419837837833316,
+          "note_count": 374,
+          "types": {
+            "drag": 58,
+            "tap": 272,
+            "flick": 4,
+            "hold": 40
+          },
+          "reference_notes": 1624,
+          "prediction_sha256": "3f50e9e574776e9b65b8c6e3e6af421ac92e49cfc3a4caa4ad9ff6a469d763be"
+        },
+        {
+          "song": "Diamond Dust_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9016493585827734,
+          "joint_f1": 0.3314285714285714,
+          "selection_joint_f1": 0.3314285714285714,
+          "grid_bonus_per_onset": 0.5540810509030969,
+          "note_count": 951,
+          "types": {
+            "hold": 154,
+            "tap": 654,
+            "flick": 95,
+            "drag": 48
+          },
+          "reference_notes": 974,
+          "prediction_sha256": "5452c3907e7e7f42108106cf6223bf95a6e9cf4624c46cf12e48e8af3986f65b"
+        },
+        {
+          "song": "インフェルノシティ_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.8184818481848185,
+          "joint_f1": 0.2055030094582975,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.45402033297601874,
+          "note_count": 1179,
+          "types": {
+            "drag": 208,
+            "tap": 870,
+            "hold": 87,
+            "flick": 14
+          },
+          "reference_notes": 1147,
+          "prediction_sha256": "4bb9dac2acb9a9db95a15e5dff805699615c7f92788fc6d8c7fd4ceba58c720d"
+        },
+        {
+          "song": "The Whole Rest_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8601190476190477,
+          "joint_f1": 0.2528428093645485,
+          "selection_joint_f1": 0.2528428093645485,
+          "grid_bonus_per_onset": 0.5345602787701454,
+          "note_count": 728,
+          "types": {
+            "tap": 402,
+            "flick": 47,
+            "hold": 118,
+            "drag": 161
+          },
+          "reference_notes": 767,
+          "prediction_sha256": "ab01fe3aa50bbee85d6ee622ef0da8b8a5d527a1946973f5628f48837506a5b6"
+        },
+        {
+          "song": "混乱-Confusion_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.7241615331964408,
+          "joint_f1": 0.08147745790331341,
+          "selection_joint_f1": 0.08147745790331341,
+          "grid_bonus_per_onset": 0.5666247727272791,
+          "note_count": 863,
+          "types": {
+            "tap": 619,
+            "drag": 230,
+            "flick": 3,
+            "hold": 11
+          },
+          "reference_notes": 978,
+          "prediction_sha256": "3f32df3b7906427d46ac1ef58570aaf68760d8def2ef6e00a091615448a8206c"
+        },
+        {
+          "song": "Cipher  20_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8911222780569514,
+          "joint_f1": 0.2716049382716049,
+          "selection_joint_f1": 0.2716049382716049,
+          "grid_bonus_per_onset": 0.6371242108932107,
+          "note_count": 1067,
+          "types": {
+            "drag": 425,
+            "tap": 579,
+            "flick": 35,
+            "hold": 28
+          },
+          "reference_notes": 1039,
+          "prediction_sha256": "d63b4ade42e66aa98cf8e72f7a6bb5f149a77f668da391d8ef17b15f88ed7152"
+        },
+        {
+          "song": "A journey to the moonlight_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.7485112230874943,
+          "joint_f1": 0.2373300370828183,
+          "selection_joint_f1": 0.2373300370828183,
+          "grid_bonus_per_onset": 0.3660749977011261,
+          "note_count": 1247,
+          "types": {
+            "flick": 63,
+            "tap": 279,
+            "hold": 91,
+            "drag": 814
+          },
+          "reference_notes": 1180,
+          "prediction_sha256": "13dbe437552b10562b1846eed19a6146e1f042fd91180b7b4280ec74b6eeb527"
+        },
+        {
+          "song": "The Chariot REVIIVAL_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.8969359331476323,
+          "joint_f1": 0.5043961129106895,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.6918066666666483,
+          "note_count": 1156,
+          "types": {
+            "hold": 119,
+            "tap": 783,
+            "flick": 67,
+            "drag": 187
+          },
+          "reference_notes": 1005,
+          "prediction_sha256": "0285ea1cf5ef5f2ebcd6964d97183536c9e70fa8664801c15906c0afbf87aa90"
+        },
+        {
+          "song": "风屿_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8206341694273545,
+          "joint_f1": 0.08514261387824607,
+          "selection_joint_f1": 0.08514261387824607,
+          "grid_bonus_per_onset": 0.5622928472099811,
+          "note_count": 1193,
+          "types": {
+            "tap": 554,
+            "drag": 635,
+            "hold": 3,
+            "flick": 1
+          },
+          "reference_notes": 1156,
+          "prediction_sha256": "b28b6b2240a33b3d20008a89865a1f517fc9c3736a2b75e7e96925ae981a87c6"
+        },
+        {
+          "song": "Rrharil_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8313077297034517,
+          "joint_f1": 0.11437908496732026,
+          "selection_joint_f1": 0.11437908496732026,
+          "grid_bonus_per_onset": 0.5670078098811514,
+          "note_count": 1246,
+          "types": {
+            "tap": 808,
+            "drag": 398,
+            "flick": 25,
+            "hold": 15
+          },
+          "reference_notes": 1202,
+          "prediction_sha256": "d8ce331f00cd6e287df7a1afdbd0321cdc50c59f3fb41ff4bd7c238aa2782fa1"
+        },
+        {
+          "song": "Rainy Heart_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 1.0,
+          "joint_f1": 0.9988597491448119,
+          "selection_joint_f1": 0.9988597491448119,
+          "grid_bonus_per_onset": 0.8525569455984058,
+          "note_count": 439,
+          "types": {
+            "tap": 308,
+            "drag": 21,
+            "hold": 65,
+            "flick": 45
+          },
+          "reference_notes": 438,
+          "prediction_sha256": "87c99fcbeb0026e0df26140d4fae2b2433b202d1c640d474b4550bc95be5be54"
+        },
+        {
+          "song": "Re_Nascence Psystyle Ver._IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.6716981132075471,
+          "joint_f1": 0.15813350615683733,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.552304720496892,
+          "note_count": 716,
+          "types": {
+            "tap": 583,
+            "hold": 49,
+            "flick": 45,
+            "drag": 39
+          },
+          "reference_notes": 827,
+          "prediction_sha256": "619c5492701262d8fd424c2fe9205f80b89b1bbf8b153b9b08066548898d655a"
+        },
+        {
+          "song": "GOODBOUNCE_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.8890200708382526,
+          "joint_f1": 0.19182561307901907,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.7057889797752713,
+          "note_count": 946,
+          "types": {
+            "tap": 687,
+            "drag": 218,
+            "flick": 9,
+            "hold": 32
+          },
+          "reference_notes": 889,
+          "prediction_sha256": "7c0867eecdd90193a170f14cd879ba95374abf77b24d98899132d31cc8318e7f"
+        }
+      ],
+      "mean_raw_joint_f1": 0.2830724585070213,
+      "mean_raw_onset_f1": 0.8004018267018452,
+      "mean_raw_grid_bonus": 0.5517132987034352
+    },
+    {
+      "candidate": {
+        "mode": "freex",
+        "variant": "audio",
+        "epoch": 1000,
+        "decoding": "greedy",
+        "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+        "screen_mean_joint": 0.29451586632361104,
+        "screen_completed": 2,
+        "screen_mean_onset": 0.8237254979190464,
+        "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e1000/inputs.json",
+        "candidate_id": "freex-audio-e1000-greedy",
+        "sha256": "43d8542f83caa19e586a043e7a1b83fb86344621349ca34f904cea125ddde3fe"
+      },
+      "mean_joint_f1": 0.27489443935126706,
+      "mean_onset_f1": 0.5424614515723476,
+      "completed": 10,
+      "total": 15,
+      "songs": [
+        {
+          "song": "Eltaw_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9914529914529915,
+          "joint_f1": 0.8371278458844134,
+          "selection_joint_f1": 0.8371278458844134,
+          "grid_bonus_per_onset": 0.7150463411652608,
+          "note_count": 861,
+          "types": {
+            "tap": 626,
+            "drag": 153,
+            "hold": 42,
+            "flick": 40
+          },
+          "reference_notes": 852,
+          "prediction_sha256": "11bb37606aa259b8430c8322f98e35e32dfcceb09cccb7f0b6f65728458f25d8"
+        },
+        {
+          "song": "DESTRUCTION 321_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.13324175824175824,
+          "joint_f1": 0.006097560975609756,
+          "selection_joint_f1": 0.006097560975609756,
+          "grid_bonus_per_onset": 0.29791004921121833,
+          "note_count": 115,
+          "types": {
+            "tap": 110,
+            "hold": 4,
+            "drag": 1
+          },
+          "reference_notes": 1525,
+          "prediction_sha256": "449bafb15fb9f358788ae0521f7000c7b7dff885268dee63c96d396cf75196c5"
+        },
+        {
+          "song": "Incyde_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.6431865828092244,
+          "joint_f1": 0.038249356381022434,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.2423467872559593,
+          "note_count": 1095,
+          "types": {
+            "hold": 166,
+            "tap": 615,
+            "drag": 313,
+            "flick": 1
+          },
+          "reference_notes": 1624,
+          "prediction_sha256": "b10863fa73b9fcc089c140d4ccfaa6b2d9e75a200aab5cbb40ec9ad55997c048"
+        },
+        {
+          "song": "Diamond Dust_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8741007194244604,
+          "joint_f1": 0.37071172555043524,
+          "selection_joint_f1": 0.37071172555043524,
+          "grid_bonus_per_onset": 0.5559632423883019,
+          "note_count": 979,
+          "types": {
+            "hold": 171,
+            "tap": 687,
+            "flick": 79,
+            "drag": 42
+          },
+          "reference_notes": 974,
+          "prediction_sha256": "a9eb909ba21d47c586597478bea844fd87cc8dd7814f732513986bbeb875e9eb"
+        },
+        {
+          "song": "インフェルノシティ_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.8741935483870967,
+          "joint_f1": 0.3498716852010265,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.49175373401708256,
+          "note_count": 1191,
+          "types": {
+            "drag": 197,
+            "tap": 898,
+            "hold": 90,
+            "flick": 6
+          },
+          "reference_notes": 1147,
+          "prediction_sha256": "ed0148f90c4ef3f345c1e72aead146cb03fe3a0ce60ebd48d6754eea8894a548"
+        },
+        {
+          "song": "The Whole Rest_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9066059225512528,
+          "joint_f1": 0.4421190320470896,
+          "selection_joint_f1": 0.4421190320470896,
+          "grid_bonus_per_onset": 0.5835372601626104,
+          "note_count": 762,
+          "types": {
+            "tap": 495,
+            "flick": 49,
+            "hold": 105,
+            "drag": 113
+          },
+          "reference_notes": 767,
+          "prediction_sha256": "9877892373aa7998e2e7b171d062b36f86de7ac777928a7628183222a9203a12"
+        },
+        {
+          "song": "混乱-Confusion_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.7141025641025641,
+          "joint_f1": 0.06153846153846154,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.5638219078455705,
+          "note_count": 907,
+          "types": {
+            "tap": 524,
+            "drag": 364,
+            "flick": 17,
+            "hold": 2
+          },
+          "reference_notes": 978,
+          "prediction_sha256": "16401e24f2806e3e445841056f9992764d3126670c62203babebb293c4938949"
+        },
+        {
+          "song": "Cipher  20_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.7886435331230284,
+          "joint_f1": 0.17067635043123014,
+          "selection_joint_f1": 0.17067635043123014,
+          "grid_bonus_per_onset": 0.5861350971169826,
+          "note_count": 1164,
+          "types": {
+            "drag": 483,
+            "tap": 594,
+            "flick": 68,
+            "hold": 19
+          },
+          "reference_notes": 1039,
+          "prediction_sha256": "b5436efa321104e2b8ea892dacf05bd2289414756c4fb5db3909f48e1961f86e"
+        },
+        {
+          "song": "A journey to the moonlight_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.717896865520728,
+          "joint_f1": 0.2070504239178938,
+          "selection_joint_f1": 0.2070504239178938,
+          "grid_bonus_per_onset": 0.4232745157667181,
+          "note_count": 1061,
+          "types": {
+            "flick": 47,
+            "tap": 378,
+            "hold": 80,
+            "drag": 556
+          },
+          "reference_notes": 1180,
+          "prediction_sha256": "67768c264c13342106938ff2a06061000ae7890eddb62bf246e7d91ac6b1b378"
+        },
+        {
+          "song": "The Chariot REVIIVAL_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9442508710801394,
+          "joint_f1": 0.6062407132243685,
+          "selection_joint_f1": 0.6062407132243685,
+          "grid_bonus_per_onset": 0.7063879503946175,
+          "note_count": 1014,
+          "types": {
+            "hold": 125,
+            "tap": 618,
+            "flick": 28,
+            "drag": 243
+          },
+          "reference_notes": 1005,
+          "prediction_sha256": "cf8529537c0d2b9752ee8b5a0c7cfbf894f100a957ea2129576cb9283b3ce8e9"
+        },
+        {
+          "song": "风屿_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.9382470119521913,
+          "joint_f1": 0.4114583333333333,
+          "selection_joint_f1": 0.4114583333333333,
+          "grid_bonus_per_onset": 0.6607578120977856,
+          "note_count": 1148,
+          "types": {
+            "tap": 718,
+            "drag": 413,
+            "hold": 15,
+            "flick": 2
+          },
+          "reference_notes": 1156,
+          "prediction_sha256": "f203a9a63ac7c70a8ccd875548f6c5bb0d93071a162431935bdd92a0c226d5d5"
+        },
+        {
+          "song": "Rrharil_IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.7843653930610452,
+          "joint_f1": 0.09607993850883935,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.5552151124935308,
+          "note_count": 1400,
+          "types": {
+            "tap": 1018,
+            "drag": 349,
+            "flick": 15,
+            "hold": 18
+          },
+          "reference_notes": 1202,
+          "prediction_sha256": "bf9e9604ecdae7f6f5b1256ec544d5e28bac17afe74ddf351eedf290d2223fc7"
+        },
+        {
+          "song": "Rainy Heart_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 1.0,
+          "joint_f1": 1.0,
+          "selection_joint_f1": 1.0,
+          "grid_bonus_per_onset": 0.8288231058358098,
+          "note_count": 438,
+          "types": {
+            "tap": 307,
+            "drag": 21,
+            "hold": 65,
+            "flick": 45
+          },
+          "reference_notes": 438,
+          "prediction_sha256": "9be838fc547db2739032700763f8ff705877fc9c472cde510ca35860d386ccd6"
+        },
+        {
+          "song": "Re_Nascence Psystyle Ver._IN",
+          "status": "failed",
+          "error": "continued with no future audio interval",
+          "onset_f1": 0.848605577689243,
+          "joint_f1": 0.2244668911335578,
+          "selection_joint_f1": 0.0,
+          "grid_bonus_per_onset": 0.5717934545454082,
+          "note_count": 955,
+          "types": {
+            "tap": 628,
+            "hold": 37,
+            "flick": 53,
+            "drag": 237
+          },
+          "reference_notes": 827,
+          "prediction_sha256": "903dd3d53c24233dba8d64fce25784dc30068d31925db0b46c6e989bb0d32a2a"
+        },
+        {
+          "song": "GOODBOUNCE_IN",
+          "status": "completed",
+          "error": null,
+          "onset_f1": 0.8424821002386634,
+          "joint_f1": 0.07193460490463215,
+          "selection_joint_f1": 0.07193460490463215,
+          "grid_bonus_per_onset": 0.7140120366972553,
+          "note_count": 946,
+          "types": {
+            "tap": 723,
+            "drag": 27,
+            "hold": 185,
+            "flick": 11
+          },
+          "reference_notes": 889,
+          "prediction_sha256": "aef16770ae1715498224d00e316e1d76ed67046f9e8ec858d6e143b318040baf"
+        }
+      ],
+      "mean_raw_joint_f1": 0.32624152820212754,
+      "mean_raw_onset_f1": 0.8000916959756258,
+      "mean_raw_grid_bonus": 0.5664518937996075
+    }
+  ],
+  "winners": {
+    "4k": {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 1000,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+      "screen_mean_joint": 0.7720937041292913,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.959468019224022,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e1000/inputs.json",
+      "candidate_id": "4k-soft-e1000-greedy",
+      "sha256": "9c1b3518fb9db1691127cfca2912649d359e468db777e1cfc0b363a447943e01"
+    },
+    "freex": {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 1000,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+      "screen_mean_joint": 0.29451586632361104,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8237254979190464,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e1000/inputs.json",
+      "candidate_id": "freex-audio-e1000-greedy",
+      "sha256": "43d8542f83caa19e586a043e7a1b83fb86344621349ca34f904cea125ddde3fe"
+    }
+  },
+  "audio_winners": {
+    "4k": {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 920,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0920.pt",
+      "screen_mean_joint": 0.5251839995639641,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.871566369048907,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0920/inputs.json",
+      "candidate_id": "4k-audio-e0920-greedy",
+      "sha256": "a720ad316c4194586793c5d60ef50cc2ce3c425a74bb68f4b099603399c60610"
+    },
+    "freex": {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 1000,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+      "screen_mean_joint": 0.29451586632361104,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8237254979190464,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e1000/inputs.json",
+      "candidate_id": "freex-audio-e1000-greedy",
+      "sha256": "43d8542f83caa19e586a043e7a1b83fb86344621349ca34f904cea125ddde3fe"
+    }
+  }
+}

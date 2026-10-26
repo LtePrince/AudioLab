@@ -1,0 +1,89 @@
+{
+  "browser_status": "passed",
+  "browser_checks": [
+    "real audio upload and automatic generation finish both modes with Phira packages",
+    "both ZIP files saved by Firefox match completed job hashes and sizes; HTTP partial download works",
+    "preview package links track selected mode; history survives refresh; 390px viewport stays within screen",
+    "preview native audio plays, seeks to mid-song, and preserves audio clock across mode switch"
+  ],
+  "job_id": "49b8a8392add49d4b05f24bb19d535c3",
+  "checks": {
+    "4k": {
+      "candidate": "4k-soft-e1000-greedy",
+      "note_count": 847,
+      "max_absolute_error": 1.4210854715202004e-14,
+      "types_identical": true,
+      "model_label": "AL-AR4K v0.5.1 / S / E14-S / e1000"
+    },
+    "freex": {
+      "candidate": "freex-audio-e1000-greedy",
+      "note_count": 861,
+      "max_absolute_error": 1.4210854715202004e-14,
+      "types_identical": true,
+      "model_label": "AL-FreeX v0.4.0 / A / E18-A / e1000"
+    }
+  },
+  "elapsed_seconds": 61.062671918421984,
+  "resources": {
+    "disk_free_gib": 9.47222900390625,
+    "ram_available_gib": 36.542945861816406,
+    "rss_gib": 1.7142448425292969,
+    "gpu_peak_allocated_gib": 0.11399269104003906,
+    "gpu_peak_reserved_gib": 0.15625,
+    "process_peak_rss_gib": 1.7134132385253906
+  },
+  "source": {
+    "git_commit": "562b084b8223e30afd051ecb0cc5269c95aab563",
+    "working_tree_dirty": true,
+    "source_sha256": {
+      "src/audio_understanding/__init__.py": "5ecfdf15d2a1454bf5f0cc4065e1f6c10926b3f49947a8f1bbcd3275786aaf1a",
+      "src/audio_understanding/annotations.py": "36e52b993ea97121f6d4baab2aa6c96b0fb4701763431e764b6a2009ff9f3d62",
+      "src/audio_understanding/evaluation.py": "c57d0c4eb36df95f04f7772f98d68229946e168a3aa830458d4eb150357194e0",
+      "src/audio_understanding/inference.py": "8eb3ee91ddd31ffdefe1fa62d1ac37a615577dd74fc3e7a94a0874546fdad8c5"
+    },
+    "product_source_sha256": {
+      "__init__.py": "d0a57354fffda1db27e5a691062a10808f4aaa59fbb3cb27862ebed711a95737",
+      "anchored_models.py": "94c1fbff8acc6e356b11fc45e7b4b8181f4839fb11358cc82b0e773117914a5a",
+      "app.html": "9cacf6a5dd1d57653ade4fd2828ef52795f94d749bdd0be0fda3ed63aef6776d",
+      "artifacts.py": "90d86622cb20eed75b9d1ca209bd416c37dbbe1315e2e2e72b8d9607889965e3",
+      "experimental_models.py": "3a2dcf70013e6dffda8d694396ac7641504b8d1f8dec20a85848d1a6276f5408",
+      "limits.py": "60e9cbfbf9641571b53d0f25b1ff1709c66f7fcb10050ce3e5372955a9ee04a1",
+      "model_bundle.py": "de5649a13d362da0d51c096bc462e9575f4ffdbd5570b713c5126bf5cbf225be",
+      "phira.py": "2ab7c6902243aa6011aae6844aafab2fd3cf8216a8596d44264191f5a3630fd6",
+      "pipeline.py": "f47993a41e232ef3dd1186bdf1b3aca9fa76eab628e1a786ea13bbdf56dfe00f",
+      "preview.html": "8e7e153352bda0270be6978b181ff056b6899108c03f2d17822f4564a4927277",
+      "runtime.py": "3f5db0f8bfa91a43736452682db7e45da8048df7adb929492acbf4da013fea6a",
+      "server.py": "db3f18643c60acb3bef8ff655c85819567021407bbef8bed7b79d45ac0c54c93",
+      "tempo.py": "4c7e1e370d86c1d053afc134287fdd391cec528122c0fabf995cb7a0ff770f47"
+    }
+  },
+  "model_sha256": {
+    "4k": "41eece914798c21cd93d8692427e67a54dcf5de12374fe8ac7995bc69c4ffb60",
+    "freex": "4aa2d73658270520582db2ec262b73887708f70a04903cdf56e2e317d117b900"
+  },
+  "playback": {
+    "native_play": true,
+    "seek_seconds": 67.7754195,
+    "mode_switch_preserves_clock": true
+  },
+  "narrow_viewport": {
+    "width": 390,
+    "scrollWidth": 378
+  },
+  "download_sha256": {
+    "4k": "040e43937900724e571ec7e6b89862646257ba5ba3496669494420c948e6a309",
+    "freex": "dddc11550b774ad20b5b7beca60c3b2d91fcc65f0e251dd32c6a160568be4996"
+  },
+  "audio_bundle_verification": {
+    "status": "passed",
+    "candidate": "4k-audio-e0920-greedy",
+    "note_count": 847,
+    "max_absolute_error": 1.4210854715202004e-14,
+    "types_identical": true,
+    "elapsed_seconds": 26.893706060945988,
+    "model_sha256": {
+      "4k": "0d5e9de0735004b54f2aad4c6ba8c209148fc3521ed3681ead9bd8b86e9f9cc8"
+    },
+    "shared_freex_identical_to_B03": true
+  }
+}

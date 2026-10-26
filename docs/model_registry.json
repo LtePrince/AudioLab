@@ -3154,6 +3154,91 @@
         ],
         "new_training": false
       }
+    },
+    {
+      "id": "E19",
+      "title": "固定15首选型与E14/E18可迁移运行包",
+      "kind": "checkpoint_evaluation_and_runtime_delivery",
+      "models": [
+        "AL-AR4K@0.5.1/A",
+        "AL-AR4K@0.5.1/S",
+        "AL-FreeX@0.4.0/A",
+        "AL-FreeX@0.4.0/S"
+      ],
+      "status": "completed",
+      "question": "按固定15首宏平均选取当前候选，交付独立A对照及最佳组合，保持原模型输出。",
+      "result": {
+        "winners": {
+          "4k": {
+            "mode": "4k",
+            "variant": "soft",
+            "epoch": 1000,
+            "decoding": "greedy",
+            "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+            "screen_mean_joint": 0.7720937041292913,
+            "screen_completed": 3,
+            "screen_mean_onset": 0.959468019224022,
+            "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e1000/inputs.json",
+            "candidate_id": "4k-soft-e1000-greedy",
+            "sha256": "9c1b3518fb9db1691127cfca2912649d359e468db777e1cfc0b363a447943e01"
+          },
+          "freex": {
+            "mode": "freex",
+            "variant": "audio",
+            "epoch": 1000,
+            "decoding": "greedy",
+            "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+            "screen_mean_joint": 0.29451586632361104,
+            "screen_completed": 2,
+            "screen_mean_onset": 0.8237254979190464,
+            "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e1000/inputs.json",
+            "candidate_id": "freex-audio-e1000-greedy",
+            "sha256": "43d8542f83caa19e586a043e7a1b83fb86344621349ca34f904cea125ddde3fe"
+          }
+        },
+        "audio_winners": {
+          "4k": {
+            "mode": "4k",
+            "variant": "audio",
+            "epoch": 920,
+            "decoding": "greedy",
+            "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0920.pt",
+            "screen_mean_joint": 0.5251839995639641,
+            "screen_completed": 3,
+            "screen_mean_onset": 0.871566369048907,
+            "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0920/inputs.json",
+            "candidate_id": "4k-audio-e0920-greedy",
+            "sha256": "a720ad316c4194586793c5d60ef50cc2ce3c425a74bb68f4b099603399c60610"
+          },
+          "freex": {
+            "mode": "freex",
+            "variant": "audio",
+            "epoch": 1000,
+            "decoding": "greedy",
+            "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+            "screen_mean_joint": 0.29451586632361104,
+            "screen_completed": 2,
+            "screen_mean_onset": 0.8237254979190464,
+            "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e1000/inputs.json",
+            "candidate_id": "freex-audio-e1000-greedy",
+            "sha256": "43d8542f83caa19e586a043e7a1b83fb86344621349ca34f904cea125ddde3fe"
+          }
+        },
+        "bundles": [
+          "B03",
+          "B04"
+        ],
+        "new_training": false,
+        "quality_passed": false,
+        "chart_packages_published": false
+      },
+      "evidence": [
+        "docs/anchored15_runtime.md",
+        "docs/evaluations/assets/runtime_selection15_20261026/summary.json"
+      ],
+      "evaluation_scope": "Eltaw + 14 unique songs drawn uniformly without replacement from the existing 300 training songs; not held-out generalization.",
+      "selection": "Screen retained E14/E18 checkpoints using existing three-song macro time+position-bin+type F1, failed generations score zero; retain best A, best S, and highest-ranked remaining distinct checkpoint. Select final mode winner by the same failed-as-zero macro F1 over fixed 15 songs. Greedy/seed42 setting is part of the candidate, not tuned on the 15.",
+      "seed": 20261026
     }
   ],
   "bundles": [
@@ -3219,6 +3304,94 @@
         }
       },
       "evidence": "docs/full300_runtime.md"
+    },
+    {
+      "id": "B03",
+      "legacy_id": "anchored15-20261026",
+      "models": [
+        "AL-Onset@0.1.0",
+        "AL-AR4K@0.5.1/S/e1000",
+        "AL-FreeX@0.4.0/A/e1000"
+      ],
+      "model_root": "checkpoints/anchored15_20261026",
+      "user_tested": false,
+      "status": "experimental_runtime_verified_user_test_pending",
+      "archive": "out/runtime_delivery_20261026/audiolab-anchored15-20261026.zip",
+      "sha256": "813c3722e5e463e215ed2cdfdfdc73d184de4b4819843761d8c2afb8d48ac944",
+      "bytes": 134252695,
+      "assets": {
+        "decoder/decoder_best.pt": {
+          "bytes": 53352040,
+          "role": "4k_layout",
+          "sha256": "41eece914798c21cd93d8692427e67a54dcf5de12374fe8ac7995bc69c4ffb60"
+        },
+        "decoder_freex/decoder_best.pt": {
+          "bytes": 54110132,
+          "role": "freex_static_layout",
+          "sha256": "4aa2d73658270520582db2ec262b73887708f70a04903cdf56e2e317d117b900"
+        },
+        "transcriber/transcriber_best.pt": {
+          "bytes": 26789255,
+          "role": "audio_candidates",
+          "sha256": "cdc148382f9015901ad62444db02c8c43de5e34b08fbbac34f6507b0fb66e213"
+        }
+      },
+      "source_checkpoints": {
+        "4k": {
+          "path": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+          "sha256": "9c1b3518fb9db1691127cfca2912649d359e468db777e1cfc0b363a447943e01"
+        },
+        "freex": {
+          "path": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+          "sha256": "43d8542f83caa19e586a043e7a1b83fb86344621349ca34f904cea125ddde3fe"
+        }
+      },
+      "release": "https://github.com/LtePrince/AudioLab/releases/tag/anchored-ar-20261026",
+      "evidence": "docs/anchored15_runtime.md"
+    },
+    {
+      "id": "B04",
+      "legacy_id": "anchored15-a-20261026",
+      "models": [
+        "AL-Onset@0.1.0",
+        "AL-AR4K@0.5.1/A/e0920",
+        "AL-FreeX@0.4.0/A/e1000"
+      ],
+      "model_root": "checkpoints/anchored15_a_20261026",
+      "user_tested": false,
+      "status": "experimental_runtime_verified_user_test_pending",
+      "archive": "out/runtime_delivery_20261026/audiolab-anchored15-a-20261026.zip",
+      "sha256": "efc5531742fc45ca1b5770c64bf3850550692dce9e629440637de50dd8948027",
+      "bytes": 134252697,
+      "assets": {
+        "decoder/decoder_best.pt": {
+          "bytes": 53352040,
+          "role": "4k_layout",
+          "sha256": "0d5e9de0735004b54f2aad4c6ba8c209148fc3521ed3681ead9bd8b86e9f9cc8"
+        },
+        "decoder_freex/decoder_best.pt": {
+          "bytes": 54110132,
+          "role": "freex_static_layout",
+          "sha256": "4aa2d73658270520582db2ec262b73887708f70a04903cdf56e2e317d117b900"
+        },
+        "transcriber/transcriber_best.pt": {
+          "bytes": 26789255,
+          "role": "audio_candidates",
+          "sha256": "cdc148382f9015901ad62444db02c8c43de5e34b08fbbac34f6507b0fb66e213"
+        }
+      },
+      "source_checkpoints": {
+        "4k": {
+          "path": "out/ar_saturation_20261023/continued1000/audio/model_e0920.pt",
+          "sha256": "a720ad316c4194586793c5d60ef50cc2ce3c425a74bb68f4b099603399c60610"
+        },
+        "freex": {
+          "path": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+          "sha256": "43d8542f83caa19e586a043e7a1b83fb86344621349ca34f904cea125ddde3fe"
+        }
+      },
+      "release": "https://github.com/LtePrince/AudioLab/releases/tag/anchored-ar-20261026",
+      "evidence": "docs/anchored15_runtime.md"
     }
   ],
   "not_run": [

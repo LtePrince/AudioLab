@@ -1,0 +1,4266 @@
+{
+  "schema": "audiolab-release-selection15-v1",
+  "created_at_utc": "2026-10-26T09:58:46.111388+00:00",
+  "seed": 20261026,
+  "scope": "Eltaw + 14 unique songs drawn uniformly without replacement from the existing 300 training songs; not held-out generalization.",
+  "selection": "Screen retained E14/E18 checkpoints using existing three-song macro time+position-bin+type F1, failed generations score zero; retain best A, best S, and highest-ranked remaining distinct checkpoint. Select final mode winner by the same failed-as-zero macro F1 over fixed 15 songs. Greedy/seed42 setting is part of the candidate, not tuned on the 15.",
+  "cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+  "metric_sha256": "d36420657a00b03459aead2bb8eb521d73373e3e2198d92532c6ed17ef6b9f11",
+  "songs": [
+    {
+      "id": "Eltaw_IN",
+      "split": "train",
+      "file": "sample-082.pt",
+      "sha256": "473bd697862b01e2f6d4ab1597751e42d5ebc9e4ebcc60d68b31381ed15601ab",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/Eltaw_IN/3571772270130511.ogg",
+        "sha256": "253c107a59aae0c7e027511ddb66025d6c831649d2ce584edde8ef56ea166708",
+        "bytes": 1818364
+      },
+      "duration": 135.55083900226757,
+      "token_counts": {
+        "4k": 1616,
+        "freex": 1627
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              2919,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "d5f09a16d98d4fbc3eea924c2a213939f964a664b67c7a6d08b87f9d54b2d66e"
+          },
+          "max_abs_roundtrip_error": 0.0018301010131835938
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              2919,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "22b87f38f73d15e636f10367c6034c8cf882abcb0aa3f611242bfcc9e4513681"
+          },
+          "max_abs_roundtrip_error": 0.0019521713256835938
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          2919,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "db3839dfae8c31793ea75553d36fa3c2f6da19d4e2aef2268789bb9e8d6bc1ad"
+      },
+      "valid": {
+        "shape": [
+          1,
+          2919
+        ],
+        "dtype": "torch.bool",
+        "sha256": "27890e035c6b05bf8eab5e117309ddc4cab2a35fb42fa296ba286d0d4f852f07"
+      }
+    },
+    {
+      "id": "DESTRUCTION 321_IN",
+      "split": "train",
+      "file": "sample-058.pt",
+      "sha256": "5b75dc320c6cbabf2fa22ca1fd51b93a9ebcd7d05fd042cb82f15ebeeba02c19",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/DESTRUCTION 321_IN/9119625120459779.ogg",
+        "sha256": "29f0492821a0753e2f6620144234ff9970779b98d19940a8f9ca9402ccf96db9",
+        "bytes": 2313090
+      },
+      "duration": 159.09587301587302,
+      "token_counts": {
+        "4k": 2774,
+        "freex": 2939
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3426,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "24e2d1bcca4f775a93eccb85ad4f54a96311851a4352559e923770902d18112d"
+          },
+          "max_abs_roundtrip_error": 0.0019364356994628906
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3426,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "80cdfb8aa1c1ff5c2fd531bb7a4965bc75ea41d9018d4125754152f790cef25e"
+          },
+          "max_abs_roundtrip_error": 0.0013422966003417969
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          3426,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "f3336da8216444aa08a0ef1720aa4197cb6821ad4e34c66f2febd8146597f86d"
+      },
+      "valid": {
+        "shape": [
+          1,
+          3426
+        ],
+        "dtype": "torch.bool",
+        "sha256": "5e6f96be16486c7acd07cd396a9d08a38073beb98ad262d24c47f925b92f60ab"
+      }
+    },
+    {
+      "id": "Incyde_IN",
+      "split": "train",
+      "file": "sample-117.pt",
+      "sha256": "b452176a2bc7aa8c24ce36e76a997fdf5606365c425bd1e85f52b6e72489e951",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/Incyde_IN/1250897993241504.ogg",
+        "sha256": "5682f7a3362691d7cf6ed958d6de55f71c281ca459f8925b02f9aa02c91c4fa8",
+        "bytes": 3008455
+      },
+      "duration": 200.58412698412698,
+      "token_counts": {
+        "4k": 3686,
+        "freex": 3857
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              4320,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "f01a09ab8f9929f1fe3fbf66036d2a0cbf3835aad6cad232860e01ad00d7dc6d"
+          },
+          "max_abs_roundtrip_error": 0.0016751289367675781
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              4320,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "2896bb3d5da25e3028a44905df77cc153d9784554daec1c8c8539ba9f8058e97"
+          },
+          "max_abs_roundtrip_error": 0.0019016265869140625
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          4320,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "5d53105d995e104961d588d29a16a9cd3b5ed6243919bf319197838dea4d1a88"
+      },
+      "valid": {
+        "shape": [
+          1,
+          4320
+        ],
+        "dtype": "torch.bool",
+        "sha256": "4819cb9cec9a1ac09d55577b2e39fa635ab3438bd49e5120fbfd58b541277a54"
+      }
+    },
+    {
+      "id": "Diamond Dust_IN",
+      "split": "train",
+      "file": "sample-068.pt",
+      "sha256": "914ddad93400a759e15fae769f7b71f6cc5ca84e7f545ed19ab8c365eccf48c2",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/Diamond Dust_IN/2235646757528914.ogg",
+        "sha256": "78288bb4aaeee18167ccd520e53793ede3316556a29b5f16caaa5b89881587c4",
+        "bytes": 2265235
+      },
+      "duration": 155.06,
+      "token_counts": {
+        "4k": 1986,
+        "freex": 1990
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3339,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "c3635d3ec723ef70ec89882c2e8be45ee579c647e6d861cb468fd2809c5fdccf"
+          },
+          "max_abs_roundtrip_error": 0.0018277168273925781
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3339,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "f3ec2917548e7f807acc037442a2d22cf81149719fc910e59e91e1adf27fa26e"
+          },
+          "max_abs_roundtrip_error": 0.0018339157104492188
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          3339,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "7f6a63911c7c79abf1f41f134fb7ba239ac7c813dc211540a722462b343d8eb8"
+      },
+      "valid": {
+        "shape": [
+          1,
+          3339
+        ],
+        "dtype": "torch.bool",
+        "sha256": "5a73968e06c286ba156be79eca70cb4e0535129d5b87541d2136b35348f753e6"
+      }
+    },
+    {
+      "id": "インフェルノシティ_IN",
+      "split": "train",
+      "file": "sample-249.pt",
+      "sha256": "b4bd8d27298f22e27f2c045fde032221d124dac2b3cb4cf1f33f1c4b4b1cb149",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/インフェルノシティ_IN/1675429354327147.ogg",
+        "sha256": "2b4b31ee6d9443ba0b1963994fd526337937f7dea04b1d5d859d75046be7f770",
+        "bytes": 1884624
+      },
+      "duration": 123.9107029478458,
+      "token_counts": {
+        "4k": 2136,
+        "freex": 2147
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              2669,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "e30fd1ac14f1864009a7ba284cda052e5a80130974fca883f0294290cfcdc645"
+          },
+          "max_abs_roundtrip_error": 0.0019297599792480469
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              2669,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "b636c627a64399a938d455c5ebb70df799fef8efee27449277e7551a5aa952ad"
+          },
+          "max_abs_roundtrip_error": 0.0019197463989257812
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          2669,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "a0627a9498f4b78add91942e536ebbd92d52d07eb4e182053d0020a8642129d9"
+      },
+      "valid": {
+        "shape": [
+          1,
+          2669
+        ],
+        "dtype": "torch.bool",
+        "sha256": "e45cd438a8540583ffcfdb2fbcee9004e54385783b5d40d83b2ba0323828af12"
+      }
+    },
+    {
+      "id": "The Whole Rest_IN",
+      "split": "train",
+      "file": "sample-208.pt",
+      "sha256": "c97b747cd35838d6482bdefaf7fbecff486664b196df26cd68a7de36f8474a97",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/The Whole Rest_IN/8254554586995888.ogg",
+        "sha256": "e0194535ae79132976f368cfa1b23f6a60b501366b79e2c9bceebabc1cb4a11c",
+        "bytes": 2118696
+      },
+      "duration": 143.52979591836734,
+      "token_counts": {
+        "4k": 1578,
+        "freex": 1585
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3091,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "2e4d5c7a571ff466d72008feb38b9011db4d70b72211886ec7ef27d6118b4c6a"
+          },
+          "max_abs_roundtrip_error": 0.001613616943359375
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3091,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "543f306fcf8bcde4ea8e4cba75d725d279f8cdc929595e493c1ea33b07a10ca1"
+          },
+          "max_abs_roundtrip_error": 0.0016613006591796875
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          3091,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "5411126f6968ed2f406eee86fc61fe18220e10737db0f1f8d381f6ce0178784a"
+      },
+      "valid": {
+        "shape": [
+          1,
+          3091
+        ],
+        "dtype": "torch.bool",
+        "sha256": "8b5ec2cf99b09e0b777b31c47b297c21ff9752855d3b9db76ee1de1615fa0791"
+      }
+    },
+    {
+      "id": "混乱-Confusion_IN",
+      "split": "train",
+      "file": "sample-278.pt",
+      "sha256": "28b64ec62b2f88681f6cc9e7c4e7e9518eab5b8fdd4bcbba32e498de1c27c9ea",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/混乱-Confusion_IN/3371322405535222.ogg",
+        "sha256": "2059fe838fed1aada578ce219ebe7b92b9771403359492c21235d21e07ff7ff7",
+        "bytes": 1871350
+      },
+      "duration": 127.79537414965986,
+      "token_counts": {
+        "4k": 1750,
+        "freex": 1756
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              2752,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "a549cd57c089939471065e2be888dfcf4f2c796c366ba498d089f6890a7b1867"
+          },
+          "max_abs_roundtrip_error": 0.0016064643859863281
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              2752,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "fef9fc2596e49ae4d24a51db93fd37f44e5a6facdb6d2d264c769374bb0f64d4"
+          },
+          "max_abs_roundtrip_error": 0.0010123252868652344
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          2752,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "7334de4c10d1d08b3a4f8f7c3e3c44d95c25557d7e98dc9e044863bf4487489e"
+      },
+      "valid": {
+        "shape": [
+          1,
+          2752
+        ],
+        "dtype": "torch.bool",
+        "sha256": "a27e41d931e5690f8ae3362d685e518bab349984c89d11e2b522e49812ac2c35"
+      }
+    },
+    {
+      "id": "Cipher  20_IN",
+      "split": "train",
+      "file": "sample-045.pt",
+      "sha256": "8b5b28fbbb3dc2a6a435f5ec2471ba66ac858070fdf5c2b1804c8f1ee9c45753",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/Cipher  20_IN/7333122143668424.ogg",
+        "sha256": "0221f7e70fe0bd4b76dcf13394e4366cedd0b3853d4e2beef227da45b91bf220",
+        "bytes": 2381280
+      },
+      "duration": 154.32126984126984,
+      "token_counts": {
+        "4k": 1986,
+        "freex": 2013
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3324,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "e55cf2e4b853d2bdde583196f44e1c722d015581bc5da4648c8102b82dfd34f7"
+          },
+          "max_abs_roundtrip_error": 0.0019025802612304688
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3324,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "2330deb3ebf952e5c33f83298a5015d88aa2c5b2c02503695f8aad10e90f0012"
+          },
+          "max_abs_roundtrip_error": 0.001804351806640625
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          3324,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "51de475f9b3ab663d9753224c347439c0c3c5a0df7716024935a6ad6dc66c719"
+      },
+      "valid": {
+        "shape": [
+          1,
+          3324
+        ],
+        "dtype": "torch.bool",
+        "sha256": "cc934ecd3dc0bcfc7b1e04871a2b22ec9246fb79088d3d11eaa5cd60394b7420"
+      }
+    },
+    {
+      "id": "A journey to the moonlight_IN",
+      "split": "train",
+      "file": "sample-004.pt",
+      "sha256": "0cd670caf97da4f98db499b30f1d3dfa379751d34596355f2ab33099c2e76873",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/A journey to the moonlight_IN/5956249765651248.ogg",
+        "sha256": "21580c002216330e089cc310f299073009e82a5faf9591172ca0f60ff0e4f958",
+        "bytes": 2226583
+      },
+      "duration": 150.54802721088436,
+      "token_counts": {
+        "4k": 2290,
+        "freex": 2359
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3242,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "ca0add78d1954131086b4f384b1d932fe6dac8d4b12599fcff5c91bfe47444c9"
+          },
+          "max_abs_roundtrip_error": 0.0018029212951660156
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3242,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "49eda9aeca6615835d7a13fc3161b440bd7423b0fb5facb575ee64945be5f2d9"
+          },
+          "max_abs_roundtrip_error": 0.0019183158874511719
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          3242,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "cc5cd9cf143ee2a07022be4b4d7bf3d9336a77ae3131bd0130e03b769c50c7a0"
+      },
+      "valid": {
+        "shape": [
+          1,
+          3242
+        ],
+        "dtype": "torch.bool",
+        "sha256": "5f21c225d16c944313fa9f0de77b8e2e8c670046c900ba73c72cd11fe53dd083"
+      }
+    },
+    {
+      "id": "The Chariot REVIIVAL_IN",
+      "split": "val",
+      "file": "sample-206.pt",
+      "sha256": "16747d232c3b3308f5c8ca7300457385f3757a0a20420f9a3e65a0c99cbc2265",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/The Chariot REVIIVAL_IN/4888883774189225.ogg",
+        "sha256": "21b030f32312d37adcd6ef85d49c003dae62dde571fb82811e0b1fc4a44953b0",
+        "bytes": 2253870
+      },
+      "duration": 146.5280725623583,
+      "token_counts": {
+        "4k": 1978,
+        "freex": 1988
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3156,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "fa08b65d747d9239e8a2b356385b1ef3b5a22920acbc2ca57fe70bf725a78cf7"
+          },
+          "max_abs_roundtrip_error": 0.0018329620361328125
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3156,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "cd5b08ae376644c3f1094a3a098863aa587c5a1680be749a8891d5812e224252"
+          },
+          "max_abs_roundtrip_error": 0.0019021034240722656
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          3156,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "4ab30a129d433b4302a5a0fbc58d9d0e693665ea6dfe71d384911638e8f78df1"
+      },
+      "valid": {
+        "shape": [
+          1,
+          3156
+        ],
+        "dtype": "torch.bool",
+        "sha256": "8f15f92b917965976d52786fad1f93baf9007c4f2d2fd091cda987ec7dcfa584"
+      }
+    },
+    {
+      "id": "风屿_IN",
+      "split": "train",
+      "file": "sample-298.pt",
+      "sha256": "4c98c3999ace7d3dc84dfdba2cadcca0c42de01b3f319cf15a0c6e19ce277582",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/风屿_IN/7972467196651204.ogg",
+        "sha256": "a4550e4ebe4ba5ed58a8da85729b028705607e77fd48ea79329075c3e3babf40",
+        "bytes": 2685253
+      },
+      "duration": 179.34657596371883,
+      "token_counts": {
+        "4k": 2184,
+        "freex": 2184
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3862,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "34d879c58301c936c21eea812af91377af20727c21ad2149ffbbce40ed2685b3"
+          },
+          "max_abs_roundtrip_error": 0.0019083023071289062
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3862,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "c2cfd1b819892c04038379ba407c435aa3b0f4dfe686919d5555e19930e5b980"
+          },
+          "max_abs_roundtrip_error": 0.0018815994262695312
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          3862,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "50715ffd49d5286286433ae46f697335754bf2d5b2da80f562341f115c645919"
+      },
+      "valid": {
+        "shape": [
+          1,
+          3862
+        ],
+        "dtype": "torch.bool",
+        "sha256": "84226dc7afc3331e289ec53497437e9e58cc8cae17664ec919519e570948e532"
+      }
+    },
+    {
+      "id": "Rrharil_IN",
+      "split": "train",
+      "file": "sample-182.pt",
+      "sha256": "560f376a1ac7c3c15417411ff9f21e08b761edf53e2cd207646b9d16098893e9",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/Rrharil_IN/3158224445033972.ogg",
+        "sha256": "be44606ef4dbeca7820a3b0eaa05a7430dac5ee5bd310e0b39ce62f7668d41d0",
+        "bytes": 1979003
+      },
+      "duration": 132.63383219954648,
+      "token_counts": {
+        "4k": 2182,
+        "freex": 2253
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              2857,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "bc8a3a8fa330ae805ea9f5a0e9b90d0dfcc89c2c384c7967ce4c28efd8857db1"
+          },
+          "max_abs_roundtrip_error": 0.0016407966613769531
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              2857,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "74797c7b245ff74f43953aede4e341a7f51ac5c1e40dcd779c6a8b7c854fb4be"
+          },
+          "max_abs_roundtrip_error": 0.0017056465148925781
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          2857,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "0b780cab050b5e8f325c866a98b20bfe5c46c2f4576f348be9835f2b6866c5a8"
+      },
+      "valid": {
+        "shape": [
+          1,
+          2857
+        ],
+        "dtype": "torch.bool",
+        "sha256": "ecfce8c75bf11dd8584a1b3705754cf166a39ad90a3c246be7d29b0d95b46466"
+      }
+    },
+    {
+      "id": "Rainy Heart_IN",
+      "split": "train",
+      "file": "sample-170.pt",
+      "sha256": "b4069115ad7314d24065dfbc7796bd556565b60647b3bc1519e46927cc2016ac",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/Rainy Heart_IN/5257444959723160.ogg",
+        "sha256": "223185c5e4d48ab1103c88a418cb5790881781f2d99b41ca388279f4adfed3b0",
+        "bytes": 2246200
+      },
+      "duration": 152.55074829931974,
+      "token_counts": {
+        "4k": 890,
+        "freex": 870
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3285,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "beb10966e52038e1ba66dcb5ed8c07c55740cf5b5ecc59f939ef0d14eaf70775"
+          },
+          "max_abs_roundtrip_error": 0.0009765625
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3285,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "83053ae17b9e0b3b35805599e7232e41dfa6176ea63d3dc8ef530ed330c84b16"
+          },
+          "max_abs_roundtrip_error": 0.0009765625
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          3285,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "131f71362e26d1a51450407b857a93317332fa96959ea05ba3d381da175602be"
+      },
+      "valid": {
+        "shape": [
+          1,
+          3285
+        ],
+        "dtype": "torch.bool",
+        "sha256": "96bbb5934b506ed221be792acca03a3757d5a3b87ed20646bcf35527bd0d961a"
+      }
+    },
+    {
+      "id": "Re_Nascence Psystyle Ver._IN",
+      "split": "train",
+      "file": "sample-175.pt",
+      "sha256": "9111cc199335ddde939899b957b0a7c8cf46928907c5df813e5348fbfb6f054e",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/Re_Nascence Psystyle Ver._IN/6717713242822206.ogg",
+        "sha256": "95b7ccfd49d43effea58d70483790850c91e60f0e9cbc6608cc3d2ead04e7f4d",
+        "bytes": 2032543
+      },
+      "duration": 147.1114739229025,
+      "token_counts": {
+        "4k": 1550,
+        "freex": 1552
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3168,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "60e00acb65c531023ebfdc4125f8b0f1f7747a85ef8ab40f3b2f98baa4d3a1be"
+          },
+          "max_abs_roundtrip_error": 0.001567840576171875
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              3168,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "3ab0b7160f0b8a640ee2dcb9967e3e42b14a69fd58646afab7ef2ab18c805440"
+          },
+          "max_abs_roundtrip_error": 0.0019049644470214844
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          3168,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "58410d7354c9cfa5b84e63e688f66f7d0502e1459a21559aa0b2a4dfe228af92"
+      },
+      "valid": {
+        "shape": [
+          1,
+          3168
+        ],
+        "dtype": "torch.bool",
+        "sha256": "ff69d4caaf9ff050da4ee77f8e9781589c68ee795c9163c14d733df6941642f7"
+      }
+    },
+    {
+      "id": "GOODBOUNCE_IN",
+      "split": "train",
+      "file": "sample-099.pt",
+      "sha256": "491c7b5c3eba9aa0f496e06211107447e721659edb5efbba478ef298cbcb038b",
+      "audio": {
+        "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/GOODBOUNCE_IN/3769547798346036.ogg",
+        "sha256": "cb12fe172d5025421a35cd8db7ba07224cf9ae9b7636f10a9fc899e2bcdf091c",
+        "bytes": 2361653
+      },
+      "duration": 132.72090702947847,
+      "token_counts": {
+        "4k": 1804,
+        "freex": 1805
+      },
+      "feature_storage": {
+        "4k": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              2858,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "2fcce927144d7c0a023eed317f8c2e46196a1149b26edae07359e3cb34b8cf18"
+          },
+          "max_abs_roundtrip_error": 0.0019392967224121094
+        },
+        "freex": {
+          "dtype": "float16",
+          "training_dtype": "float32",
+          "stored": {
+            "shape": [
+              1,
+              2858,
+              256
+            ],
+            "dtype": "torch.float16",
+            "sha256": "02181ddc1fc22ac28b8cfa61914d6c1554d7296077f1df836fc2ebbc2c852680"
+          },
+          "max_abs_roundtrip_error": 0.0013885498046875
+        }
+      },
+      "condition": {
+        "shape": [
+          1,
+          2858,
+          2
+        ],
+        "dtype": "torch.float32",
+        "sha256": "ee79166cf138b44e992883cbcb9278520acda5cfaa23f8f996b4044445478c1c"
+      },
+      "valid": {
+        "shape": [
+          1,
+          2858
+        ],
+        "dtype": "torch.bool",
+        "sha256": "02b9b7a5425cf91ff60c581e2b5caba50dc5d137b6d3d0e166e5742d17729aac"
+      }
+    }
+  ],
+  "candidates": {
+    "4k": [
+      {
+        "mode": "4k",
+        "variant": "audio",
+        "epoch": 920,
+        "decoding": "greedy",
+        "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0920.pt",
+        "screen_mean_joint": 0.5251839995639641,
+        "screen_completed": 3,
+        "screen_mean_onset": 0.871566369048907,
+        "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0920/inputs.json",
+        "candidate_id": "4k-audio-e0920-greedy",
+        "sha256": "a720ad316c4194586793c5d60ef50cc2ce3c425a74bb68f4b099603399c60610"
+      },
+      {
+        "mode": "4k",
+        "variant": "soft",
+        "epoch": 960,
+        "decoding": "greedy",
+        "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0960.pt",
+        "screen_mean_joint": 0.8105374701469351,
+        "screen_completed": 3,
+        "screen_mean_onset": 0.9869478288387197,
+        "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0960/inputs.json",
+        "candidate_id": "4k-soft-e0960-greedy",
+        "sha256": "763af747243e43eb19f6aa5f23d4bfed2a7f2b9fdd427ac8e697a960e2abaa8d"
+      },
+      {
+        "mode": "4k",
+        "variant": "soft",
+        "epoch": 1000,
+        "decoding": "greedy",
+        "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+        "screen_mean_joint": 0.7720937041292913,
+        "screen_completed": 3,
+        "screen_mean_onset": 0.959468019224022,
+        "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e1000/inputs.json",
+        "candidate_id": "4k-soft-e1000-greedy",
+        "sha256": "9c1b3518fb9db1691127cfca2912649d359e468db777e1cfc0b363a447943e01"
+      }
+    ],
+    "freex": [
+      {
+        "mode": "freex",
+        "variant": "audio",
+        "epoch": 980,
+        "decoding": "greedy",
+        "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0980.pt",
+        "screen_mean_joint": 0.33619563153896725,
+        "screen_completed": 3,
+        "screen_mean_onset": 0.8048016777615806,
+        "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0980/inputs.json",
+        "candidate_id": "freex-audio-e0980-greedy",
+        "sha256": "ebd6c8ed934d77ce116d1147a01c554f40df5bb48670270a1a2e2b242b21e2dd"
+      },
+      {
+        "mode": "freex",
+        "variant": "soft",
+        "epoch": 980,
+        "decoding": "greedy",
+        "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0980.pt",
+        "screen_mean_joint": 0.2777116854708053,
+        "screen_completed": 2,
+        "screen_mean_onset": 0.8180444925812256,
+        "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0980/inputs.json",
+        "candidate_id": "freex-soft-e0980-greedy",
+        "sha256": "cba4c3a63c74c1e4f5d4224e9361b9d89d220b0a116e81dbec4356bd696c916c"
+      },
+      {
+        "mode": "freex",
+        "variant": "audio",
+        "epoch": 1000,
+        "decoding": "greedy",
+        "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+        "screen_mean_joint": 0.29451586632361104,
+        "screen_completed": 2,
+        "screen_mean_onset": 0.8237254979190464,
+        "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e1000/inputs.json",
+        "candidate_id": "freex-audio-e1000-greedy",
+        "sha256": "43d8542f83caa19e586a043e7a1b83fb86344621349ca34f904cea125ddde3fe"
+      }
+    ]
+  },
+  "screening": [
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 960,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0960.pt",
+      "screen_mean_joint": 0.8105374701469351,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.9869478288387197,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0960/inputs.json",
+      "candidate_id": "4k-soft-e0960-greedy",
+      "sha256": "763af747243e43eb19f6aa5f23d4bfed2a7f2b9fdd427ac8e697a960e2abaa8d"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 1000,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+      "screen_mean_joint": 0.7720937041292913,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.959468019224022,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e1000/inputs.json",
+      "candidate_id": "4k-soft-e1000-greedy",
+      "sha256": "9c1b3518fb9db1691127cfca2912649d359e468db777e1cfc0b363a447943e01"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 980,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0980.pt",
+      "screen_mean_joint": 0.6404338638003411,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.9485402226423021,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0980/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 940,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0940.pt",
+      "screen_mean_joint": 0.5489093817040585,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.8925302763853361,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0940/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 920,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0920.pt",
+      "screen_mean_joint": 0.5251839995639641,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.871566369048907,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0920/inputs.json",
+      "candidate_id": "4k-audio-e0920-greedy",
+      "sha256": "a720ad316c4194586793c5d60ef50cc2ce3c425a74bb68f4b099603399c60610"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 940,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0940.pt",
+      "screen_mean_joint": 0.4338841897558093,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.8718266985675435,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0940/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 920,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0920.pt",
+      "screen_mean_joint": 0.43321276017248694,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.880164056469492,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0920/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 1000,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e1000.pt",
+      "screen_mean_joint": 0.42068186014760767,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8088055444420309,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e1000/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 980,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0980.pt",
+      "screen_mean_joint": 0.38700457147476913,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.860817415182112,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0980/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 860,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0860.pt",
+      "screen_mean_joint": 0.3717330140321051,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.8352682716269254,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0860/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 980,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0980.pt",
+      "screen_mean_joint": 0.3470558322978168,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.826652962915467,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0980/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 1000,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+      "screen_mean_joint": 0.34694351784287153,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8246559560540077,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e1000/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 900,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0900.pt",
+      "screen_mean_joint": 0.3366466059091086,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8818261043188962,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0900/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 980,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0980.pt",
+      "screen_mean_joint": 0.316333964885689,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8445917363710171,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0980/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 880,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0880.pt",
+      "screen_mean_joint": 0.3141739745591906,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8472556945981352,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0880/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 840,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0840.pt",
+      "screen_mean_joint": 0.2816774446404076,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8344582746462242,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0840/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 860,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0860.pt",
+      "screen_mean_joint": 0.26874416796918843,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.815380165199779,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0860/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 760,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0760.pt",
+      "screen_mean_joint": 0.2685325242308206,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7718331560961721,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0760/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 800,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0800.pt",
+      "screen_mean_joint": 0.2633925549708418,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7809487844420986,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0800/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 920,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0920.pt",
+      "screen_mean_joint": 0.25961198219773834,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7913415323680293,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0920/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 1000,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e1000.pt",
+      "screen_mean_joint": 0.251943534813205,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7955513235975846,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e1000/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 960,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0960.pt",
+      "screen_mean_joint": 0.2512305571962985,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.879892349551983,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0960/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 820,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0820.pt",
+      "screen_mean_joint": 0.23777635377877915,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7810024638482085,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0820/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 900,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0900.pt",
+      "screen_mean_joint": 0.23062015503875968,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7235498105270781,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0900/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 860,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0860.pt",
+      "screen_mean_joint": 0.2232705063802117,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8360077539555177,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0860/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 880,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0880.pt",
+      "screen_mean_joint": 0.22260802469135801,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.8562300334626293,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0880/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 800,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0800.pt",
+      "screen_mean_joint": 0.2156505602997874,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6671847594913933,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0800/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 820,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0820.pt",
+      "screen_mean_joint": 0.1930846930846931,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.8088271314432367,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0820/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 740,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0740.pt",
+      "screen_mean_joint": 0.18569589093053482,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8276920464849944,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0740/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 840,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0840.pt",
+      "screen_mean_joint": 0.18139262726740782,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7707467867564246,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0840/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 900,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0900.pt",
+      "screen_mean_joint": 0.17684630738522955,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.8041973616770078,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0900/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 720,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0720.pt",
+      "screen_mean_joint": 0.1727295729569242,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8102542271487708,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0720/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 880,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0880.pt",
+      "screen_mean_joint": 0.15646801791877799,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7919122949273114,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0880/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 840,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0840.pt",
+      "screen_mean_joint": 0.1530998240601066,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7861590777279834,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0840/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 900,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0900.pt",
+      "screen_mean_joint": 0.1501361338000778,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.837593549715841,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0900/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 600,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued700/audio/model_e0600.pt",
+      "screen_mean_joint": 0.14969523030324505,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8018454542469015,
+      "source": "out/ar_saturation_20261023/continued700/audio/evaluation-e0600/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 780,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0780.pt",
+      "screen_mean_joint": 0.14334058232587804,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7483211257619635,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0780/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 840,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0840.pt",
+      "screen_mean_joint": 0.12806914162247104,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.8344458038790914,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0840/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 720,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0720.pt",
+      "screen_mean_joint": 0.11851401503142425,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7818981019539629,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0720/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 960,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0960.pt",
+      "screen_mean_joint": 0.11648465938637546,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.8485211348837398,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0960/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 560,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued700/soft/model_e0560.pt",
+      "screen_mean_joint": 0.11175337186897881,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7412984412770925,
+      "source": "out/ar_saturation_20261023/continued700/soft/evaluation-e0560/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 780,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0780.pt",
+      "screen_mean_joint": 0.10905077262693157,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6604852414825904,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0780/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 700,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued700/audio/model_e0700.pt",
+      "screen_mean_joint": 0.10617419011579596,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7526836623912007,
+      "source": "out/ar_saturation_20261023/continued700/audio/evaluation-e0700/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 780,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0780.pt",
+      "screen_mean_joint": 0.10547749949093871,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7031418201834758,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0780/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 720,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0720.pt",
+      "screen_mean_joint": 0.1048970653227881,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7175009303458683,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0720/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 760,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0760.pt",
+      "screen_mean_joint": 0.09843659525188188,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7256144463572762,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0760/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 880,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0880.pt",
+      "screen_mean_joint": 0.0899666139518538,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7542656670727125,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0880/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 500,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued500/soft/model_e0500.pt",
+      "screen_mean_joint": 0.08393152954168968,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7635700877947911,
+      "source": "out/ar_saturation_20261023/continued500/soft/evaluation-e0500/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 780,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0780.pt",
+      "screen_mean_joint": 0.0806086777709233,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7524594261711465,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0780/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 820,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0820.pt",
+      "screen_mean_joint": 0.07446250655479811,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7431151645207439,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0820/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 380,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued500/audio/model_e0380.pt",
+      "screen_mean_joint": 0.0742868083476929,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7443645324059412,
+      "source": "out/ar_saturation_20261023/continued500/audio/evaluation-e0380/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 560,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued700/soft/model_e0560.pt",
+      "screen_mean_joint": 0.07364089235434264,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7525603664629731,
+      "source": "out/ar_saturation_20261023/continued700/soft/evaluation-e0560/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 740,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0740.pt",
+      "screen_mean_joint": 0.06843147848010085,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7436266036104561,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0740/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 700,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued700/soft/model_e0700.pt",
+      "screen_mean_joint": 0.06834733893557422,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7743960278577278,
+      "source": "out/ar_saturation_20261023/continued700/soft/evaluation-e0700/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 760,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0760.pt",
+      "screen_mean_joint": 0.060515873015873016,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7773159064855902,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0760/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 700,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued700/audio/model_e0700.pt",
+      "screen_mean_joint": 0.059569773855488145,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7076445777554904,
+      "source": "out/ar_saturation_20261023/continued700/audio/evaluation-e0700/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 760,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0760.pt",
+      "screen_mean_joint": 0.05801526717557252,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7316589157157597,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0760/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 940,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0940.pt",
+      "screen_mean_joint": 0.05701149425287356,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6867532774112902,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0940/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 860,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0860.pt",
+      "screen_mean_joint": 0.05506040800158447,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7202453374561771,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0860/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 740,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0740.pt",
+      "screen_mean_joint": 0.052157943067033974,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6586346729088757,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0740/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 100,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/audio/model_e0100.pt",
+      "screen_mean_joint": 0.04655029093931837,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6617912432577893,
+      "source": "out/ar_saturation_20261023/audio/evaluation-e0100/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 400,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued500/soft/model_e0400.pt",
+      "screen_mean_joint": 0.0463949843260188,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6309895183528177,
+      "source": "out/ar_saturation_20261023/continued500/soft/evaluation-e0400/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 500,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued500/audio/model_e0500.pt",
+      "screen_mean_joint": 0.04551724137931035,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.638835621139544,
+      "source": "out/ar_saturation_20261023/continued500/audio/evaluation-e0500/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 600,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued700/audio/model_e0600.pt",
+      "screen_mean_joint": 0.044103169915337664,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7113725890475747,
+      "source": "out/ar_saturation_20261023/continued700/audio/evaluation-e0600/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 40,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/audio/model_e0040.pt",
+      "screen_mean_joint": 0.04141469671980942,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6293920042235012,
+      "source": "out/ar_saturation_20261023/audio/evaluation-e0040/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 400,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued500/audio/model_e0400.pt",
+      "screen_mean_joint": 0.040206777713957496,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6963009570106758,
+      "source": "out/ar_saturation_20261023/continued500/audio/evaluation-e0400/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 940,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0940.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.859551110299289,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0940/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 800,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0800.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.8313871242422718,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0800/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 960,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0960.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.7524536840100474,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0960/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 920,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0920.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.7418457517830664,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0920/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 300,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/soft/model_e0300.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.7274024244327255,
+      "source": "out/ar_saturation_20261023/soft/evaluation-e0300/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 500,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued500/soft/model_e0500.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.7230965380569856,
+      "source": "out/ar_saturation_20261023/continued500/soft/evaluation-e0500/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 300,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/audio/model_e0300.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.7019623598575648,
+      "source": "out/ar_saturation_20261023/audio/evaluation-e0300/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 40,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/soft/model_e0040.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.7006536411552756,
+      "source": "out/ar_saturation_20261023/soft/evaluation-e0040/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 40,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/audio/model_e0040.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6977194213281884,
+      "source": "out/ar_saturation_20261023/audio/evaluation-e0040/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 740,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0740.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6889660017384333,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0740/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 800,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0800.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6873142442598644,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0800/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 100,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/soft/model_e0100.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6768686790973533,
+      "source": "out/ar_saturation_20261023/soft/evaluation-e0100/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 600,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued700/soft/model_e0600.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6762767768707174,
+      "source": "out/ar_saturation_20261023/continued700/soft/evaluation-e0600/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 720,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e0720.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6729608439474256,
+      "source": "out/ar_saturation_20261023/continued1000/soft/evaluation-e0720/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 380,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued500/audio/model_e0380.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6727704903200197,
+      "source": "out/ar_saturation_20261023/continued500/audio/evaluation-e0380/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 820,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0820.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6604146168158569,
+      "source": "out/ar_saturation_20261023/continued1000/audio/evaluation-e0820/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 100,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/audio/model_e0100.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.656319866398621,
+      "source": "out/ar_saturation_20261023/audio/evaluation-e0100/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 100,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/soft/model_e0100.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6502626330972663,
+      "source": "out/ar_saturation_20261023/soft/evaluation-e0100/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 300,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/audio/model_e0300.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6497921066738587,
+      "source": "out/ar_saturation_20261023/audio/evaluation-e0300/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 500,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued500/audio/model_e0500.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6461337129976655,
+      "source": "out/ar_saturation_20261023/continued500/audio/evaluation-e0500/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 300,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/soft/model_e0300.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.645868770792475,
+      "source": "out/ar_saturation_20261023/soft/evaluation-e0300/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 400,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued500/soft/model_e0400.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6393702674209444,
+      "source": "out/ar_saturation_20261023/continued500/soft/evaluation-e0400/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 400,
+      "decoding": "greedy",
+      "checkpoint": "out/ar_saturation_20261023/continued500/audio/model_e0400.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.609085039402955,
+      "source": "out/ar_saturation_20261023/continued500/audio/evaluation-e0400/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 40,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/soft/model_e0040.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5929242461842182,
+      "source": "out/ar_saturation_20261023/soft/evaluation-e0040/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 600,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued700/soft/model_e0600.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5908069437971568,
+      "source": "out/ar_saturation_20261023/continued700/soft/evaluation-e0600/inputs.json"
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 700,
+      "decoding": "seed42",
+      "checkpoint": "out/ar_saturation_20261023/continued700/soft/model_e0700.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5796346110895472,
+      "source": "out/ar_saturation_20261023/continued700/soft/evaluation-e0700/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 980,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0980.pt",
+      "screen_mean_joint": 0.33619563153896725,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.8048016777615806,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0980/inputs.json",
+      "candidate_id": "freex-audio-e0980-greedy",
+      "sha256": "ebd6c8ed934d77ce116d1147a01c554f40df5bb48670270a1a2e2b242b21e2dd"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 1000,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+      "screen_mean_joint": 0.29451586632361104,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8237254979190464,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e1000/inputs.json",
+      "candidate_id": "freex-audio-e1000-greedy",
+      "sha256": "43d8542f83caa19e586a043e7a1b83fb86344621349ca34f904cea125ddde3fe"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 980,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0980.pt",
+      "screen_mean_joint": 0.2777116854708053,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8180444925812256,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0980/inputs.json",
+      "candidate_id": "freex-soft-e0980-greedy",
+      "sha256": "cba4c3a63c74c1e4f5d4224e9361b9d89d220b0a116e81dbec4356bd696c916c"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 960,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0960.pt",
+      "screen_mean_joint": 0.20902252402743854,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7986094204151645,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0960/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 960,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0960.pt",
+      "screen_mean_joint": 0.2089238938599271,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6649618632220853,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0960/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 900,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0900.pt",
+      "screen_mean_joint": 0.1931489194572945,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8007147780632554,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0900/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 940,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0940.pt",
+      "screen_mean_joint": 0.1887329672564572,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.8087378962632894,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0940/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 1000,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+      "screen_mean_joint": 0.18794485213044984,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8321221068681959,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e1000/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 900,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0900.pt",
+      "screen_mean_joint": 0.18675188929966,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8432038026198659,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0900/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 940,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0940.pt",
+      "screen_mean_joint": 0.18615222811269147,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.8105029223542548,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0940/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 940,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0940.pt",
+      "screen_mean_joint": 0.16551163919540374,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7550466962190071,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0940/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 980,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0980.pt",
+      "screen_mean_joint": 0.16054976237541732,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7938334542201975,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0980/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 920,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0920.pt",
+      "screen_mean_joint": 0.16040100250626566,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7942958889498878,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0920/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 940,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0940.pt",
+      "screen_mean_joint": 0.15926550496533634,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7586003807543596,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0940/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 980,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0980.pt",
+      "screen_mean_joint": 0.15602035048049745,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.8033682300070565,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0980/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 920,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0920.pt",
+      "screen_mean_joint": 0.15474007703563597,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7990899921713328,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0920/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 860,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0860.pt",
+      "screen_mean_joint": 0.14950088506156994,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7726958998247133,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0860/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 860,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0860.pt",
+      "screen_mean_joint": 0.14738664311313884,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6336565229750798,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0860/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 860,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0860.pt",
+      "screen_mean_joint": 0.13715841199137413,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6894896023543328,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0860/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 880,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0880.pt",
+      "screen_mean_joint": 0.13425517686446561,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.8143450557504306,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0880/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 960,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0960.pt",
+      "screen_mean_joint": 0.12392270133860582,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7845574151630338,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0960/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 920,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0920.pt",
+      "screen_mean_joint": 0.1200440845359333,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7371481403653948,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0920/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 920,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0920.pt",
+      "screen_mean_joint": 0.11495476317189995,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6802651233117745,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0920/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 1000,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e1000.pt",
+      "screen_mean_joint": 0.11383144179933581,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8104148202616498,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e1000/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 740,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0740.pt",
+      "screen_mean_joint": 0.09847090924055951,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7485499560048571,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0740/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 820,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0820.pt",
+      "screen_mean_joint": 0.097119341563786,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7232890085927701,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0820/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 780,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0780.pt",
+      "screen_mean_joint": 0.09479965899403239,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7382788555941462,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0780/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 800,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0800.pt",
+      "screen_mean_joint": 0.0927907245962945,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7533453541461657,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0800/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 900,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0900.pt",
+      "screen_mean_joint": 0.09024808487591798,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.8122249651790978,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0900/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 820,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0820.pt",
+      "screen_mean_joint": 0.08565574336009135,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7541467030017994,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0820/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 800,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0800.pt",
+      "screen_mean_joint": 0.0849304772641864,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7493683027656226,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0800/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 820,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0820.pt",
+      "screen_mean_joint": 0.08482938960593758,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7596122352281116,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0820/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 960,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0960.pt",
+      "screen_mean_joint": 0.08295270634777918,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7558395339202735,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0960/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 740,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0740.pt",
+      "screen_mean_joint": 0.08220650219368125,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7554031754564952,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0740/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 900,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0900.pt",
+      "screen_mean_joint": 0.07560467443837558,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.8216805924176491,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0900/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 760,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0760.pt",
+      "screen_mean_joint": 0.07309605817068504,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7583052075125079,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0760/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 860,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0860.pt",
+      "screen_mean_joint": 0.07161441950646677,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6374690928970546,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0860/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 740,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0740.pt",
+      "screen_mean_joint": 0.06912124214749245,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.6913824422619664,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0740/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 1000,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e1000.pt",
+      "screen_mean_joint": 0.06440991490935997,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7913258586739212,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e1000/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 880,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0880.pt",
+      "screen_mean_joint": 0.06137470143764122,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7880628300131564,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0880/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 740,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0740.pt",
+      "screen_mean_joint": 0.06124030730876245,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7149792766538915,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0740/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 700,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0700.pt",
+      "screen_mean_joint": 0.06068346745008872,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7589299549356068,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0700/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 760,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0760.pt",
+      "screen_mean_joint": 0.05991168552084852,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7155905764709324,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0760/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 720,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0720.pt",
+      "screen_mean_joint": 0.059404592403643805,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7395523273938771,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0720/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 800,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0800.pt",
+      "screen_mean_joint": 0.05900675865796121,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.742172963264811,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0800/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 880,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0880.pt",
+      "screen_mean_joint": 0.058762661237980206,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7867747578379416,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0880/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 760,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0760.pt",
+      "screen_mean_joint": 0.05737374839044599,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7101540330630316,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0760/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 600,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0600.pt",
+      "screen_mean_joint": 0.05440921894234314,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7070546775846841,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0600/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 820,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0820.pt",
+      "screen_mean_joint": 0.05357479720807395,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.73623581123709,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0820/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 680,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0680.pt",
+      "screen_mean_joint": 0.05217737694535315,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6471114170033763,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0680/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 580,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0580.pt",
+      "screen_mean_joint": 0.05196304849884526,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7172917854491684,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0580/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 600,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0600.pt",
+      "screen_mean_joint": 0.05181104491813005,
+      "screen_completed": 3,
+      "screen_mean_onset": 0.7424797302071752,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0600/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 760,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0760.pt",
+      "screen_mean_joint": 0.04998795857314257,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6892565202375874,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0760/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 840,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0840.pt",
+      "screen_mean_joint": 0.047508690614136734,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6796252150298203,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0840/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 720,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0720.pt",
+      "screen_mean_joint": 0.04748920066416152,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7805561105772837,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0720/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 680,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0680.pt",
+      "screen_mean_joint": 0.04373206628850537,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.687534185133585,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0680/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 660,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0660.pt",
+      "screen_mean_joint": 0.04026845637583893,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7177958850895096,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0660/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 720,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0720.pt",
+      "screen_mean_joint": 0.039284288470331094,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7262285377665549,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0720/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 680,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0680.pt",
+      "screen_mean_joint": 0.038580415724844504,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6486763792592695,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0680/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 640,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0640.pt",
+      "screen_mean_joint": 0.03535911602209945,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6842661580184848,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0640/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 480,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0480.pt",
+      "screen_mean_joint": 0.03522669421260649,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6813972899911067,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0480/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 700,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0700.pt",
+      "screen_mean_joint": 0.0351825575093974,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6393005119615498,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0700/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 640,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0640.pt",
+      "screen_mean_joint": 0.03474834318466774,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7051721330126192,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0640/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 700,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0700.pt",
+      "screen_mean_joint": 0.03464880643779726,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7244313769974744,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0700/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 580,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0580.pt",
+      "screen_mean_joint": 0.03225115044369231,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7454651806821363,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0580/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 480,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0480.pt",
+      "screen_mean_joint": 0.03142296018568113,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6368263501132295,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0480/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 520,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0520.pt",
+      "screen_mean_joint": 0.030252720900202913,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6947590719181203,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0520/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 340,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0340.pt",
+      "screen_mean_joint": 0.028138800851023653,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6838792087766351,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0340/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 700,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0700.pt",
+      "screen_mean_joint": 0.028131308327979342,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6873744490674141,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0700/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 660,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0660.pt",
+      "screen_mean_joint": 0.027491487460160943,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6775061668051442,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0660/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 560,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0560.pt",
+      "screen_mean_joint": 0.027099397250547115,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7533215118509731,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0560/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 440,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0440.pt",
+      "screen_mean_joint": 0.02672538392050587,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.5646778077305146,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0440/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 440,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0440.pt",
+      "screen_mean_joint": 0.02464646464646465,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5388255396971559,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0440/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 420,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0420.pt",
+      "screen_mean_joint": 0.0242547548857803,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.7219151889179355,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0420/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 780,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0780.pt",
+      "screen_mean_joint": 0.02098417198430085,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6705968349536974,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0780/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 540,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0540.pt",
+      "screen_mean_joint": 0.020928270042194094,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5845913679752393,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0540/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 280,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0280.pt",
+      "screen_mean_joint": 0.020499842978493582,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6143376184011593,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0280/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 640,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0640.pt",
+      "screen_mean_joint": 0.01906985794901732,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5979273420705207,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0640/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 720,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0720.pt",
+      "screen_mean_joint": 0.017897091722595078,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6086575546804197,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0720/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 840,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0840.pt",
+      "screen_mean_joint": 0.017185821697099892,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7603364523081753,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0840/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 560,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0560.pt",
+      "screen_mean_joint": 0.015895953757225433,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5863190162072988,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0560/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 220,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0220.pt",
+      "screen_mean_joint": 0.014775725593667547,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6335274386293016,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0220/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 360,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0360.pt",
+      "screen_mean_joint": 0.01444317749904979,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5500820581658101,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0360/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 360,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0360.pt",
+      "screen_mean_joint": 0.012949640287769784,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6499719942448634,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0360/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 500,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0500.pt",
+      "screen_mean_joint": 0.01241927471435668,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.47686019182401185,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0500/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 880,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0880.pt",
+      "screen_mean_joint": 0.012274241627213746,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7629332473748899,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0880/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 500,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0500.pt",
+      "screen_mean_joint": 0.011644832605531294,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5289965579913963,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0500/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 240,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0240.pt",
+      "screen_mean_joint": 0.011185682326621925,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5790276998690218,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0240/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 580,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0580.pt",
+      "screen_mean_joint": 0.010021097046413503,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6066237587819611,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0580/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 660,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0660.pt",
+      "screen_mean_joint": 0.009922822491730982,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.71219923975961,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0660/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 520,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0520.pt",
+      "screen_mean_joint": 0.009871668311944718,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.710061561273149,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0520/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 140,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0140.pt",
+      "screen_mean_joint": 0.009456264775413711,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6604293132609964,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0140/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 320,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0320.pt",
+      "screen_mean_joint": 0.009014546199549273,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6878101541044394,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0320/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 320,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0320.pt",
+      "screen_mean_joint": 0.00854594431802593,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.5391181089108253,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0320/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 400,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0400.pt",
+      "screen_mean_joint": 0.008411044066556957,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5970850430053466,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0400/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 680,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0680.pt",
+      "screen_mean_joint": 0.008165931732810714,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7621543026312614,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0680/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 100,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0100.pt",
+      "screen_mean_joint": 0.008143623912641125,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.46187928193199124,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0100/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 460,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0460.pt",
+      "screen_mean_joint": 0.008012820512820514,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5767622932063636,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0460/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 20,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0020.pt",
+      "screen_mean_joint": 0.007989425689656927,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.6279721843914942,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0020/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 80,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0080.pt",
+      "screen_mean_joint": 0.007227891156462585,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5395106696673059,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0080/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 500,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0500.pt",
+      "screen_mean_joint": 0.007014187788936713,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5863378970221845,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0500/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 780,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0780.pt",
+      "screen_mean_joint": 0.00681044267877412,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6821857954645156,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0780/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 300,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0300.pt",
+      "screen_mean_joint": 0.006805130822598071,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.621830784194209,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0300/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 20,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0020.pt",
+      "screen_mean_joint": 0.006658343736995423,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5932688529748312,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0020/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 640,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0640.pt",
+      "screen_mean_joint": 0.006308100929614874,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7144896545904166,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0640/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 840,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0840.pt",
+      "screen_mean_joint": 0.0061236987140232705,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.7369557674569768,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0840/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 280,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0280.pt",
+      "screen_mean_joint": 0.0060166144906185414,
+      "screen_completed": 2,
+      "screen_mean_onset": 0.5310849334107809,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0280/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 400,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0400.pt",
+      "screen_mean_joint": 0.005787037037037038,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6406573230422119,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0400/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 580,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0580.pt",
+      "screen_mean_joint": 0.005426356589147287,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6366618765688353,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0580/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 380,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0380.pt",
+      "screen_mean_joint": 0.003843689942344651,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5663046914338487,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0380/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 180,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0180.pt",
+      "screen_mean_joint": 0.0036585365853658534,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6240762396322251,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0180/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 40,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0040.pt",
+      "screen_mean_joint": 0.0033433634236041455,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5243098545861918,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0040/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 60,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0060.pt",
+      "screen_mean_joint": 0.0030193236714975845,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5460406275605325,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0060/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 540,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0540.pt",
+      "screen_mean_joint": 0.002974714923153198,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5895118041320608,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0540/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 80,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0080.pt",
+      "screen_mean_joint": 0.002898550724637681,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.586805261921541,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0080/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 160,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0160.pt",
+      "screen_mean_joint": 0.002735443532629934,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5826644482575646,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0160/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 420,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0420.pt",
+      "screen_mean_joint": 0.002577319587628866,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6875273813032621,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0420/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 160,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0160.pt",
+      "screen_mean_joint": 0.0025542784163473816,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6119963352219173,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0160/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 200,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0200.pt",
+      "screen_mean_joint": 0.0024449877750611247,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.4096036387927782,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0200/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 340,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0340.pt",
+      "screen_mean_joint": 0.0021367521367521365,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5296288978462431,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0340/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 120,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0120.pt",
+      "screen_mean_joint": 0.0020990764063811922,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.6031958118406864,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0120/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 120,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0120.pt",
+      "screen_mean_joint": 0.0017316017316017316,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5495880267235097,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0120/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 480,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0480.pt",
+      "screen_mean_joint": 0.0014234875444839859,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.5927761592130502,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0480/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 600,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0600.pt",
+      "screen_mean_joint": 0.001266624445851805,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.4047441633260942,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0600/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 240,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0240.pt",
+      "screen_mean_joint": 0.0008760402978537013,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.569365086668351,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0240/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 60,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0060.pt",
+      "screen_mean_joint": 0.0005712653527563553,
+      "screen_completed": 1,
+      "screen_mean_onset": 0.4248860991986553,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0060/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 840,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0840.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.7516947506244298,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0840/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 660,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0660.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.7260131261704516,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0660/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 800,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0800.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.7179290981240611,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0800/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 620,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0620.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.703279254639041,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0620/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 620,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0620.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.694388701745722,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0620/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 620,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0620.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.694133558508493,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0620/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 780,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0780.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6889380547050121,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0780/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 20,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0020.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6678842372141482,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0020/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 20,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0020.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6641538268799007,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0020/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 560,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0560.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6618479885238193,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0560/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 560,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0560.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6552001005613267,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0560/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 600,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0600.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6464545417410107,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0600/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 300,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0300.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.639603590670696,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0300/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 140,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0140.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6345361196618635,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0140/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 540,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0540.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6192872828278857,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0540/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 520,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0520.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6184207187580874,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0520/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 380,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0380.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.614924084557856,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0380/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 620,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0620.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.6021978108217938,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0620/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 540,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0540.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5866636041475259,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0540/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 400,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0400.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5806681519630801,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0400/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 260,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0260.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5722080992723497,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0260/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 280,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0280.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5647572293658674,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0280/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 420,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0420.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5563689242241953,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0420/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 260,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0260.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5548955679969041,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0260/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 480,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0480.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5530532446239607,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0480/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 40,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0040.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.54466478929195,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0040/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 520,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0520.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5359600774208981,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0520/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 300,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0300.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5333383619781713,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0300/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 100,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0100.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5277307275467116,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0100/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 460,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0460.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5271692696009488,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0460/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 500,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0500.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5252975616475737,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0500/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 460,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0460.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5234408260137339,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0460/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 40,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0040.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5225358680912139,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0040/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 260,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0260.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5191917659787635,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0260/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 180,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0180.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5088634252104951,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0180/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 60,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0060.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5031686940150002,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0060/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 440,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0440.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.5027288580119658,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0440/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 200,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0200.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4943494131889391,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0200/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 280,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0280.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4921344327027518,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0280/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 320,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0320.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4914347977220109,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0320/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 180,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0180.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.48736382982597765,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0180/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 340,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0340.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4835126016457036,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0340/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 240,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0240.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.48020091373572976,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0240/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 60,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0060.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.47902567044559374,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0060/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 340,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0340.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.47652656468119364,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0340/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 240,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0240.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.45779776973863817,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0240/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 140,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0140.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.45623253722165374,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0140/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 260,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0260.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.45591546716310327,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0260/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 320,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0320.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4557802173907656,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0320/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 40,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0040.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.45469928337101523,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0040/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 440,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0440.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4509474617942056,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0440/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 360,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0360.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4439136425364223,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0360/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 420,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0420.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.43329900886676037,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0420/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 220,
+      "decoding": "seed42",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0220.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.43151546099142357,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0220/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 400,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0400.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.42713921293165286,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0400/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 120,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0120.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4244792335124585,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0120/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 140,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0140.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.42156997545488234,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0140/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 380,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0380.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4205127567459594,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0380/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 180,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0180.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4195242721003285,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0180/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 100,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0100.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4171978251077615,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0100/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 80,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0080.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4143626697092886,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0080/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 380,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0380.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.41100015098180326,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0380/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 80,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0080.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.4031415526198021,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0080/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 360,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0360.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.40277445057474986,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0360/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 160,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0160.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.39626089753114163,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0160/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 460,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0460.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.3786358012074992,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0460/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 200,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0200.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.3726240069902212,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0200/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 160,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0160.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.3628461323847388,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0160/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 120,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0120.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.36211835054072466,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0120/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 300,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0300.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.36055636971995486,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0300/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 100,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0100.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.35692261096794575,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0100/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 220,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_e0220.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.35015636319186616,
+      "source": "out/freex_anchored_20261025/continued1000/soft/evaluation-e0220/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 200,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0200.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.32542392555793803,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0200/inputs.json"
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 220,
+      "decoding": "greedy",
+      "checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_e0220.pt",
+      "screen_mean_joint": 0.0,
+      "screen_completed": 0,
+      "screen_mean_onset": 0.2691496931553863,
+      "source": "out/freex_anchored_20261025/continued1000/audio/evaluation-e0220/inputs.json"
+    }
+  ]
+}
