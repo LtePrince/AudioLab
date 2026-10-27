@@ -1,0 +1,49 @@
+{
+  "observed_at_utc": "2026-10-27T10:37:01.545116+00:00",
+  "status": "running",
+  "supervisor_pid": 4004327,
+  "runs": [
+    {
+      "id": "E14-S",
+      "status": "running",
+      "pid": 4004328,
+      "gpu": 0,
+      "epoch": 1001,
+      "steps": 300300,
+      "objective": 0.0890803796303473,
+      "learning_rates": [
+        2.9999999999999997e-05
+      ],
+      "parent_sha256": "ba3fe08f51263c3a109291433193d3b08d872c63f49698c3d5f762bef193922c"
+    },
+    {
+      "id": "E18-A",
+      "status": "running",
+      "pid": 4004329,
+      "gpu": 1,
+      "epoch": 1001,
+      "steps": 300300,
+      "objective": 0.1880563445270724,
+      "learning_rates": [
+        2.9999999999999997e-05
+      ],
+      "parent_sha256": "4ab99fe2872b1cde5cca83466384c6019a6288eed35f48eb072c790d8751a756"
+    },
+    {
+      "id": "E14-A",
+      "status": "queued",
+      "pid": null,
+      "gpu": 0
+    },
+    {
+      "id": "E18-S",
+      "status": "queued",
+      "pid": null,
+      "gpu": 1
+    }
+  ],
+  "tests_passed": 27,
+  "metric_replay": "matches previous 4K/free-x Eltaw joint F1/onset F1/four-group score",
+  "source_fingerprints_verified": true,
+  "warning": "This is a launch snapshot, not live progress. Read out/ar_continue1200_20261027/supervisor.json for current status."
+}

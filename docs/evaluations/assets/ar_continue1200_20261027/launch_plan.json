@@ -1,0 +1,147 @@
+{
+  "schema": "audiolab-continue1200-plan-v1",
+  "created_at_utc": "2026-10-27T10:32:52.795517+00:00",
+  "decision": "User authorized 200 additional epochs for all four E14/E18 A/S models",
+  "start_epoch": 1000,
+  "target_epoch": 1200,
+  "training_songs": 300,
+  "held_out_songs": 0,
+  "architecture_loss_lr_sampling_changed": false,
+  "checkpoint_policy": "New output per model; original parents preserved; latest+best-fit+1050/1100/1150/1200 snapshots; no data/cache copy",
+  "evaluations": "Same original 3-song/probe diagnostics plus fixed15 greedy every50; e1000 matched baseline at first evaluation; reference BPM, no snapping/repairs",
+  "disk_free_gib": 9.622848510742188,
+  "estimated_peak_additional_gib": 1.3,
+  "limits": {
+    "min_free_disk_gib": 8,
+    "min_available_ram_gib": 8,
+    "max_rss_gib": 4,
+    "gpu_memory_fraction": 0.65
+  },
+  "sources_note": "4K source differs only by already-integrated 8a2b235 free-x extension; original 37a3650 hashes verified. No training implementation edited for this continuation.",
+  "source_sha256": {
+    "benchmarks/v1/protocol.json": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5",
+    "docs/evaluations/assets/ar_continue1200_20261027/supervise.py": "ff8e944a04486716c8907019630c8a724d65025a9f1df44ce1b4c7ff094734a8",
+    "docs/evaluations/assets/ar_continue1200_20261027/worker.py": "522dd18b98d96bc399b74fe9c301f431a78beab5189ee20241e1965a9dd304e5",
+    "docs/evaluations/assets/freex_layout_best_20261026/analyze.py": "d36420657a00b03459aead2bb8eb521d73373e3e2198d92532c6ed17ef6b9f11",
+    "docs/evaluations/assets/runtime_selection15_20261026/selection.json": "04790f4fff9fd6c57be2381557ee62e364fdbb0dd9e5c7f651d9bdb2bc3d5419",
+    "docs/evaluations/diffusion_ar_attribution_20261023.json": "010b3da7661be03587110961c8cfd49fef2495fd81915c9db42a91067dc98318",
+    "out/freex_anchored_20261025/pairs/pairs.json": "e0deb8269336075534b4b4e2e308e0439a461de587e169b106980d8bd6433754",
+    "out/full_corpus_v1/cache/cache.json": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+    "out/grounded_ar_20261023/pairs/pairs.json": "0c859f21b65b1142a0e3e238b1d6892978c4bc30e754430d89d9324cfc4c3955",
+    "script/train_alignment_scratch.py": "fbe986e1ee0d78def6c09a9300c5e153de241f120b808dd4ed96484859404eed",
+    "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+    "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2",
+    "script/train_models.py": "6aca0ae974d12416ce4fb81e2bddd0bb4541a2d5cf60643b95eed36205d92cd2",
+    "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45",
+    "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+    "src/audio_understanding/evaluation.py": "c57d0c4eb36df95f04f7772f98d68229946e168a3aa830458d4eb150357194e0",
+    "src/conditional_training.py": "7229cd6dfa83745b46ba236bb486348b34ba969a9948efcab924486cbb018ddc",
+    "src/data/chart_tokenizer.py": "466eaeb75600cde2449b8282aae5ff3fb1b6d68f3981e16e7dc33109fe21ae99",
+    "src/model_benchmark.py": "c7257da6cb65d8522ae376ecbb23acf5db696cb879a30818a326a780146cf250",
+    "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+    "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+    "src/pattern_diagnostics.py": "c3355a18928182afeb5bc0ff6588c72e5f6aa5798af8455b3375b80f910cd175",
+    "src/product/artifacts.py": "aca2fcc5c4f7eb3819a85c7c34f5b7314d04aead3cd789cf7ad5d9b440044fd7",
+    "src/resource_budget.py": "b26ae4c3608a223b144d93de88e32fce02ce63f75c85277c91b6ae0432220c91",
+    "src/soft_onset.py": "5dfbb511ff0e058b25a6e00d65f479c1a176f12e8b2919b166f4c68101ccb73f"
+  },
+  "metric_replay_checks": [
+    {
+      "mode": "4k",
+      "same_existing_metric": true,
+      "joint_f1": 0.9964580873671782,
+      "grid": 0.7604819347598757
+    },
+    {
+      "mode": "freex",
+      "same_existing_metric": true,
+      "joint_f1": 0.8371278458844134,
+      "grid": 0.7150463411652608
+    }
+  ],
+  "continuation_tests_passed": 27,
+  "runs": [
+    {
+      "id": "E14-S",
+      "mode": "4k",
+      "variant": "soft",
+      "gpu": 0,
+      "parent_checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_latest.pt",
+      "parent_sha256": "ba3fe08f51263c3a109291433193d3b08d872c63f49698c3d5f762bef193922c",
+      "parent_epoch": 1000,
+      "parent_steps": 300000,
+      "learning_rates": [
+        2.9999999999999997e-05
+      ],
+      "parameters": 6626691,
+      "pairs": "out/grounded_ar_20261023/pairs",
+      "output": "out/ar_saturation_20261023/continued1200/soft",
+      "source_differences": [
+        "src/anchored_ar.py",
+        "script/train_anchored_ar.py",
+        "src/conditional_training.py",
+        "script/train_grounded_ar.py"
+      ],
+      "optimizer_rng_preserved": true
+    },
+    {
+      "id": "E18-A",
+      "mode": "freex",
+      "variant": "audio",
+      "gpu": 1,
+      "parent_checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_latest.pt",
+      "parent_sha256": "4ab99fe2872b1cde5cca83466384c6019a6288eed35f48eb072c790d8751a756",
+      "parent_epoch": 1000,
+      "parent_steps": 300000,
+      "learning_rates": [
+        2.9999999999999997e-05
+      ],
+      "parameters": 6815860,
+      "pairs": "out/freex_anchored_20261025/pairs",
+      "output": "out/freex_anchored_20261025/continued1200/audio",
+      "source_differences": [],
+      "optimizer_rng_preserved": true
+    },
+    {
+      "id": "E14-A",
+      "mode": "4k",
+      "variant": "audio",
+      "gpu": 0,
+      "parent_checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_latest.pt",
+      "parent_sha256": "bb3894c98af9e5d1ece8c57e88ea9c14653dcf98c030cb5f798bf28254019cca",
+      "parent_epoch": 1000,
+      "parent_steps": 300000,
+      "learning_rates": [
+        2.9999999999999997e-05
+      ],
+      "parameters": 6626691,
+      "pairs": "out/grounded_ar_20261023/pairs",
+      "output": "out/ar_saturation_20261023/continued1200/audio",
+      "source_differences": [
+        "src/anchored_ar.py",
+        "script/train_anchored_ar.py",
+        "src/conditional_training.py",
+        "script/train_grounded_ar.py"
+      ],
+      "optimizer_rng_preserved": true
+    },
+    {
+      "id": "E18-S",
+      "mode": "freex",
+      "variant": "soft",
+      "gpu": 1,
+      "parent_checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_latest.pt",
+      "parent_sha256": "cd27d84233ea281d9ade83ccd29db1728f5af5b2afc3fb251fc807f00a95b225",
+      "parent_epoch": 1000,
+      "parent_steps": 300000,
+      "learning_rates": [
+        2.9999999999999997e-05
+      ],
+      "parameters": 6815860,
+      "pairs": "out/freex_anchored_20261025/pairs",
+      "output": "out/freex_anchored_20261025/continued1200/soft",
+      "source_differences": [],
+      "optimizer_rng_preserved": true
+    }
+  ]
+}
