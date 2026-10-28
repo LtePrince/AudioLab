@@ -1,0 +1,2083 @@
+{
+  "schema": "audiolab-continue1200-completion-v1",
+  "observed_at_utc": "2026-10-28T02:04:11.112048+00:00",
+  "training_status": "completed",
+  "quality_status": "not_passed",
+  "finished_at_utc": "2026-10-27T23:56:26.252203+00:00",
+  "elapsed_hours": 13.3824799875,
+  "training_songs": 300,
+  "held_out_songs": 0,
+  "scope": "Fixed 15 training songs, greedy, reference BPM. Joint F1 counts failed generations as zero; raw onset/grid retain failed prefixes. No generalization certification.",
+  "sources_unchanged_since_launch": true,
+  "snapshots_verified": 16,
+  "supervisor_path": "out/ar_continue1200_20261027/supervisor.json",
+  "supervisor_sha256": "e553d87afa6cbf5a6f9b5c645cc23584e71a7054db1c455fafc05870ab297d52",
+  "next_training": "Not scheduled; authorized target1200 reached.",
+  "disk_free_gib": 8.683513641357422,
+  "runs": [
+    {
+      "id": "E14-A",
+      "mode": "4k",
+      "variant": "audio",
+      "status": "completed",
+      "epoch": 1200,
+      "steps": 360000,
+      "finished_at_utc": "2026-10-27T22:42:21.025282+00:00",
+      "checkpoint": "out/ar_saturation_20261023/continued1200/audio/model_latest.pt",
+      "checkpoint_sha256": "4345eaeb350fff4250dec89bd0d81144ba451db30990ab56269777da4ff7d016",
+      "snapshots": [
+        {
+          "epoch": 1050,
+          "path": "out/ar_saturation_20261023/continued1200/audio/model_e1050.pt",
+          "sha256": "42cebc088a4849b0bd88c497e6a7ec64f50d6a4f36b4223643d2c074e4002431",
+          "source_checkpoint_sha256": "1de8b819521886ed310334f9f7a14612e015625fbf47392d672b3b3f93ee46b1"
+        },
+        {
+          "epoch": 1100,
+          "path": "out/ar_saturation_20261023/continued1200/audio/model_e1100.pt",
+          "sha256": "57e5fd74a1033cff52df869dd4c51fa5ecfb5be2cebf671af773a72746abc08c",
+          "source_checkpoint_sha256": "9c0225269ed8d53711118b0971e7407a11468421fed50db1121208f682175d66"
+        },
+        {
+          "epoch": 1150,
+          "path": "out/ar_saturation_20261023/continued1200/audio/model_e1150.pt",
+          "sha256": "de7a1baa2604de80b6905a3cc4f2765780ea47dfff200dacdea014f64bda1902",
+          "source_checkpoint_sha256": "258f90aa081d393cc7629349e35d96a1115d7ddc707466194f3234ec8b535599"
+        },
+        {
+          "epoch": 1200,
+          "path": "out/ar_saturation_20261023/continued1200/audio/model_e1200.pt",
+          "sha256": "2df3293b56b9b7beabe95be7149423075d6bd21fa48ff0039eca9c75acf701c1",
+          "source_checkpoint_sha256": "4345eaeb350fff4250dec89bd0d81144ba451db30990ab56269777da4ff7d016"
+        }
+      ],
+      "evaluations": [
+        {
+          "path": "out/ar_saturation_20261023/continued1200/audio/evaluation-e1000-fixed15/summary.json",
+          "sha256": "177ad3956120205e8d967f1b3761e3c05c9625dcfeb5dfb4faebdb9ea6235065",
+          "epoch": 1000,
+          "completed": 10,
+          "total": 15,
+          "mean_joint_f1": 0.3930615187563385,
+          "mean_raw_joint_f1": 0.5176214827814946,
+          "mean_raw_onset_f1": 0.8457667628987176,
+          "mean_raw_grid_bonus": 0.594778696140393,
+          "mean_tail_10s_recall": 0.8058768371751326,
+          "failed_songs": [
+            "DESTRUCTION 321_IN",
+            "インフェルノシティ_IN",
+            "混乱-Confusion_IN",
+            "风屿_IN",
+            "Rrharil_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 847,
+              "predicted_notes": 847,
+              "matched_notes": 679,
+              "onset_f1": 0.9913793103448276,
+              "joint_time_bin_type_f1": 0.8016528925619835,
+              "exact_groups_given_matched": 0.7492753623188406,
+              "four_group_reproduction": 0.5916905444126075,
+              "matched_coordinate_mae_screen": 0.0,
+              "matched_holds": 23,
+              "matched_hold_duration_mae_ms": 27.03311556657358,
+              "type_counts": {
+                "tap": 609,
+                "drag": 140,
+                "hold": 48,
+                "flick": 50
+              },
+              "selection_joint_f1": 0.8016528925619835,
+              "matched_onset_mae_ms": 2.563895652173774,
+              "grid_bonus": 0.7327158521949115,
+              "first_onset_delta_seconds": 0.0005148833647301565,
+              "last_onset_delta_seconds": -0.0018359859191150463,
+              "tail_10s_recall": 0.9130434782608695,
+              "reference_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 688,
+                "singleton_windows": 400,
+                "chord_interrupted_windows": 288,
+                "counts": {
+                  "unclassified": 335,
+                  "AAAA": 9,
+                  "monotonic_run": 6,
+                  "ABAB": 50
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/ar_saturation_20261023/continued1200/audio/evaluation-e1050/fixed15/summary.json",
+          "sha256": "0da81af1c3179d9b8836999f00ff34bb868c874f9d872bc4ed54364fbd5e33f3",
+          "epoch": 1050,
+          "completed": 13,
+          "total": 15,
+          "mean_joint_f1": 0.7145848408945409,
+          "mean_raw_joint_f1": 0.7423803015291116,
+          "mean_raw_onset_f1": 0.9165583096395972,
+          "mean_raw_grid_bonus": 0.638536631759007,
+          "mean_tail_10s_recall": 0.8656064652955927,
+          "failed_songs": [
+            "DESTRUCTION 321_IN",
+            "Incyde_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 847,
+              "predicted_notes": 847,
+              "matched_notes": 843,
+              "onset_f1": 1.0,
+              "joint_time_bin_type_f1": 0.9952774498229043,
+              "exact_groups_given_matched": 0.9942938659058488,
+              "four_group_reproduction": 0.9813753581661891,
+              "matched_coordinate_mae_screen": 0.0,
+              "matched_holds": 41,
+              "matched_hold_duration_mae_ms": 3.7912296221444337,
+              "type_counts": {
+                "tap": 604,
+                "drag": 156,
+                "hold": 41,
+                "flick": 46
+              },
+              "selection_joint_f1": 0.9952774498229043,
+              "matched_onset_mae_ms": 2.283786019971621,
+              "grid_bonus": 0.7595654885401748,
+              "first_onset_delta_seconds": 0.000166457047588775,
+              "last_onset_delta_seconds": -0.005231009048799251,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 338,
+                  "AAAA": 9,
+                  "monotonic_run": 7,
+                  "ABAB": 51
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/ar_saturation_20261023/continued1200/audio/evaluation-e1100/fixed15/summary.json",
+          "sha256": "bdefe67c66c685cf952e46ec68033466ea729692ca031bb099b6d9767e8e0ba5",
+          "epoch": 1100,
+          "completed": 12,
+          "total": 15,
+          "mean_joint_f1": 0.6516593995543516,
+          "mean_raw_joint_f1": 0.7770775438478983,
+          "mean_raw_onset_f1": 0.920984116693943,
+          "mean_raw_grid_bonus": 0.6490261165659331,
+          "mean_tail_10s_recall": 0.8800602644691873,
+          "failed_songs": [
+            "DESTRUCTION 321_IN",
+            "The Whole Rest_IN",
+            "Rrharil_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 847,
+              "predicted_notes": 847,
+              "matched_notes": 846,
+              "onset_f1": 1.0,
+              "joint_time_bin_type_f1": 0.9988193624557261,
+              "exact_groups_given_matched": 0.9985734664764622,
+              "four_group_reproduction": 0.994269340974212,
+              "matched_coordinate_mae_screen": 0.0,
+              "matched_holds": 41,
+              "matched_hold_duration_mae_ms": 3.4660621256590253e-12,
+              "type_counts": {
+                "tap": 604,
+                "drag": 156,
+                "hold": 41,
+                "flick": 46
+              },
+              "selection_joint_f1": 0.9988193624557261,
+              "matched_onset_mae_ms": 2.2244621968615945,
+              "grid_bonus": 0.7653121590109242,
+              "first_onset_delta_seconds": 0.0009226286568575492,
+              "last_onset_delta_seconds": -0.0006988552856057595,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 334,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 54
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/ar_saturation_20261023/continued1200/audio/evaluation-e1150/fixed15/summary.json",
+          "sha256": "dd4aee8662a6223c0d8b8db9840072814936b50b0b77bcec9d65f0cf95612531",
+          "epoch": 1150,
+          "completed": 14,
+          "total": 15,
+          "mean_joint_f1": 0.8251902131518217,
+          "mean_raw_joint_f1": 0.840765861132533,
+          "mean_raw_onset_f1": 0.9337510282070399,
+          "mean_raw_grid_bonus": 0.6650900418314304,
+          "mean_tail_10s_recall": 0.9172780691877607,
+          "failed_songs": [
+            "DESTRUCTION 321_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 847,
+              "predicted_notes": 847,
+              "matched_notes": 845,
+              "onset_f1": 1.0,
+              "joint_time_bin_type_f1": 0.9976387249114522,
+              "exact_groups_given_matched": 0.9971469329529244,
+              "four_group_reproduction": 0.9928366762177651,
+              "matched_coordinate_mae_screen": 0.0,
+              "matched_holds": 41,
+              "matched_hold_duration_mae_ms": 3.531050790515132e-12,
+              "type_counts": {
+                "tap": 603,
+                "drag": 156,
+                "hold": 42,
+                "flick": 46
+              },
+              "selection_joint_f1": 0.9976387249114522,
+              "matched_onset_mae_ms": 2.24884165477883,
+              "grid_bonus": 0.7631220435568289,
+              "first_onset_delta_seconds": 0.001198211383437675,
+              "last_onset_delta_seconds": -0.002613421567843943,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/ar_saturation_20261023/continued1200/audio/evaluation-e1200/fixed15/summary.json",
+          "sha256": "7d9461155dd754a349f94d00dcb06bee7235c42e9cc5b0e2bedffbe9ddacd2f3",
+          "epoch": 1200,
+          "completed": 13,
+          "total": 15,
+          "mean_joint_f1": 0.8352721521738001,
+          "mean_raw_joint_f1": 0.917518222287283,
+          "mean_raw_onset_f1": 0.9804718168119827,
+          "mean_raw_grid_bonus": 0.6773987667931678,
+          "mean_tail_10s_recall": 0.9677858157420689,
+          "failed_songs": [
+            "Eltaw_IN",
+            "Incyde_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "failed",
+            "error": "continued with no future audio interval",
+            "metrics": {
+              "reference_notes": 847,
+              "predicted_notes": 914,
+              "matched_notes": 775,
+              "onset_f1": 0.9607167470709855,
+              "joint_time_bin_type_f1": 0.8801817149346962,
+              "exact_groups_given_matched": 0.8938307030129125,
+              "four_group_reproduction": 0.8080229226361032,
+              "matched_coordinate_mae_screen": 0.0,
+              "matched_holds": 38,
+              "matched_hold_duration_mae_ms": 4.090537223892679,
+              "type_counts": {
+                "tap": 671,
+                "drag": 158,
+                "hold": 40,
+                "flick": 45
+              },
+              "selection_joint_f1": 0.0,
+              "matched_onset_mae_ms": 2.453936872309966,
+              "grid_bonus": 0.7007399260444399,
+              "first_onset_delta_seconds": 0.0018059776019041518,
+              "last_onset_delta_seconds": 4.980890785306286,
+              "tail_10s_recall": 0.9130434782608695,
+              "reference_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 747,
+                "singleton_windows": 429,
+                "chord_interrupted_windows": 318,
+                "counts": {
+                  "unclassified": 356,
+                  "AAAA": 8,
+                  "monotonic_run": 6,
+                  "ABAB": 59
+                }
+              }
+            }
+          }
+        }
+      ],
+      "best_fixed15_epoch": 1200,
+      "best_fixed15_joint_f1": 0.8352721521738001,
+      "final_training": {
+        "epoch": 1200,
+        "steps": 360000,
+        "elapsed_seconds": 128469.13245944306,
+        "counts": {
+          "time_count": 270200,
+          "layout_count": 633694,
+          "stop_count": 1200,
+          "continue_count": 270200
+        },
+        "frame_ce": 0.006955507393422185,
+        "frame_accuracy": 0.9979052553663953,
+        "conditional_offset_mae_seconds": 0.0028802975002525074,
+        "subframe_mse": 0.0068378694279273644,
+        "layout_ce": 0.1748101064242274,
+        "stop_bce": 0.019369145859341543,
+        "continue_bce": 4.933955844113952e-05,
+        "false_stop_rate": 1.1102886750555144e-05,
+        "end_stop_recall": 0.9916666666666667,
+        "learning_rates": [
+          2.9999999999999997e-05
+        ],
+        "objective": 0.05756328464281172
+      },
+      "last20_objective_drop_percent": 3.5858786038567154,
+      "resources": {
+        "disk_free_gib": 8.718189239501953,
+        "ram_available_gib": 34.821128845214844,
+        "rss_gib": 2.1180801391601562,
+        "gpu_peak_allocated_gib": 0.3066267967224121,
+        "gpu_peak_reserved_gib": 0.583984375
+      },
+      "final_original_benchmark": {
+        "greedy": {
+          "-SURREALISM-_IN": {
+            "status": "completed",
+            "note_count": 911,
+            "f1_50ms": 1.0,
+            "error": null
+          },
+          "ABYSS MOTION 192.333_IN": {
+            "status": "completed",
+            "note_count": 765,
+            "f1_50ms": 1.0,
+            "error": null
+          },
+          "Eltaw_IN": {
+            "status": "failed",
+            "note_count": 914,
+            "f1_50ms": 0.9607167470709855,
+            "error": "continued with no future audio interval"
+          },
+          "piano_three": {
+            "status": "completed",
+            "note_count": 13,
+            "f1_50ms": 0.375,
+            "error": null
+          },
+          "piano_weak_middle": {
+            "status": "completed",
+            "note_count": 9,
+            "f1_50ms": 0.3333333333333333,
+            "error": null
+          },
+          "piano_repeated": {
+            "status": "completed",
+            "note_count": 6,
+            "f1_50ms": 0.4444444444444444,
+            "error": null
+          },
+          "piano_chunk_boundary": {
+            "status": "failed",
+            "note_count": 76,
+            "f1_50ms": 0.05063291139240506,
+            "error": "continued with no future audio interval"
+          },
+          "silence": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 1.0,
+            "error": null
+          }
+        },
+        "seed42": {
+          "-SURREALISM-_IN": {
+            "status": "completed",
+            "note_count": 912,
+            "f1_50ms": 0.998639455782313,
+            "error": null
+          },
+          "ABYSS MOTION 192.333_IN": {
+            "status": "completed",
+            "note_count": 767,
+            "f1_50ms": 0.9969418960244648,
+            "error": null
+          },
+          "Eltaw_IN": {
+            "status": "completed",
+            "note_count": 850,
+            "f1_50ms": 0.9892318736539842,
+            "error": null
+          },
+          "piano_three": {
+            "status": "completed",
+            "note_count": 10,
+            "f1_50ms": 0.3076923076923077,
+            "error": null
+          },
+          "piano_weak_middle": {
+            "status": "completed",
+            "note_count": 9,
+            "f1_50ms": 0.3333333333333333,
+            "error": null
+          },
+          "piano_repeated": {
+            "status": "completed",
+            "note_count": 6,
+            "f1_50ms": 0.4444444444444444,
+            "error": null
+          },
+          "piano_chunk_boundary": {
+            "status": "failed",
+            "note_count": 88,
+            "f1_50ms": 0.06593406593406594,
+            "error": "continued with no future audio interval"
+          },
+          "silence": {
+            "status": "completed",
+            "note_count": 1,
+            "f1_50ms": 0.0,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "id": "E14-S",
+      "mode": "4k",
+      "variant": "soft",
+      "status": "completed",
+      "epoch": 1200,
+      "steps": 360000,
+      "finished_at_utc": "2026-10-27T16:40:24.439718+00:00",
+      "checkpoint": "out/ar_saturation_20261023/continued1200/soft/model_latest.pt",
+      "checkpoint_sha256": "082a4fc228fbb5adf759a2c1d65f660202cb2b6ae73e8b9ea002cf45826945c8",
+      "snapshots": [
+        {
+          "epoch": 1050,
+          "path": "out/ar_saturation_20261023/continued1200/soft/model_e1050.pt",
+          "sha256": "343518c81f3a60deef79fb29af401542cdb3f28d63e26af5d4862b0e1622f3b5",
+          "source_checkpoint_sha256": "00503420038c3e5c4808e178b94592cc295cc8650f52a087257129f55f6fe5ca"
+        },
+        {
+          "epoch": 1100,
+          "path": "out/ar_saturation_20261023/continued1200/soft/model_e1100.pt",
+          "sha256": "1485c59759661e70add4812a675913d7ac85d2ec941b9ffcb8d03710b1c47aa9",
+          "source_checkpoint_sha256": "cbd6f97814e6500ac53c631a781c7f455267fac0da438878aa88607e6cc022eb"
+        },
+        {
+          "epoch": 1150,
+          "path": "out/ar_saturation_20261023/continued1200/soft/model_e1150.pt",
+          "sha256": "e36b2a9d0506e9754af68b9045e7cf8555c7d36a7222920fbca798c5594843ee",
+          "source_checkpoint_sha256": "f2cc5a863d360bb3b7828122a2a82d81b21f1f84594c1d1175590b3894432bfe"
+        },
+        {
+          "epoch": 1200,
+          "path": "out/ar_saturation_20261023/continued1200/soft/model_e1200.pt",
+          "sha256": "b02b8492fa5171a383567a873f3713627417175e901ae0221fb45bb49e561431",
+          "source_checkpoint_sha256": "082a4fc228fbb5adf759a2c1d65f660202cb2b6ae73e8b9ea002cf45826945c8"
+        }
+      ],
+      "evaluations": [
+        {
+          "path": "out/ar_saturation_20261023/continued1200/soft/evaluation-e1000-fixed15/summary.json",
+          "sha256": "1aa818af1400be20b9c1254ebd736dcd7d4d7436ad46d4bc0a6f04c7cc165b97",
+          "epoch": 1000,
+          "completed": 10,
+          "total": 15,
+          "mean_joint_f1": 0.49839140857199477,
+          "mean_raw_joint_f1": 0.6058917012030637,
+          "mean_raw_onset_f1": 0.8615577295883866,
+          "mean_raw_grid_bonus": 0.6142290919417736,
+          "mean_tail_10s_recall": 0.8269101317850422,
+          "failed_songs": [
+            "DESTRUCTION 321_IN",
+            "Incyde_IN",
+            "Cipher  20_IN",
+            "A journey to the moonlight_IN",
+            "GOODBOUNCE_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 847,
+              "predicted_notes": 847,
+              "matched_notes": 844,
+              "onset_f1": 1.0,
+              "joint_time_bin_type_f1": 0.9964580873671782,
+              "exact_groups_given_matched": 0.9957203994293866,
+              "four_group_reproduction": 0.9828080229226361,
+              "matched_coordinate_mae_screen": 0.0,
+              "matched_holds": 41,
+              "matched_hold_duration_mae_ms": 3.509387902229763e-12,
+              "type_counts": {
+                "tap": 604,
+                "drag": 156,
+                "hold": 41,
+                "flick": 46
+              },
+              "selection_joint_f1": 0.9964580873671782,
+              "matched_onset_mae_ms": 2.2773851640515868,
+              "grid_bonus": 0.7604819347598757,
+              "first_onset_delta_seconds": -0.00193177661436561,
+              "last_onset_delta_seconds": -0.005228181501763629,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 334,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 54
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/ar_saturation_20261023/continued1200/soft/evaluation-e1050/fixed15/summary.json",
+          "sha256": "8c025fe52c13de32c80e8eeb6f08b1c831cfb5188290ef848c60887dfa6e1200",
+          "epoch": 1050,
+          "completed": 12,
+          "total": 15,
+          "mean_joint_f1": 0.6389195901576946,
+          "mean_raw_joint_f1": 0.7079139355046381,
+          "mean_raw_onset_f1": 0.9199752720123867,
+          "mean_raw_grid_bonus": 0.6353162814293224,
+          "mean_tail_10s_recall": 0.7578396043747407,
+          "failed_songs": [
+            "DESTRUCTION 321_IN",
+            "Incyde_IN",
+            "风屿_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 847,
+              "predicted_notes": 847,
+              "matched_notes": 846,
+              "onset_f1": 1.0,
+              "joint_time_bin_type_f1": 0.9988193624557261,
+              "exact_groups_given_matched": 0.9985734664764622,
+              "four_group_reproduction": 0.994269340974212,
+              "matched_coordinate_mae_screen": 0.0,
+              "matched_holds": 41,
+              "matched_hold_duration_mae_ms": 3.7912296221441304,
+              "type_counts": {
+                "tap": 604,
+                "drag": 156,
+                "hold": 41,
+                "flick": 46
+              },
+              "selection_joint_f1": 0.9988193624557261,
+              "matched_onset_mae_ms": 2.165726105563293,
+              "grid_bonus": 0.7725305221112687,
+              "first_onset_delta_seconds": -0.0038095557207997732,
+              "last_onset_delta_seconds": -0.002313441386974091,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/ar_saturation_20261023/continued1200/soft/evaluation-e1100/fixed15/summary.json",
+          "sha256": "5800691da51fd1ef2054eac1935e38e037007b962e4d69b6bedc0c96505504a1",
+          "epoch": 1100,
+          "completed": 12,
+          "total": 15,
+          "mean_joint_f1": 0.7638137575183961,
+          "mean_raw_joint_f1": 0.8533009596987574,
+          "mean_raw_onset_f1": 0.9402535248307758,
+          "mean_raw_grid_bonus": 0.6640440397782313,
+          "mean_tail_10s_recall": 0.8100810000610599,
+          "failed_songs": [
+            "DESTRUCTION 321_IN",
+            "Incyde_IN",
+            "Rrharil_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 847,
+              "predicted_notes": 847,
+              "matched_notes": 846,
+              "onset_f1": 1.0,
+              "joint_time_bin_type_f1": 0.9988193624557261,
+              "exact_groups_given_matched": 0.9985734664764622,
+              "four_group_reproduction": 0.994269340974212,
+              "matched_coordinate_mae_screen": 0.0,
+              "matched_holds": 41,
+              "matched_hold_duration_mae_ms": 3.4877250139443943e-12,
+              "type_counts": {
+                "tap": 604,
+                "drag": 156,
+                "hold": 41,
+                "flick": 46
+              },
+              "selection_joint_f1": 0.9988193624557261,
+              "matched_onset_mae_ms": 2.1653651925819553,
+              "grid_bonus": 0.7726313746076897,
+              "first_onset_delta_seconds": -0.002694951350405983,
+              "last_onset_delta_seconds": -0.0025177333902206556,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/ar_saturation_20261023/continued1200/soft/evaluation-e1150/fixed15/summary.json",
+          "sha256": "7366eaf57cea3959f7627dbe676f78076bedc3844240808c5e49df438da85cdb",
+          "epoch": 1150,
+          "completed": 13,
+          "total": 15,
+          "mean_joint_f1": 0.7855002061805765,
+          "mean_raw_joint_f1": 0.829032191594647,
+          "mean_raw_onset_f1": 0.9471636092802527,
+          "mean_raw_grid_bonus": 0.6601449227332967,
+          "mean_tail_10s_recall": 0.9205862991315046,
+          "failed_songs": [
+            "DESTRUCTION 321_IN",
+            "Incyde_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 847,
+              "predicted_notes": 847,
+              "matched_notes": 847,
+              "onset_f1": 1.0,
+              "joint_time_bin_type_f1": 1.0,
+              "exact_groups_given_matched": 1.0,
+              "four_group_reproduction": 1.0,
+              "matched_coordinate_mae_screen": 0.0,
+              "matched_holds": 41,
+              "matched_hold_duration_mae_ms": 3.4877250139443943e-12,
+              "type_counts": {
+                "tap": 604,
+                "drag": 156,
+                "hold": 41,
+                "flick": 46
+              },
+              "selection_joint_f1": 1.0,
+              "matched_onset_mae_ms": 2.2375263908703977,
+              "grid_bonus": 0.7655540861626349,
+              "first_onset_delta_seconds": -0.0026153482200912403,
+              "last_onset_delta_seconds": 0.0007443009156702374,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/ar_saturation_20261023/continued1200/soft/evaluation-e1200/fixed15/summary.json",
+          "sha256": "d8b61929c061612a52cd0fb4b95ead671cf673799e634b4552b686e0dcdd8a86",
+          "epoch": 1200,
+          "completed": 14,
+          "total": 15,
+          "mean_joint_f1": 0.9207938904854147,
+          "mean_raw_joint_f1": 0.9314502859275589,
+          "mean_raw_onset_f1": 0.9583711205868379,
+          "mean_raw_grid_bonus": 0.6864086775122694,
+          "mean_tail_10s_recall": 0.9490202066473253,
+          "failed_songs": [
+            "Incyde_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 847,
+              "predicted_notes": 847,
+              "matched_notes": 846,
+              "onset_f1": 1.0,
+              "joint_time_bin_type_f1": 0.9988193624557261,
+              "exact_groups_given_matched": 0.9985734664764622,
+              "four_group_reproduction": 0.994269340974212,
+              "matched_coordinate_mae_screen": 0.0,
+              "matched_holds": 41,
+              "matched_hold_duration_mae_ms": 3.7912296221441304,
+              "type_counts": {
+                "tap": 604,
+                "drag": 156,
+                "hold": 41,
+                "flick": 46
+              },
+              "selection_joint_f1": 0.9988193624557261,
+              "matched_onset_mae_ms": 2.1237845934380166,
+              "grid_bonus": 0.7761280783642296,
+              "first_onset_delta_seconds": -0.0031988996745271336,
+              "last_onset_delta_seconds": -0.0020094254120976984,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 337,
+                  "AAAA": 9,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 698,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 293,
+                "counts": {
+                  "unclassified": 334,
+                  "AAAA": 12,
+                  "monotonic_run": 8,
+                  "ABAB": 51
+                }
+              }
+            }
+          }
+        }
+      ],
+      "best_fixed15_epoch": 1200,
+      "best_fixed15_joint_f1": 0.9207938904854147,
+      "final_training": {
+        "epoch": 1200,
+        "steps": 360000,
+        "elapsed_seconds": 129634.54382339865,
+        "counts": {
+          "time_count": 270200,
+          "layout_count": 633694,
+          "stop_count": 1200,
+          "continue_count": 270200
+        },
+        "frame_ce": 0.007276627629087677,
+        "frame_accuracy": 0.9977720207253886,
+        "conditional_offset_mae_seconds": 0.0028683093961776565,
+        "subframe_mse": 0.006771289443938293,
+        "layout_ce": 0.17526485786369586,
+        "stop_bce": 0.017997899123243035,
+        "continue_bce": 7.922459716359216e-05,
+        "false_stop_rate": 1.850481125092524e-05,
+        "end_stop_recall": 0.9941666666666666,
+        "learning_rates": [
+          2.9999999999999997e-05
+        ],
+        "objective": 0.05794335770899691
+      },
+      "last20_objective_drop_percent": 3.735420409902296,
+      "resources": {
+        "disk_free_gib": 9.196128845214844,
+        "ram_available_gib": 34.875892639160156,
+        "rss_gib": 2.1194496154785156,
+        "gpu_peak_allocated_gib": 0.3066267967224121,
+        "gpu_peak_reserved_gib": 0.583984375
+      },
+      "final_original_benchmark": {
+        "greedy": {
+          "-SURREALISM-_IN": {
+            "status": "completed",
+            "note_count": 907,
+            "f1_50ms": 0.9986376021798365,
+            "error": null
+          },
+          "ABYSS MOTION 192.333_IN": {
+            "status": "completed",
+            "note_count": 765,
+            "f1_50ms": 1.0,
+            "error": null
+          },
+          "Eltaw_IN": {
+            "status": "completed",
+            "note_count": 847,
+            "f1_50ms": 1.0,
+            "error": null
+          },
+          "piano_three": {
+            "status": "completed",
+            "note_count": 9,
+            "f1_50ms": 0.5,
+            "error": null
+          },
+          "piano_weak_middle": {
+            "status": "completed",
+            "note_count": 10,
+            "f1_50ms": 0.46153846153846156,
+            "error": null
+          },
+          "piano_repeated": {
+            "status": "completed",
+            "note_count": 22,
+            "f1_50ms": 0.24,
+            "error": null
+          },
+          "piano_chunk_boundary": {
+            "status": "failed",
+            "note_count": 64,
+            "f1_50ms": 0.08955223880597014,
+            "error": "continued with no future audio interval"
+          },
+          "silence": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 1.0,
+            "error": null
+          }
+        },
+        "seed42": {
+          "-SURREALISM-_IN": {
+            "status": "failed",
+            "note_count": 985,
+            "f1_50ms": 0.8536109303838647,
+            "error": "continued with no future audio interval"
+          },
+          "ABYSS MOTION 192.333_IN": {
+            "status": "completed",
+            "note_count": 763,
+            "f1_50ms": 0.9977116704805492,
+            "error": null
+          },
+          "Eltaw_IN": {
+            "status": "completed",
+            "note_count": 839,
+            "f1_50ms": 0.9992862241256245,
+            "error": null
+          },
+          "piano_three": {
+            "status": "completed",
+            "note_count": 12,
+            "f1_50ms": 0.4,
+            "error": null
+          },
+          "piano_weak_middle": {
+            "status": "completed",
+            "note_count": 12,
+            "f1_50ms": 0.4,
+            "error": null
+          },
+          "piano_repeated": {
+            "status": "completed",
+            "note_count": 15,
+            "f1_50ms": 0.3333333333333333,
+            "error": null
+          },
+          "piano_chunk_boundary": {
+            "status": "failed",
+            "note_count": 67,
+            "f1_50ms": 0.05714285714285714,
+            "error": "continued with no future audio interval"
+          },
+          "silence": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 1.0,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "id": "E18-A",
+      "mode": "freex",
+      "variant": "audio",
+      "status": "completed",
+      "epoch": 1200,
+      "steps": 360000,
+      "finished_at_utc": "2026-10-27T17:14:27.533671+00:00",
+      "checkpoint": "out/freex_anchored_20261025/continued1200/audio/model_latest.pt",
+      "checkpoint_sha256": "3966fb620cb7ea6107b485108b058e090bd247c0c5c29d2b3a2535e2c5f96e2f",
+      "snapshots": [
+        {
+          "epoch": 1050,
+          "path": "out/freex_anchored_20261025/continued1200/audio/model_e1050.pt",
+          "sha256": "d3b194b5211c5155699a1cf51a1b30a63144f88a1b507d5e0e520d467bcd25d4",
+          "source_checkpoint_sha256": "d7bbb14a3283fda2d3d17c7e6f11ab0949da1a4a7f1dc7eead3b28401907db59"
+        },
+        {
+          "epoch": 1100,
+          "path": "out/freex_anchored_20261025/continued1200/audio/model_e1100.pt",
+          "sha256": "c02085f44ebab5138e49ed4d52086d58c80dfc4c0f35db8f2da87fecc90605c6",
+          "source_checkpoint_sha256": "f3dd1c0d5f6e688ebd5075230008c5de344afe6e954cc8a8399f93fdaa1806a7"
+        },
+        {
+          "epoch": 1150,
+          "path": "out/freex_anchored_20261025/continued1200/audio/model_e1150.pt",
+          "sha256": "024fdb85ddbd59bb8562de6ac6824a4bbc2e4fac537683c0c2b013e6b8962532",
+          "source_checkpoint_sha256": "6fa96ec6df595e6a4632ce0d20f912138aa2cc4ce6a191fff91a1fbefe3b498f"
+        },
+        {
+          "epoch": 1200,
+          "path": "out/freex_anchored_20261025/continued1200/audio/model_e1200.pt",
+          "sha256": "957f088bc3b33f101f8027e159c07374b58d618f47944d3d324e81d380a6e199",
+          "source_checkpoint_sha256": "3966fb620cb7ea6107b485108b058e090bd247c0c5c29d2b3a2535e2c5f96e2f"
+        }
+      ],
+      "evaluations": [
+        {
+          "path": "out/freex_anchored_20261025/continued1200/audio/evaluation-e1000-fixed15/summary.json",
+          "sha256": "eb3eaa8e110cf873379b6c48de6db95bed0a942cbcbfe92c1a54c58de4777a76",
+          "epoch": 1000,
+          "completed": 10,
+          "total": 15,
+          "mean_joint_f1": 0.27489443935126706,
+          "mean_raw_joint_f1": 0.32624152820212754,
+          "mean_raw_onset_f1": 0.8000916959756258,
+          "mean_raw_grid_bonus": 0.5664518937996075,
+          "mean_tail_10s_recall": 0.7454113652141718,
+          "failed_songs": [
+            "Incyde_IN",
+            "インフェルノシティ_IN",
+            "混乱-Confusion_IN",
+            "Rrharil_IN",
+            "Re_Nascence Psystyle Ver._IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 861,
+              "matched_notes": 717,
+              "onset_f1": 0.9914529914529915,
+              "joint_time_bin_type_f1": 0.8371278458844134,
+              "exact_groups_given_matched": 0.8175287356321839,
+              "four_group_reproduction": 0.6529160739687055,
+              "matched_coordinate_mae_screen": 0.0010421200552057919,
+              "matched_holds": 35,
+              "matched_hold_duration_mae_ms": 97.70540340488975,
+              "type_counts": {
+                "tap": 626,
+                "drag": 153,
+                "hold": 42,
+                "flick": 40
+              },
+              "selection_joint_f1": 0.8371278458844134,
+              "matched_onset_mae_ms": 2.7815387931034743,
+              "grid_bonus": 0.7150463411652608,
+              "first_onset_delta_seconds": -0.0003369819582219602,
+              "last_onset_delta_seconds": -0.010983564221248798,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 703,
+                "singleton_windows": 406,
+                "chord_interrupted_windows": 297,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 360,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 695,
+                "singleton_windows": 403,
+                "chord_interrupted_windows": 292,
+                "counts": {
+                  "monotonic_run": 28,
+                  "unclassified": 355,
+                  "AAAA": 7,
+                  "ABAB": 13
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/freex_anchored_20261025/continued1200/audio/evaluation-e1050/fixed15/summary.json",
+          "sha256": "1866f1fb284af92620018d52df032de9f007a7e5363f32742f6172282f4c1087",
+          "epoch": 1050,
+          "completed": 12,
+          "total": 15,
+          "mean_joint_f1": 0.4328505475397558,
+          "mean_raw_joint_f1": 0.46107136334903626,
+          "mean_raw_onset_f1": 0.8351625776802407,
+          "mean_raw_grid_bonus": 0.5792404182656093,
+          "mean_tail_10s_recall": 0.8806206424985501,
+          "failed_songs": [
+            "Incyde_IN",
+            "インフェルノシティ_IN",
+            "GOODBOUNCE_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 879,
+              "matched_notes": 644,
+              "onset_f1": 0.9335219236209336,
+              "joint_time_bin_type_f1": 0.7440785673021375,
+              "exact_groups_given_matched": 0.759090909090909,
+              "four_group_reproduction": 0.5874822190611664,
+              "matched_coordinate_mae_screen": 0.0010619389878569348,
+              "matched_holds": 23,
+              "matched_hold_duration_mae_ms": 121.64902004956524,
+              "type_counts": {
+                "tap": 599,
+                "drag": 175,
+                "hold": 41,
+                "flick": 64
+              },
+              "selection_joint_f1": 0.7440785673021375,
+              "matched_onset_mae_ms": 2.9492590909094507,
+              "grid_bonus": 0.6755301438794948,
+              "first_onset_delta_seconds": -0.0023386139912435766,
+              "last_onset_delta_seconds": -0.0164164003602707,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 703,
+                "singleton_windows": 406,
+                "chord_interrupted_windows": 297,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 360,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 705,
+                "singleton_windows": 381,
+                "chord_interrupted_windows": 324,
+                "counts": {
+                  "monotonic_run": 36,
+                  "unclassified": 328,
+                  "AAAA": 6,
+                  "ABAB": 11
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/freex_anchored_20261025/continued1200/audio/evaluation-e1100/fixed15/summary.json",
+          "sha256": "04a78c577812c0898267cddf5873fa457884d3c0a800f6342d00479d1930c936",
+          "epoch": 1100,
+          "completed": 12,
+          "total": 15,
+          "mean_joint_f1": 0.44609520661238994,
+          "mean_raw_joint_f1": 0.5074091921685043,
+          "mean_raw_onset_f1": 0.8078044235234634,
+          "mean_raw_grid_bonus": 0.5955466893149429,
+          "mean_tail_10s_recall": 0.7078187562100566,
+          "failed_songs": [
+            "Incyde_IN",
+            "インフェルノシティ_IN",
+            "The Chariot REVIIVAL_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 854,
+              "matched_notes": 787,
+              "onset_f1": 0.99361249112846,
+              "joint_time_bin_type_f1": 0.9226260257913247,
+              "exact_groups_given_matched": 0.9085714285714286,
+              "four_group_reproduction": 0.844950213371266,
+              "matched_coordinate_mae_screen": 0.0009003536203870252,
+              "matched_holds": 33,
+              "matched_hold_duration_mae_ms": 40.037682524732496,
+              "type_counts": {
+                "tap": 610,
+                "drag": 162,
+                "hold": 38,
+                "flick": 44
+              },
+              "selection_joint_f1": 0.9226260257913247,
+              "matched_onset_mae_ms": 2.5159657142858536,
+              "grid_bonus": 0.7390598220957805,
+              "first_onset_delta_seconds": -0.003290529913862583,
+              "last_onset_delta_seconds": -0.01463089782919269,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 703,
+                "singleton_windows": 406,
+                "chord_interrupted_windows": 297,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 360,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 700,
+                "singleton_windows": 397,
+                "chord_interrupted_windows": 303,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 351,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/freex_anchored_20261025/continued1200/audio/evaluation-e1150/fixed15/summary.json",
+          "sha256": "d22a69c2ae650ebcb23673469c10bbbe79e669777973b18ee8ac9dc063a7144f",
+          "epoch": 1150,
+          "completed": 12,
+          "total": 15,
+          "mean_joint_f1": 0.5315753355733205,
+          "mean_raw_joint_f1": 0.620789910398755,
+          "mean_raw_onset_f1": 0.8950419658826894,
+          "mean_raw_grid_bonus": 0.6141509799592761,
+          "mean_tail_10s_recall": 0.8154208248000225,
+          "failed_songs": [
+            "DESTRUCTION 321_IN",
+            "インフェルノシティ_IN",
+            "Cipher  20_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 876,
+              "matched_notes": 753,
+              "onset_f1": 0.9964564138908576,
+              "joint_time_bin_type_f1": 0.8715277777777778,
+              "exact_groups_given_matched": 0.8477951635846372,
+              "four_group_reproduction": 0.7496443812233285,
+              "matched_coordinate_mae_screen": 0.0009193834100418258,
+              "matched_holds": 41,
+              "matched_hold_duration_mae_ms": 30.32983697712982,
+              "type_counts": {
+                "tap": 639,
+                "drag": 152,
+                "hold": 41,
+                "flick": 44
+              },
+              "selection_joint_f1": 0.8715277777777778,
+              "matched_onset_mae_ms": 2.6170042674258123,
+              "grid_bonus": 0.7272526857682824,
+              "first_onset_delta_seconds": -0.0015813185600501711,
+              "last_onset_delta_seconds": -0.011386620463298414,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 703,
+                "singleton_windows": 406,
+                "chord_interrupted_windows": 297,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 360,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 702,
+                "singleton_windows": 376,
+                "chord_interrupted_windows": 326,
+                "counts": {
+                  "monotonic_run": 26,
+                  "unclassified": 336,
+                  "AAAA": 3,
+                  "ABAB": 11
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/freex_anchored_20261025/continued1200/audio/evaluation-e1200/fixed15/summary.json",
+          "sha256": "c3b10e7084c052086aa5616b96b99c9a1590ecdb1ef99d480c0c982389922118",
+          "epoch": 1200,
+          "completed": 9,
+          "total": 15,
+          "mean_joint_f1": 0.5034278111092387,
+          "mean_raw_joint_f1": 0.622859732104017,
+          "mean_raw_onset_f1": 0.8718361186158808,
+          "mean_raw_grid_bonus": 0.6097819218681011,
+          "mean_tail_10s_recall": 0.8904464788431522,
+          "failed_songs": [
+            "Incyde_IN",
+            "混乱-Confusion_IN",
+            "A journey to the moonlight_IN",
+            "Rrharil_IN",
+            "Re_Nascence Psystyle Ver._IN",
+            "GOODBOUNCE_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 859,
+              "matched_notes": 640,
+              "onset_f1": 0.9866102889358703,
+              "joint_time_bin_type_f1": 0.7481005260081823,
+              "exact_groups_given_matched": 0.75,
+              "four_group_reproduction": 0.6571834992887624,
+              "matched_coordinate_mae_screen": 0.0009202166246883932,
+              "matched_holds": 32,
+              "matched_hold_duration_mae_ms": 43.71761658031503,
+              "type_counts": {
+                "tap": 616,
+                "drag": 154,
+                "hold": 48,
+                "flick": 41
+              },
+              "selection_joint_f1": 0.7481005260081823,
+              "matched_onset_mae_ms": 2.891918571428773,
+              "grid_bonus": 0.697356589060326,
+              "first_onset_delta_seconds": -0.001185783067207069,
+              "last_onset_delta_seconds": -0.013591258747624124,
+              "tail_10s_recall": 0.9565217391304348,
+              "reference_patterns": {
+                "total_four_onset_windows": 703,
+                "singleton_windows": 406,
+                "chord_interrupted_windows": 297,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 360,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 710,
+                "singleton_windows": 415,
+                "chord_interrupted_windows": 295,
+                "counts": {
+                  "monotonic_run": 24,
+                  "unclassified": 374,
+                  "AAAA": 5,
+                  "ABAB": 12
+                }
+              }
+            }
+          }
+        }
+      ],
+      "best_fixed15_epoch": 1150,
+      "best_fixed15_joint_f1": 0.5315753355733205,
+      "final_training": {
+        "epoch": 1200,
+        "steps": 360000,
+        "elapsed_seconds": 135416.07543499768,
+        "counts": {
+          "time_count": 273769,
+          "layout_count": 645516,
+          "stop_count": 1200,
+          "continue_count": 273769,
+          "coordinate_count": 333986
+        },
+        "frame_ce": 0.010997346015161124,
+        "frame_accuracy": 0.9966906406495988,
+        "conditional_offset_mae_seconds": 0.0031308221894907487,
+        "subframe_mse": 0.008208102399217775,
+        "layout_ce": 0.38680263728509545,
+        "stop_bce": 0.03105795572649901,
+        "continue_bce": 0.00010557273814318947,
+        "false_stop_rate": 4.0179859662708345e-05,
+        "end_stop_recall": 0.9875,
+        "learning_rates": [
+          2.9999999999999997e-05
+        ],
+        "coordinate_mse": 0.023478066785053982,
+        "conditional_coordinate_mae_screen": 0.0013399298942727855,
+        "objective": 0.13950450097536257
+      },
+      "last20_objective_drop_percent": 2.6048733041245558,
+      "resources": {
+        "disk_free_gib": 9.063270568847656,
+        "ram_available_gib": 35.12409210205078,
+        "rss_gib": 2.1368637084960938,
+        "gpu_peak_allocated_gib": 0.3256955146789551,
+        "gpu_peak_reserved_gib": 0.59765625
+      },
+      "final_original_benchmark": {
+        "greedy": {
+          "-SURREALISM-_IN": {
+            "status": "completed",
+            "note_count": 915,
+            "f1_50ms": 1.0,
+            "error": null
+          },
+          "ABYSS MOTION 192.333_IN": {
+            "status": "completed",
+            "note_count": 780,
+            "f1_50ms": 0.9992509363295881,
+            "error": null
+          },
+          "Eltaw_IN": {
+            "status": "completed",
+            "note_count": 859,
+            "f1_50ms": 0.9866102889358703,
+            "error": null
+          },
+          "piano_three": {
+            "status": "completed",
+            "note_count": 3,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_weak_middle": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_repeated": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_chunk_boundary": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "silence": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 1.0,
+            "error": null
+          }
+        },
+        "seed42": {
+          "-SURREALISM-_IN": {
+            "status": "failed",
+            "note_count": 963,
+            "f1_50ms": 0.9420949902407287,
+            "error": "continued with no future audio interval"
+          },
+          "ABYSS MOTION 192.333_IN": {
+            "status": "completed",
+            "note_count": 874,
+            "f1_50ms": 0.7789327789327789,
+            "error": null
+          },
+          "Eltaw_IN": {
+            "status": "failed",
+            "note_count": 905,
+            "f1_50ms": 0.9183955739972337,
+            "error": "continued with no future audio interval"
+          },
+          "piano_three": {
+            "status": "completed",
+            "note_count": 4,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_weak_middle": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_repeated": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_chunk_boundary": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "silence": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 1.0,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "id": "E18-S",
+      "mode": "freex",
+      "variant": "soft",
+      "status": "completed",
+      "epoch": 1200,
+      "steps": 360000,
+      "finished_at_utc": "2026-10-27T23:56:25.590580+00:00",
+      "checkpoint": "out/freex_anchored_20261025/continued1200/soft/model_latest.pt",
+      "checkpoint_sha256": "9d9955f37cc4524a72feec945e9c23637d10675fc362b6fa953b7a7ce7d3f320",
+      "snapshots": [
+        {
+          "epoch": 1050,
+          "path": "out/freex_anchored_20261025/continued1200/soft/model_e1050.pt",
+          "sha256": "e9e764caa00ae0a4c0306d89f645460084b20e505e51a7aa2782a3c22517bdea",
+          "source_checkpoint_sha256": "3832337546b679df440253e977acaeea684ca6febc5936261d8e6d9c2e332f56"
+        },
+        {
+          "epoch": 1100,
+          "path": "out/freex_anchored_20261025/continued1200/soft/model_e1100.pt",
+          "sha256": "d503aa3ad729383b60fec8f7c174027de18d03ae6c219bc9713498ee5b295162",
+          "source_checkpoint_sha256": "b63f54e35341a0662c3440effbaee4df263b2e0f4e5a53c201f602014dc9d544"
+        },
+        {
+          "epoch": 1150,
+          "path": "out/freex_anchored_20261025/continued1200/soft/model_e1150.pt",
+          "sha256": "506182b990087f218e259aa9eb058fe99b2eb1ae60379b710955a576b5ab797b",
+          "source_checkpoint_sha256": "c4181ef2c3599abac9a90bb74cdff632e91847bfb002d5edce169be3e13a0aa1"
+        },
+        {
+          "epoch": 1200,
+          "path": "out/freex_anchored_20261025/continued1200/soft/model_e1200.pt",
+          "sha256": "492dbf3a81d29e08e60e993945933b2b8eaf76aff2027ffb583859a9a4023be6",
+          "source_checkpoint_sha256": "9d9955f37cc4524a72feec945e9c23637d10675fc362b6fa953b7a7ce7d3f320"
+        }
+      ],
+      "evaluations": [
+        {
+          "path": "out/freex_anchored_20261025/continued1200/soft/evaluation-e1000-fixed15/summary.json",
+          "sha256": "4c6b28173a0d36a9a84e6b4eb8873ef5377f2067c7350a349303e9bf5c50a3ab",
+          "epoch": 1000,
+          "completed": 11,
+          "total": 15,
+          "mean_joint_f1": 0.25312189889501635,
+          "mean_raw_joint_f1": 0.29880172103323055,
+          "mean_raw_onset_f1": 0.7589033415606454,
+          "mean_raw_grid_bonus": 0.5542229949798615,
+          "mean_tail_10s_recall": 0.7524784690548235,
+          "failed_songs": [
+            "Eltaw_IN",
+            "Incyde_IN",
+            "インフェルノシティ_IN",
+            "混乱-Confusion_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "failed",
+            "error": "continued with no future audio interval",
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 997,
+              "matched_notes": 403,
+              "onset_f1": 0.903485254691689,
+              "joint_time_bin_type_f1": 0.43591130340724715,
+              "exact_groups_given_matched": 0.4465875370919881,
+              "four_group_reproduction": 0.28165007112375534,
+              "matched_coordinate_mae_screen": 0.0009194663763047629,
+              "matched_holds": 9,
+              "matched_hold_duration_mae_ms": 259.0673575129582,
+              "type_counts": {
+                "tap": 761,
+                "drag": 152,
+                "hold": 43,
+                "flick": 41
+              },
+              "selection_joint_f1": 0.0,
+              "matched_onset_mae_ms": 2.961845697329611,
+              "grid_bonus": 0.6401210551315102,
+              "first_onset_delta_seconds": -0.000485431637572864,
+              "last_onset_delta_seconds": 4.980889984418667,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 703,
+                "singleton_windows": 406,
+                "chord_interrupted_windows": 297,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 360,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 783,
+                "singleton_windows": 405,
+                "chord_interrupted_windows": 378,
+                "counts": {
+                  "monotonic_run": 22,
+                  "unclassified": 326,
+                  "AAAA": 23,
+                  "ABAB": 34
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/freex_anchored_20261025/continued1200/soft/evaluation-e1050/fixed15/summary.json",
+          "sha256": "7766da5deb785c1523f621c1595c821dc6c85d0a2a2e0c4be234ca446c291209",
+          "epoch": 1050,
+          "completed": 13,
+          "total": 15,
+          "mean_joint_f1": 0.3758522486711849,
+          "mean_raw_joint_f1": 0.40194423667345136,
+          "mean_raw_onset_f1": 0.8678822298315515,
+          "mean_raw_grid_bonus": 0.5716969336779131,
+          "mean_tail_10s_recall": 0.8468439062591838,
+          "failed_songs": [
+            "Rrharil_IN",
+            "GOODBOUNCE_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 854,
+              "matched_notes": 810,
+              "onset_f1": 0.9978708303761533,
+              "joint_time_bin_type_f1": 0.9495896834701055,
+              "exact_groups_given_matched": 0.9231863442389758,
+              "four_group_reproduction": 0.8349928876244666,
+              "matched_coordinate_mae_screen": 0.0008961685075096421,
+              "matched_holds": 41,
+              "matched_hold_duration_mae_ms": 56.86844433211555,
+              "type_counts": {
+                "tap": 607,
+                "drag": 164,
+                "hold": 41,
+                "flick": 42
+              },
+              "selection_joint_f1": 0.9495896834701055,
+              "matched_onset_mae_ms": 2.6988250355619305,
+              "grid_bonus": 0.7227422019914559,
+              "first_onset_delta_seconds": -0.002020630515300992,
+              "last_onset_delta_seconds": -0.0075772115271774965,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 703,
+                "singleton_windows": 406,
+                "chord_interrupted_windows": 297,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 360,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 700,
+                "singleton_windows": 414,
+                "chord_interrupted_windows": 286,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 368,
+                  "ABAB": 10,
+                  "AAAA": 3
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/freex_anchored_20261025/continued1200/soft/evaluation-e1100/fixed15/summary.json",
+          "sha256": "5a50ca239d3db3826ad7fbf41a45c83a9367ff3cf7ccf45e484587bd2488ec52",
+          "epoch": 1100,
+          "completed": 13,
+          "total": 15,
+          "mean_joint_f1": 0.4346604875449794,
+          "mean_raw_joint_f1": 0.46043074444722726,
+          "mean_raw_onset_f1": 0.8486909891417194,
+          "mean_raw_grid_bonus": 0.5882224846003211,
+          "mean_tail_10s_recall": 0.833454745137945,
+          "failed_songs": [
+            "Incyde_IN",
+            "インフェルノシティ_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 938,
+              "matched_notes": 374,
+              "onset_f1": 0.8914123491838183,
+              "joint_time_bin_type_f1": 0.41787709497206704,
+              "exact_groups_given_matched": 0.4426751592356688,
+              "four_group_reproduction": 0.267425320056899,
+              "matched_coordinate_mae_screen": 0.0008119631989883869,
+              "matched_holds": 5,
+              "matched_hold_duration_mae_ms": 0.0,
+              "type_counts": {
+                "tap": 760,
+                "drag": 119,
+                "hold": 27,
+                "flick": 32
+              },
+              "selection_joint_f1": 0.41787709497206704,
+              "matched_onset_mae_ms": 3.2141114649684193,
+              "grid_bonus": 0.6619823119962363,
+              "first_onset_delta_seconds": -0.0016035901640041317,
+              "last_onset_delta_seconds": -0.00957487143099911,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 703,
+                "singleton_windows": 406,
+                "chord_interrupted_windows": 297,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 360,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 700,
+                "singleton_windows": 328,
+                "chord_interrupted_windows": 372,
+                "counts": {
+                  "monotonic_run": 26,
+                  "unclassified": 284,
+                  "AAAA": 7,
+                  "ABAB": 11
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/freex_anchored_20261025/continued1200/soft/evaluation-e1150/fixed15/summary.json",
+          "sha256": "9a49082e1bb4492471f57f1000bc63c62ece4e21a54af1cc280794dc60e629eb",
+          "epoch": 1150,
+          "completed": 13,
+          "total": 15,
+          "mean_joint_f1": 0.5485716608150104,
+          "mean_raw_joint_f1": 0.5795613524370203,
+          "mean_raw_onset_f1": 0.8774567976801959,
+          "mean_raw_grid_bonus": 0.5982934243996856,
+          "mean_tail_10s_recall": 0.8402838639584095,
+          "failed_songs": [
+            "インフェルノシティ_IN",
+            "混乱-Confusion_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 851,
+              "matched_notes": 781,
+              "onset_f1": 0.9971590909090909,
+              "joint_time_bin_type_f1": 0.917204932472108,
+              "exact_groups_given_matched": 0.9002849002849003,
+              "four_group_reproduction": 0.8150782361308677,
+              "matched_coordinate_mae_screen": 0.0008500426815708516,
+              "matched_holds": 34,
+              "matched_hold_duration_mae_ms": 89.14964949710857,
+              "type_counts": {
+                "tap": 592,
+                "drag": 174,
+                "hold": 43,
+                "flick": 42
+              },
+              "selection_joint_f1": 0.917204932472108,
+              "matched_onset_mae_ms": 2.5978945868946397,
+              "grid_bonus": 0.7296559620132843,
+              "first_onset_delta_seconds": -0.0007329409603122894,
+              "last_onset_delta_seconds": -0.008599650043606744,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 703,
+                "singleton_windows": 406,
+                "chord_interrupted_windows": 297,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 360,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 699,
+                "singleton_windows": 414,
+                "chord_interrupted_windows": 285,
+                "counts": {
+                  "monotonic_run": 32,
+                  "unclassified": 372,
+                  "AAAA": 4,
+                  "ABAB": 6
+                }
+              }
+            }
+          }
+        },
+        {
+          "path": "out/freex_anchored_20261025/continued1200/soft/evaluation-e1200/fixed15/summary.json",
+          "sha256": "29432b473360637038922cead5a95a71d73b0da0ca46cbc269db9b1320c11c22",
+          "epoch": 1200,
+          "completed": 14,
+          "total": 15,
+          "mean_joint_f1": 0.7012732865514586,
+          "mean_raw_joint_f1": 0.7047639284161963,
+          "mean_raw_onset_f1": 0.9272179524377778,
+          "mean_raw_grid_bonus": 0.6329724708906427,
+          "mean_tail_10s_recall": 0.893808047901332,
+          "failed_songs": [
+            "Incyde_IN"
+          ],
+          "eltaw": {
+            "song": "Eltaw_IN",
+            "status": "completed",
+            "error": null,
+            "metrics": {
+              "reference_notes": 852,
+              "predicted_notes": 862,
+              "matched_notes": 771,
+              "onset_f1": 0.9964564138908576,
+              "joint_time_bin_type_f1": 0.8996499416569428,
+              "exact_groups_given_matched": 0.887624466571835,
+              "four_group_reproduction": 0.8065433854907539,
+              "matched_coordinate_mae_screen": 0.0008233223548667074,
+              "matched_holds": 38,
+              "matched_hold_duration_mae_ms": 32.72429779111345,
+              "type_counts": {
+                "tap": 618,
+                "drag": 159,
+                "hold": 40,
+                "flick": 45
+              },
+              "selection_joint_f1": 0.8996499416569428,
+              "matched_onset_mae_ms": 2.615963015647143,
+              "grid_bonus": 0.7240589042080646,
+              "first_onset_delta_seconds": -0.00013830352851673666,
+              "last_onset_delta_seconds": -0.007716867161576602,
+              "tail_10s_recall": 1.0,
+              "reference_patterns": {
+                "total_four_onset_windows": 703,
+                "singleton_windows": 406,
+                "chord_interrupted_windows": 297,
+                "counts": {
+                  "monotonic_run": 33,
+                  "unclassified": 360,
+                  "AAAA": 4,
+                  "ABAB": 9
+                }
+              },
+              "prediction_patterns": {
+                "total_four_onset_windows": 702,
+                "singleton_windows": 402,
+                "chord_interrupted_windows": 300,
+                "counts": {
+                  "monotonic_run": 29,
+                  "unclassified": 360,
+                  "AAAA": 5,
+                  "ABAB": 8
+                }
+              }
+            }
+          }
+        }
+      ],
+      "best_fixed15_epoch": 1200,
+      "best_fixed15_joint_f1": 0.7012732865514586,
+      "final_training": {
+        "epoch": 1200,
+        "steps": 360000,
+        "elapsed_seconds": 138300.05443029106,
+        "counts": {
+          "time_count": 273769,
+          "layout_count": 645516,
+          "stop_count": 1200,
+          "continue_count": 273769,
+          "coordinate_count": 333986
+        },
+        "frame_ce": 0.01181811515656352,
+        "frame_accuracy": 0.996442256062593,
+        "conditional_offset_mae_seconds": 0.003128966111010314,
+        "subframe_mse": 0.008185785001038209,
+        "layout_ce": 0.38733848543066834,
+        "stop_bce": 0.023693859142228157,
+        "continue_bce": 7.405954675647372e-05,
+        "false_stop_rate": 1.0958143544375002e-05,
+        "end_stop_recall": 0.9933333333333333,
+        "learning_rates": [
+          2.9999999999999997e-05
+        ],
+        "coordinate_mse": 0.023466853870609712,
+        "conditional_coordinate_mae_screen": 0.0013411544697225376,
+        "objective": 0.14039394507741948
+      },
+      "last20_objective_drop_percent": 2.518375198354954,
+      "resources": {
+        "disk_free_gib": 8.687267303466797,
+        "ram_available_gib": 36.49932861328125,
+        "rss_gib": 2.2146530151367188,
+        "gpu_peak_allocated_gib": 0.3256955146789551,
+        "gpu_peak_reserved_gib": 0.59765625
+      },
+      "final_original_benchmark": {
+        "greedy": {
+          "-SURREALISM-_IN": {
+            "status": "completed",
+            "note_count": 915,
+            "f1_50ms": 1.0,
+            "error": null
+          },
+          "ABYSS MOTION 192.333_IN": {
+            "status": "completed",
+            "note_count": 726,
+            "f1_50ms": 0.7688787185354691,
+            "error": null
+          },
+          "Eltaw_IN": {
+            "status": "completed",
+            "note_count": 862,
+            "f1_50ms": 0.9964564138908576,
+            "error": null
+          },
+          "piano_three": {
+            "status": "completed",
+            "note_count": 1,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_weak_middle": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_repeated": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_chunk_boundary": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "silence": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 1.0,
+            "error": null
+          }
+        },
+        "seed42": {
+          "-SURREALISM-_IN": {
+            "status": "failed",
+            "note_count": 940,
+            "f1_50ms": 0.806009144350098,
+            "error": "continued with no future audio interval"
+          },
+          "ABYSS MOTION 192.333_IN": {
+            "status": "failed",
+            "note_count": 614,
+            "f1_50ms": 0.6778242677824268,
+            "error": "continued with no future audio interval"
+          },
+          "Eltaw_IN": {
+            "status": "completed",
+            "note_count": 897,
+            "f1_50ms": 0.9859747545582047,
+            "error": null
+          },
+          "piano_three": {
+            "status": "completed",
+            "note_count": 1,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_weak_middle": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_repeated": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "piano_chunk_boundary": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 0.0,
+            "error": null
+          },
+          "silence": {
+            "status": "completed",
+            "note_count": 0,
+            "f1_50ms": 1.0,
+            "error": null
+          }
+        }
+      }
+    }
+  ]
+}
