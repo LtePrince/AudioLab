@@ -901,20 +901,20 @@
       "models": [
         "AL-AR4K@0.5.1"
       ],
-      "status": "completed",
+      "status": "running",
       "question": "保持结构/损失/采样，500轮后按用户授权续到700轮，继续观察拟合与自由生成",
-      "result": "A/S均完成1200轮。固定15首联合F1 A 0.3931→0.8353、S 0.4984→0.9208，最终自然结束13/15、14/15。4K A贪心Eltaw仍失败，稀疏探针未通过。全部来自训练歌曲；质量未通过，未继续加训或替换发布权重。",
+      "result": "用户批准从1200轮续至1400轮，各加训200轮；原配方、独立优化器/RNG和实际3e-5学习率保持不变，先S后A分批运行。新阶段尚无评测结论。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
           "id": "E14-A",
           "model": "AL-AR4K@0.5.1",
           "variant": "audio",
-          "checkpoint": "out/ar_saturation_20261023/continued1200/audio/model_latest.pt",
+          "checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
           "parent_run": "E13-A",
-          "progress_file": "out/ar_saturation_20261023/continued1200/audio/training.json",
-          "log_file": "out/ar_continue1200_20261027/E14-A.log",
-          "evaluation_root": "out/ar_saturation_20261023/continued1200/audio",
+          "progress_file": "out/ar_saturation_20261023/continued1400/audio/training.json",
+          "log_file": "out/ar_continue1400_20261028/E14-A.log",
+          "evaluation_root": "out/ar_saturation_20261023/continued1400/audio",
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/audio/model_e0040.pt",
             "out/ar_saturation_20261023/audio/model_e0100.pt",
@@ -941,26 +941,26 @@
             "out/ar_saturation_20261023/continued1000/audio/model_e1000.pt"
           ],
           "training": {
-            "target_epochs": 1200,
-            "start_epoch": 1000,
+            "target_epochs": 1400,
+            "start_epoch": 1200,
             "additional_epochs": 200,
-            "start_steps": 300000,
-            "target_steps": 360000,
+            "start_steps": 360000,
+            "target_steps": 420000,
             "learning_rate": 3e-05,
             "training_songs": 300,
             "held_out_songs": 0,
             "optimizer_rng_preserved": true,
             "evaluation_every": 50,
             "snapshot_every": 50,
-            "phase": "continued1200",
-            "completed_epoch": 1200,
-            "completed_steps": 360000
+            "phase": "continued1400"
           },
           "snapshot": {
-            "observed_at_utc": "2026-10-28T02:04:11.112048+00:00",
-            "status": "completed",
+            "observed_at_utc": "2026-10-28T02:23:54.781031+00:00",
+            "status": "queued",
             "epoch": 1200,
-            "steps": 360000
+            "steps": 360000,
+            "pid": null,
+            "note": "Launch snapshot; live status is in supervisor.json."
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -1414,7 +1414,7 @@
             "out/ar_saturation_20261023/continued500/audio",
             "out/ar_saturation_20261023/continued700/audio"
           ],
-          "status": "completed",
+          "status": "queued",
           "quality_status": "not_passed",
           "checkpoint_gaps": [
             {
@@ -1638,11 +1638,9 @@
             }
           },
           "gpu": 0,
-          "parent_checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_latest.pt",
-          "parent_checkpoint_sha256": "bb3894c98af9e5d1ece8c57e88ea9c14653dcf98c030cb5f798bf28254019cca",
-          "supervisor": "out/ar_continue1200_20261027/supervisor.json",
-          "completed_at_utc": "2026-10-27T22:42:21.025282+00:00",
-          "checkpoint_sha256": "4345eaeb350fff4250dec89bd0d81144ba451db30990ab56269777da4ff7d016",
+          "parent_checkpoint": "out/ar_saturation_20261023/continued1200/audio/model_latest.pt",
+          "parent_checkpoint_sha256": "4345eaeb350fff4250dec89bd0d81144ba451db30990ab56269777da4ff7d016",
+          "supervisor": "out/ar_continue1400_20261028/supervisor.json",
           "fixed15_completion": {
             "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
             "baseline": {
@@ -1682,17 +1680,47 @@
             },
             "best_epoch": 1200,
             "best_joint_f1": 0.8352721521738001
+          },
+          "phase1200": {
+            "status": "completed",
+            "checkpoint": "out/ar_saturation_20261023/continued1200/audio/model_latest.pt",
+            "checkpoint_sha256": "4345eaeb350fff4250dec89bd0d81144ba451db30990ab56269777da4ff7d016",
+            "progress_file": "out/ar_saturation_20261023/continued1200/audio/training.json",
+            "log_file": "out/ar_continue1200_20261027/E14-A.log",
+            "completed_at_utc": "2026-10-27T22:42:21.025282+00:00",
+            "training": {
+              "target_epochs": 1200,
+              "start_epoch": 1000,
+              "additional_epochs": 200,
+              "start_steps": 300000,
+              "target_steps": 360000,
+              "learning_rate": 3e-05,
+              "training_songs": 300,
+              "held_out_songs": 0,
+              "optimizer_rng_preserved": true,
+              "evaluation_every": 50,
+              "snapshot_every": 50,
+              "phase": "continued1200",
+              "completed_epoch": 1200,
+              "completed_steps": 360000
+            },
+            "snapshot": {
+              "observed_at_utc": "2026-10-28T02:04:11.112048+00:00",
+              "status": "completed",
+              "epoch": 1200,
+              "steps": 360000
+            }
           }
         },
         {
           "id": "E14-S",
           "model": "AL-AR4K@0.5.1",
           "variant": "soft",
-          "checkpoint": "out/ar_saturation_20261023/continued1200/soft/model_latest.pt",
+          "checkpoint": "out/ar_saturation_20261023/continued1400/soft/model_latest.pt",
           "parent_run": "E13-S",
-          "progress_file": "out/ar_saturation_20261023/continued1200/soft/training.json",
-          "log_file": "out/ar_continue1200_20261027/E14-S.log",
-          "evaluation_root": "out/ar_saturation_20261023/continued1200/soft",
+          "progress_file": "out/ar_saturation_20261023/continued1400/soft/training.json",
+          "log_file": "out/ar_continue1400_20261028/E14-S.log",
+          "evaluation_root": "out/ar_saturation_20261023/continued1400/soft",
           "immutable_checkpoints": [
             "out/ar_saturation_20261023/soft/model_e0040.pt",
             "out/ar_saturation_20261023/soft/model_e0100.pt",
@@ -1719,26 +1747,26 @@
             "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt"
           ],
           "training": {
-            "target_epochs": 1200,
-            "start_epoch": 1000,
+            "target_epochs": 1400,
+            "start_epoch": 1200,
             "additional_epochs": 200,
-            "start_steps": 300000,
-            "target_steps": 360000,
+            "start_steps": 360000,
+            "target_steps": 420000,
             "learning_rate": 3e-05,
             "training_songs": 300,
             "held_out_songs": 0,
             "optimizer_rng_preserved": true,
             "evaluation_every": 50,
             "snapshot_every": 50,
-            "phase": "continued1200",
-            "completed_epoch": 1200,
-            "completed_steps": 360000
+            "phase": "continued1400"
           },
           "snapshot": {
-            "observed_at_utc": "2026-10-28T02:04:11.112048+00:00",
-            "status": "completed",
+            "observed_at_utc": "2026-10-28T02:23:54.781031+00:00",
+            "status": "running",
             "epoch": 1200,
-            "steps": 360000
+            "steps": 360000,
+            "pid": 320442,
+            "note": "Launch snapshot; live status is in supervisor.json."
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -2192,7 +2220,7 @@
             "out/ar_saturation_20261023/continued500/soft",
             "out/ar_saturation_20261023/continued700/soft"
           ],
-          "status": "completed",
+          "status": "running",
           "quality_status": "not_passed",
           "checkpoint_gaps": [
             {
@@ -2416,11 +2444,9 @@
             }
           },
           "gpu": 0,
-          "parent_checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_latest.pt",
-          "parent_checkpoint_sha256": "ba3fe08f51263c3a109291433193d3b08d872c63f49698c3d5f762bef193922c",
-          "supervisor": "out/ar_continue1200_20261027/supervisor.json",
-          "completed_at_utc": "2026-10-27T16:40:24.439718+00:00",
-          "checkpoint_sha256": "082a4fc228fbb5adf759a2c1d65f660202cb2b6ae73e8b9ea002cf45826945c8",
+          "parent_checkpoint": "out/ar_saturation_20261023/continued1200/soft/model_latest.pt",
+          "parent_checkpoint_sha256": "082a4fc228fbb5adf759a2c1d65f660202cb2b6ae73e8b9ea002cf45826945c8",
+          "supervisor": "out/ar_continue1400_20261028/supervisor.json",
           "fixed15_completion": {
             "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
             "baseline": {
@@ -2459,6 +2485,36 @@
             },
             "best_epoch": 1200,
             "best_joint_f1": 0.9207938904854147
+          },
+          "phase1200": {
+            "status": "completed",
+            "checkpoint": "out/ar_saturation_20261023/continued1200/soft/model_latest.pt",
+            "checkpoint_sha256": "082a4fc228fbb5adf759a2c1d65f660202cb2b6ae73e8b9ea002cf45826945c8",
+            "progress_file": "out/ar_saturation_20261023/continued1200/soft/training.json",
+            "log_file": "out/ar_continue1200_20261027/E14-S.log",
+            "completed_at_utc": "2026-10-27T16:40:24.439718+00:00",
+            "training": {
+              "target_epochs": 1200,
+              "start_epoch": 1000,
+              "additional_epochs": 200,
+              "start_steps": 300000,
+              "target_steps": 360000,
+              "learning_rate": 3e-05,
+              "training_songs": 300,
+              "held_out_songs": 0,
+              "optimizer_rng_preserved": true,
+              "evaluation_every": 50,
+              "snapshot_every": 50,
+              "phase": "continued1200",
+              "completed_epoch": 1200,
+              "completed_steps": 360000
+            },
+            "snapshot": {
+              "observed_at_utc": "2026-10-28T02:04:11.112048+00:00",
+              "status": "completed",
+              "epoch": 1200,
+              "steps": 360000
+            }
           }
         }
       ],
@@ -2478,9 +2534,9 @@
         "soft_route": "candidate_for_retirement_after_current_comparison",
         "reason": "No stable benefit from additional soft onset has been demonstrated; user may abandon this route.",
         "original_training_target": 300,
-        "current_training_target": 1200
+        "current_training_target": 1400
       },
-      "updated_at_utc": "2026-10-28T02:04:11.112048+00:00",
+      "updated_at_utc": "2026-10-28T02:23:54.781031+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
@@ -2533,7 +2589,7 @@
         "verified_at_utc": "2026-10-24T00:11:55.918447+00:00"
       },
       "quality_status": "not_passed",
-      "completion_scope": "Authorized +200 epochs completed for both independent A/S runs; target1200 reached; no further training scheduled. Quality not passed.",
+      "completion_scope": "Authorized +200 epochs from1200 to1400 now running/queued; previous1200 phase completed; quality not passed.",
       "phase500_completed_at_utc": "2026-10-23T19:24:52.401644+00:00",
       "phase500_completion_verified_at_utc": "2026-10-24T00:11:55.918447+00:00",
       "phase500_completion_assessment": "out/ar_saturation_20261023/completion500_assessment.json",
@@ -2885,7 +2941,20 @@
         "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
         "snapshots_verified": 8
       },
-      "completed_at_utc": "2026-10-27T22:42:21.025282+00:00"
+      "phase1200_result": "A/S均完成1200轮。固定15首联合F1 A 0.3931→0.8353、S 0.4984→0.9208，最终自然结束13/15、14/15。4K A贪心Eltaw仍失败，稀疏探针未通过。全部来自训练歌曲；质量未通过，未继续加训或替换发布权重。",
+      "phase1200_completed_at_utc": "2026-10-27T22:42:21.025282+00:00",
+      "phase1200_completion_assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+      "extension_1400": {
+        "status": "running",
+        "start_epoch": 1200,
+        "target_epoch": 1400,
+        "user_authorized": true,
+        "plan": "docs/evaluations/assets/ar_continue1400_20261028/launch_plan.json",
+        "evidence": "docs/evaluations/ar_continue1400_20261028.md",
+        "supervisor": "out/ar_continue1400_20261028/supervisor.json",
+        "evaluation_every": 50,
+        "architecture_loss_lr_sampling_changed": false
+      }
     },
     {
       "id": "E15",
@@ -2971,16 +3040,16 @@
       "models": [
         "AL-FreeX@0.4.0"
       ],
-      "status": "completed",
+      "status": "running",
       "question": "沿用4K时间结构，完整训练静态free-x的64bin和连续坐标；先检查全部训练曲拟合",
-      "result": "A/S均完成1200轮。固定15首联合F1 A 0.2749→0.5034、S 0.2531→0.7013，最终自然结束9/15、14/15；A最佳为1150轮0.5316及12/15。稀疏探针未通过。全部来自训练歌曲；质量未通过，未继续加训或替换发布权重。",
+      "result": "用户批准从1200轮续至1400轮，各加训200轮；原配方、独立优化器/RNG和实际3e-5学习率保持不变，先S后A分批运行。新阶段尚无评测结论。",
       "evidence": "docs/evaluations/freex_anchored_20261025.md",
       "training_scope": {
         "songs": 300,
         "held_out_songs": 0,
         "generalization": "用户另提供新歌曲后再检查",
-        "four_k": "E14 independently continuing1000→1200 under the same authorization",
-        "target_epoch": 1200,
+        "four_k": "E14 independently continuing1200→1400 under the same authorization",
+        "target_epoch": 1400,
         "schedule": "10-epoch warmup/cosine 3e-4 to3e-5, then preserve AdamW/RNG and continue at3e-5",
         "keep_all_four_types": true,
         "hold_quota": null,
@@ -2993,12 +3062,12 @@
           "model": "AL-FreeX@0.4.0",
           "variant": "audio",
           "gpu": 1,
-          "checkpoint": "out/freex_anchored_20261025/continued1200/audio/model_latest.pt",
+          "checkpoint": "out/freex_anchored_20261025/continued1400/audio/model_latest.pt",
           "pilot_checkpoint": "out/freex_anchored_20261025/pilot/audio/model_latest.pt",
-          "progress_file": "out/freex_anchored_20261025/continued1200/audio/training.json",
-          "log_file": "out/ar_continue1200_20261027/E18-A.log",
-          "evaluation_root": "out/freex_anchored_20261025/continued1200/audio",
-          "supervisor": "out/ar_continue1200_20261027/supervisor.json",
+          "progress_file": "out/freex_anchored_20261025/continued1400/audio/training.json",
+          "log_file": "out/ar_continue1400_20261028/E18-A.log",
+          "evaluation_root": "out/freex_anchored_20261025/continued1400/audio",
+          "supervisor": "out/ar_continue1400_20261028/supervisor.json",
           "parent_run": null,
           "initialization": "from_scratch; independent parameters and AdamW; identical seed42",
           "additional_onset_input": "none_zeroed_channel",
@@ -3008,20 +3077,18 @@
           "acoustic_frontend": "frozen original free-x encoder from full cache, not 4K encoder",
           "schema": "audiolab-absolute-time-group-freex-ar-v1",
           "training": {
-            "target_epochs": 1200,
-            "start_epoch": 1000,
+            "target_epochs": 1400,
+            "start_epoch": 1200,
             "additional_epochs": 200,
-            "start_steps": 300000,
-            "target_steps": 360000,
+            "start_steps": 360000,
+            "target_steps": 420000,
             "learning_rate": 3e-05,
             "training_songs": 300,
             "held_out_songs": 0,
             "optimizer_rng_preserved": true,
             "evaluation_every": 50,
             "snapshot_every": 50,
-            "phase": "continued1200",
-            "completed_epoch": 1200,
-            "completed_steps": 360000
+            "phase": "continued1400"
           },
           "parameters": 6815860,
           "initial_state_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
@@ -3029,7 +3096,7 @@
           "pid_at_launch": 2046932,
           "pilot_progress_file": "out/freex_anchored_20261025/pilot/audio/training.json",
           "pilot_log_file": "out/freex_anchored_20261025/audio-pilot.log",
-          "status": "completed",
+          "status": "queued",
           "quality_status": "not_passed",
           "completion_resources": {
             "disk_free_gib": 9.063270568847656,
@@ -3081,16 +3148,16 @@
             },
             "snapshot": null
           },
-          "parent_checkpoint": "out/freex_anchored_20261025/continued1000/audio/model_latest.pt",
-          "parent_checkpoint_sha256": "4ab99fe2872b1cde5cca83466384c6019a6288eed35f48eb072c790d8751a756",
+          "parent_checkpoint": "out/freex_anchored_20261025/continued1200/audio/model_latest.pt",
+          "parent_checkpoint_sha256": "3966fb620cb7ea6107b485108b058e090bd247c0c5c29d2b3a2535e2c5f96e2f",
           "snapshot": {
-            "observed_at_utc": "2026-10-28T02:04:11.112048+00:00",
-            "status": "completed",
+            "observed_at_utc": "2026-10-28T02:23:54.781031+00:00",
+            "status": "queued",
             "epoch": 1200,
-            "steps": 360000
+            "steps": 360000,
+            "pid": null,
+            "note": "Launch snapshot; live status is in supervisor.json."
           },
-          "completed_at_utc": "2026-10-27T17:14:27.533671+00:00",
-          "checkpoint_sha256": "3966fb620cb7ea6107b485108b058e090bd247c0c5c29d2b3a2535e2c5f96e2f",
           "fixed15_completion": {
             "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
             "baseline": {
@@ -3134,6 +3201,36 @@
             },
             "best_epoch": 1150,
             "best_joint_f1": 0.5315753355733205
+          },
+          "phase1200": {
+            "status": "completed",
+            "checkpoint": "out/freex_anchored_20261025/continued1200/audio/model_latest.pt",
+            "checkpoint_sha256": "3966fb620cb7ea6107b485108b058e090bd247c0c5c29d2b3a2535e2c5f96e2f",
+            "progress_file": "out/freex_anchored_20261025/continued1200/audio/training.json",
+            "log_file": "out/ar_continue1200_20261027/E18-A.log",
+            "completed_at_utc": "2026-10-27T17:14:27.533671+00:00",
+            "training": {
+              "target_epochs": 1200,
+              "start_epoch": 1000,
+              "additional_epochs": 200,
+              "start_steps": 300000,
+              "target_steps": 360000,
+              "learning_rate": 3e-05,
+              "training_songs": 300,
+              "held_out_songs": 0,
+              "optimizer_rng_preserved": true,
+              "evaluation_every": 50,
+              "snapshot_every": 50,
+              "phase": "continued1200",
+              "completed_epoch": 1200,
+              "completed_steps": 360000
+            },
+            "snapshot": {
+              "observed_at_utc": "2026-10-28T02:04:11.112048+00:00",
+              "status": "completed",
+              "epoch": 1200,
+              "steps": 360000
+            }
           }
         },
         {
@@ -3141,12 +3238,12 @@
           "model": "AL-FreeX@0.4.0",
           "variant": "soft",
           "gpu": 1,
-          "checkpoint": "out/freex_anchored_20261025/continued1200/soft/model_latest.pt",
+          "checkpoint": "out/freex_anchored_20261025/continued1400/soft/model_latest.pt",
           "pilot_checkpoint": "out/freex_anchored_20261025/pilot/soft/model_latest.pt",
-          "progress_file": "out/freex_anchored_20261025/continued1200/soft/training.json",
-          "log_file": "out/ar_continue1200_20261027/E18-S.log",
-          "evaluation_root": "out/freex_anchored_20261025/continued1200/soft",
-          "supervisor": "out/ar_continue1200_20261027/supervisor.json",
+          "progress_file": "out/freex_anchored_20261025/continued1400/soft/training.json",
+          "log_file": "out/ar_continue1400_20261028/E18-S.log",
+          "evaluation_root": "out/freex_anchored_20261025/continued1400/soft",
+          "supervisor": "out/ar_continue1400_20261028/supervisor.json",
           "parent_run": null,
           "initialization": "from_scratch; independent parameters and AdamW; identical seed42",
           "additional_onset_input": "continuous_probability_and_subframe_offset",
@@ -3156,20 +3253,18 @@
           "acoustic_frontend": "frozen original free-x encoder from full cache, not 4K encoder",
           "schema": "audiolab-absolute-time-group-freex-ar-v1",
           "training": {
-            "target_epochs": 1200,
-            "start_epoch": 1000,
+            "target_epochs": 1400,
+            "start_epoch": 1200,
             "additional_epochs": 200,
-            "start_steps": 300000,
-            "target_steps": 360000,
+            "start_steps": 360000,
+            "target_steps": 420000,
             "learning_rate": 3e-05,
             "training_songs": 300,
             "held_out_songs": 0,
             "optimizer_rng_preserved": true,
             "evaluation_every": 50,
             "snapshot_every": 50,
-            "phase": "continued1200",
-            "completed_epoch": 1200,
-            "completed_steps": 360000
+            "phase": "continued1400"
           },
           "parameters": 6815860,
           "initial_state_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
@@ -3177,7 +3272,7 @@
           "pid_at_launch": 2046933,
           "pilot_progress_file": "out/freex_anchored_20261025/pilot/soft/training.json",
           "pilot_log_file": "out/freex_anchored_20261025/soft-pilot.log",
-          "status": "completed",
+          "status": "running",
           "quality_status": "not_passed",
           "completion_resources": {
             "disk_free_gib": 8.687267303466797,
@@ -3229,16 +3324,16 @@
             },
             "snapshot": null
           },
-          "parent_checkpoint": "out/freex_anchored_20261025/continued1000/soft/model_latest.pt",
-          "parent_checkpoint_sha256": "cd27d84233ea281d9ade83ccd29db1728f5af5b2afc3fb251fc807f00a95b225",
+          "parent_checkpoint": "out/freex_anchored_20261025/continued1200/soft/model_latest.pt",
+          "parent_checkpoint_sha256": "9d9955f37cc4524a72feec945e9c23637d10675fc362b6fa953b7a7ce7d3f320",
           "snapshot": {
-            "observed_at_utc": "2026-10-28T02:04:11.112048+00:00",
-            "status": "completed",
+            "observed_at_utc": "2026-10-28T02:23:54.781031+00:00",
+            "status": "running",
             "epoch": 1200,
-            "steps": 360000
+            "steps": 360000,
+            "pid": 320443,
+            "note": "Launch snapshot; live status is in supervisor.json."
           },
-          "completed_at_utc": "2026-10-27T23:56:25.590580+00:00",
-          "checkpoint_sha256": "9d9955f37cc4524a72feec945e9c23637d10675fc362b6fa953b7a7ce7d3f320",
           "fixed15_completion": {
             "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
             "baseline": {
@@ -3276,6 +3371,36 @@
             },
             "best_epoch": 1200,
             "best_joint_f1": 0.7012732865514586
+          },
+          "phase1200": {
+            "status": "completed",
+            "checkpoint": "out/freex_anchored_20261025/continued1200/soft/model_latest.pt",
+            "checkpoint_sha256": "9d9955f37cc4524a72feec945e9c23637d10675fc362b6fa953b7a7ce7d3f320",
+            "progress_file": "out/freex_anchored_20261025/continued1200/soft/training.json",
+            "log_file": "out/ar_continue1200_20261027/E18-S.log",
+            "completed_at_utc": "2026-10-27T23:56:25.590580+00:00",
+            "training": {
+              "target_epochs": 1200,
+              "start_epoch": 1000,
+              "additional_epochs": 200,
+              "start_steps": 300000,
+              "target_steps": 360000,
+              "learning_rate": 3e-05,
+              "training_songs": 300,
+              "held_out_songs": 0,
+              "optimizer_rng_preserved": true,
+              "evaluation_every": 50,
+              "snapshot_every": 50,
+              "phase": "continued1200",
+              "completed_epoch": 1200,
+              "completed_steps": 360000
+            },
+            "snapshot": {
+              "observed_at_utc": "2026-10-28T02:04:11.112048+00:00",
+              "status": "completed",
+              "epoch": 1200,
+              "steps": 360000
+            }
           }
         }
       ],
@@ -3470,8 +3595,8 @@
       },
       "phase1000_result": "A/S各完成1000轮、300000步；三首自然曲两种解码均4/6自行结束。Eltaw最佳完成排布均为e0980贪心，联合F1 A0.8449/S0.7516；最终e1000的S在Eltaw结束失败。跨曲排布与稀疏探针未通过，全部100份快照SHA已核验。后续加训由用户安排。",
       "phase1000_completed_at_utc": "2026-10-26T06:47:16.846357+00:00",
-      "updated_at_utc": "2026-10-28T02:04:11.112048+00:00",
-      "completion_scope": "Authorized +200 epochs completed for both independent A/S runs; target1200 reached; no further training scheduled. Quality not passed.",
+      "updated_at_utc": "2026-10-28T02:23:54.781031+00:00",
+      "completion_scope": "Authorized +200 epochs from1200 to1400 now running/queued; previous1200 phase completed; quality not passed.",
       "extension_1200": {
         "status": "completed",
         "target_epoch": 1200,
@@ -3486,7 +3611,29 @@
         "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
         "snapshots_verified": 8
       },
-      "completed_at_utc": "2026-10-27T23:56:25.590580+00:00"
+      "phase1200_result": "A/S均完成1200轮。固定15首联合F1 A 0.2749→0.5034、S 0.2531→0.7013，最终自然结束9/15、14/15；A最佳为1150轮0.5316及12/15。稀疏探针未通过。全部来自训练歌曲；质量未通过，未继续加训或替换发布权重。",
+      "phase1200_completed_at_utc": "2026-10-27T23:56:25.590580+00:00",
+      "phase1200_completion_assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+      "extension_1400": {
+        "status": "running",
+        "start_epoch": 1200,
+        "target_epoch": 1400,
+        "user_authorized": true,
+        "plan": "docs/evaluations/assets/ar_continue1400_20261028/launch_plan.json",
+        "evidence": "docs/evaluations/ar_continue1400_20261028.md",
+        "supervisor": "out/ar_continue1400_20261028/supervisor.json",
+        "evaluation_every": 50,
+        "architecture_loss_lr_sampling_changed": false
+      },
+      "storage_cleanup": {
+        "status": "completed",
+        "completed_at_utc": "2026-10-28T02:19:20.852847+00:00",
+        "record": "docs/evaluations/assets/ar_continue1400_20261028/cleanup.json",
+        "deleted_count": 62,
+        "deleted_bytes": 1699429446,
+        "retention_policy": "Remove only numbered FreeX snapshots below800 that are neither multiples of100 nor epoch40; preserve all4K, all>=800, all latest/best-fit/pilot parents, published weights, free-x A1150, sidecars/evaluations/logs.",
+        "evaluation_outputs_retained": true
+      }
     },
     {
       "id": "E19",

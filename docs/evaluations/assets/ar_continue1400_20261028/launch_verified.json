@@ -1,0 +1,47 @@
+{
+  "observed_at_utc": "2026-10-28T02:25:08.881209+00:00",
+  "status": "running",
+  "supervisor_pid": 320424,
+  "runs": [
+    {
+      "id": "E14-S",
+      "status": "running",
+      "pid": 320442,
+      "gpu": 0,
+      "epoch": 1201,
+      "steps": 360300,
+      "objective": 0.057446183886788606,
+      "learning_rates": [
+        2.9999999999999997e-05
+      ]
+    },
+    {
+      "id": "E18-S",
+      "status": "running",
+      "pid": 320443,
+      "gpu": 1,
+      "epoch": 1201,
+      "steps": 360300,
+      "objective": 0.1390456597641166,
+      "learning_rates": [
+        2.9999999999999997e-05
+      ]
+    },
+    {
+      "id": "E14-A",
+      "status": "queued",
+      "pid": null,
+      "gpu": 0
+    },
+    {
+      "id": "E18-A",
+      "status": "queued",
+      "pid": null,
+      "gpu": 1
+    }
+  ],
+  "tests_passed": 27,
+  "evaluation_hook_verified": true,
+  "source_fingerprints_verified": true,
+  "warning": "Launch snapshot only; live progress is out/ar_continue1400_20261028/supervisor.json"
+}

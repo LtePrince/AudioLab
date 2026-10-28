@@ -1,0 +1,457 @@
+{
+  "schema": "audiolab-checkpoint-prune-v1",
+  "experiment": "E18",
+  "status": "completed",
+  "created_at_utc": "2026-10-28T02:19:12.342556+00:00",
+  "user_request": "清理快照，继续训练",
+  "retention_policy": "Remove only numbered FreeX snapshots below800 that are neither multiples of100 nor epoch40; preserve all4K, all>=800, all latest/best-fit/pilot parents, published weights, free-x A1150, sidecars/evaluations/logs.",
+  "disk_free_before_gib": 8.678897857666016,
+  "removed": [
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0020.pt",
+      "variant": "audio",
+      "epoch": 20,
+      "bytes": 27320637,
+      "sha256": "13df134a870fbde377834ce0a3b7dbf67feab52b586ed399a7410597bbfe36d1"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0060.pt",
+      "variant": "audio",
+      "epoch": 60,
+      "bytes": 27331901,
+      "sha256": "64f93858cddf74ffde5082579b00cfd0ac71ad0a496b1ad3f1a315ccf67db76a"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0080.pt",
+      "variant": "audio",
+      "epoch": 80,
+      "bytes": 27336317,
+      "sha256": "239de00e9cf081e952e27d6e8ff519c7f62264be7bba0808a6a687e76e91fe5d"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0120.pt",
+      "variant": "audio",
+      "epoch": 120,
+      "bytes": 27345149,
+      "sha256": "7725fc718930871053bb1fa3b1a399baca16281ea5de08eb95729e60d11efd38"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0140.pt",
+      "variant": "audio",
+      "epoch": 140,
+      "bytes": 27349565,
+      "sha256": "4723592bcdde6fc63fe9343f7c467b21ce536280584888d53b4e981db5ed8cfe"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0160.pt",
+      "variant": "audio",
+      "epoch": 160,
+      "bytes": 27353981,
+      "sha256": "c0e53f68b0bec12aae732bd7692c21b3ed062797ea5f1967e3e2e241f63326fe"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0180.pt",
+      "variant": "audio",
+      "epoch": 180,
+      "bytes": 27358397,
+      "sha256": "a2c1f09302cc4539199ac282297d8691702b3ad744c4bef155f0b0441108e7db"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0220.pt",
+      "variant": "audio",
+      "epoch": 220,
+      "bytes": 27367229,
+      "sha256": "eb8fb00ff67124ae9875bc7ed50d85b1095e8369f54e2ae3dd7fb9aee5e161fb"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0240.pt",
+      "variant": "audio",
+      "epoch": 240,
+      "bytes": 27371709,
+      "sha256": "dafc4affcda4f4357f00be976689f143b8ba5f75f3aa3ac966c824aeffad94b6"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0260.pt",
+      "variant": "audio",
+      "epoch": 260,
+      "bytes": 27376189,
+      "sha256": "b5db7e2b936b651f3dee798e58df8c8f4ec7ccf5f5772dd9febe437711e936ee"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0280.pt",
+      "variant": "audio",
+      "epoch": 280,
+      "bytes": 27380669,
+      "sha256": "dc850fc0064140617b05e7289833915e6989a8f8a58ef258b8ec09f747f246cd"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0320.pt",
+      "variant": "audio",
+      "epoch": 320,
+      "bytes": 27389629,
+      "sha256": "7d9e01b10700fafb77ff17f1f4d1bcd4636d22f98bcb2a6f35cdbce1e23809c9"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0340.pt",
+      "variant": "audio",
+      "epoch": 340,
+      "bytes": 27394109,
+      "sha256": "baeb785561fcb1904826cb28a0b11347469e8bf92d432938f0dd17e1ca4aeb46"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0360.pt",
+      "variant": "audio",
+      "epoch": 360,
+      "bytes": 27398589,
+      "sha256": "03d6dcf343c9c126e11ba2b883f17454476fc11ebb41d81f0051c94b7416c27f"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0380.pt",
+      "variant": "audio",
+      "epoch": 380,
+      "bytes": 27403069,
+      "sha256": "b2ec10aa85eeb56a670ccea84841aff35df4d215f8a02308054a10e063890d0e"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0420.pt",
+      "variant": "audio",
+      "epoch": 420,
+      "bytes": 27412029,
+      "sha256": "1e9a3cf8f55378ab83492edc034ffa9c7eac80ec7042e8d998d2a5cf9f6fb3f3"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0440.pt",
+      "variant": "audio",
+      "epoch": 440,
+      "bytes": 27416509,
+      "sha256": "215ca69b2bf39dc60629c5ac0e42ff147c4cd4c84e688caf9a9a7728b91e995f"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0460.pt",
+      "variant": "audio",
+      "epoch": 460,
+      "bytes": 27420989,
+      "sha256": "4a6468e5b29a91260afd0e341c1e9c0580f6882f3e819839fd0383529a4e7eea"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0480.pt",
+      "variant": "audio",
+      "epoch": 480,
+      "bytes": 27425469,
+      "sha256": "3ff36eab5903e3433bb6f9ddcb88c553a75ed23526d6ca5bc6344fd0d1152c1e"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0520.pt",
+      "variant": "audio",
+      "epoch": 520,
+      "bytes": 27434429,
+      "sha256": "148b5075c1b36d710c71a9df76b0ebb83dc99da43743645bef0c99211b92c500"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0540.pt",
+      "variant": "audio",
+      "epoch": 540,
+      "bytes": 27438909,
+      "sha256": "ea4ce10711a141d355d2ab0e932eb900c163e1c30cd332466e4a61de763e7563"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0560.pt",
+      "variant": "audio",
+      "epoch": 560,
+      "bytes": 27443389,
+      "sha256": "385bc55beef51e45b117d8d2898410c9c5c5bbd953a2a629d93ce62cabdad190"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0580.pt",
+      "variant": "audio",
+      "epoch": 580,
+      "bytes": 27447869,
+      "sha256": "23d9577f24999753e66c40285cd0d4bccd01c7688f30efdbac9525483c8df689"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0620.pt",
+      "variant": "audio",
+      "epoch": 620,
+      "bytes": 27456829,
+      "sha256": "631f3ae440b7e26d97392da9ba6bcfe897a9e6cb06f52ea5bc61217c90547781"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0640.pt",
+      "variant": "audio",
+      "epoch": 640,
+      "bytes": 27461309,
+      "sha256": "d2806981e4c2f84421ec7fb6d3554bad34bc72df42dc872d4ee076926e3f86f7"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0660.pt",
+      "variant": "audio",
+      "epoch": 660,
+      "bytes": 27465789,
+      "sha256": "8d9643f8ddd78f4c4d3f19c40ac500b44e02d764bc71123b8de98cf5eb6e0244"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0680.pt",
+      "variant": "audio",
+      "epoch": 680,
+      "bytes": 27470269,
+      "sha256": "8b538edbc178f3901b351615df87fa58e49a44f37fa76eea1459ed0d49331441"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0720.pt",
+      "variant": "audio",
+      "epoch": 720,
+      "bytes": 27479229,
+      "sha256": "fb50f6fa1d5cf58d1284626d6f99c728a21ea1a7cdd3d41b5226450fb606ba18"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0740.pt",
+      "variant": "audio",
+      "epoch": 740,
+      "bytes": 27483709,
+      "sha256": "3b58b6b2d762d15993b0c455bd0f7d5f69ac2d78d671b130f6621b1a0f4016d0"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0760.pt",
+      "variant": "audio",
+      "epoch": 760,
+      "bytes": 27488189,
+      "sha256": "13817724f554ed67cad7a16b22dd02d3e30ec2908403ba2f361fd391b7382bdd"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_e0780.pt",
+      "variant": "audio",
+      "epoch": 780,
+      "bytes": 27492669,
+      "sha256": "7e82449581e73246251ce7f3a28a1b9fd591722595626edd7abe3f9819793e35"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0020.pt",
+      "variant": "soft",
+      "epoch": 20,
+      "bytes": 27320637,
+      "sha256": "acaef7962377c9957530470f90a9c2c5bd579a66be9e2382eeed14580d4ed330"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0060.pt",
+      "variant": "soft",
+      "epoch": 60,
+      "bytes": 27331901,
+      "sha256": "b1b1a9e3293feedcc5017687777a25bf45314b11381ce7010aa7147003cc6b45"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0080.pt",
+      "variant": "soft",
+      "epoch": 80,
+      "bytes": 27336317,
+      "sha256": "db71a680122abe8dc68f3e757a00919ccc0a6b4bce802948349c92e5e89a2138"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0120.pt",
+      "variant": "soft",
+      "epoch": 120,
+      "bytes": 27345149,
+      "sha256": "370126600513598e4dbee92e35b4b2a472c10786478ae2d817ea01fe8ae98e1e"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0140.pt",
+      "variant": "soft",
+      "epoch": 140,
+      "bytes": 27349565,
+      "sha256": "5c9b5153f7c3b3df176ca02bc17f2689b2644adb7e9628f072e2ca8d407ea6a4"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0160.pt",
+      "variant": "soft",
+      "epoch": 160,
+      "bytes": 27353981,
+      "sha256": "d550523c8c53edffe52f19fbde85f3b62da7250229a663d09cd1b424a2e2ffdc"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0180.pt",
+      "variant": "soft",
+      "epoch": 180,
+      "bytes": 27358397,
+      "sha256": "edd4208a4b72865133123d3ac2e83e935f56e287cf558f8244d893787a785d26"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0220.pt",
+      "variant": "soft",
+      "epoch": 220,
+      "bytes": 27367229,
+      "sha256": "71a22c8364fff5d311a9a4462f622be8a24b7ef457904acde88b5a42533ff50c"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0240.pt",
+      "variant": "soft",
+      "epoch": 240,
+      "bytes": 27371709,
+      "sha256": "aae31c8bb9e49f754e264f67b3d052d635eb870ff8bbac8417e24ab194b364bc"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0260.pt",
+      "variant": "soft",
+      "epoch": 260,
+      "bytes": 27376189,
+      "sha256": "78d10a86ad01b8b26ba92207037a0ad917772ef0f4a5d344d1b46e23df687561"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0280.pt",
+      "variant": "soft",
+      "epoch": 280,
+      "bytes": 27380669,
+      "sha256": "6cdaa399198896bff4783cc64d79a1c6cdf235a614135601c1886dd9ca190e2a"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0320.pt",
+      "variant": "soft",
+      "epoch": 320,
+      "bytes": 27389629,
+      "sha256": "5ad5741722cb1f2a43025fdafbb8e757cda3b1320e3063e19d1ad9decb9dcf68"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0340.pt",
+      "variant": "soft",
+      "epoch": 340,
+      "bytes": 27394109,
+      "sha256": "9f9421658dc39e00644ed1b31a44f6467a62510a0d0225af6e50b67c19221018"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0360.pt",
+      "variant": "soft",
+      "epoch": 360,
+      "bytes": 27398589,
+      "sha256": "0e8fe6f887fa08838552aaa2fde89837e55d95d809b292f9dc7c65e9324152cd"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0380.pt",
+      "variant": "soft",
+      "epoch": 380,
+      "bytes": 27403069,
+      "sha256": "5f039de9b16dd713e92e030554d91410619a4d0b887f56f2836b7c30009163c7"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0420.pt",
+      "variant": "soft",
+      "epoch": 420,
+      "bytes": 27412029,
+      "sha256": "ba56c84517c7d492d6adb647bba3bb1fb13ced3b83012541c90a269a959adeba"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0440.pt",
+      "variant": "soft",
+      "epoch": 440,
+      "bytes": 27416509,
+      "sha256": "5af549e0005ac19bd29ae249c618743315c005e5972bfaf82663d72f05acbc1f"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0460.pt",
+      "variant": "soft",
+      "epoch": 460,
+      "bytes": 27420989,
+      "sha256": "d8e7088b5d28429949d5e3e7718d562c1c2212a286615e3a22d2e45a8d26f3d2"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0480.pt",
+      "variant": "soft",
+      "epoch": 480,
+      "bytes": 27425469,
+      "sha256": "495054fd78fdd590489c7147db295aee33e19b1c10733dbe3fe3583e3f2c03f5"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0520.pt",
+      "variant": "soft",
+      "epoch": 520,
+      "bytes": 27434429,
+      "sha256": "6e4e32c5f0c6fcbf393e1475ad14a76b6d7818f3082e09e86a14337289ac2179"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0540.pt",
+      "variant": "soft",
+      "epoch": 540,
+      "bytes": 27438909,
+      "sha256": "3e64a8a1dc1cf54fe130348751f9890f8e58ed7e93989a3b25711e56afd50905"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0560.pt",
+      "variant": "soft",
+      "epoch": 560,
+      "bytes": 27443389,
+      "sha256": "8ec13b72133a4604d2abbf5b47ae0cc47ee8932d9001d9c68b53cc6fccf57595"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0580.pt",
+      "variant": "soft",
+      "epoch": 580,
+      "bytes": 27447869,
+      "sha256": "87dffb9c80a0e6660ccdc16d1af68800b28658d89ea2d31afaecc8d5939f4d9d"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0620.pt",
+      "variant": "soft",
+      "epoch": 620,
+      "bytes": 27456829,
+      "sha256": "87cc48ee805076f8c69aee36a062c64c33127c3e2f41ce67470e07dc56a0f8b3"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0640.pt",
+      "variant": "soft",
+      "epoch": 640,
+      "bytes": 27461309,
+      "sha256": "a03ad7aca857ca1aa242cbc5ff60f7dd2967f08428603bce59d9bbe5d785658f"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0660.pt",
+      "variant": "soft",
+      "epoch": 660,
+      "bytes": 27465789,
+      "sha256": "a02042bd111ce8e0c83c144424d29cbba7f4eaa731119dfac3f89185235ba2cc"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0680.pt",
+      "variant": "soft",
+      "epoch": 680,
+      "bytes": 27470269,
+      "sha256": "50cab9b921a2677d3c5ae42db1478a2119d06e9ce5b97c1c48b701035422ad3e"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0720.pt",
+      "variant": "soft",
+      "epoch": 720,
+      "bytes": 27479229,
+      "sha256": "8138c732a8a5c90d227fdb39a1849e1ac05d9b7f4c984553b0db01fa5f1e9790"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0740.pt",
+      "variant": "soft",
+      "epoch": 740,
+      "bytes": 27483709,
+      "sha256": "c2e22c1d59800ed3ef090c73bd9c4992156e00f3406e847d3ea409b0849e7160"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0760.pt",
+      "variant": "soft",
+      "epoch": 760,
+      "bytes": 27488189,
+      "sha256": "94ef0daa2b2531b670f74b74add45d7540fd7ce83beb9b3bc1bdfd5f3e1cdb18"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_e0780.pt",
+      "variant": "soft",
+      "epoch": 780,
+      "bytes": 27492669,
+      "sha256": "d141cf18e7e6faa4f0f0fd6ef0c31effa10ed2d9e206db56f51ba1dc5a07a4ac"
+    }
+  ],
+  "deleted_count": 62,
+  "deleted_bytes": 1699429446,
+  "protected_checkpoint_sha256": {
+    "out/ar_saturation_20261023/continued1200/soft/model_latest.pt": "082a4fc228fbb5adf759a2c1d65f660202cb2b6ae73e8b9ea002cf45826945c8",
+    "out/freex_anchored_20261025/continued1200/audio/model_latest.pt": "3966fb620cb7ea6107b485108b058e090bd247c0c5c29d2b3a2535e2c5f96e2f",
+    "out/ar_saturation_20261023/continued1200/audio/model_latest.pt": "4345eaeb350fff4250dec89bd0d81144ba451db30990ab56269777da4ff7d016",
+    "out/freex_anchored_20261025/continued1200/soft/model_latest.pt": "9d9955f37cc4524a72feec945e9c23637d10675fc362b6fa953b7a7ce7d3f320",
+    "out/freex_anchored_20261025/continued1200/audio/model_e1150.pt": "024fdb85ddbd59bb8562de6ac6824a4bbc2e4fac537683c0c2b013e6b8962532"
+  },
+  "evaluation_outputs_retained": true,
+  "completed_at_utc": "2026-10-28T02:19:20.852847+00:00",
+  "disk_free_after_gib": 10.26171875
+}
