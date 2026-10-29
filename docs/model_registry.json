@@ -901,9 +901,9 @@
       "models": [
         "AL-AR4K@0.5.1"
       ],
-      "status": "running",
+      "status": "completed",
       "question": "保持结构/损失/采样，500轮后按用户授权续到700轮，继续观察拟合与自由生成",
-      "result": "用户批准从1200轮续至1400轮，各加训200轮；原配方、独立优化器/RNG和实际3e-5学习率保持不变，先S后A分批运行。新阶段尚无评测结论。",
+      "result": "A/S均完成1400轮、420000步。固定15首训练曲主联合F1 A 0.8353→0.9921、S 0.9208→0.9893，两组均自然结束15/15；本阶段最佳均为1400轮。网格均约0.7045，A已在此训练曲评测追上S。原探针仍未通过；未追加训练或更换发布权重。",
       "evidence": "docs/evaluations/ar_saturation_20261023.md",
       "runs": [
         {
@@ -938,7 +938,11 @@
             "out/ar_saturation_20261023/continued1000/audio/model_e0940.pt",
             "out/ar_saturation_20261023/continued1000/audio/model_e0960.pt",
             "out/ar_saturation_20261023/continued1000/audio/model_e0980.pt",
-            "out/ar_saturation_20261023/continued1000/audio/model_e1000.pt"
+            "out/ar_saturation_20261023/continued1000/audio/model_e1000.pt",
+            "out/ar_saturation_20261023/continued1400/audio/model_e1250.pt",
+            "out/ar_saturation_20261023/continued1400/audio/model_e1300.pt",
+            "out/ar_saturation_20261023/continued1400/audio/model_e1350.pt",
+            "out/ar_saturation_20261023/continued1400/audio/model_e1400.pt"
           ],
           "training": {
             "target_epochs": 1400,
@@ -952,15 +956,20 @@
             "optimizer_rng_preserved": true,
             "evaluation_every": 50,
             "snapshot_every": 50,
-            "phase": "continued1400"
+            "phase": "continued1400",
+            "completed_epoch": 1400,
+            "completed_steps": 420000,
+            "finished_at_utc": "2026-10-28T14:36:29.908566+00:00"
           },
           "snapshot": {
-            "observed_at_utc": "2026-10-28T02:23:54.781031+00:00",
-            "status": "queued",
-            "epoch": 1200,
-            "steps": 360000,
+            "observed_at_utc": "2026-10-29T02:24:55.257555+00:00",
+            "status": "completed",
+            "epoch": 1400,
+            "steps": 420000,
+            "finished_at_utc": "2026-10-28T14:36:29.908566+00:00",
+            "checkpoint_sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
             "pid": null,
-            "note": "Launch snapshot; live status is in supervisor.json."
+            "note": "Final training and checkpoint hashes verified; quality not passed."
           },
           "additional_onset_input": "none_zeroed_channel",
           "hard_onset_threshold": null,
@@ -1414,7 +1423,7 @@
             "out/ar_saturation_20261023/continued500/audio",
             "out/ar_saturation_20261023/continued700/audio"
           ],
-          "status": "queued",
+          "status": "completed",
           "quality_status": "not_passed",
           "checkpoint_gaps": [
             {
@@ -1503,65 +1512,16 @@
             }
           },
           "completion_resources": {
-            "disk_free_gib": 8.718189239501953,
-            "ram_available_gib": 34.821128845214844,
-            "rss_gib": 2.1180801391601562,
-            "gpu_peak_allocated_gib": 0.3066267967224121,
-            "gpu_peak_reserved_gib": 0.583984375
+            "disk_free_gib": 9.381362915039062,
+            "ram_available_gib": 34.90232849121094,
+            "rss_gib": 2.1078453063964844,
+            "gpu_peak_allocated_gib": 0.3066849708557129,
+            "gpu_peak_reserved_gib": 0.591796875
           },
           "final_training_trend": {
-            "blocks": [
-              {
-                "from_epoch": 681,
-                "to_epoch": 700,
-                "frame_ce": 0.013076646375529839,
-                "layout_ce": 0.6972460926456033,
-                "objective": 0.1969836598887855,
-                "frame_accuracy": 0.9960299777942265
-              },
-              {
-                "from_epoch": 921,
-                "to_epoch": 940,
-                "frame_ce": 0.010316796301338908,
-                "layout_ce": 0.35484124833888614,
-                "objective": 0.10719244813635366,
-                "frame_accuracy": 0.9968523316062177
-              },
-              {
-                "from_epoch": 941,
-                "to_epoch": 960,
-                "frame_ce": 0.009982435265375783,
-                "layout_ce": 0.33493295025070124,
-                "objective": 0.10177267402712807,
-                "frame_accuracy": 0.996949481865285
-              },
-              {
-                "from_epoch": 961,
-                "to_epoch": 980,
-                "frame_ce": 0.009497975587400788,
-                "layout_ce": 0.31543384343545455,
-                "objective": 0.09631753072798924,
-                "frame_accuracy": 0.997080680977054
-              },
-              {
-                "from_epoch": 981,
-                "to_epoch": 1000,
-                "frame_ce": 0.0093585040354047,
-                "layout_ce": 0.29720635724334915,
-                "objective": 0.09153649251280005,
-                "frame_accuracy": 0.9971628423390081
-              }
-            ],
-            "last_block_percent_change": {
-              "frame_ce": -1.4684345175734026,
-              "layout_ce": -5.7785448744453465,
-              "objective": -4.963829719318014
-            },
-            "phase700_to1000_block_percent_change": {
-              "frame_ce": -28.433454827400173,
-              "layout_ce": -57.374252738277676,
-              "objective": -53.5309210091434
-            }
+            "objective_change_percent_last20_vs_previous20": -2.533178261817571,
+            "epoch": 1400,
+            "evidence": "docs/evaluations/assets/ar_continue1400_20261028/completion.json"
           },
           "phase1000": {
             "status": "completed",
@@ -1642,27 +1602,8 @@
           "parent_checkpoint_sha256": "4345eaeb350fff4250dec89bd0d81144ba451db30990ab56269777da4ff7d016",
           "supervisor": "out/ar_continue1400_20261028/supervisor.json",
           "fixed15_completion": {
-            "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+            "assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
             "baseline": {
-              "path": "out/ar_saturation_20261023/continued1200/audio/evaluation-e1000-fixed15/summary.json",
-              "sha256": "177ad3956120205e8d967f1b3761e3c05c9625dcfeb5dfb4faebdb9ea6235065",
-              "epoch": 1000,
-              "completed": 10,
-              "total": 15,
-              "mean_joint_f1": 0.3930615187563385,
-              "mean_raw_joint_f1": 0.5176214827814946,
-              "mean_raw_onset_f1": 0.8457667628987176,
-              "mean_raw_grid_bonus": 0.594778696140393,
-              "mean_tail_10s_recall": 0.8058768371751326,
-              "failed_songs": [
-                "DESTRUCTION 321_IN",
-                "インフェルノシティ_IN",
-                "混乱-Confusion_IN",
-                "风屿_IN",
-                "Rrharil_IN"
-              ]
-            },
-            "final": {
               "path": "out/ar_saturation_20261023/continued1200/audio/evaluation-e1200/fixed15/summary.json",
               "sha256": "7d9461155dd754a349f94d00dcb06bee7235c42e9cc5b0e2bedffbe9ddacd2f3",
               "epoch": 1200,
@@ -1678,8 +1619,21 @@
                 "Incyde_IN"
               ]
             },
-            "best_epoch": 1200,
-            "best_joint_f1": 0.8352721521738001
+            "final": {
+              "path": "out/ar_saturation_20261023/continued1400/audio/evaluation-e1400/fixed15/summary.json",
+              "sha256": "1e1673ee30114a1c0495b6a7625d0c2df505d486871bc16f56d32f4fc000b906",
+              "epoch": 1400,
+              "completed": 15,
+              "total": 15,
+              "mean_joint_f1": 0.9920900506009109,
+              "mean_raw_joint_f1": 0.9920900506009109,
+              "mean_raw_onset_f1": 0.9997074429629226,
+              "mean_raw_grid_bonus": 0.704506719582551,
+              "mean_tail_10s_recall": 0.9975232551503738,
+              "failed_songs": []
+            },
+            "best_epoch": 1400,
+            "best_joint_f1": 0.9920900506009109
           },
           "phase1200": {
             "status": "completed",
@@ -1709,8 +1663,88 @@
               "status": "completed",
               "epoch": 1200,
               "steps": 360000
+            },
+            "fixed15_completion": {
+              "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+              "baseline": {
+                "path": "out/ar_saturation_20261023/continued1200/audio/evaluation-e1000-fixed15/summary.json",
+                "sha256": "177ad3956120205e8d967f1b3761e3c05c9625dcfeb5dfb4faebdb9ea6235065",
+                "epoch": 1000,
+                "completed": 10,
+                "total": 15,
+                "mean_joint_f1": 0.3930615187563385,
+                "mean_raw_joint_f1": 0.5176214827814946,
+                "mean_raw_onset_f1": 0.8457667628987176,
+                "mean_raw_grid_bonus": 0.594778696140393,
+                "mean_tail_10s_recall": 0.8058768371751326,
+                "failed_songs": [
+                  "DESTRUCTION 321_IN",
+                  "インフェルノシティ_IN",
+                  "混乱-Confusion_IN",
+                  "风屿_IN",
+                  "Rrharil_IN"
+                ]
+              },
+              "final": {
+                "path": "out/ar_saturation_20261023/continued1200/audio/evaluation-e1200/fixed15/summary.json",
+                "sha256": "7d9461155dd754a349f94d00dcb06bee7235c42e9cc5b0e2bedffbe9ddacd2f3",
+                "epoch": 1200,
+                "completed": 13,
+                "total": 15,
+                "mean_joint_f1": 0.8352721521738001,
+                "mean_raw_joint_f1": 0.917518222287283,
+                "mean_raw_onset_f1": 0.9804718168119827,
+                "mean_raw_grid_bonus": 0.6773987667931678,
+                "mean_tail_10s_recall": 0.9677858157420689,
+                "failed_songs": [
+                  "Eltaw_IN",
+                  "Incyde_IN"
+                ]
+              },
+              "best_epoch": 1200,
+              "best_joint_f1": 0.8352721521738001
             }
-          }
+          },
+          "checkpoint_sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+          "phase1400_completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
+          "phase1400_snapshots": [
+            {
+              "path": "out/ar_saturation_20261023/continued1400/audio/model_e1250.pt",
+              "epoch": 1250,
+              "steps": 375000,
+              "sha256": "fa106c09ad287645a0a28f15c342fb23307a7553a307005b6786eeae3fcf3a64",
+              "source_checkpoint_sha256": "790e48cdef9ab7d03277af395ff2d8364a70ac968c42c36551a3de30a5ea852b",
+              "schema": "audiolab-absolute-time-group-ar-v1",
+              "variant": "audio"
+            },
+            {
+              "path": "out/ar_saturation_20261023/continued1400/audio/model_e1300.pt",
+              "epoch": 1300,
+              "steps": 390000,
+              "sha256": "904a58234226e055ac4acb8fb98ad9bf917c6e111c0ff923833e658532552cef",
+              "source_checkpoint_sha256": "6075a730d936ca0a70eeef46376020a2134cd6a0997fc37277beed67ffd1cda9",
+              "schema": "audiolab-absolute-time-group-ar-v1",
+              "variant": "audio"
+            },
+            {
+              "path": "out/ar_saturation_20261023/continued1400/audio/model_e1350.pt",
+              "epoch": 1350,
+              "steps": 405000,
+              "sha256": "85eb91e489e4c401153091488e3b1fb6845451d43e07ed996af2dec89c5389c8",
+              "source_checkpoint_sha256": "33256fbf2935658c510d8694f001693ce06e808960c8820c66497d497cf360f9",
+              "schema": "audiolab-absolute-time-group-ar-v1",
+              "variant": "audio"
+            },
+            {
+              "path": "out/ar_saturation_20261023/continued1400/audio/model_e1400.pt",
+              "epoch": 1400,
+              "steps": 420000,
+              "sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+              "source_checkpoint_sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+              "schema": "audiolab-absolute-time-group-ar-v1",
+              "variant": "audio"
+            }
+          ]
         },
         {
           "id": "E14-S",
@@ -1744,7 +1778,11 @@
             "out/ar_saturation_20261023/continued1000/soft/model_e0940.pt",
             "out/ar_saturation_20261023/continued1000/soft/model_e0960.pt",
             "out/ar_saturation_20261023/continued1000/soft/model_e0980.pt",
-            "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt"
+            "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+            "out/ar_saturation_20261023/continued1400/soft/model_e1250.pt",
+            "out/ar_saturation_20261023/continued1400/soft/model_e1300.pt",
+            "out/ar_saturation_20261023/continued1400/soft/model_e1350.pt",
+            "out/ar_saturation_20261023/continued1400/soft/model_e1400.pt"
           ],
           "training": {
             "target_epochs": 1400,
@@ -1758,15 +1796,20 @@
             "optimizer_rng_preserved": true,
             "evaluation_every": 50,
             "snapshot_every": 50,
-            "phase": "continued1400"
+            "phase": "continued1400",
+            "completed_epoch": 1400,
+            "completed_steps": 420000,
+            "finished_at_utc": "2026-10-28T08:29:01.650624+00:00"
           },
           "snapshot": {
-            "observed_at_utc": "2026-10-28T02:23:54.781031+00:00",
-            "status": "running",
-            "epoch": 1200,
-            "steps": 360000,
-            "pid": 320442,
-            "note": "Launch snapshot; live status is in supervisor.json."
+            "observed_at_utc": "2026-10-29T02:24:55.257555+00:00",
+            "status": "completed",
+            "epoch": 1400,
+            "steps": 420000,
+            "finished_at_utc": "2026-10-28T08:29:01.650624+00:00",
+            "checkpoint_sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+            "pid": null,
+            "note": "Final training and checkpoint hashes verified; quality not passed."
           },
           "additional_onset_input": "dense_probability_and_offset",
           "hard_onset_threshold": null,
@@ -2220,7 +2263,7 @@
             "out/ar_saturation_20261023/continued500/soft",
             "out/ar_saturation_20261023/continued700/soft"
           ],
-          "status": "running",
+          "status": "completed",
           "quality_status": "not_passed",
           "checkpoint_gaps": [
             {
@@ -2309,65 +2352,16 @@
             }
           },
           "completion_resources": {
-            "disk_free_gib": 9.196128845214844,
-            "ram_available_gib": 34.875892639160156,
-            "rss_gib": 2.1194496154785156,
-            "gpu_peak_allocated_gib": 0.3066267967224121,
-            "gpu_peak_reserved_gib": 0.583984375
+            "disk_free_gib": 9.83237075805664,
+            "ram_available_gib": 34.90744400024414,
+            "rss_gib": 2.1196441650390625,
+            "gpu_peak_allocated_gib": 0.3066849708557129,
+            "gpu_peak_reserved_gib": 0.591796875
           },
           "final_training_trend": {
-            "blocks": [
-              {
-                "from_epoch": 681,
-                "to_epoch": 700,
-                "frame_ce": 0.01317961361248873,
-                "layout_ce": 0.6979103700557794,
-                "objective": 0.19726208942352702,
-                "frame_accuracy": 0.9959650259067357
-              },
-              {
-                "from_epoch": 921,
-                "to_epoch": 940,
-                "frame_ce": 0.010259440786286184,
-                "layout_ce": 0.35615666621238384,
-                "objective": 0.1074574473254156,
-                "frame_accuracy": 0.9968695410806809
-              },
-              {
-                "from_epoch": 941,
-                "to_epoch": 960,
-                "frame_ce": 0.009891902379200623,
-                "layout_ce": 0.3361834528182157,
-                "objective": 0.10198142225281656,
-                "frame_accuracy": 0.9969685418208735
-              },
-              {
-                "from_epoch": 961,
-                "to_epoch": 980,
-                "frame_ce": 0.009823619151337906,
-                "layout_ce": 0.31687712495890247,
-                "objective": 0.09699194356389088,
-                "frame_accuracy": 0.997010547742413
-              },
-              {
-                "from_epoch": 981,
-                "to_epoch": 1000,
-                "frame_ce": 0.009524628185307488,
-                "layout_ce": 0.29892455585329303,
-                "objective": 0.09211603149684908,
-                "frame_accuracy": 0.9971030717986676
-              }
-            ],
-            "last_block_percent_change": {
-              "frame_ce": -3.0435928085597364,
-              "layout_ce": -5.665467050654982,
-              "objective": -5.027131004782803
-            },
-            "phase700_to1000_block_percent_change": {
-              "frame_ce": -27.73211366164675,
-              "layout_ce": -57.16863243780115,
-              "objective": -53.30271935877477
-            }
+            "objective_change_percent_last20_vs_previous20": -3.339640116241276,
+            "epoch": 1400,
+            "evidence": "docs/evaluations/assets/ar_continue1400_20261028/completion.json"
           },
           "phase1000": {
             "status": "completed",
@@ -2448,27 +2442,8 @@
           "parent_checkpoint_sha256": "082a4fc228fbb5adf759a2c1d65f660202cb2b6ae73e8b9ea002cf45826945c8",
           "supervisor": "out/ar_continue1400_20261028/supervisor.json",
           "fixed15_completion": {
-            "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+            "assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
             "baseline": {
-              "path": "out/ar_saturation_20261023/continued1200/soft/evaluation-e1000-fixed15/summary.json",
-              "sha256": "1aa818af1400be20b9c1254ebd736dcd7d4d7436ad46d4bc0a6f04c7cc165b97",
-              "epoch": 1000,
-              "completed": 10,
-              "total": 15,
-              "mean_joint_f1": 0.49839140857199477,
-              "mean_raw_joint_f1": 0.6058917012030637,
-              "mean_raw_onset_f1": 0.8615577295883866,
-              "mean_raw_grid_bonus": 0.6142290919417736,
-              "mean_tail_10s_recall": 0.8269101317850422,
-              "failed_songs": [
-                "DESTRUCTION 321_IN",
-                "Incyde_IN",
-                "Cipher  20_IN",
-                "A journey to the moonlight_IN",
-                "GOODBOUNCE_IN"
-              ]
-            },
-            "final": {
               "path": "out/ar_saturation_20261023/continued1200/soft/evaluation-e1200/fixed15/summary.json",
               "sha256": "d8b61929c061612a52cd0fb4b95ead671cf673799e634b4552b686e0dcdd8a86",
               "epoch": 1200,
@@ -2483,8 +2458,21 @@
                 "Incyde_IN"
               ]
             },
-            "best_epoch": 1200,
-            "best_joint_f1": 0.9207938904854147
+            "final": {
+              "path": "out/ar_saturation_20261023/continued1400/soft/evaluation-e1400/fixed15/summary.json",
+              "sha256": "e223519ed635754dad316da38b4e71e29e508694d3dad638b6e059cf39ed0b46",
+              "epoch": 1400,
+              "completed": 15,
+              "total": 15,
+              "mean_joint_f1": 0.9893132540871934,
+              "mean_raw_joint_f1": 0.9893132540871934,
+              "mean_raw_onset_f1": 0.9986898744540017,
+              "mean_raw_grid_bonus": 0.7044993559501668,
+              "mean_tail_10s_recall": 0.9955030531301717,
+              "failed_songs": []
+            },
+            "best_epoch": 1400,
+            "best_joint_f1": 0.9893132540871934
           },
           "phase1200": {
             "status": "completed",
@@ -2514,8 +2502,87 @@
               "status": "completed",
               "epoch": 1200,
               "steps": 360000
+            },
+            "fixed15_completion": {
+              "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+              "baseline": {
+                "path": "out/ar_saturation_20261023/continued1200/soft/evaluation-e1000-fixed15/summary.json",
+                "sha256": "1aa818af1400be20b9c1254ebd736dcd7d4d7436ad46d4bc0a6f04c7cc165b97",
+                "epoch": 1000,
+                "completed": 10,
+                "total": 15,
+                "mean_joint_f1": 0.49839140857199477,
+                "mean_raw_joint_f1": 0.6058917012030637,
+                "mean_raw_onset_f1": 0.8615577295883866,
+                "mean_raw_grid_bonus": 0.6142290919417736,
+                "mean_tail_10s_recall": 0.8269101317850422,
+                "failed_songs": [
+                  "DESTRUCTION 321_IN",
+                  "Incyde_IN",
+                  "Cipher  20_IN",
+                  "A journey to the moonlight_IN",
+                  "GOODBOUNCE_IN"
+                ]
+              },
+              "final": {
+                "path": "out/ar_saturation_20261023/continued1200/soft/evaluation-e1200/fixed15/summary.json",
+                "sha256": "d8b61929c061612a52cd0fb4b95ead671cf673799e634b4552b686e0dcdd8a86",
+                "epoch": 1200,
+                "completed": 14,
+                "total": 15,
+                "mean_joint_f1": 0.9207938904854147,
+                "mean_raw_joint_f1": 0.9314502859275589,
+                "mean_raw_onset_f1": 0.9583711205868379,
+                "mean_raw_grid_bonus": 0.6864086775122694,
+                "mean_tail_10s_recall": 0.9490202066473253,
+                "failed_songs": [
+                  "Incyde_IN"
+                ]
+              },
+              "best_epoch": 1200,
+              "best_joint_f1": 0.9207938904854147
             }
-          }
+          },
+          "checkpoint_sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+          "phase1400_completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
+          "phase1400_snapshots": [
+            {
+              "path": "out/ar_saturation_20261023/continued1400/soft/model_e1250.pt",
+              "epoch": 1250,
+              "steps": 375000,
+              "sha256": "566fec1a7aeed338694028615f42b6bdb62a4e5cdb070ea48621002e22bab509",
+              "source_checkpoint_sha256": "fdfee81ca0d9747db501513c76f01f46c319820af250bdb5d8b378130b6cf839",
+              "schema": "audiolab-absolute-time-group-ar-v1",
+              "variant": "soft"
+            },
+            {
+              "path": "out/ar_saturation_20261023/continued1400/soft/model_e1300.pt",
+              "epoch": 1300,
+              "steps": 390000,
+              "sha256": "70e2f4ae9baab0025000c6bec16ce58afb183028f19dc3c110baec488a9b2615",
+              "source_checkpoint_sha256": "127b0ad9baa12ecc2044876dcf72898819cc8083aa9d7964a15e32a0ba544ac0",
+              "schema": "audiolab-absolute-time-group-ar-v1",
+              "variant": "soft"
+            },
+            {
+              "path": "out/ar_saturation_20261023/continued1400/soft/model_e1350.pt",
+              "epoch": 1350,
+              "steps": 405000,
+              "sha256": "10ce2728b068499c3cabac8d5ec968803bb83b9341b61531c6cde6a5b1f581a9",
+              "source_checkpoint_sha256": "db453f39f4ceec338c9e2c8d1cee20668f7afb53e93609847010e01179121296",
+              "schema": "audiolab-absolute-time-group-ar-v1",
+              "variant": "soft"
+            },
+            {
+              "path": "out/ar_saturation_20261023/continued1400/soft/model_e1400.pt",
+              "epoch": 1400,
+              "steps": 420000,
+              "sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+              "source_checkpoint_sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+              "schema": "audiolab-absolute-time-group-ar-v1",
+              "variant": "soft"
+            }
+          ]
         }
       ],
       "sampling_changes": "deferred_by_user",
@@ -2536,7 +2603,7 @@
         "original_training_target": 300,
         "current_training_target": 1400
       },
-      "updated_at_utc": "2026-10-28T02:23:54.781031+00:00",
+      "updated_at_utc": "2026-10-29T02:24:55.257555+00:00",
       "interruption_recovery": {
         "observed_utc": "2026-10-23T09:52:35.949892+00:00",
         "resumed_utc": "2026-10-23T09:54:55.504377+00:00",
@@ -2589,7 +2656,7 @@
         "verified_at_utc": "2026-10-24T00:11:55.918447+00:00"
       },
       "quality_status": "not_passed",
-      "completion_scope": "Authorized +200 epochs from1200 to1400 now running/queued; previous1200 phase completed; quality not passed.",
+      "completion_scope": "Authorized four-model 1200→1400 continuation completed; no further training scheduled; fixed15 training-song evaluation only.",
       "phase500_completed_at_utc": "2026-10-23T19:24:52.401644+00:00",
       "phase500_completion_verified_at_utc": "2026-10-24T00:11:55.918447+00:00",
       "phase500_completion_assessment": "out/ar_saturation_20261023/completion500_assessment.json",
@@ -2893,8 +2960,8 @@
         "assessment_path": "out/ar_saturation_20261023/completion1000_assessment.json",
         "snapshots_verified": 30
       },
-      "completion_verified_at_utc": "2026-10-28T02:04:11.112048+00:00",
-      "completion_assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+      "completion_verified_at_utc": "2026-10-29T02:24:55.257555+00:00",
+      "completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
       "layout_replay": {
         "kind": "saved-output analysis",
         "status": "completed",
@@ -2945,7 +3012,7 @@
       "phase1200_completed_at_utc": "2026-10-27T22:42:21.025282+00:00",
       "phase1200_completion_assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
       "extension_1400": {
-        "status": "running",
+        "status": "completed",
         "start_epoch": 1200,
         "target_epoch": 1400,
         "user_authorized": true,
@@ -2953,8 +3020,14 @@
         "evidence": "docs/evaluations/ar_continue1400_20261028.md",
         "supervisor": "out/ar_continue1400_20261028/supervisor.json",
         "evaluation_every": 50,
-        "architecture_loss_lr_sampling_changed": false
-      }
+        "architecture_loss_lr_sampling_changed": false,
+        "finished_at_utc": "2026-10-28T14:36:29.908566+00:00",
+        "assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
+        "snapshots_verified": 8
+      },
+      "phase1400_result": "A/S均完成1400轮、420000步。固定15首训练曲主联合F1 A 0.8353→0.9921、S 0.9208→0.9893，两组均自然结束15/15；本阶段最佳均为1400轮。网格均约0.7045，A已在此训练曲评测追上S。原探针仍未通过；未追加训练或更换发布权重。",
+      "phase1400_completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
+      "phase1400_completed_at_utc": "2026-10-28T14:36:29.908566+00:00"
     },
     {
       "id": "E15",
@@ -3040,15 +3113,15 @@
       "models": [
         "AL-FreeX@0.4.0"
       ],
-      "status": "running",
+      "status": "completed",
       "question": "沿用4K时间结构，完整训练静态free-x的64bin和连续坐标；先检查全部训练曲拟合",
-      "result": "用户批准从1200轮续至1400轮，各加训200轮；原配方、独立优化器/RNG和实际3e-5学习率保持不变，先S后A分批运行。新阶段尚无评测结论。",
+      "result": "A/S均完成1400轮、420000步。固定15首训练曲主联合F1 A 0.5034→0.7074、S 0.7013→0.8704，最终自然结束11/15及14/15。A本阶段最佳为1300轮0.8419、14/15，1400出现回退；S最佳为1400轮。原探针仍未通过；未追加训练或更换发布权重。",
       "evidence": "docs/evaluations/freex_anchored_20261025.md",
       "training_scope": {
         "songs": 300,
         "held_out_songs": 0,
         "generalization": "用户另提供新歌曲后再检查",
-        "four_k": "E14 independently continuing1200→1400 under the same authorization",
+        "four_k": "E14 independently completed1400 under the same authorization",
         "target_epoch": 1400,
         "schedule": "10-epoch warmup/cosine 3e-4 to3e-5, then preserve AdamW/RNG and continue at3e-5",
         "keep_all_four_types": true,
@@ -3088,7 +3161,10 @@
             "optimizer_rng_preserved": true,
             "evaluation_every": 50,
             "snapshot_every": 50,
-            "phase": "continued1400"
+            "phase": "continued1400",
+            "completed_epoch": 1400,
+            "completed_steps": 420000,
+            "finished_at_utc": "2026-10-28T15:31:03.889321+00:00"
           },
           "parameters": 6815860,
           "initial_state_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
@@ -3096,17 +3172,19 @@
           "pid_at_launch": 2046932,
           "pilot_progress_file": "out/freex_anchored_20261025/pilot/audio/training.json",
           "pilot_log_file": "out/freex_anchored_20261025/audio-pilot.log",
-          "status": "queued",
+          "status": "completed",
           "quality_status": "not_passed",
           "completion_resources": {
-            "disk_free_gib": 9.063270568847656,
-            "ram_available_gib": 35.12409210205078,
-            "rss_gib": 2.1368637084960938,
-            "gpu_peak_allocated_gib": 0.3256955146789551,
+            "disk_free_gib": 9.348125457763672,
+            "ram_available_gib": 36.47732925415039,
+            "rss_gib": 2.1907920837402344,
+            "gpu_peak_allocated_gib": 0.3235187530517578,
             "gpu_peak_reserved_gib": 0.59765625
           },
           "final_training_trend": {
-            "objective_change_percent_last20_vs_previous20": -3.3499941490686136
+            "objective_change_percent_last20_vs_previous20": -1.9396413362524985,
+            "epoch": 1400,
+            "evidence": "docs/evaluations/assets/ar_continue1400_20261028/completion.json"
           },
           "compact_snapshots_verified": 50,
           "phase1000": {
@@ -3151,35 +3229,18 @@
           "parent_checkpoint": "out/freex_anchored_20261025/continued1200/audio/model_latest.pt",
           "parent_checkpoint_sha256": "3966fb620cb7ea6107b485108b058e090bd247c0c5c29d2b3a2535e2c5f96e2f",
           "snapshot": {
-            "observed_at_utc": "2026-10-28T02:23:54.781031+00:00",
-            "status": "queued",
-            "epoch": 1200,
-            "steps": 360000,
+            "observed_at_utc": "2026-10-29T02:24:55.257555+00:00",
+            "status": "completed",
+            "epoch": 1400,
+            "steps": 420000,
+            "finished_at_utc": "2026-10-28T15:31:03.889321+00:00",
+            "checkpoint_sha256": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
             "pid": null,
-            "note": "Launch snapshot; live status is in supervisor.json."
+            "note": "Final training and checkpoint hashes verified; quality not passed."
           },
           "fixed15_completion": {
-            "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+            "assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
             "baseline": {
-              "path": "out/freex_anchored_20261025/continued1200/audio/evaluation-e1000-fixed15/summary.json",
-              "sha256": "eb3eaa8e110cf873379b6c48de6db95bed0a942cbcbfe92c1a54c58de4777a76",
-              "epoch": 1000,
-              "completed": 10,
-              "total": 15,
-              "mean_joint_f1": 0.27489443935126706,
-              "mean_raw_joint_f1": 0.32624152820212754,
-              "mean_raw_onset_f1": 0.8000916959756258,
-              "mean_raw_grid_bonus": 0.5664518937996075,
-              "mean_tail_10s_recall": 0.7454113652141718,
-              "failed_songs": [
-                "Incyde_IN",
-                "インフェルノシティ_IN",
-                "混乱-Confusion_IN",
-                "Rrharil_IN",
-                "Re_Nascence Psystyle Ver._IN"
-              ]
-            },
-            "final": {
               "path": "out/freex_anchored_20261025/continued1200/audio/evaluation-e1200/fixed15/summary.json",
               "sha256": "c3b10e7084c052086aa5616b96b99c9a1590ecdb1ef99d480c0c982389922118",
               "epoch": 1200,
@@ -3199,8 +3260,26 @@
                 "GOODBOUNCE_IN"
               ]
             },
-            "best_epoch": 1150,
-            "best_joint_f1": 0.5315753355733205
+            "final": {
+              "path": "out/freex_anchored_20261025/continued1400/audio/evaluation-e1400/fixed15/summary.json",
+              "sha256": "ee3f46a55643357cb3fee7ade489dbb0e006a4fe793302a00fc48ac0f37ad88c",
+              "epoch": 1400,
+              "completed": 11,
+              "total": 15,
+              "mean_joint_f1": 0.7073604272470686,
+              "mean_raw_joint_f1": 0.8022524278344426,
+              "mean_raw_onset_f1": 0.9261103636550565,
+              "mean_raw_grid_bonus": 0.6437414536915348,
+              "mean_tail_10s_recall": 0.882639437644655,
+              "failed_songs": [
+                "DESTRUCTION 321_IN",
+                "Incyde_IN",
+                "Diamond Dust_IN",
+                "インフェルノシティ_IN"
+              ]
+            },
+            "best_epoch": 1300,
+            "best_joint_f1": 0.8419337400102376
           },
           "phase1200": {
             "status": "completed",
@@ -3230,8 +3309,92 @@
               "status": "completed",
               "epoch": 1200,
               "steps": 360000
+            },
+            "fixed15_completion": {
+              "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+              "baseline": {
+                "path": "out/freex_anchored_20261025/continued1200/audio/evaluation-e1000-fixed15/summary.json",
+                "sha256": "eb3eaa8e110cf873379b6c48de6db95bed0a942cbcbfe92c1a54c58de4777a76",
+                "epoch": 1000,
+                "completed": 10,
+                "total": 15,
+                "mean_joint_f1": 0.27489443935126706,
+                "mean_raw_joint_f1": 0.32624152820212754,
+                "mean_raw_onset_f1": 0.8000916959756258,
+                "mean_raw_grid_bonus": 0.5664518937996075,
+                "mean_tail_10s_recall": 0.7454113652141718,
+                "failed_songs": [
+                  "Incyde_IN",
+                  "インフェルノシティ_IN",
+                  "混乱-Confusion_IN",
+                  "Rrharil_IN",
+                  "Re_Nascence Psystyle Ver._IN"
+                ]
+              },
+              "final": {
+                "path": "out/freex_anchored_20261025/continued1200/audio/evaluation-e1200/fixed15/summary.json",
+                "sha256": "c3b10e7084c052086aa5616b96b99c9a1590ecdb1ef99d480c0c982389922118",
+                "epoch": 1200,
+                "completed": 9,
+                "total": 15,
+                "mean_joint_f1": 0.5034278111092387,
+                "mean_raw_joint_f1": 0.622859732104017,
+                "mean_raw_onset_f1": 0.8718361186158808,
+                "mean_raw_grid_bonus": 0.6097819218681011,
+                "mean_tail_10s_recall": 0.8904464788431522,
+                "failed_songs": [
+                  "Incyde_IN",
+                  "混乱-Confusion_IN",
+                  "A journey to the moonlight_IN",
+                  "Rrharil_IN",
+                  "Re_Nascence Psystyle Ver._IN",
+                  "GOODBOUNCE_IN"
+                ]
+              },
+              "best_epoch": 1150,
+              "best_joint_f1": 0.5315753355733205
             }
-          }
+          },
+          "checkpoint_sha256": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+          "phase1400_completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
+          "phase1400_snapshots": [
+            {
+              "path": "out/freex_anchored_20261025/continued1400/audio/model_e1250.pt",
+              "epoch": 1250,
+              "steps": 375000,
+              "sha256": "98d7d4842c900f2db3a7380e11cf4962af528c18f223c12005033f58e1376ac1",
+              "source_checkpoint_sha256": "3c3817039e13210624371c7609a06ff1904e8ed27ca23a0404828dd8539ffbca",
+              "schema": "audiolab-absolute-time-group-freex-ar-v1",
+              "variant": "audio"
+            },
+            {
+              "path": "out/freex_anchored_20261025/continued1400/audio/model_e1300.pt",
+              "epoch": 1300,
+              "steps": 390000,
+              "sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+              "source_checkpoint_sha256": "9da6973754a250f61ec937c180e7c891086319c40789fb04369dec6af618d0a9",
+              "schema": "audiolab-absolute-time-group-freex-ar-v1",
+              "variant": "audio"
+            },
+            {
+              "path": "out/freex_anchored_20261025/continued1400/audio/model_e1350.pt",
+              "epoch": 1350,
+              "steps": 405000,
+              "sha256": "900283e97bacf7b54673fc93396f11e4b02b4d461da737300b8c2392824c728e",
+              "source_checkpoint_sha256": "6e8a36a28ee28f8ef7b413918ba6e68eb94f57bebcfc78023d6f0c0ec25af41e",
+              "schema": "audiolab-absolute-time-group-freex-ar-v1",
+              "variant": "audio"
+            },
+            {
+              "path": "out/freex_anchored_20261025/continued1400/audio/model_e1400.pt",
+              "epoch": 1400,
+              "steps": 420000,
+              "sha256": "c34170a8752e8c61bd8fb16abf036eb3f2e72bea4757b5d463d9af2bf04f30b5",
+              "source_checkpoint_sha256": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+              "schema": "audiolab-absolute-time-group-freex-ar-v1",
+              "variant": "audio"
+            }
+          ]
         },
         {
           "id": "E18-S",
@@ -3264,7 +3427,10 @@
             "optimizer_rng_preserved": true,
             "evaluation_every": 50,
             "snapshot_every": 50,
-            "phase": "continued1400"
+            "phase": "continued1400",
+            "completed_epoch": 1400,
+            "completed_steps": 420000,
+            "finished_at_utc": "2026-10-28T09:00:34.937918+00:00"
           },
           "parameters": 6815860,
           "initial_state_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
@@ -3272,17 +3438,19 @@
           "pid_at_launch": 2046933,
           "pilot_progress_file": "out/freex_anchored_20261025/pilot/soft/training.json",
           "pilot_log_file": "out/freex_anchored_20261025/soft-pilot.log",
-          "status": "running",
+          "status": "completed",
           "quality_status": "not_passed",
           "completion_resources": {
-            "disk_free_gib": 8.687267303466797,
-            "ram_available_gib": 36.49932861328125,
-            "rss_gib": 2.2146530151367188,
-            "gpu_peak_allocated_gib": 0.3256955146789551,
+            "disk_free_gib": 9.704059600830078,
+            "ram_available_gib": 35.109107971191406,
+            "rss_gib": 2.1596412658691406,
+            "gpu_peak_allocated_gib": 0.3235187530517578,
             "gpu_peak_reserved_gib": 0.59765625
           },
           "final_training_trend": {
-            "objective_change_percent_last20_vs_previous20": -3.319783293624534
+            "objective_change_percent_last20_vs_previous20": -1.9809020433518458,
+            "epoch": 1400,
+            "evidence": "docs/evaluations/assets/ar_continue1400_20261028/completion.json"
           },
           "compact_snapshots_verified": 50,
           "phase1000": {
@@ -3327,34 +3495,18 @@
           "parent_checkpoint": "out/freex_anchored_20261025/continued1200/soft/model_latest.pt",
           "parent_checkpoint_sha256": "9d9955f37cc4524a72feec945e9c23637d10675fc362b6fa953b7a7ce7d3f320",
           "snapshot": {
-            "observed_at_utc": "2026-10-28T02:23:54.781031+00:00",
-            "status": "running",
-            "epoch": 1200,
-            "steps": 360000,
-            "pid": 320443,
-            "note": "Launch snapshot; live status is in supervisor.json."
+            "observed_at_utc": "2026-10-29T02:24:55.257555+00:00",
+            "status": "completed",
+            "epoch": 1400,
+            "steps": 420000,
+            "finished_at_utc": "2026-10-28T09:00:34.937918+00:00",
+            "checkpoint_sha256": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+            "pid": null,
+            "note": "Final training and checkpoint hashes verified; quality not passed."
           },
           "fixed15_completion": {
-            "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+            "assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
             "baseline": {
-              "path": "out/freex_anchored_20261025/continued1200/soft/evaluation-e1000-fixed15/summary.json",
-              "sha256": "4c6b28173a0d36a9a84e6b4eb8873ef5377f2067c7350a349303e9bf5c50a3ab",
-              "epoch": 1000,
-              "completed": 11,
-              "total": 15,
-              "mean_joint_f1": 0.25312189889501635,
-              "mean_raw_joint_f1": 0.29880172103323055,
-              "mean_raw_onset_f1": 0.7589033415606454,
-              "mean_raw_grid_bonus": 0.5542229949798615,
-              "mean_tail_10s_recall": 0.7524784690548235,
-              "failed_songs": [
-                "Eltaw_IN",
-                "Incyde_IN",
-                "インフェルノシティ_IN",
-                "混乱-Confusion_IN"
-              ]
-            },
-            "final": {
               "path": "out/freex_anchored_20261025/continued1200/soft/evaluation-e1200/fixed15/summary.json",
               "sha256": "29432b473360637038922cead5a95a71d73b0da0ca46cbc269db9b1320c11c22",
               "epoch": 1200,
@@ -3369,8 +3521,23 @@
                 "Incyde_IN"
               ]
             },
-            "best_epoch": 1200,
-            "best_joint_f1": 0.7012732865514586
+            "final": {
+              "path": "out/freex_anchored_20261025/continued1400/soft/evaluation-e1400/fixed15/summary.json",
+              "sha256": "0e19069cbe07bcad2b19af1a5fe81ef8343a7044a8db7e640e9fbb46978cac11",
+              "epoch": 1400,
+              "completed": 14,
+              "total": 15,
+              "mean_joint_f1": 0.8703884948337461,
+              "mean_raw_joint_f1": 0.8893827778812318,
+              "mean_raw_onset_f1": 0.9617327507796727,
+              "mean_raw_grid_bonus": 0.6646828233598486,
+              "mean_tail_10s_recall": 0.9147632784724339,
+              "failed_songs": [
+                "Incyde_IN"
+              ]
+            },
+            "best_epoch": 1400,
+            "best_joint_f1": 0.8703884948337461
           },
           "phase1200": {
             "status": "completed",
@@ -3400,8 +3567,86 @@
               "status": "completed",
               "epoch": 1200,
               "steps": 360000
+            },
+            "fixed15_completion": {
+              "assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+              "baseline": {
+                "path": "out/freex_anchored_20261025/continued1200/soft/evaluation-e1000-fixed15/summary.json",
+                "sha256": "4c6b28173a0d36a9a84e6b4eb8873ef5377f2067c7350a349303e9bf5c50a3ab",
+                "epoch": 1000,
+                "completed": 11,
+                "total": 15,
+                "mean_joint_f1": 0.25312189889501635,
+                "mean_raw_joint_f1": 0.29880172103323055,
+                "mean_raw_onset_f1": 0.7589033415606454,
+                "mean_raw_grid_bonus": 0.5542229949798615,
+                "mean_tail_10s_recall": 0.7524784690548235,
+                "failed_songs": [
+                  "Eltaw_IN",
+                  "Incyde_IN",
+                  "インフェルノシティ_IN",
+                  "混乱-Confusion_IN"
+                ]
+              },
+              "final": {
+                "path": "out/freex_anchored_20261025/continued1200/soft/evaluation-e1200/fixed15/summary.json",
+                "sha256": "29432b473360637038922cead5a95a71d73b0da0ca46cbc269db9b1320c11c22",
+                "epoch": 1200,
+                "completed": 14,
+                "total": 15,
+                "mean_joint_f1": 0.7012732865514586,
+                "mean_raw_joint_f1": 0.7047639284161963,
+                "mean_raw_onset_f1": 0.9272179524377778,
+                "mean_raw_grid_bonus": 0.6329724708906427,
+                "mean_tail_10s_recall": 0.893808047901332,
+                "failed_songs": [
+                  "Incyde_IN"
+                ]
+              },
+              "best_epoch": 1200,
+              "best_joint_f1": 0.7012732865514586
             }
-          }
+          },
+          "checkpoint_sha256": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+          "phase1400_completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
+          "phase1400_snapshots": [
+            {
+              "path": "out/freex_anchored_20261025/continued1400/soft/model_e1250.pt",
+              "epoch": 1250,
+              "steps": 375000,
+              "sha256": "51d95252695d1c4447eace6d74572bcc5b07eb1ffbb7e5b49bc36c82a51b53f3",
+              "source_checkpoint_sha256": "d81524112632be43e191e697a59b4abdfe50d1a014b19a84d41bdee1a79ddc46",
+              "schema": "audiolab-absolute-time-group-freex-ar-v1",
+              "variant": "soft"
+            },
+            {
+              "path": "out/freex_anchored_20261025/continued1400/soft/model_e1300.pt",
+              "epoch": 1300,
+              "steps": 390000,
+              "sha256": "1da0da4e2a3562c3ccf11d4b1d51d2eed517a27f1f72481d737c2430a15b01ff",
+              "source_checkpoint_sha256": "16a3a6b9444a9f007036743bd21086a5b5ffe7e7e34383880c6611f2c4444069",
+              "schema": "audiolab-absolute-time-group-freex-ar-v1",
+              "variant": "soft"
+            },
+            {
+              "path": "out/freex_anchored_20261025/continued1400/soft/model_e1350.pt",
+              "epoch": 1350,
+              "steps": 405000,
+              "sha256": "2add862b2a68e2fd4eed3bb26b57ddd45ebbe5b170880518b98db316859058ef",
+              "source_checkpoint_sha256": "e130e0e8f7344543927e860c50c00a310442e9962385ab3764d4258a4f7b493f",
+              "schema": "audiolab-absolute-time-group-freex-ar-v1",
+              "variant": "soft"
+            },
+            {
+              "path": "out/freex_anchored_20261025/continued1400/soft/model_e1400.pt",
+              "epoch": 1400,
+              "steps": 420000,
+              "sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+              "source_checkpoint_sha256": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+              "schema": "audiolab-absolute-time-group-freex-ar-v1",
+              "variant": "soft"
+            }
+          ]
         }
       ],
       "launched_at_utc": "2026-10-24T22:39:55.541311+00:00",
@@ -3501,8 +3746,8 @@
         "quality_passed": false
       },
       "quality_status": "not_passed",
-      "completion_verified_at_utc": "2026-10-28T02:04:11.112048+00:00",
-      "completion_assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
+      "completion_verified_at_utc": "2026-10-29T02:24:55.257555+00:00",
+      "completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
       "noteworthy_outputs": [
         {
           "run": "E18-A",
@@ -3595,8 +3840,8 @@
       },
       "phase1000_result": "A/S各完成1000轮、300000步；三首自然曲两种解码均4/6自行结束。Eltaw最佳完成排布均为e0980贪心，联合F1 A0.8449/S0.7516；最终e1000的S在Eltaw结束失败。跨曲排布与稀疏探针未通过，全部100份快照SHA已核验。后续加训由用户安排。",
       "phase1000_completed_at_utc": "2026-10-26T06:47:16.846357+00:00",
-      "updated_at_utc": "2026-10-28T02:23:54.781031+00:00",
-      "completion_scope": "Authorized +200 epochs from1200 to1400 now running/queued; previous1200 phase completed; quality not passed.",
+      "updated_at_utc": "2026-10-29T02:24:55.257555+00:00",
+      "completion_scope": "Authorized four-model 1200→1400 continuation completed; no further training scheduled; fixed15 training-song evaluation only.",
       "extension_1200": {
         "status": "completed",
         "target_epoch": 1200,
@@ -3615,7 +3860,7 @@
       "phase1200_completed_at_utc": "2026-10-27T23:56:25.590580+00:00",
       "phase1200_completion_assessment": "docs/evaluations/assets/ar_continue1200_20261027/completion.json",
       "extension_1400": {
-        "status": "running",
+        "status": "completed",
         "start_epoch": 1200,
         "target_epoch": 1400,
         "user_authorized": true,
@@ -3623,7 +3868,10 @@
         "evidence": "docs/evaluations/ar_continue1400_20261028.md",
         "supervisor": "out/ar_continue1400_20261028/supervisor.json",
         "evaluation_every": 50,
-        "architecture_loss_lr_sampling_changed": false
+        "architecture_loss_lr_sampling_changed": false,
+        "finished_at_utc": "2026-10-28T15:31:03.889321+00:00",
+        "assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
+        "snapshots_verified": 8
       },
       "storage_cleanup": {
         "status": "completed",
@@ -3633,7 +3881,10 @@
         "deleted_bytes": 1699429446,
         "retention_policy": "Remove only numbered FreeX snapshots below800 that are neither multiples of100 nor epoch40; preserve all4K, all>=800, all latest/best-fit/pilot parents, published weights, free-x A1150, sidecars/evaluations/logs.",
         "evaluation_outputs_retained": true
-      }
+      },
+      "phase1400_result": "A/S均完成1400轮、420000步。固定15首训练曲主联合F1 A 0.5034→0.7074、S 0.7013→0.8704，最终自然结束11/15及14/15。A本阶段最佳为1300轮0.8419、14/15，1400出现回退；S最佳为1400轮。原探针仍未通过；未追加训练或更换发布权重。",
+      "phase1400_completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
+      "phase1400_completed_at_utc": "2026-10-28T15:31:03.889321+00:00"
     },
     {
       "id": "E19",
