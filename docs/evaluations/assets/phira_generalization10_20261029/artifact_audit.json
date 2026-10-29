@@ -1,0 +1,376 @@
+{
+  "observed_at_utc": "2026-10-29T11:30:48.480956+00:00",
+  "status": "passed",
+  "unit_tests": 3,
+  "source_and_checkpoint_hashes_unchanged": true,
+  "output_count": 40,
+  "previews_verified": 40,
+  "packages_verified": 40,
+  "warning_previews": 27,
+  "training_updates": 0,
+  "eltaw_control_matches_cached_results": 4,
+  "media_published": false,
+  "disk_free_gib": 8.285247802734375,
+  "packages": [
+    {
+      "song_id": 40717,
+      "run_id": "E14-A",
+      "path": "out/phira_generalization10_20261029/40717/E14-A/40717_4k_E14-A_20261029.phira.zip",
+      "sha256": "6e0869d5823b90b2f0a863d97204170908e62183f6d99388db99192fdae55142",
+      "bytes": 15104312,
+      "preview": "out/phira_generalization10_20261029/40717/E14-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 40717,
+      "run_id": "E14-S",
+      "path": "out/phira_generalization10_20261029/40717/E14-S/40717_4k_E14-S_20261029.phira.zip",
+      "sha256": "fc8ea68569a3ba69bdc177f749a3b65dd0ac8b5e4889b307c7e7b61f56fc57ae",
+      "bytes": 15095655,
+      "preview": "out/phira_generalization10_20261029/40717/E14-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 40717,
+      "run_id": "E18-A",
+      "path": "out/phira_generalization10_20261029/40717/E18-A/40717_freex_E18-A_20261029.phira.zip",
+      "sha256": "0bb62dabcf1a58b405a08d6ca07a437943c2771852f86e61209c9e8f8108b60a",
+      "bytes": 15106962,
+      "preview": "out/phira_generalization10_20261029/40717/E18-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 40717,
+      "run_id": "E18-S",
+      "path": "out/phira_generalization10_20261029/40717/E18-S/40717_freex_E18-S_20261029.phira.zip",
+      "sha256": "925dffea1e6c1e69b7d17d6beb4ad7fb041dcdd670bce84f3cf8e99c5fce65eb",
+      "bytes": 15112891,
+      "preview": "out/phira_generalization10_20261029/40717/E18-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 37396,
+      "run_id": "E14-A",
+      "path": "out/phira_generalization10_20261029/37396/E14-A/37396_4k_E14-A_20261029.phira.zip",
+      "sha256": "987cc4aac23fd1c6b994f842aa77c1316f11400b8dc4a32c8e8837902c72a515",
+      "bytes": 7178198,
+      "preview": "out/phira_generalization10_20261029/37396/E14-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 37396,
+      "run_id": "E14-S",
+      "path": "out/phira_generalization10_20261029/37396/E14-S/37396_4k_E14-S_20261029.phira.zip",
+      "sha256": "a171a655b0b1ef7d24927c402222084bfa951f673f3f7de47cef53a54730be88",
+      "bytes": 7178175,
+      "preview": "out/phira_generalization10_20261029/37396/E14-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 37396,
+      "run_id": "E18-A",
+      "path": "out/phira_generalization10_20261029/37396/E18-A/37396_freex_E18-A_20261029.phira.zip",
+      "sha256": "d005b3a8766b6b033358c716392f5f25948ea6a146ea57d40bab1162d790dc65",
+      "bytes": 7187636,
+      "preview": "out/phira_generalization10_20261029/37396/E18-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 37396,
+      "run_id": "E18-S",
+      "path": "out/phira_generalization10_20261029/37396/E18-S/37396_freex_E18-S_20261029.phira.zip",
+      "sha256": "72e888c0fb579c142a56d080a877b84375b604974b59a1c335b33f9f4d739331",
+      "bytes": 7185637,
+      "preview": "out/phira_generalization10_20261029/37396/E18-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 6990,
+      "run_id": "E14-A",
+      "path": "out/phira_generalization10_20261029/6990/E14-A/6990_4k_E14-A_20261029.phira.zip",
+      "sha256": "65045c45b327da41c6a79772b0e13ead7d01234fea0df544111f366f0f7c2cf8",
+      "bytes": 11257067,
+      "preview": "out/phira_generalization10_20261029/6990/E14-A/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 6990,
+      "run_id": "E14-S",
+      "path": "out/phira_generalization10_20261029/6990/E14-S/6990_4k_E14-S_20261029.phira.zip",
+      "sha256": "c17aea5c876dd8ce2c04b8745b8a618cde29cedd8a8bb1562413ba23c8f778ba",
+      "bytes": 11252138,
+      "preview": "out/phira_generalization10_20261029/6990/E14-S/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 6990,
+      "run_id": "E18-A",
+      "path": "out/phira_generalization10_20261029/6990/E18-A/6990_freex_E18-A_20261029.phira.zip",
+      "sha256": "1576da2ecafea4ff1841d15d97dc2a0bd4cc9fd8b3353f5c205358d59e62f1b9",
+      "bytes": 11261931,
+      "preview": "out/phira_generalization10_20261029/6990/E18-A/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 6990,
+      "run_id": "E18-S",
+      "path": "out/phira_generalization10_20261029/6990/E18-S/6990_freex_E18-S_20261029.phira.zip",
+      "sha256": "9b25ce39824c14d67ee8751ab1eea4234a5b690785c53624b03773ad2113cc44",
+      "bytes": 11263364,
+      "preview": "out/phira_generalization10_20261029/6990/E18-S/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 30114,
+      "run_id": "E14-A",
+      "path": "out/phira_generalization10_20261029/30114/E14-A/30114_4k_E14-A_20261029.phira.zip",
+      "sha256": "f501d8c9583fbeaa4c530a461aae19d4911cdbf552d6962a434883580fd8baf4",
+      "bytes": 15894333,
+      "preview": "out/phira_generalization10_20261029/30114/E14-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 30114,
+      "run_id": "E14-S",
+      "path": "out/phira_generalization10_20261029/30114/E14-S/30114_4k_E14-S_20261029.phira.zip",
+      "sha256": "fd5077a47862c9b208e4a339abe39bdcbaa616cc5e3d89fb7e9bd7d874f95be1",
+      "bytes": 15885047,
+      "preview": "out/phira_generalization10_20261029/30114/E14-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 30114,
+      "run_id": "E18-A",
+      "path": "out/phira_generalization10_20261029/30114/E18-A/30114_freex_E18-A_20261029.phira.zip",
+      "sha256": "785ba2ce488b720c88f7d43b33304e113033c3322a8536ca461d7e289edb544c",
+      "bytes": 15886149,
+      "preview": "out/phira_generalization10_20261029/30114/E18-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 30114,
+      "run_id": "E18-S",
+      "path": "out/phira_generalization10_20261029/30114/E18-S/30114_freex_E18-S_20261029.phira.zip",
+      "sha256": "0806692755a1b941505a2040c6ac44307ba58de7de1ba42888800970dac5b0a2",
+      "bytes": 15898685,
+      "preview": "out/phira_generalization10_20261029/30114/E18-S/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 23968,
+      "run_id": "E14-A",
+      "path": "out/phira_generalization10_20261029/23968/E14-A/23968_4k_E14-A_20261029.phira.zip",
+      "sha256": "69807c2f82ad70f990ecac4dc790e0600bc2c53b2734e01798d202f7a3696a64",
+      "bytes": 9488389,
+      "preview": "out/phira_generalization10_20261029/23968/E14-A/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 23968,
+      "run_id": "E14-S",
+      "path": "out/phira_generalization10_20261029/23968/E14-S/23968_4k_E14-S_20261029.phira.zip",
+      "sha256": "786ae747e386335b04a1b77e4c9ccf07025408ccd867f7570821b42c90b937c6",
+      "bytes": 9485478,
+      "preview": "out/phira_generalization10_20261029/23968/E14-S/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 23968,
+      "run_id": "E18-A",
+      "path": "out/phira_generalization10_20261029/23968/E18-A/23968_freex_E18-A_20261029.phira.zip",
+      "sha256": "5a6d959ad2886590326cce0d75d7030a50fefc4decc172f29454d214fde8cf7a",
+      "bytes": 9487425,
+      "preview": "out/phira_generalization10_20261029/23968/E18-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 23968,
+      "run_id": "E18-S",
+      "path": "out/phira_generalization10_20261029/23968/E18-S/23968_freex_E18-S_20261029.phira.zip",
+      "sha256": "fb4dd08ebe96e81769736158aa2fe901115a5c428af4ea101f932727e27ff3d9",
+      "bytes": 9490020,
+      "preview": "out/phira_generalization10_20261029/23968/E18-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 51352,
+      "run_id": "E14-A",
+      "path": "out/phira_generalization10_20261029/51352/E14-A/51352_4k_E14-A_20261029.phira.zip",
+      "sha256": "fcd6863f5af1b429e963739eee0227e7b6edb7693eb642c399a36962b4a66e66",
+      "bytes": 12855781,
+      "preview": "out/phira_generalization10_20261029/51352/E14-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 51352,
+      "run_id": "E14-S",
+      "path": "out/phira_generalization10_20261029/51352/E14-S/51352_4k_E14-S_20261029.phira.zip",
+      "sha256": "7b1baee3f4fd04e1eb07285450e32c470a339b9661a467516980aa68d87ed596",
+      "bytes": 12855682,
+      "preview": "out/phira_generalization10_20261029/51352/E14-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 51352,
+      "run_id": "E18-A",
+      "path": "out/phira_generalization10_20261029/51352/E18-A/51352_freex_E18-A_20261029.phira.zip",
+      "sha256": "eb9412d8b08f318c0a704bd5fad19f13eb43cfee8824e954203f246b025c8cc9",
+      "bytes": 12864750,
+      "preview": "out/phira_generalization10_20261029/51352/E18-A/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 51352,
+      "run_id": "E18-S",
+      "path": "out/phira_generalization10_20261029/51352/E18-S/51352_freex_E18-S_20261029.phira.zip",
+      "sha256": "780e707f7ec885e6ed0d10359d160dcb393a479804fa5e9f20394a22f5d61abe",
+      "bytes": 12861058,
+      "preview": "out/phira_generalization10_20261029/51352/E18-S/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 64888,
+      "run_id": "E14-A",
+      "path": "out/phira_generalization10_20261029/64888/E14-A/64888_4k_E14-A_20261029.phira.zip",
+      "sha256": "0c3b57d2d92c5aff84ba07a75c5e644b853f55a8f6385aeb8c62bb57e016e178",
+      "bytes": 17799536,
+      "preview": "out/phira_generalization10_20261029/64888/E14-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 64888,
+      "run_id": "E14-S",
+      "path": "out/phira_generalization10_20261029/64888/E14-S/64888_4k_E14-S_20261029.phira.zip",
+      "sha256": "ab3e197a90d3d30c52560c5c7eaca9cdd58b118c54dad5414b0ebb648a7d0a9f",
+      "bytes": 17787983,
+      "preview": "out/phira_generalization10_20261029/64888/E14-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 64888,
+      "run_id": "E18-A",
+      "path": "out/phira_generalization10_20261029/64888/E18-A/64888_freex_E18-A_20261029.phira.zip",
+      "sha256": "b47cec52d716144199e9c893cbf4d17302ee861f8c9d2756f4cd65ea239237c9",
+      "bytes": 17795903,
+      "preview": "out/phira_generalization10_20261029/64888/E18-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 64888,
+      "run_id": "E18-S",
+      "path": "out/phira_generalization10_20261029/64888/E18-S/64888_freex_E18-S_20261029.phira.zip",
+      "sha256": "186c7a52867fe3779501b920236aee9e2b1f9b40bab94ca07ac313cd81a28be4",
+      "bytes": 17805174,
+      "preview": "out/phira_generalization10_20261029/64888/E18-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 51818,
+      "run_id": "E14-A",
+      "path": "out/phira_generalization10_20261029/51818/E14-A/51818_4k_E14-A_20261029.phira.zip",
+      "sha256": "5586202a141132bf5e8c7c0cc66ac2e382c5a1df77158ef81125afb82200901d",
+      "bytes": 10672578,
+      "preview": "out/phira_generalization10_20261029/51818/E14-A/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 51818,
+      "run_id": "E14-S",
+      "path": "out/phira_generalization10_20261029/51818/E14-S/51818_4k_E14-S_20261029.phira.zip",
+      "sha256": "d60bf42f0c06105c4828edbb132a089311259a8629ab4c68ad5e2bb93c08f233",
+      "bytes": 10670646,
+      "preview": "out/phira_generalization10_20261029/51818/E14-S/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 51818,
+      "run_id": "E18-A",
+      "path": "out/phira_generalization10_20261029/51818/E18-A/51818_freex_E18-A_20261029.phira.zip",
+      "sha256": "3df24dc0c0cc11d33e77d38f96de4b338e976d9b041de795a431e79c7f277bd8",
+      "bytes": 10677300,
+      "preview": "out/phira_generalization10_20261029/51818/E18-A/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 51818,
+      "run_id": "E18-S",
+      "path": "out/phira_generalization10_20261029/51818/E18-S/51818_freex_E18-S_20261029.phira.zip",
+      "sha256": "421ba0b5138507a3057d4c5dfceaea63bf60821578ba581f771d59c9f81578da",
+      "bytes": 10673883,
+      "preview": "out/phira_generalization10_20261029/51818/E18-S/preview.html",
+      "model_completed": true
+    },
+    {
+      "song_id": 52417,
+      "run_id": "E14-A",
+      "path": "out/phira_generalization10_20261029/52417/E14-A/52417_4k_E14-A_20261029.phira.zip",
+      "sha256": "e825e97636aeb0493655a2dd7f085a91cbcf23d2debed14ed37535850aaebaa3",
+      "bytes": 21990128,
+      "preview": "out/phira_generalization10_20261029/52417/E14-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 52417,
+      "run_id": "E14-S",
+      "path": "out/phira_generalization10_20261029/52417/E14-S/52417_4k_E14-S_20261029.phira.zip",
+      "sha256": "2dbad41294d76e03d9ddacd5c31c0e3015347d15fa5da8694959da7d7df5d74e",
+      "bytes": 21995920,
+      "preview": "out/phira_generalization10_20261029/52417/E14-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 52417,
+      "run_id": "E18-A",
+      "path": "out/phira_generalization10_20261029/52417/E18-A/52417_freex_E18-A_20261029.phira.zip",
+      "sha256": "ad6860d034a0ec2769370e7cd5f3e641dcef77ea61a0332cabbe935bf56de3aa",
+      "bytes": 21999950,
+      "preview": "out/phira_generalization10_20261029/52417/E18-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 52417,
+      "run_id": "E18-S",
+      "path": "out/phira_generalization10_20261029/52417/E18-S/52417_freex_E18-S_20261029.phira.zip",
+      "sha256": "5d6880cf9322fdfb0e35cf6725af99bb28dbd127fba03f30c1f12733c8fb1417",
+      "bytes": 22007219,
+      "preview": "out/phira_generalization10_20261029/52417/E18-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 52244,
+      "run_id": "E14-A",
+      "path": "out/phira_generalization10_20261029/52244/E14-A/52244_4k_E14-A_20261029.phira.zip",
+      "sha256": "aa71f0af827b3d71de8bf2c805b5325643f4b2a67e4f201ccf2c28635b7df465",
+      "bytes": 16277312,
+      "preview": "out/phira_generalization10_20261029/52244/E14-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 52244,
+      "run_id": "E14-S",
+      "path": "out/phira_generalization10_20261029/52244/E14-S/52244_4k_E14-S_20261029.phira.zip",
+      "sha256": "4e2d931a7db044092414a850573a5a35b2a0d8ba55dd423a750a159ded07acb6",
+      "bytes": 16267344,
+      "preview": "out/phira_generalization10_20261029/52244/E14-S/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 52244,
+      "run_id": "E18-A",
+      "path": "out/phira_generalization10_20261029/52244/E18-A/52244_freex_E18-A_20261029.phira.zip",
+      "sha256": "aa93347bee6b585f7c2c8c8f362d326b841529630a8a72e9a87646b9c94b0be4",
+      "bytes": 16299326,
+      "preview": "out/phira_generalization10_20261029/52244/E18-A/preview.html",
+      "model_completed": false
+    },
+    {
+      "song_id": 52244,
+      "run_id": "E18-S",
+      "path": "out/phira_generalization10_20261029/52244/E18-S/52244_freex_E18-S_20261029.phira.zip",
+      "sha256": "ad1893a08332504085a609889f250c0ffdf32f6f0dcd91e1f79dfb73690abbd8",
+      "bytes": 16307742,
+      "preview": "out/phira_generalization10_20261029/52244/E18-S/preview.html",
+      "model_completed": false
+    }
+  ]
+}

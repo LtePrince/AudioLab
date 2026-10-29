@@ -1,0 +1,48 @@
+{
+  "source": "Eltaw_IN original training audio; CPU re-encoding using the exact evaluation frontend; no rollout or optimization",
+  "results": [
+    {
+      "mode": "4k",
+      "shape": [
+        1,
+        2919,
+        256
+      ],
+      "cached_shape": [
+        1,
+        2919,
+        256
+      ],
+      "feature_max_abs": 0.00390625,
+      "feature_mean_abs": 0.0003819260746240616,
+      "feature_relative_l2": 0.000564007495995611,
+      "onset_max_abs": 0.0628124475479126,
+      "duration": 135.55083900226757,
+      "cached_duration": 135.55083900226757
+    },
+    {
+      "mode": "freex",
+      "shape": [
+        1,
+        2919,
+        256
+      ],
+      "cached_shape": [
+        1,
+        2919,
+        256
+      ],
+      "feature_max_abs": 0.0030517578125,
+      "feature_mean_abs": 0.0003832288202829659,
+      "feature_relative_l2": 0.0005647159996442497,
+      "onset_max_abs": 0.0628124475479126,
+      "duration": 135.55083900226757,
+      "cached_duration": 135.55083900226757
+    }
+  ],
+  "resources": {
+    "disk_free_gib": 8.38510513305664,
+    "ram_available_gib": 36.52116775512695,
+    "rss_gib": 0.9064903259277344
+  }
+}

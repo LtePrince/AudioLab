@@ -3027,7 +3027,8 @@
       },
       "phase1400_result": "A/S均完成1400轮、420000步。固定15首训练曲主联合F1 A 0.8353→0.9921、S 0.9208→0.9893，两组均自然结束15/15；本阶段最佳均为1400轮。网格均约0.7045，A已在此训练曲评测追上S。原探针仍未通过；未追加训练或更换发布权重。",
       "phase1400_completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
-      "phase1400_completed_at_utc": "2026-10-28T14:36:29.908566+00:00"
+      "phase1400_completed_at_utc": "2026-10-28T14:36:29.908566+00:00",
+      "generalization_evaluation": "E20"
     },
     {
       "id": "E15",
@@ -3884,7 +3885,8 @@
       },
       "phase1400_result": "A/S均完成1400轮、420000步。固定15首训练曲主联合F1 A 0.5034→0.7074、S 0.7013→0.8704，最终自然结束11/15及14/15。A本阶段最佳为1300轮0.8419、14/15，1400出现回退；S最佳为1400轮。原探针仍未通过；未追加训练或更换发布权重。",
       "phase1400_completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
-      "phase1400_completed_at_utc": "2026-10-28T15:31:03.889321+00:00"
+      "phase1400_completed_at_utc": "2026-10-28T15:31:03.889321+00:00",
+      "generalization_evaluation": "E20"
     },
     {
       "id": "E19",
@@ -3970,6 +3972,223 @@
       "evaluation_scope": "Eltaw + 14 unique songs drawn uniformly without replacement from the existing 300 training songs; not held-out generalization.",
       "selection": "Screen retained E14/E18 checkpoints using existing three-song macro time+position-bin+type F1, failed generations score zero; retain best A, best S, and highest-ranked remaining distinct checkpoint. Select final mode winner by the same failed-as-zero macro F1 over fixed 15 songs. Greedy/seed42 setting is part of the candidate, not tuned on the 15.",
       "seed": 20261026
+    },
+    {
+      "id": "E20",
+      "title": "Phira社区13–15级十首新歌泛化评估",
+      "kind": "frozen_checkpoint_inference_evaluation",
+      "models": [
+        "AL-AR4K@0.5.1/A",
+        "AL-AR4K@0.5.1/S",
+        "AL-FreeX@0.4.0/A",
+        "AL-FreeX@0.4.0/S"
+      ],
+      "status": "completed",
+      "quality_status": "not_passed",
+      "question": "训练曲高拟合能否泛化到十首新曲的节奏、键型与自然结束？",
+      "result": "已完成40组推理。4K A1400/S1400与free-x A1300/S1400的50ms起点F1为0.4745/0.3881/0.4567/0.4770，网格0.1763/0.1746/0.1720/0.1728，自然结束3/10、3/10、3/10、4/10。参考网格均值0.9121。Eltaw GPU特征及四组评分完全复现旧结果；训练曲高拟合尚未转为新歌稳定表现。",
+      "evidence": [
+        "docs/evaluations/phira_generalization10_20261029.md",
+        "docs/evaluations/assets/phira_generalization10_20261029/summary.json",
+        "docs/evaluations/assets/phira_generalization10_20261029/rollout_control.json",
+        "docs/evaluations/assets/phira_generalization10_20261029/artifact_audit.json"
+      ],
+      "evaluation_scope": "new titles and original audio bytes relative to 300-song decoder training; no robust acoustic-fingerprint search; frozen frontend pretraining overlap not established",
+      "dataset": {
+        "selection": "docs/evaluations/assets/phira_generalization10_20261029/selection.json",
+        "sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+        "songs": 10,
+        "reference_difficulty": "13.x–15.x",
+        "reference_kind": "community_authored_chart",
+        "used_for_training": false
+      },
+      "candidates": [
+        {
+          "id": "E14-A",
+          "mode": "4k",
+          "variant": "audio",
+          "epoch": 1400,
+          "checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_e1400.pt",
+          "sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3"
+        },
+        {
+          "id": "E14-S",
+          "mode": "4k",
+          "variant": "soft",
+          "epoch": 1400,
+          "checkpoint": "out/ar_saturation_20261023/continued1400/soft/model_e1400.pt",
+          "sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712"
+        },
+        {
+          "id": "E18-A",
+          "mode": "freex",
+          "variant": "audio",
+          "epoch": 1300,
+          "checkpoint": "out/freex_anchored_20261025/continued1400/audio/model_e1300.pt",
+          "sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103"
+        },
+        {
+          "id": "E18-S",
+          "mode": "freex",
+          "variant": "soft",
+          "epoch": 1400,
+          "checkpoint": "out/freex_anchored_20261025/continued1400/soft/model_e1400.pt",
+          "sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533"
+        }
+      ],
+      "decoding": {
+        "greedy": true,
+        "seed": 42,
+        "max_tokens": 12000,
+        "bpm": "reference chart",
+        "offset": "reference scoring only; not passed to generator",
+        "forced_grid": false,
+        "repair": false,
+        "checkpoint_selection": "fixed from prior training-song results"
+      },
+      "source_sha256": {
+        "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+        "src/model_benchmark.py": "c7257da6cb65d8522ae376ecbb23acf5db696cb879a30818a326a780146cf250",
+        "src/audio_understanding/evaluation.py": "c57d0c4eb36df95f04f7772f98d68229946e168a3aa830458d4eb150357194e0",
+        "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2",
+        "src/data/audio2mel.py": "00d73fa0afee5949e725cc6f57b352daeefb5ff4d08ef8e15fe23a0b5724ea0d",
+        "src/product/anchored_models.py": "94df079fd6c4a2ebd49b518c240a06d2759c48a690f1deff137c9918aca53f95",
+        "docs/evaluations/assets/phira_generalization10_20261029/benchmark.py": "973f0bf0715a312461029e438d0f4b6d12bc049ca082014b0239e96529b2aecc",
+        "src/product/artifacts.py": "aca2fcc5c4f7eb3819a85c7c34f5b7314d04aead3cd789cf7ad5d9b440044fd7",
+        "src/product/phira.py": "2ab7c6902243aa6011aae6844aafab2fd3cf8216a8596d44264191f5a3630fd6"
+      },
+      "metric_note": "Same unique-onset matcher at25/50/100ms and same rhythm bonus. New time+type F1 ignores moving-line coordinates and is NOT the old time+bin+type joint F1. Reference is one valid authored chart, not the only valid arrangement.",
+      "results": [
+        {
+          "id": "E14-A",
+          "mode": "4k",
+          "variant": "audio",
+          "epoch": 1400,
+          "checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_e1400.pt",
+          "sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+          "total": 10,
+          "completed": 3,
+          "mean_onset_f1_25ms": 0.35903328817297414,
+          "mean_onset_f1_50ms": 0.47451945959947855,
+          "mean_onset_f1_100ms": 0.5507828337026479,
+          "mean_time_type_f1": 0.2206890016956525,
+          "mean_completed_only_time_type_f1": 0.11411310500572652,
+          "mean_grid_bonus": 0.17634872632502105,
+          "mean_reference_grid_bonus": 0.9121335011704957,
+          "mean_note_count_ratio": 0.8092055008108351,
+          "mean_tail_10s_recall": 0.32155259722093066,
+          "failed_songs": [
+            "天使にふれたよ!",
+            "リテラチュア（翻自 上田麗奈）",
+            "Rubia",
+            "トリックハート",
+            "Yuri on ICE",
+            "匙ノ咒",
+            "あのね"
+          ],
+          "artifact_errors": []
+        },
+        {
+          "id": "E14-S",
+          "mode": "4k",
+          "variant": "soft",
+          "epoch": 1400,
+          "checkpoint": "out/ar_saturation_20261023/continued1400/soft/model_e1400.pt",
+          "sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+          "total": 10,
+          "completed": 3,
+          "mean_onset_f1_25ms": 0.30094638018566255,
+          "mean_onset_f1_50ms": 0.38806853987727535,
+          "mean_onset_f1_100ms": 0.45844941409572115,
+          "mean_time_type_f1": 0.19094088971926745,
+          "mean_completed_only_time_type_f1": 0.10380512018354823,
+          "mean_grid_bonus": 0.1745695228231164,
+          "mean_reference_grid_bonus": 0.9121335011704957,
+          "mean_note_count_ratio": 0.5796872207051494,
+          "mean_tail_10s_recall": 0.24185351315810055,
+          "failed_songs": [
+            "天使にふれたよ!",
+            "リテラチュア（翻自 上田麗奈）",
+            "Rubia",
+            "トリックハート",
+            "Yuri on ICE",
+            "匙ノ咒",
+            "あのね"
+          ],
+          "artifact_errors": []
+        },
+        {
+          "id": "E18-A",
+          "mode": "freex",
+          "variant": "audio",
+          "epoch": 1300,
+          "checkpoint": "out/freex_anchored_20261025/continued1400/audio/model_e1300.pt",
+          "sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+          "total": 10,
+          "completed": 3,
+          "mean_onset_f1_25ms": 0.3252455941294157,
+          "mean_onset_f1_50ms": 0.4567101653478654,
+          "mean_onset_f1_100ms": 0.5267176957136435,
+          "mean_time_type_f1": 0.22457481398407333,
+          "mean_completed_only_time_type_f1": 0.0889609771963048,
+          "mean_grid_bonus": 0.1719501490104257,
+          "mean_reference_grid_bonus": 0.9121335011704957,
+          "mean_note_count_ratio": 0.7664045271521981,
+          "mean_tail_10s_recall": 0.28622354427269014,
+          "failed_songs": [
+            "天使にふれたよ!",
+            "リテラチュア（翻自 上田麗奈）",
+            "Rubia",
+            "Bunny Bunny Carrot Carrot",
+            "Yuri on ICE",
+            "匙ノ咒",
+            "あのね"
+          ],
+          "artifact_errors": []
+        },
+        {
+          "id": "E18-S",
+          "mode": "freex",
+          "variant": "soft",
+          "epoch": 1400,
+          "checkpoint": "out/freex_anchored_20261025/continued1400/soft/model_e1400.pt",
+          "sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+          "total": 10,
+          "completed": 4,
+          "mean_onset_f1_25ms": 0.33193361360069673,
+          "mean_onset_f1_50ms": 0.4769564504809045,
+          "mean_onset_f1_100ms": 0.5613175471703377,
+          "mean_time_type_f1": 0.21778932877997928,
+          "mean_completed_only_time_type_f1": 0.07859035964378734,
+          "mean_grid_bonus": 0.17275499471260694,
+          "mean_reference_grid_bonus": 0.9121335011704957,
+          "mean_note_count_ratio": 0.8625912868715562,
+          "mean_tail_10s_recall": 0.2529191708209135,
+          "failed_songs": [
+            "天使にふれたよ!",
+            "リテラチュア（翻自 上田麗奈）",
+            "Bunny Bunny Carrot Carrot",
+            "Yuri on ICE",
+            "匙ノ咒",
+            "あのね"
+          ],
+          "artifact_errors": []
+        }
+      ],
+      "delivery": {
+        "preview": "out/phira_generalization10_20261029/index.html",
+        "local_phira_packages": 40,
+        "published": false,
+        "released_weights_changed": false
+      },
+      "validation": {
+        "adapter_tests_passed": 3,
+        "live_frontend_control": "GPU features and soft onset exactly equal cached Eltaw; four rollout scores equal historical results",
+        "package_and_preview_checks": 40,
+        "human_touch_playtest": false
+      },
+      "training_updates": 0,
+      "updated_at_utc": "2026-10-29T11:30:48.480956+00:00"
     }
   ],
   "bundles": [

@@ -1,0 +1,130 @@
+{
+  "song": "Eltaw_IN",
+  "split": "training control only; excluded from new-song aggregate",
+  "purpose": "same checkpoint and live audio frontend versus stored fixed15 training-song evaluation",
+  "results": [
+    {
+      "id": "E14-A",
+      "epoch": 1400,
+      "features": {
+        "shape": [
+          1,
+          2919,
+          256
+        ],
+        "duration": 135.55083900226757,
+        "cached_duration": 135.55083900226757,
+        "relative_l2": 0.0,
+        "max_abs": 0.0,
+        "soft_mean_abs": 0.0,
+        "soft_max_abs": 0.0
+      },
+      "status": "completed",
+      "metrics": {
+        "onset_f1": 1.0,
+        "joint_time_bin_type_f1": 0.9964580873671782,
+        "grid_bonus": 0.7799225213504644
+      },
+      "cached_status": "completed",
+      "cached_metrics": {
+        "onset_f1": 1.0,
+        "joint_time_bin_type_f1": 0.9964580873671782,
+        "grid_bonus": 0.7799225213504644
+      }
+    },
+    {
+      "id": "E14-S",
+      "epoch": 1400,
+      "features": {
+        "shape": [
+          1,
+          2919,
+          256
+        ],
+        "duration": 135.55083900226757,
+        "cached_duration": 135.55083900226757,
+        "relative_l2": 0.0,
+        "max_abs": 0.0,
+        "soft_mean_abs": 0.0,
+        "soft_max_abs": 0.0
+      },
+      "status": "completed",
+      "metrics": {
+        "onset_f1": 1.0,
+        "joint_time_bin_type_f1": 1.0,
+        "grid_bonus": 0.794925761673773
+      },
+      "cached_status": "completed",
+      "cached_metrics": {
+        "onset_f1": 1.0,
+        "joint_time_bin_type_f1": 1.0,
+        "grid_bonus": 0.794925761673773
+      }
+    },
+    {
+      "id": "E18-A",
+      "epoch": 1300,
+      "features": {
+        "shape": [
+          1,
+          2919,
+          256
+        ],
+        "duration": 135.55083900226757,
+        "cached_duration": 135.55083900226757,
+        "relative_l2": 0.0,
+        "max_abs": 0.0,
+        "soft_mean_abs": 0.0,
+        "soft_max_abs": 0.0
+      },
+      "status": "completed",
+      "metrics": {
+        "onset_f1": 1.0,
+        "joint_time_bin_type_f1": 0.9964830011723329,
+        "grid_bonus": 0.7474591909348799
+      },
+      "cached_status": "completed",
+      "cached_metrics": {
+        "onset_f1": 1.0,
+        "joint_time_bin_type_f1": 0.9964830011723329,
+        "grid_bonus": 0.7474591909348799
+      }
+    },
+    {
+      "id": "E18-S",
+      "epoch": 1400,
+      "features": {
+        "shape": [
+          1,
+          2919,
+          256
+        ],
+        "duration": 135.55083900226757,
+        "cached_duration": 135.55083900226757,
+        "relative_l2": 0.0,
+        "max_abs": 0.0,
+        "soft_mean_abs": 0.0,
+        "soft_max_abs": 0.0
+      },
+      "status": "completed",
+      "metrics": {
+        "onset_f1": 0.9992912827781715,
+        "joint_time_bin_type_f1": 0.9894613583138173,
+        "grid_bonus": 0.7416306133333358
+      },
+      "cached_status": "completed",
+      "cached_metrics": {
+        "onset_f1": 0.9992912827781715,
+        "joint_time_bin_type_f1": 0.9894613583138173,
+        "grid_bonus": 0.7416306133333358
+      }
+    }
+  ],
+  "resources": {
+    "disk_free_gib": 8.304450988769531,
+    "ram_available_gib": 35.909358978271484,
+    "rss_gib": 1.7755966186523438,
+    "gpu_peak_allocated_gib": 0.1511244773864746,
+    "gpu_peak_reserved_gib": 0.19140625
+  }
+}

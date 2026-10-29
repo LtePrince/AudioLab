@@ -1,0 +1,4138 @@
+{
+  "schema": "audiolab-phira-generalization10-results-v1",
+  "experiment": "E20",
+  "observed_at_utc": "2026-10-29T11:27:08.724113+00:00",
+  "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+  "metrics_scope": "Same unique-onset matcher at25/50/100ms and same rhythm bonus. New time+type F1 ignores moving-line coordinates and is NOT the old time+bin+type joint F1. Reference is one valid authored chart, not the only valid arrangement.",
+  "training_updates": 0,
+  "aggregates": [
+    {
+      "id": "E14-A",
+      "mode": "4k",
+      "variant": "audio",
+      "epoch": 1400,
+      "checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_e1400.pt",
+      "sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "total": 10,
+      "completed": 3,
+      "mean_onset_f1_25ms": 0.35903328817297414,
+      "mean_onset_f1_50ms": 0.47451945959947855,
+      "mean_onset_f1_100ms": 0.5507828337026479,
+      "mean_time_type_f1": 0.2206890016956525,
+      "mean_completed_only_time_type_f1": 0.11411310500572652,
+      "mean_grid_bonus": 0.17634872632502105,
+      "mean_reference_grid_bonus": 0.9121335011704957,
+      "mean_note_count_ratio": 0.8092055008108351,
+      "mean_tail_10s_recall": 0.32155259722093066,
+      "failed_songs": [
+        "天使にふれたよ!",
+        "リテラチュア（翻自 上田麗奈）",
+        "Rubia",
+        "トリックハート",
+        "Yuri on ICE",
+        "匙ノ咒",
+        "あのね"
+      ],
+      "artifact_errors": []
+    },
+    {
+      "id": "E14-S",
+      "mode": "4k",
+      "variant": "soft",
+      "epoch": 1400,
+      "checkpoint": "out/ar_saturation_20261023/continued1400/soft/model_e1400.pt",
+      "sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "total": 10,
+      "completed": 3,
+      "mean_onset_f1_25ms": 0.30094638018566255,
+      "mean_onset_f1_50ms": 0.38806853987727535,
+      "mean_onset_f1_100ms": 0.45844941409572115,
+      "mean_time_type_f1": 0.19094088971926745,
+      "mean_completed_only_time_type_f1": 0.10380512018354823,
+      "mean_grid_bonus": 0.1745695228231164,
+      "mean_reference_grid_bonus": 0.9121335011704957,
+      "mean_note_count_ratio": 0.5796872207051494,
+      "mean_tail_10s_recall": 0.24185351315810055,
+      "failed_songs": [
+        "天使にふれたよ!",
+        "リテラチュア（翻自 上田麗奈）",
+        "Rubia",
+        "トリックハート",
+        "Yuri on ICE",
+        "匙ノ咒",
+        "あのね"
+      ],
+      "artifact_errors": []
+    },
+    {
+      "id": "E18-A",
+      "mode": "freex",
+      "variant": "audio",
+      "epoch": 1300,
+      "checkpoint": "out/freex_anchored_20261025/continued1400/audio/model_e1300.pt",
+      "sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "total": 10,
+      "completed": 3,
+      "mean_onset_f1_25ms": 0.3252455941294157,
+      "mean_onset_f1_50ms": 0.4567101653478654,
+      "mean_onset_f1_100ms": 0.5267176957136435,
+      "mean_time_type_f1": 0.22457481398407333,
+      "mean_completed_only_time_type_f1": 0.0889609771963048,
+      "mean_grid_bonus": 0.1719501490104257,
+      "mean_reference_grid_bonus": 0.9121335011704957,
+      "mean_note_count_ratio": 0.7664045271521981,
+      "mean_tail_10s_recall": 0.28622354427269014,
+      "failed_songs": [
+        "天使にふれたよ!",
+        "リテラチュア（翻自 上田麗奈）",
+        "Rubia",
+        "Bunny Bunny Carrot Carrot",
+        "Yuri on ICE",
+        "匙ノ咒",
+        "あのね"
+      ],
+      "artifact_errors": []
+    },
+    {
+      "id": "E18-S",
+      "mode": "freex",
+      "variant": "soft",
+      "epoch": 1400,
+      "checkpoint": "out/freex_anchored_20261025/continued1400/soft/model_e1400.pt",
+      "sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "total": 10,
+      "completed": 4,
+      "mean_onset_f1_25ms": 0.33193361360069673,
+      "mean_onset_f1_50ms": 0.4769564504809045,
+      "mean_onset_f1_100ms": 0.5613175471703377,
+      "mean_time_type_f1": 0.21778932877997928,
+      "mean_completed_only_time_type_f1": 0.07859035964378734,
+      "mean_grid_bonus": 0.17275499471260694,
+      "mean_reference_grid_bonus": 0.9121335011704957,
+      "mean_note_count_ratio": 0.8625912868715562,
+      "mean_tail_10s_recall": 0.2529191708209135,
+      "failed_songs": [
+        "天使にふれたよ!",
+        "リテラチュア（翻自 上田麗奈）",
+        "Bunny Bunny Carrot Carrot",
+        "Yuri on ICE",
+        "匙ノ咒",
+        "あのね"
+      ],
+      "artifact_errors": []
+    }
+  ],
+  "rows": [
+    {
+      "song_id": 40717,
+      "name": "天使にふれたよ!",
+      "run_id": "E14-A",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.3380281690140845,
+        "onset_f1_50ms": 0.5434962717481359,
+        "onset_f1_100ms": 0.5700082850041425,
+        "time_type_f1": 0.2096195262024408,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.16037234775806655,
+        "reference_grid_bonus": 0.8472622478386167,
+        "reference_notes": 850,
+        "predicted_notes": 543,
+        "reference_unique_onsets": 694,
+        "predicted_unique_onsets": 513,
+        "note_count_ratio": 0.6388235294117647,
+        "matched_onset_mae_ms": 20.7380365853659,
+        "last_onset_delta_seconds": 9.642606999999998,
+        "tail_10s_recall": 0.14705882352941177,
+        "reference_types": {
+          "hold": 218,
+          "flick": 71,
+          "drag": 278,
+          "tap": 283
+        },
+        "predicted_types": {
+          "tap": 339,
+          "hold": 99,
+          "drag": 103,
+          "flick": 2
+        },
+        "generated_patterns": {
+          "note_count": 543,
+          "unique_onsets": 513,
+          "type_counts": {
+            "tap": 339,
+            "hold": 99,
+            "drag": 103,
+            "flick": 2
+          },
+          "chord_sizes": {
+            "1": 483,
+            "2": 30
+          },
+          "four_onset_patterns": {
+            "unclassified": 310,
+            "ABAB": 55,
+            "AAAA": 45,
+            "monotonic_run": 1
+          },
+          "singleton_windows": 411,
+          "chord_interrupted_windows": 99,
+          "jack_runs_2_to_3": 47,
+          "jack_runs_4_plus": 8,
+          "longest_jack_run": 28,
+          "hold_overlap_pairs": 13,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 4,
+              "second": 7,
+              "gap_seconds": -0.0019966046439612306
+            },
+            {
+              "first": 76,
+              "second": 78,
+              "gap_seconds": -0.2534985923268067
+            },
+            {
+              "first": 78,
+              "second": 79,
+              "gap_seconds": -0.2599547347609885
+            },
+            {
+              "first": 89,
+              "second": 95,
+              "gap_seconds": -0.5242643005594587
+            },
+            {
+              "first": 126,
+              "second": 127,
+              "gap_seconds": -0.5250342375500736
+            },
+            {
+              "first": 139,
+              "second": 143,
+              "gap_seconds": -0.00923985357333379
+            },
+            {
+              "first": 199,
+              "second": 200,
+              "gap_seconds": -0.25688397194439005
+            },
+            {
+              "first": 201,
+              "second": 203,
+              "gap_seconds": -0.02045819623046441
+            },
+            {
+              "first": 263,
+              "second": 265,
+              "gap_seconds": -1.0185363845252908
+            },
+            {
+              "first": 343,
+              "second": 345,
+              "gap_seconds": -0.012036242895106852
+            },
+            {
+              "first": 344,
+              "second": 346,
+              "gap_seconds": -0.004889480055851436
+            },
+            {
+              "first": 348,
+              "second": 349,
+              "gap_seconds": -0.42506611801249505
+            },
+            {
+              "first": 354,
+              "second": 355,
+              "gap_seconds": -0.2392248141243556
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.81521987915039,
+        "ram_available_gib": 36.016178131103516,
+        "rss_gib": 1.6949043273925781,
+        "gpu_peak_allocated_gib": 0.1828770637512207,
+        "gpu_peak_reserved_gib": 0.2109375
+      }
+    },
+    {
+      "song_id": 40717,
+      "name": "天使にふれたよ!",
+      "run_id": "E14-S",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.16511627906976745,
+        "onset_f1_50ms": 0.2302325581395349,
+        "onset_f1_100ms": 0.2302325581395349,
+        "time_type_f1": 0.0901077375122429,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.1484852337346707,
+        "reference_grid_bonus": 0.8472622478386167,
+        "reference_notes": 850,
+        "predicted_notes": 171,
+        "reference_unique_onsets": 694,
+        "predicted_unique_onsets": 166,
+        "note_count_ratio": 0.2011764705882353,
+        "matched_onset_mae_ms": 17.767919191920107,
+        "last_onset_delta_seconds": 9.642608000000024,
+        "tail_10s_recall": 0.029411764705882353,
+        "reference_types": {
+          "hold": 218,
+          "flick": 71,
+          "drag": 278,
+          "tap": 283
+        },
+        "predicted_types": {
+          "hold": 35,
+          "tap": 84,
+          "drag": 52
+        },
+        "generated_patterns": {
+          "note_count": 171,
+          "unique_onsets": 166,
+          "type_counts": {
+            "hold": 35,
+            "tap": 84,
+            "drag": 52
+          },
+          "chord_sizes": {
+            "1": 161,
+            "2": 5
+          },
+          "four_onset_patterns": {
+            "unclassified": 117,
+            "AAAA": 25,
+            "ABAB": 6
+          },
+          "singleton_windows": 148,
+          "chord_interrupted_windows": 15,
+          "jack_runs_2_to_3": 16,
+          "jack_runs_4_plus": 5,
+          "longest_jack_run": 10,
+          "hold_overlap_pairs": 1,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 65,
+              "second": 67,
+              "gap_seconds": -0.25400833313530313
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.786331176757812,
+        "ram_available_gib": 36.03443145751953,
+        "rss_gib": 1.6949195861816406,
+        "gpu_peak_allocated_gib": 0.1828770637512207,
+        "gpu_peak_reserved_gib": 0.2109375
+      }
+    },
+    {
+      "song_id": 40717,
+      "name": "天使にふれたよ!",
+      "run_id": "E18-A",
+      "mode": "freex",
+      "epoch": 1300,
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.1146384479717813,
+        "onset_f1_50ms": 0.2786596119929453,
+        "onset_f1_100ms": 0.3262786596119929,
+        "time_type_f1": 0.06828528072837632,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.0977701527272636,
+        "reference_grid_bonus": 0.8472622478386167,
+        "reference_notes": 850,
+        "predicted_notes": 468,
+        "reference_unique_onsets": 694,
+        "predicted_unique_onsets": 440,
+        "note_count_ratio": 0.5505882352941176,
+        "matched_onset_mae_ms": 27.45194303797486,
+        "last_onset_delta_seconds": 9.642606999999998,
+        "tail_10s_recall": 0.6176470588235294,
+        "reference_types": {
+          "hold": 218,
+          "flick": 71,
+          "drag": 278,
+          "tap": 283
+        },
+        "predicted_types": {
+          "tap": 347,
+          "flick": 82,
+          "drag": 19,
+          "hold": 20
+        },
+        "generated_patterns": {
+          "note_count": 468,
+          "unique_onsets": 440,
+          "type_counts": {
+            "tap": 347,
+            "flick": 82,
+            "drag": 19,
+            "hold": 20
+          },
+          "chord_sizes": {
+            "1": 412,
+            "2": 28
+          },
+          "four_onset_patterns": {
+            "AAAA": 80,
+            "unclassified": 232,
+            "ABAB": 67,
+            "monotonic_run": 1
+          },
+          "singleton_windows": 380,
+          "chord_interrupted_windows": 57,
+          "jack_runs_2_to_3": 15,
+          "jack_runs_4_plus": 2,
+          "longest_jack_run": 82,
+          "hold_overlap_pairs": 2,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 310,
+              "second": 312,
+              "gap_seconds": -0.001591332936484946
+            },
+            {
+              "first": 328,
+              "second": 330,
+              "gap_seconds": -0.10808940520820443
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.800628662109375,
+        "ram_available_gib": 36.03364562988281,
+        "rss_gib": 1.7128524780273438,
+        "gpu_peak_allocated_gib": 0.18428659439086914,
+        "gpu_peak_reserved_gib": 0.2109375
+      }
+    },
+    {
+      "song_id": 40717,
+      "name": "天使にふれたよ!",
+      "run_id": "E18-S",
+      "mode": "freex",
+      "epoch": 1400,
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.16411042944785276,
+        "onset_f1_50ms": 0.41411042944785276,
+        "onset_f1_100ms": 0.47392638036809814,
+        "time_type_f1": 0.14947089947089948,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.07976320786882282,
+        "reference_grid_bonus": 0.8472622478386167,
+        "reference_notes": 850,
+        "predicted_notes": 662,
+        "reference_unique_onsets": 694,
+        "predicted_unique_onsets": 610,
+        "note_count_ratio": 0.7788235294117647,
+        "matched_onset_mae_ms": 27.671766666666375,
+        "last_onset_delta_seconds": 9.642608000000024,
+        "tail_10s_recall": 0.6470588235294118,
+        "reference_types": {
+          "hold": 218,
+          "flick": 71,
+          "drag": 278,
+          "tap": 283
+        },
+        "predicted_types": {
+          "tap": 595,
+          "flick": 39,
+          "drag": 24,
+          "hold": 4
+        },
+        "generated_patterns": {
+          "note_count": 662,
+          "unique_onsets": 610,
+          "type_counts": {
+            "tap": 595,
+            "flick": 39,
+            "drag": 24,
+            "hold": 4
+          },
+          "chord_sizes": {
+            "1": 558,
+            "2": 52
+          },
+          "four_onset_patterns": {
+            "AAAA": 82,
+            "unclassified": 324,
+            "monotonic_run": 7,
+            "ABAB": 57
+          },
+          "singleton_windows": 470,
+          "chord_interrupted_windows": 137,
+          "jack_runs_2_to_3": 24,
+          "jack_runs_4_plus": 2,
+          "longest_jack_run": 81,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.757884979248047,
+        "ram_available_gib": 36.01746368408203,
+        "rss_gib": 1.7139511108398438,
+        "gpu_peak_allocated_gib": 0.18464040756225586,
+        "gpu_peak_reserved_gib": 0.2109375
+      }
+    },
+    {
+      "song_id": 37396,
+      "name": "リテラチュア（翻自 上田麗奈）",
+      "run_id": "E14-A",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.3277310924369748,
+        "onset_f1_50ms": 0.4831932773109244,
+        "onset_f1_100ms": 0.5378151260504201,
+        "time_type_f1": 0.18248175182481752,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.14658454683540675,
+        "reference_grid_bonus": 0.9707112970711297,
+        "reference_notes": 297,
+        "predicted_notes": 251,
+        "reference_unique_onsets": 239,
+        "predicted_unique_onsets": 237,
+        "note_count_ratio": 0.8451178451178452,
+        "matched_onset_mae_ms": 19.963643478260913,
+        "last_onset_delta_seconds": 3.3874080000000077,
+        "tail_10s_recall": 0.6538461538461539,
+        "reference_types": {
+          "tap": 236,
+          "hold": 40,
+          "drag": 12,
+          "flick": 9
+        },
+        "predicted_types": {
+          "drag": 86,
+          "flick": 22,
+          "tap": 122,
+          "hold": 21
+        },
+        "generated_patterns": {
+          "note_count": 251,
+          "unique_onsets": 237,
+          "type_counts": {
+            "drag": 86,
+            "flick": 22,
+            "tap": 122,
+            "hold": 21
+          },
+          "chord_sizes": {
+            "1": 223,
+            "2": 14
+          },
+          "four_onset_patterns": {
+            "AAAA": 38,
+            "unclassified": 123,
+            "ABAB": 25,
+            "monotonic_run": 1
+          },
+          "singleton_windows": 187,
+          "chord_interrupted_windows": 47,
+          "jack_runs_2_to_3": 26,
+          "jack_runs_4_plus": 4,
+          "longest_jack_run": 29,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.779388427734375,
+        "ram_available_gib": 36.055816650390625,
+        "rss_gib": 1.6783485412597656,
+        "gpu_peak_allocated_gib": 0.1828770637512207,
+        "gpu_peak_reserved_gib": 0.2109375
+      }
+    },
+    {
+      "song_id": 37396,
+      "name": "リテラチュア（翻自 上田麗奈）",
+      "run_id": "E14-S",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.34838709677419355,
+        "onset_f1_50ms": 0.5419354838709678,
+        "onset_f1_100ms": 0.5935483870967742,
+        "time_type_f1": 0.291970802919708,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.105847660176983,
+        "reference_grid_bonus": 0.9707112970711297,
+        "reference_notes": 297,
+        "predicted_notes": 251,
+        "reference_unique_onsets": 239,
+        "predicted_unique_onsets": 226,
+        "note_count_ratio": 0.8451178451178452,
+        "matched_onset_mae_ms": 21.809301587301437,
+        "last_onset_delta_seconds": 3.3874080000000077,
+        "tail_10s_recall": 0.5769230769230769,
+        "reference_types": {
+          "tap": 236,
+          "hold": 40,
+          "drag": 12,
+          "flick": 9
+        },
+        "predicted_types": {
+          "hold": 42,
+          "tap": 164,
+          "flick": 23,
+          "drag": 22
+        },
+        "generated_patterns": {
+          "note_count": 251,
+          "unique_onsets": 226,
+          "type_counts": {
+            "hold": 42,
+            "tap": 164,
+            "flick": 23,
+            "drag": 22
+          },
+          "chord_sizes": {
+            "1": 201,
+            "2": 25
+          },
+          "four_onset_patterns": {
+            "ABAB": 26,
+            "unclassified": 121,
+            "AAAA": 1,
+            "monotonic_run": 1
+          },
+          "singleton_windows": 149,
+          "chord_interrupted_windows": 74,
+          "jack_runs_2_to_3": 30,
+          "jack_runs_4_plus": 1,
+          "longest_jack_run": 4,
+          "hold_overlap_pairs": 3,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 2,
+              "second": 5,
+              "gap_seconds": -0.5593805784805106
+            },
+            {
+              "first": 3,
+              "second": 4,
+              "gap_seconds": -0.2507121915321342
+            },
+            {
+              "first": 11,
+              "second": 13,
+              "gap_seconds": -0.7150702143215781
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.77242660522461,
+        "ram_available_gib": 36.06486511230469,
+        "rss_gib": 1.6783485412597656,
+        "gpu_peak_allocated_gib": 0.1828770637512207,
+        "gpu_peak_reserved_gib": 0.2109375
+      }
+    },
+    {
+      "song_id": 37396,
+      "name": "リテラチュア（翻自 上田麗奈）",
+      "run_id": "E18-A",
+      "mode": "freex",
+      "epoch": 1300,
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.31871345029239767,
+        "onset_f1_50ms": 0.543859649122807,
+        "onset_f1_100ms": 0.5906432748538012,
+        "time_type_f1": 0.29906542056074764,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.1161625288389454,
+        "reference_grid_bonus": 0.9707112970711297,
+        "reference_notes": 297,
+        "predicted_notes": 452,
+        "reference_unique_onsets": 239,
+        "predicted_unique_onsets": 445,
+        "note_count_ratio": 1.5218855218855218,
+        "matched_onset_mae_ms": 22.586467741935355,
+        "last_onset_delta_seconds": 3.3874080000000077,
+        "tail_10s_recall": 0.8461538461538461,
+        "reference_types": {
+          "tap": 236,
+          "hold": 40,
+          "drag": 12,
+          "flick": 9
+        },
+        "predicted_types": {
+          "tap": 274,
+          "flick": 50,
+          "drag": 110,
+          "hold": 18
+        },
+        "generated_patterns": {
+          "note_count": 452,
+          "unique_onsets": 445,
+          "type_counts": {
+            "tap": 274,
+            "flick": 50,
+            "drag": 110,
+            "hold": 18
+          },
+          "chord_sizes": {
+            "1": 438,
+            "2": 7
+          },
+          "four_onset_patterns": {
+            "unclassified": 354,
+            "ABAB": 28,
+            "monotonic_run": 19,
+            "AAAA": 14
+          },
+          "singleton_windows": 415,
+          "chord_interrupted_windows": 27,
+          "jack_runs_2_to_3": 26,
+          "jack_runs_4_plus": 5,
+          "longest_jack_run": 9,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.73904800415039,
+        "ram_available_gib": 36.058475494384766,
+        "rss_gib": 1.697235107421875,
+        "gpu_peak_allocated_gib": 0.18464040756225586,
+        "gpu_peak_reserved_gib": 0.2109375
+      }
+    },
+    {
+      "song_id": 37396,
+      "name": "リテラチュア（翻自 上田麗奈）",
+      "run_id": "E18-S",
+      "mode": "freex",
+      "epoch": 1400,
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.2984126984126984,
+        "onset_f1_50ms": 0.5111111111111111,
+        "onset_f1_100ms": 0.5873015873015873,
+        "time_type_f1": 0.2733812949640288,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.14010386496163293,
+        "reference_grid_bonus": 0.9707112970711297,
+        "reference_notes": 297,
+        "predicted_notes": 398,
+        "reference_unique_onsets": 239,
+        "predicted_unique_onsets": 391,
+        "note_count_ratio": 1.34006734006734,
+        "matched_onset_mae_ms": 22.938192546583323,
+        "last_onset_delta_seconds": 3.3874080000000077,
+        "tail_10s_recall": 0.19230769230769232,
+        "reference_types": {
+          "tap": 236,
+          "hold": 40,
+          "drag": 12,
+          "flick": 9
+        },
+        "predicted_types": {
+          "tap": 231,
+          "flick": 29,
+          "hold": 7,
+          "drag": 131
+        },
+        "generated_patterns": {
+          "note_count": 398,
+          "unique_onsets": 391,
+          "type_counts": {
+            "tap": 231,
+            "flick": 29,
+            "hold": 7,
+            "drag": 131
+          },
+          "chord_sizes": {
+            "1": 384,
+            "2": 7
+          },
+          "four_onset_patterns": {
+            "unclassified": 220,
+            "ABAB": 88,
+            "AAAA": 37,
+            "monotonic_run": 23
+          },
+          "singleton_windows": 368,
+          "chord_interrupted_windows": 20,
+          "jack_runs_2_to_3": 26,
+          "jack_runs_4_plus": 5,
+          "longest_jack_run": 29,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.720680236816406,
+        "ram_available_gib": 36.030948638916016,
+        "rss_gib": 1.6972427368164062,
+        "gpu_peak_allocated_gib": 0.18464040756225586,
+        "gpu_peak_reserved_gib": 0.212890625
+      }
+    },
+    {
+      "song_id": 6990,
+      "name": "Constant Moderato",
+      "run_id": "E14-A",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.6020761245674741,
+        "onset_f1_50ms": 0.6349480968858131,
+        "onset_f1_100ms": 0.6384083044982699,
+        "time_type_f1": 0.44903777619387025,
+        "completed_only_time_type_f1": 0.44903777619387025,
+        "grid_bonus": 0.37211595345049553,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 625,
+        "predicted_notes": 778,
+        "reference_unique_onsets": 417,
+        "predicted_unique_onsets": 739,
+        "note_count_ratio": 1.2448,
+        "matched_onset_mae_ms": 10.347787465939769,
+        "last_onset_delta_seconds": -2.958578999999986,
+        "tail_10s_recall": 0.0,
+        "reference_types": {
+          "flick": 41,
+          "drag": 33,
+          "tap": 539,
+          "hold": 12
+        },
+        "predicted_types": {
+          "tap": 709,
+          "hold": 11,
+          "flick": 32,
+          "drag": 26
+        },
+        "generated_patterns": {
+          "note_count": 778,
+          "unique_onsets": 739,
+          "type_counts": {
+            "tap": 709,
+            "hold": 11,
+            "flick": 32,
+            "drag": 26
+          },
+          "chord_sizes": {
+            "1": 700,
+            "2": 39
+          },
+          "four_onset_patterns": {
+            "unclassified": 503,
+            "ABAB": 70,
+            "AAAA": 43
+          },
+          "singleton_windows": 616,
+          "chord_interrupted_windows": 120,
+          "jack_runs_2_to_3": 94,
+          "jack_runs_4_plus": 22,
+          "longest_jack_run": 14,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.74618148803711,
+        "ram_available_gib": 36.04579162597656,
+        "rss_gib": 1.7106208801269531,
+        "gpu_peak_allocated_gib": 0.1828770637512207,
+        "gpu_peak_reserved_gib": 0.2109375
+      }
+    },
+    {
+      "song_id": 6990,
+      "name": "Constant Moderato",
+      "run_id": "E14-S",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.6288770053475936,
+        "onset_f1_50ms": 0.6395721925133689,
+        "onset_f1_100ms": 0.6438502673796791,
+        "time_type_f1": 0.41420118343195267,
+        "completed_only_time_type_f1": 0.41420118343195267,
+        "grid_bonus": 0.4388552978119697,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 625,
+        "predicted_notes": 558,
+        "reference_unique_onsets": 417,
+        "predicted_unique_onsets": 518,
+        "note_count_ratio": 0.8928,
+        "matched_onset_mae_ms": 8.889749163879397,
+        "last_onset_delta_seconds": -8.587995000000006,
+        "tail_10s_recall": 0.0,
+        "reference_types": {
+          "flick": 41,
+          "drag": 33,
+          "tap": 539,
+          "hold": 12
+        },
+        "predicted_types": {
+          "tap": 452,
+          "flick": 38,
+          "hold": 20,
+          "drag": 48
+        },
+        "generated_patterns": {
+          "note_count": 558,
+          "unique_onsets": 518,
+          "type_counts": {
+            "tap": 452,
+            "flick": 38,
+            "hold": 20,
+            "drag": 48
+          },
+          "chord_sizes": {
+            "1": 478,
+            "2": 40
+          },
+          "four_onset_patterns": {
+            "unclassified": 316,
+            "monotonic_run": 5,
+            "ABAB": 38,
+            "AAAA": 47
+          },
+          "singleton_windows": 406,
+          "chord_interrupted_windows": 109,
+          "jack_runs_2_to_3": 54,
+          "jack_runs_4_plus": 8,
+          "longest_jack_run": 33,
+          "hold_overlap_pairs": 2,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 428,
+              "second": 431,
+              "gap_seconds": -0.6694438327088506
+            },
+            {
+              "first": 463,
+              "second": 465,
+              "gap_seconds": -0.40569908643797703
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.728008270263672,
+        "ram_available_gib": 36.06064987182617,
+        "rss_gib": 1.7106552124023438,
+        "gpu_peak_allocated_gib": 0.1828770637512207,
+        "gpu_peak_reserved_gib": 0.2109375
+      }
+    },
+    {
+      "song_id": 6990,
+      "name": "Constant Moderato",
+      "run_id": "E18-A",
+      "mode": "freex",
+      "epoch": 1300,
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.593170731707317,
+        "onset_f1_50ms": 0.5970731707317073,
+        "onset_f1_100ms": 0.6009756097560975,
+        "time_type_f1": 0.3215926493108729,
+        "completed_only_time_type_f1": 0.3215926493108729,
+        "grid_bonus": 0.5043402385963852,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 625,
+        "predicted_notes": 681,
+        "reference_unique_onsets": 417,
+        "predicted_unique_onsets": 608,
+        "note_count_ratio": 1.0896,
+        "matched_onset_mae_ms": 6.70123202614356,
+        "last_onset_delta_seconds": -7.657172000000003,
+        "tail_10s_recall": 0.0,
+        "reference_types": {
+          "flick": 41,
+          "drag": 33,
+          "tap": 539,
+          "hold": 12
+        },
+        "predicted_types": {
+          "hold": 76,
+          "tap": 458,
+          "drag": 143,
+          "flick": 4
+        },
+        "generated_patterns": {
+          "note_count": 681,
+          "unique_onsets": 608,
+          "type_counts": {
+            "hold": 76,
+            "tap": 458,
+            "drag": 143,
+            "flick": 4
+          },
+          "chord_sizes": {
+            "1": 535,
+            "2": 73
+          },
+          "four_onset_patterns": {
+            "unclassified": 346,
+            "ABAB": 7,
+            "monotonic_run": 22,
+            "AAAA": 18
+          },
+          "singleton_windows": 393,
+          "chord_interrupted_windows": 212,
+          "jack_runs_2_to_3": 24,
+          "jack_runs_4_plus": 5,
+          "longest_jack_run": 11,
+          "hold_overlap_pairs": 1,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 498,
+              "second": 500,
+              "gap_seconds": -0.005135165882762749
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.679122924804688,
+        "ram_available_gib": 35.98064422607422,
+        "rss_gib": 1.7283058166503906,
+        "gpu_peak_allocated_gib": 0.18464040756225586,
+        "gpu_peak_reserved_gib": 0.212890625
+      }
+    },
+    {
+      "song_id": 6990,
+      "name": "Constant Moderato",
+      "run_id": "E18-S",
+      "mode": "freex",
+      "epoch": 1400,
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.5909943714821764,
+        "onset_f1_50ms": 0.5928705440900562,
+        "onset_f1_100ms": 0.5928705440900562,
+        "time_type_f1": 0.28319882611885544,
+        "completed_only_time_type_f1": 0.28319882611885544,
+        "grid_bonus": 0.5219400710836538,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 625,
+        "predicted_notes": 738,
+        "reference_unique_onsets": 417,
+        "predicted_unique_onsets": 649,
+        "note_count_ratio": 1.1808,
+        "matched_onset_mae_ms": 6.586107594936543,
+        "last_onset_delta_seconds": -7.638412999999986,
+        "tail_10s_recall": 0.0,
+        "reference_types": {
+          "flick": 41,
+          "drag": 33,
+          "tap": 539,
+          "hold": 12
+        },
+        "predicted_types": {
+          "hold": 103,
+          "tap": 455,
+          "drag": 167,
+          "flick": 13
+        },
+        "generated_patterns": {
+          "note_count": 738,
+          "unique_onsets": 649,
+          "type_counts": {
+            "hold": 103,
+            "tap": 455,
+            "drag": 167,
+            "flick": 13
+          },
+          "chord_sizes": {
+            "1": 561,
+            "2": 87,
+            "3": 1
+          },
+          "four_onset_patterns": {
+            "unclassified": 370,
+            "monotonic_run": 26,
+            "ABAB": 14,
+            "AAAA": 19
+          },
+          "singleton_windows": 429,
+          "chord_interrupted_windows": 217,
+          "jack_runs_2_to_3": 27,
+          "jack_runs_4_plus": 4,
+          "longest_jack_run": 14,
+          "hold_overlap_pairs": 3,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 13,
+              "second": 14,
+              "gap_seconds": -0.2827298977045247
+            },
+            {
+              "first": 183,
+              "second": 185,
+              "gap_seconds": -0.1831458422602381
+            },
+            {
+              "first": 693,
+              "second": 694,
+              "gap_seconds": -0.14112455060963214
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.657943725585938,
+        "ram_available_gib": 35.98291778564453,
+        "rss_gib": 1.7287673950195312,
+        "gpu_peak_allocated_gib": 0.18464040756225586,
+        "gpu_peak_reserved_gib": 0.212890625
+      }
+    },
+    {
+      "song_id": 30114,
+      "name": "Rubia",
+      "run_id": "E14-A",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.13825608798114689,
+        "onset_f1_50ms": 0.2608012568735271,
+        "onset_f1_100ms": 0.32050274941084056,
+        "time_type_f1": 0.06,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.13460376158940307,
+        "reference_grid_bonus": 0.8340807174887892,
+        "reference_notes": 936,
+        "predicted_notes": 764,
+        "reference_unique_onsets": 669,
+        "predicted_unique_onsets": 604,
+        "note_count_ratio": 0.8162393162393162,
+        "matched_onset_mae_ms": 26.331993975903636,
+        "last_onset_delta_seconds": 11.059408999999988,
+        "tail_10s_recall": 0.0,
+        "reference_types": {
+          "tap": 359,
+          "drag": 407,
+          "hold": 59,
+          "flick": 111
+        },
+        "predicted_types": {
+          "hold": 208,
+          "drag": 323,
+          "tap": 192,
+          "flick": 41
+        },
+        "generated_patterns": {
+          "note_count": 764,
+          "unique_onsets": 604,
+          "type_counts": {
+            "hold": 208,
+            "drag": 323,
+            "tap": 192,
+            "flick": 41
+          },
+          "chord_sizes": {
+            "2": 160,
+            "1": 444
+          },
+          "four_onset_patterns": {
+            "AAAA": 26,
+            "unclassified": 224,
+            "ABAB": 37,
+            "monotonic_run": 1
+          },
+          "singleton_windows": 288,
+          "chord_interrupted_windows": 313,
+          "jack_runs_2_to_3": 63,
+          "jack_runs_4_plus": 9,
+          "longest_jack_run": 11,
+          "hold_overlap_pairs": 36,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 0,
+              "second": 2,
+              "gap_seconds": -1.0749960665011442
+            },
+            {
+              "first": 0,
+              "second": 6,
+              "gap_seconds": -0.35177752009006724
+            },
+            {
+              "first": 2,
+              "second": 6,
+              "gap_seconds": -0.04884027711833472
+            },
+            {
+              "first": 159,
+              "second": 161,
+              "gap_seconds": -0.14031834657691178
+            },
+            {
+              "first": 173,
+              "second": 174,
+              "gap_seconds": -0.24606538782504828
+            },
+            {
+              "first": 191,
+              "second": 193,
+              "gap_seconds": -0.08487008833481013
+            },
+            {
+              "first": 528,
+              "second": 530,
+              "gap_seconds": -0.1142532581880289
+            },
+            {
+              "first": 535,
+              "second": 536,
+              "gap_seconds": -0.30625400583409146
+            },
+            {
+              "first": 535,
+              "second": 538,
+              "gap_seconds": -0.2955072463337274
+            },
+            {
+              "first": 536,
+              "second": 538,
+              "gap_seconds": -0.3201355934408099
+            },
+            {
+              "first": 574,
+              "second": 578,
+              "gap_seconds": -0.006361920419195144
+            },
+            {
+              "first": 578,
+              "second": 580,
+              "gap_seconds": -0.06404582031379391
+            },
+            {
+              "first": 579,
+              "second": 581,
+              "gap_seconds": -0.06404582031379391
+            },
+            {
+              "first": 580,
+              "second": 582,
+              "gap_seconds": -0.061719686084074965
+            },
+            {
+              "first": 581,
+              "second": 583,
+              "gap_seconds": -0.061719686084074965
+            },
+            {
+              "first": 646,
+              "second": 650,
+              "gap_seconds": -0.0008282184944334858
+            },
+            {
+              "first": 672,
+              "second": 673,
+              "gap_seconds": -0.12089032764798446
+            },
+            {
+              "first": 688,
+              "second": 690,
+              "gap_seconds": -0.19330954395103106
+            },
+            {
+              "first": 690,
+              "second": 691,
+              "gap_seconds": -0.10088597214601691
+            },
+            {
+              "first": 695,
+              "second": 697,
+              "gap_seconds": -0.11331265106953481
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.705280303955078,
+        "ram_available_gib": 35.9980354309082,
+        "rss_gib": 1.6859283447265625,
+        "gpu_peak_allocated_gib": 0.18749237060546875,
+        "gpu_peak_reserved_gib": 0.228515625
+      }
+    },
+    {
+      "song_id": 30114,
+      "name": "Rubia",
+      "run_id": "E14-S",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.038751345532831,
+        "onset_f1_50ms": 0.10764262648008611,
+        "onset_f1_100ms": 0.16361679224973089,
+        "time_type_f1": 0.043153526970954356,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.17357244717948653,
+        "reference_grid_bonus": 0.8340807174887892,
+        "reference_notes": 936,
+        "predicted_notes": 269,
+        "reference_unique_onsets": 669,
+        "predicted_unique_onsets": 260,
+        "note_count_ratio": 0.28739316239316237,
+        "matched_onset_mae_ms": 30.543219999999465,
+        "last_onset_delta_seconds": 11.05940799999999,
+        "tail_10s_recall": 0.05,
+        "reference_types": {
+          "tap": 359,
+          "drag": 407,
+          "hold": 59,
+          "flick": 111
+        },
+        "predicted_types": {
+          "tap": 182,
+          "flick": 8,
+          "drag": 54,
+          "hold": 25
+        },
+        "generated_patterns": {
+          "note_count": 269,
+          "unique_onsets": 260,
+          "type_counts": {
+            "tap": 182,
+            "flick": 8,
+            "drag": 54,
+            "hold": 25
+          },
+          "chord_sizes": {
+            "1": 251,
+            "2": 9
+          },
+          "four_onset_patterns": {
+            "unclassified": 140,
+            "ABAB": 49,
+            "monotonic_run": 1,
+            "AAAA": 32
+          },
+          "singleton_windows": 222,
+          "chord_interrupted_windows": 35,
+          "jack_runs_2_to_3": 7,
+          "jack_runs_4_plus": 2,
+          "longest_jack_run": 32,
+          "hold_overlap_pairs": 5,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 57,
+              "second": 59,
+              "gap_seconds": -0.06875939849409463
+            },
+            {
+              "first": 76,
+              "second": 80,
+              "gap_seconds": -0.9433563061455068
+            },
+            {
+              "first": 76,
+              "second": 85,
+              "gap_seconds": -0.43255675390273396
+            },
+            {
+              "first": 80,
+              "second": 85,
+              "gap_seconds": -1.0333180948160496
+            },
+            {
+              "first": 80,
+              "second": 92,
+              "gap_seconds": -0.3909642428748832
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.690093994140625,
+        "ram_available_gib": 35.993709564208984,
+        "rss_gib": 1.685943603515625,
+        "gpu_peak_allocated_gib": 0.18749237060546875,
+        "gpu_peak_reserved_gib": 0.228515625
+      }
+    },
+    {
+      "song_id": 30114,
+      "name": "Rubia",
+      "run_id": "E18-A",
+      "mode": "freex",
+      "epoch": 1300,
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.14545454545454545,
+        "onset_f1_50ms": 0.2159090909090909,
+        "onset_f1_100ms": 0.26590909090909093,
+        "time_type_f1": 0.06764960971379011,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.10342137124802045,
+        "reference_grid_bonus": 0.8340807174887892,
+        "reference_notes": 936,
+        "predicted_notes": 217,
+        "reference_unique_onsets": 669,
+        "predicted_unique_onsets": 211,
+        "note_count_ratio": 0.23183760683760685,
+        "matched_onset_mae_ms": 22.789284210526223,
+        "last_onset_delta_seconds": 11.05940799999999,
+        "tail_10s_recall": 0.45,
+        "reference_types": {
+          "tap": 359,
+          "drag": 407,
+          "hold": 59,
+          "flick": 111
+        },
+        "predicted_types": {
+          "hold": 33,
+          "tap": 133,
+          "flick": 3,
+          "drag": 48
+        },
+        "generated_patterns": {
+          "note_count": 217,
+          "unique_onsets": 211,
+          "type_counts": {
+            "hold": 33,
+            "tap": 133,
+            "flick": 3,
+            "drag": 48
+          },
+          "chord_sizes": {
+            "1": 205,
+            "2": 6
+          },
+          "four_onset_patterns": {
+            "unclassified": 149,
+            "ABAB": 26,
+            "AAAA": 6,
+            "monotonic_run": 5
+          },
+          "singleton_windows": 186,
+          "chord_interrupted_windows": 22,
+          "jack_runs_2_to_3": 15,
+          "jack_runs_4_plus": 3,
+          "longest_jack_run": 7,
+          "hold_overlap_pairs": 2,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 2,
+              "second": 4,
+              "gap_seconds": -0.43362605564922063
+            },
+            {
+              "first": 62,
+              "second": 64,
+              "gap_seconds": -0.10267808002105028
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.633560180664062,
+        "ram_available_gib": 35.950157165527344,
+        "rss_gib": 1.7577362060546875,
+        "gpu_peak_allocated_gib": 0.1870865821838379,
+        "gpu_peak_reserved_gib": 0.23046875
+      }
+    },
+    {
+      "song_id": 30114,
+      "name": "Rubia",
+      "run_id": "E18-S",
+      "mode": "freex",
+      "epoch": 1400,
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.12106537530266344,
+        "onset_f1_50ms": 0.2679580306698951,
+        "onset_f1_100ms": 0.3341404358353511,
+        "time_type_f1": 0.09517514871116986,
+        "completed_only_time_type_f1": 0.09517514871116986,
+        "grid_bonus": 0.1372183204678308,
+        "reference_grid_bonus": 0.8340807174887892,
+        "reference_notes": 936,
+        "predicted_notes": 577,
+        "reference_unique_onsets": 669,
+        "predicted_unique_onsets": 570,
+        "note_count_ratio": 0.6164529914529915,
+        "matched_onset_mae_ms": 27.077771084337698,
+        "last_onset_delta_seconds": 11.056016999999997,
+        "tail_10s_recall": 0.675,
+        "reference_types": {
+          "tap": 359,
+          "drag": 407,
+          "hold": 59,
+          "flick": 111
+        },
+        "predicted_types": {
+          "hold": 82,
+          "flick": 62,
+          "drag": 128,
+          "tap": 305
+        },
+        "generated_patterns": {
+          "note_count": 577,
+          "unique_onsets": 570,
+          "type_counts": {
+            "hold": 82,
+            "flick": 62,
+            "drag": 128,
+            "tap": 305
+          },
+          "chord_sizes": {
+            "1": 563,
+            "2": 7
+          },
+          "four_onset_patterns": {
+            "AAAA": 110,
+            "unclassified": 399,
+            "monotonic_run": 11,
+            "ABAB": 19
+          },
+          "singleton_windows": 539,
+          "chord_interrupted_windows": 28,
+          "jack_runs_2_to_3": 28,
+          "jack_runs_4_plus": 14,
+          "longest_jack_run": 26,
+          "hold_overlap_pairs": 4,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 56,
+              "second": 58,
+              "gap_seconds": -0.297356544831473
+            },
+            {
+              "first": 146,
+              "second": 148,
+              "gap_seconds": -0.11447605222102197
+            },
+            {
+              "first": 159,
+              "second": 161,
+              "gap_seconds": -0.04254637320422461
+            },
+            {
+              "first": 377,
+              "second": 382,
+              "gap_seconds": -0.2013259769616127
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.605361938476562,
+        "ram_available_gib": 35.96272659301758,
+        "rss_gib": 1.7577362060546875,
+        "gpu_peak_allocated_gib": 0.1870865821838379,
+        "gpu_peak_reserved_gib": 0.23046875
+      }
+    },
+    {
+      "song_id": 23968,
+      "name": "Bunny Bunny Carrot Carrot",
+      "run_id": "E14-A",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.4665757162346521,
+        "onset_f1_50ms": 0.5784447476125512,
+        "onset_f1_100ms": 0.597544338335607,
+        "time_type_f1": 0.27050183598531213,
+        "completed_only_time_type_f1": 0.27050183598531213,
+        "grid_bonus": 0.039693066391458136,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 656,
+        "predicted_notes": 978,
+        "reference_unique_onsets": 497,
+        "predicted_unique_onsets": 969,
+        "note_count_ratio": 1.4908536585365855,
+        "matched_onset_mae_ms": 21.253731132075178,
+        "last_onset_delta_seconds": -0.0141050000000007,
+        "tail_10s_recall": 0.45901639344262296,
+        "reference_types": {
+          "flick": 41,
+          "tap": 463,
+          "drag": 50,
+          "hold": 102
+        },
+        "predicted_types": {
+          "tap": 527,
+          "drag": 360,
+          "flick": 75,
+          "hold": 16
+        },
+        "generated_patterns": {
+          "note_count": 978,
+          "unique_onsets": 969,
+          "type_counts": {
+            "tap": 527,
+            "drag": 360,
+            "flick": 75,
+            "hold": 16
+          },
+          "chord_sizes": {
+            "1": 960,
+            "2": 9
+          },
+          "four_onset_patterns": {
+            "unclassified": 684,
+            "monotonic_run": 7,
+            "ABAB": 81,
+            "AAAA": 158
+          },
+          "singleton_windows": 930,
+          "chord_interrupted_windows": 36,
+          "jack_runs_2_to_3": 88,
+          "jack_runs_4_plus": 35,
+          "longest_jack_run": 30,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.669261932373047,
+        "ram_available_gib": 35.9911003112793,
+        "rss_gib": 1.734283447265625,
+        "gpu_peak_allocated_gib": 0.18749237060546875,
+        "gpu_peak_reserved_gib": 0.228515625
+      }
+    },
+    {
+      "song_id": 23968,
+      "name": "Bunny Bunny Carrot Carrot",
+      "run_id": "E14-S",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.5498857578065499,
+        "onset_f1_50ms": 0.6321401370906321,
+        "onset_f1_100ms": 0.6412795125666413,
+        "time_type_f1": 0.24623444662737393,
+        "completed_only_time_type_f1": 0.24623444662737393,
+        "grid_bonus": 0.032433901960792204,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 656,
+        "predicted_notes": 871,
+        "reference_unique_onsets": 497,
+        "predicted_unique_onsets": 816,
+        "note_count_ratio": 1.3277439024390243,
+        "matched_onset_mae_ms": 19.854322891565918,
+        "last_onset_delta_seconds": 1.1971070000000026,
+        "tail_10s_recall": 0.6557377049180327,
+        "reference_types": {
+          "flick": 41,
+          "tap": 463,
+          "drag": 50,
+          "hold": 102
+        },
+        "predicted_types": {
+          "tap": 471,
+          "drag": 279,
+          "flick": 91,
+          "hold": 30
+        },
+        "generated_patterns": {
+          "note_count": 871,
+          "unique_onsets": 816,
+          "type_counts": {
+            "tap": 471,
+            "drag": 279,
+            "flick": 91,
+            "hold": 30
+          },
+          "chord_sizes": {
+            "1": 761,
+            "2": 55
+          },
+          "four_onset_patterns": {
+            "unclassified": 531,
+            "ABAB": 71,
+            "AAAA": 50,
+            "monotonic_run": 5
+          },
+          "singleton_windows": 657,
+          "chord_interrupted_windows": 156,
+          "jack_runs_2_to_3": 70,
+          "jack_runs_4_plus": 21,
+          "longest_jack_run": 12,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.633350372314453,
+        "ram_available_gib": 35.950157165527344,
+        "rss_gib": 1.7342910766601562,
+        "gpu_peak_allocated_gib": 0.18749237060546875,
+        "gpu_peak_reserved_gib": 0.228515625
+      }
+    },
+    {
+      "song_id": 23968,
+      "name": "Bunny Bunny Carrot Carrot",
+      "run_id": "E18-A",
+      "mode": "freex",
+      "epoch": 1300,
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.3835125448028674,
+        "onset_f1_50ms": 0.6487455197132617,
+        "onset_f1_100ms": 0.6684587813620072,
+        "time_type_f1": 0.40929535232383807,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.018691541195471437,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 656,
+        "predicted_notes": 678,
+        "reference_unique_onsets": 497,
+        "predicted_unique_onsets": 619,
+        "note_count_ratio": 1.0335365853658536,
+        "matched_onset_mae_ms": 24.236657458563393,
+        "last_onset_delta_seconds": 3.656176000000002,
+        "tail_10s_recall": 0.26229508196721313,
+        "reference_types": {
+          "flick": 41,
+          "tap": 463,
+          "drag": 50,
+          "hold": 102
+        },
+        "predicted_types": {
+          "drag": 91,
+          "tap": 541,
+          "hold": 25,
+          "flick": 21
+        },
+        "generated_patterns": {
+          "note_count": 678,
+          "unique_onsets": 619,
+          "type_counts": {
+            "drag": 91,
+            "tap": 541,
+            "hold": 25,
+            "flick": 21
+          },
+          "chord_sizes": {
+            "1": 560,
+            "2": 59
+          },
+          "four_onset_patterns": {
+            "AAAA": 49,
+            "unclassified": 361,
+            "ABAB": 22,
+            "monotonic_run": 15
+          },
+          "singleton_windows": 447,
+          "chord_interrupted_windows": 169,
+          "jack_runs_2_to_3": 44,
+          "jack_runs_4_plus": 5,
+          "longest_jack_run": 46,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.58316421508789,
+        "ram_available_gib": 35.94297790527344,
+        "rss_gib": 1.7581710815429688,
+        "gpu_peak_allocated_gib": 0.1870865821838379,
+        "gpu_peak_reserved_gib": 0.23046875
+      }
+    },
+    {
+      "song_id": 23968,
+      "name": "Bunny Bunny Carrot Carrot",
+      "run_id": "E18-S",
+      "mode": "freex",
+      "epoch": 1400,
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.4360033030553262,
+        "onset_f1_50ms": 0.6870355078447564,
+        "onset_f1_100ms": 0.7184145334434352,
+        "time_type_f1": 0.39173789173789175,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.019797146591970488,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 656,
+        "predicted_notes": 748,
+        "reference_unique_onsets": 497,
+        "predicted_unique_onsets": 714,
+        "note_count_ratio": 1.1402439024390243,
+        "matched_onset_mae_ms": 24.01017788461499,
+        "last_onset_delta_seconds": 3.656176000000002,
+        "tail_10s_recall": 0.819672131147541,
+        "reference_types": {
+          "flick": 41,
+          "tap": 463,
+          "drag": 50,
+          "hold": 102
+        },
+        "predicted_types": {
+          "drag": 71,
+          "tap": 632,
+          "hold": 37,
+          "flick": 8
+        },
+        "generated_patterns": {
+          "note_count": 748,
+          "unique_onsets": 714,
+          "type_counts": {
+            "drag": 71,
+            "tap": 632,
+            "hold": 37,
+            "flick": 8
+          },
+          "chord_sizes": {
+            "1": 680,
+            "2": 34
+          },
+          "four_onset_patterns": {
+            "unclassified": 524,
+            "ABAB": 49,
+            "monotonic_run": 11,
+            "AAAA": 21
+          },
+          "singleton_windows": 605,
+          "chord_interrupted_windows": 106,
+          "jack_runs_2_to_3": 35,
+          "jack_runs_4_plus": 5,
+          "longest_jack_run": 15,
+          "hold_overlap_pairs": 4,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 197,
+              "second": 199,
+              "gap_seconds": -0.0028086200300521114
+            },
+            {
+              "first": 198,
+              "second": 200,
+              "gap_seconds": -0.0028086200300521114
+            },
+            {
+              "first": 208,
+              "second": 210,
+              "gap_seconds": -0.0034713483375128362
+            },
+            {
+              "first": 209,
+              "second": 211,
+              "gap_seconds": -0.0034713483375128362
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.539531707763672,
+        "ram_available_gib": 35.90208053588867,
+        "rss_gib": 1.7586669921875,
+        "gpu_peak_allocated_gib": 0.1870865821838379,
+        "gpu_peak_reserved_gib": 0.23046875
+      }
+    },
+    {
+      "song_id": 51352,
+      "name": "トリックハート",
+      "run_id": "E14-A",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.017591339648173207,
+        "onset_f1_50ms": 0.3085250338294993,
+        "onset_f1_100ms": 0.7577807848443843,
+        "time_type_f1": 0.11713191023535852,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.04283096774193801,
+        "reference_grid_bonus": 0.9836512261580381,
+        "reference_notes": 956,
+        "predicted_notes": 871,
+        "reference_unique_onsets": 734,
+        "predicted_unique_onsets": 744,
+        "note_count_ratio": 0.9110878661087866,
+        "matched_onset_mae_ms": 43.348144736841675,
+        "last_onset_delta_seconds": 2.9000000000000057,
+        "tail_10s_recall": 0.42857142857142855,
+        "reference_types": {
+          "tap": 738,
+          "hold": 52,
+          "drag": 146,
+          "flick": 20
+        },
+        "predicted_types": {
+          "hold": 101,
+          "flick": 156,
+          "tap": 399,
+          "drag": 215
+        },
+        "generated_patterns": {
+          "note_count": 871,
+          "unique_onsets": 744,
+          "type_counts": {
+            "hold": 101,
+            "flick": 156,
+            "tap": 399,
+            "drag": 215
+          },
+          "chord_sizes": {
+            "1": 617,
+            "2": 127
+          },
+          "four_onset_patterns": {
+            "ABAB": 46,
+            "unclassified": 318,
+            "AAAA": 32
+          },
+          "singleton_windows": 396,
+          "chord_interrupted_windows": 345,
+          "jack_runs_2_to_3": 62,
+          "jack_runs_4_plus": 13,
+          "longest_jack_run": 20,
+          "hold_overlap_pairs": 4,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 17,
+              "second": 19,
+              "gap_seconds": -0.3091653753786705
+            },
+            {
+              "first": 508,
+              "second": 510,
+              "gap_seconds": -0.0003501494184945386
+            },
+            {
+              "first": 530,
+              "second": 534,
+              "gap_seconds": -0.002114393446191798
+            },
+            {
+              "first": 658,
+              "second": 662,
+              "gap_seconds": -0.020920489045238355
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.620704650878906,
+        "ram_available_gib": 35.94709396362305,
+        "rss_gib": 1.7513961791992188,
+        "gpu_peak_allocated_gib": 0.18749237060546875,
+        "gpu_peak_reserved_gib": 0.228515625
+      }
+    },
+    {
+      "song_id": 51352,
+      "name": "トリックハート",
+      "run_id": "E14-S",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.019217570350034317,
+        "onset_f1_50ms": 0.3225806451612903,
+        "onset_f1_100ms": 0.785175017158545,
+        "time_type_f1": 0.11349862258953168,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.046475352697093845,
+        "reference_grid_bonus": 0.9836512261580381,
+        "reference_notes": 956,
+        "predicted_notes": 859,
+        "reference_unique_onsets": 734,
+        "predicted_unique_onsets": 723,
+        "note_count_ratio": 0.8985355648535565,
+        "matched_onset_mae_ms": 43.64860000000114,
+        "last_onset_delta_seconds": 2.899999000000008,
+        "tail_10s_recall": 0.4897959183673469,
+        "reference_types": {
+          "tap": 738,
+          "hold": 52,
+          "drag": 146,
+          "flick": 20
+        },
+        "predicted_types": {
+          "hold": 179,
+          "tap": 332,
+          "flick": 124,
+          "drag": 224
+        },
+        "generated_patterns": {
+          "note_count": 859,
+          "unique_onsets": 723,
+          "type_counts": {
+            "hold": 179,
+            "tap": 332,
+            "flick": 124,
+            "drag": 224
+          },
+          "chord_sizes": {
+            "1": 587,
+            "2": 136
+          },
+          "four_onset_patterns": {
+            "ABAB": 30,
+            "unclassified": 313,
+            "AAAA": 14
+          },
+          "singleton_windows": 357,
+          "chord_interrupted_windows": 363,
+          "jack_runs_2_to_3": 79,
+          "jack_runs_4_plus": 7,
+          "longest_jack_run": 8,
+          "hold_overlap_pairs": 19,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 27,
+              "second": 30,
+              "gap_seconds": -1.0064290990851088
+            },
+            {
+              "first": 77,
+              "second": 79,
+              "gap_seconds": -0.00242318012817222
+            },
+            {
+              "first": 79,
+              "second": 83,
+              "gap_seconds": -0.18376211430210176
+            },
+            {
+              "first": 511,
+              "second": 514,
+              "gap_seconds": -0.36952931722004223
+            },
+            {
+              "first": 519,
+              "second": 521,
+              "gap_seconds": -0.10854123277728434
+            },
+            {
+              "first": 531,
+              "second": 537,
+              "gap_seconds": -0.27323972394947305
+            },
+            {
+              "first": 573,
+              "second": 579,
+              "gap_seconds": -0.09955384269592571
+            },
+            {
+              "first": 578,
+              "second": 585,
+              "gap_seconds": -0.10144691934391403
+            },
+            {
+              "first": 585,
+              "second": 590,
+              "gap_seconds": -0.10405712309339776
+            },
+            {
+              "first": 629,
+              "second": 635,
+              "gap_seconds": -0.19398685654275027
+            },
+            {
+              "first": 658,
+              "second": 661,
+              "gap_seconds": -0.3498454606451986
+            },
+            {
+              "first": 740,
+              "second": 742,
+              "gap_seconds": -0.004499317956344839
+            },
+            {
+              "first": 820,
+              "second": 824,
+              "gap_seconds": -0.20497214561686405
+            },
+            {
+              "first": 824,
+              "second": 827,
+              "gap_seconds": -0.5904426221782444
+            },
+            {
+              "first": 824,
+              "second": 830,
+              "gap_seconds": -9.892366369967931e-05
+            },
+            {
+              "first": 829,
+              "second": 831,
+              "gap_seconds": -0.20428338775292332
+            },
+            {
+              "first": 831,
+              "second": 836,
+              "gap_seconds": -0.8008811511257932
+            },
+            {
+              "first": 842,
+              "second": 851,
+              "gap_seconds": -0.4894642082093128
+            },
+            {
+              "first": 842,
+              "second": 854,
+              "gap_seconds": -0.16106787441538017
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.59259033203125,
+        "ram_available_gib": 35.95779037475586,
+        "rss_gib": 1.7515678405761719,
+        "gpu_peak_allocated_gib": 0.18749237060546875,
+        "gpu_peak_reserved_gib": 0.228515625
+      }
+    },
+    {
+      "song_id": 51352,
+      "name": "トリックハート",
+      "run_id": "E18-A",
+      "mode": "freex",
+      "epoch": 1300,
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.0195822454308094,
+        "onset_f1_50ms": 0.4281984334203655,
+        "onset_f1_100ms": 0.8133159268929504,
+        "time_type_f1": 0.20755781161872533,
+        "completed_only_time_type_f1": 0.20755781161872533,
+        "grid_bonus": 0.04317503759397765,
+        "reference_grid_bonus": 0.9836512261580381,
+        "reference_notes": 956,
+        "predicted_notes": 817,
+        "reference_unique_onsets": 734,
+        "predicted_unique_onsets": 798,
+        "note_count_ratio": 0.854602510460251,
+        "matched_onset_mae_ms": 43.189719512194934,
+        "last_onset_delta_seconds": 0.8931520000000148,
+        "tail_10s_recall": 0.40816326530612246,
+        "reference_types": {
+          "tap": 738,
+          "hold": 52,
+          "drag": 146,
+          "flick": 20
+        },
+        "predicted_types": {
+          "flick": 72,
+          "tap": 553,
+          "drag": 137,
+          "hold": 55
+        },
+        "generated_patterns": {
+          "note_count": 817,
+          "unique_onsets": 798,
+          "type_counts": {
+            "flick": 72,
+            "tap": 553,
+            "drag": 137,
+            "hold": 55
+          },
+          "chord_sizes": {
+            "1": 779,
+            "2": 19
+          },
+          "four_onset_patterns": {
+            "unclassified": 661,
+            "monotonic_run": 36,
+            "AAAA": 10,
+            "ABAB": 15
+          },
+          "singleton_windows": 722,
+          "chord_interrupted_windows": 73,
+          "jack_runs_2_to_3": 36,
+          "jack_runs_4_plus": 5,
+          "longest_jack_run": 6,
+          "hold_overlap_pairs": 1,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 407,
+              "second": 410,
+              "gap_seconds": -0.013837922457398122
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.515941619873047,
+        "ram_available_gib": 35.895320892333984,
+        "rss_gib": 1.7786026000976562,
+        "gpu_peak_allocated_gib": 0.1870865821838379,
+        "gpu_peak_reserved_gib": 0.23046875
+      }
+    },
+    {
+      "song_id": 51352,
+      "name": "トリックハート",
+      "run_id": "E18-S",
+      "mode": "freex",
+      "epoch": 1400,
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.021231422505307854,
+        "onset_f1_50ms": 0.3326256192498231,
+        "onset_f1_100ms": 0.7699929228591649,
+        "time_type_f1": 0.12455089820359282,
+        "completed_only_time_type_f1": 0.12455089820359282,
+        "grid_bonus": 0.028973078055963185,
+        "reference_grid_bonus": 0.9836512261580381,
+        "reference_notes": 956,
+        "predicted_notes": 714,
+        "reference_unique_onsets": 734,
+        "predicted_unique_onsets": 679,
+        "note_count_ratio": 0.7468619246861925,
+        "matched_onset_mae_ms": 43.02694893617041,
+        "last_onset_delta_seconds": -7.740991000000008,
+        "tail_10s_recall": 0.061224489795918366,
+        "reference_types": {
+          "tap": 738,
+          "hold": 52,
+          "drag": 146,
+          "flick": 20
+        },
+        "predicted_types": {
+          "hold": 45,
+          "tap": 335,
+          "drag": 226,
+          "flick": 108
+        },
+        "generated_patterns": {
+          "note_count": 714,
+          "unique_onsets": 679,
+          "type_counts": {
+            "hold": 45,
+            "tap": 335,
+            "drag": 226,
+            "flick": 108
+          },
+          "chord_sizes": {
+            "2": 35,
+            "1": 644
+          },
+          "four_onset_patterns": {
+            "unclassified": 385,
+            "monotonic_run": 26,
+            "AAAA": 133,
+            "ABAB": 17
+          },
+          "singleton_windows": 561,
+          "chord_interrupted_windows": 115,
+          "jack_runs_2_to_3": 29,
+          "jack_runs_4_plus": 8,
+          "longest_jack_run": 57,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.471736907958984,
+        "ram_available_gib": 35.89825439453125,
+        "rss_gib": 1.7786216735839844,
+        "gpu_peak_allocated_gib": 0.1870865821838379,
+        "gpu_peak_reserved_gib": 0.23046875
+      }
+    },
+    {
+      "song_id": 64888,
+      "name": "Yuri on ICE",
+      "run_id": "E14-A",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.18313791178112787,
+        "onset_f1_50ms": 0.3472920156337242,
+        "onset_f1_100ms": 0.4355108877721943,
+        "time_type_f1": 0.11776447105788423,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.1661786094420676,
+        "reference_grid_bonus": 0.5686813186813187,
+        "reference_notes": 1299,
+        "predicted_notes": 705,
+        "reference_unique_onsets": 1092,
+        "predicted_unique_onsets": 699,
+        "note_count_ratio": 0.5427251732101617,
+        "matched_onset_mae_ms": 24.58690996784501,
+        "last_onset_delta_seconds": 9.96578199999999,
+        "tail_10s_recall": 0.6666666666666666,
+        "reference_types": {
+          "tap": 889,
+          "drag": 276,
+          "flick": 24,
+          "hold": 110
+        },
+        "predicted_types": {
+          "hold": 14,
+          "drag": 361,
+          "tap": 330
+        },
+        "generated_patterns": {
+          "note_count": 705,
+          "unique_onsets": 699,
+          "type_counts": {
+            "hold": 14,
+            "drag": 361,
+            "tap": 330
+          },
+          "chord_sizes": {
+            "1": 693,
+            "2": 6
+          },
+          "four_onset_patterns": {
+            "unclassified": 429,
+            "ABAB": 104,
+            "AAAA": 140,
+            "monotonic_run": 1
+          },
+          "singleton_windows": 674,
+          "chord_interrupted_windows": 22,
+          "jack_runs_2_to_3": 65,
+          "jack_runs_4_plus": 27,
+          "longest_jack_run": 36,
+          "hold_overlap_pairs": 1,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 61,
+              "second": 62,
+              "gap_seconds": -0.6090382741638347
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.565921783447266,
+        "ram_available_gib": 35.95526885986328,
+        "rss_gib": 1.7651214599609375,
+        "gpu_peak_allocated_gib": 0.19692325592041016,
+        "gpu_peak_reserved_gib": 0.248046875
+      }
+    },
+    {
+      "song_id": 64888,
+      "name": "Yuri on ICE",
+      "run_id": "E14-S",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.06795366795366796,
+        "onset_f1_50ms": 0.14826254826254825,
+        "onset_f1_100ms": 0.19305019305019305,
+        "time_type_f1": 0.07304116865869854,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.1854853464695797,
+        "reference_grid_bonus": 0.5686813186813187,
+        "reference_notes": 1299,
+        "predicted_notes": 207,
+        "reference_unique_onsets": 1092,
+        "predicted_unique_onsets": 203,
+        "note_count_ratio": 0.15935334872979215,
+        "matched_onset_mae_ms": 26.838666666667148,
+        "last_onset_delta_seconds": 9.96578199999999,
+        "tail_10s_recall": 0.2,
+        "reference_types": {
+          "tap": 889,
+          "drag": 276,
+          "flick": 24,
+          "hold": 110
+        },
+        "predicted_types": {
+          "hold": 12,
+          "tap": 143,
+          "drag": 52
+        },
+        "generated_patterns": {
+          "note_count": 207,
+          "unique_onsets": 203,
+          "type_counts": {
+            "hold": 12,
+            "tap": 143,
+            "drag": 52
+          },
+          "chord_sizes": {
+            "1": 199,
+            "2": 4
+          },
+          "four_onset_patterns": {
+            "unclassified": 114,
+            "ABAB": 55,
+            "AAAA": 15
+          },
+          "singleton_windows": 184,
+          "chord_interrupted_windows": 16,
+          "jack_runs_2_to_3": 16,
+          "jack_runs_4_plus": 2,
+          "longest_jack_run": 16,
+          "hold_overlap_pairs": 3,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 8,
+              "second": 12,
+              "gap_seconds": -0.38364101972169085
+            },
+            {
+              "first": 31,
+              "second": 38,
+              "gap_seconds": -0.11764686636373423
+            },
+            {
+              "first": 38,
+              "second": 43,
+              "gap_seconds": -1.5151109704949697
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.549076080322266,
+        "ram_available_gib": 35.95073318481445,
+        "rss_gib": 1.7651214599609375,
+        "gpu_peak_allocated_gib": 0.19692325592041016,
+        "gpu_peak_reserved_gib": 0.248046875
+      }
+    },
+    {
+      "song_id": 64888,
+      "name": "Yuri on ICE",
+      "run_id": "E18-A",
+      "mode": "freex",
+      "epoch": 1300,
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.13067400275103164,
+        "onset_f1_50ms": 0.2696011004126547,
+        "onset_f1_100ms": 0.33975240715268223,
+        "time_type_f1": 0.10059880239520957,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.1703074769797286,
+        "reference_grid_bonus": 0.5686813186813187,
+        "reference_notes": 1299,
+        "predicted_notes": 371,
+        "reference_unique_onsets": 1092,
+        "predicted_unique_onsets": 362,
+        "note_count_ratio": 0.28560431100846806,
+        "matched_onset_mae_ms": 26.074887755102367,
+        "last_onset_delta_seconds": 9.96578199999999,
+        "tail_10s_recall": 0.0,
+        "reference_types": {
+          "tap": 889,
+          "drag": 276,
+          "flick": 24,
+          "hold": 110
+        },
+        "predicted_types": {
+          "drag": 134,
+          "hold": 64,
+          "flick": 11,
+          "tap": 162
+        },
+        "generated_patterns": {
+          "note_count": 371,
+          "unique_onsets": 362,
+          "type_counts": {
+            "drag": 134,
+            "hold": 64,
+            "flick": 11,
+            "tap": 162
+          },
+          "chord_sizes": {
+            "1": 353,
+            "2": 9
+          },
+          "four_onset_patterns": {
+            "unclassified": 274,
+            "ABAB": 16,
+            "AAAA": 11,
+            "monotonic_run": 26
+          },
+          "singleton_windows": 327,
+          "chord_interrupted_windows": 32,
+          "jack_runs_2_to_3": 21,
+          "jack_runs_4_plus": 3,
+          "longest_jack_run": 8,
+          "hold_overlap_pairs": 15,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 8,
+              "second": 10,
+              "gap_seconds": -0.3593849877597517
+            },
+            {
+              "first": 16,
+              "second": 20,
+              "gap_seconds": -1.0007626266652458
+            },
+            {
+              "first": 16,
+              "second": 22,
+              "gap_seconds": -0.15113276821144694
+            },
+            {
+              "first": 20,
+              "second": 22,
+              "gap_seconds": -0.6503701415462011
+            },
+            {
+              "first": 23,
+              "second": 24,
+              "gap_seconds": -1.1135042317708326
+            },
+            {
+              "first": 26,
+              "second": 28,
+              "gap_seconds": -0.721921587401237
+            },
+            {
+              "first": 29,
+              "second": 33,
+              "gap_seconds": -0.009732616191008958
+            },
+            {
+              "first": 30,
+              "second": 32,
+              "gap_seconds": -0.7732214147866188
+            },
+            {
+              "first": 33,
+              "second": 35,
+              "gap_seconds": -0.9866778661334337
+            },
+            {
+              "first": 33,
+              "second": 39,
+              "gap_seconds": -0.01506396235251728
+            },
+            {
+              "first": 34,
+              "second": 38,
+              "gap_seconds": -0.7245388274938875
+            },
+            {
+              "first": 35,
+              "second": 39,
+              "gap_seconds": -0.5283860962190836
+            },
+            {
+              "first": 281,
+              "second": 284,
+              "gap_seconds": -0.1994219597018514
+            },
+            {
+              "first": 297,
+              "second": 299,
+              "gap_seconds": -2.52834352800366
+            },
+            {
+              "first": 363,
+              "second": 365,
+              "gap_seconds": -1.873428817368449
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.454681396484375,
+        "ram_available_gib": 35.898990631103516,
+        "rss_gib": 1.7791900634765625,
+        "gpu_peak_allocated_gib": 0.1983327865600586,
+        "gpu_peak_reserved_gib": 0.25
+      }
+    },
+    {
+      "song_id": 64888,
+      "name": "Yuri on ICE",
+      "run_id": "E18-S",
+      "mode": "freex",
+      "epoch": 1400,
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.20725388601036268,
+        "onset_f1_50ms": 0.41450777202072536,
+        "onset_f1_100ms": 0.51237766263673,
+        "time_type_f1": 0.20154241645244217,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.15908531266151132,
+        "reference_grid_bonus": 0.5686813186813187,
+        "reference_notes": 1299,
+        "predicted_notes": 646,
+        "reference_unique_onsets": 1092,
+        "predicted_unique_onsets": 645,
+        "note_count_ratio": 0.4973056197074673,
+        "matched_onset_mae_ms": 24.73863055555528,
+        "last_onset_delta_seconds": 9.96578199999999,
+        "tail_10s_recall": 0.0,
+        "reference_types": {
+          "tap": 889,
+          "drag": 276,
+          "flick": 24,
+          "hold": 110
+        },
+        "predicted_types": {
+          "tap": 291,
+          "drag": 316,
+          "flick": 10,
+          "hold": 29
+        },
+        "generated_patterns": {
+          "note_count": 646,
+          "unique_onsets": 645,
+          "type_counts": {
+            "tap": 291,
+            "drag": 316,
+            "flick": 10,
+            "hold": 29
+          },
+          "chord_sizes": {
+            "1": 644,
+            "2": 1
+          },
+          "four_onset_patterns": {
+            "unclassified": 471,
+            "AAAA": 94,
+            "ABAB": 45,
+            "monotonic_run": 28
+          },
+          "singleton_windows": 638,
+          "chord_interrupted_windows": 4,
+          "jack_runs_2_to_3": 56,
+          "jack_runs_4_plus": 14,
+          "longest_jack_run": 35,
+          "hold_overlap_pairs": 2,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 610,
+              "second": 611,
+              "gap_seconds": -0.0757109543850163
+            },
+            {
+              "first": 638,
+              "second": 639,
+              "gap_seconds": -0.05110967311730974
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.385265350341797,
+        "ram_available_gib": 36.763912200927734,
+        "rss_gib": 1.7794189453125,
+        "gpu_peak_allocated_gib": 0.1983327865600586,
+        "gpu_peak_reserved_gib": 0.25
+      }
+    },
+    {
+      "song_id": 51818,
+      "name": "emp",
+      "run_id": "E14-A",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.7031327697662855,
+        "onset_f1_50ms": 0.7598209845847836,
+        "onset_f1_100ms": 0.8125310790651418,
+        "time_type_f1": 0.42159143787808284,
+        "completed_only_time_type_f1": 0.42159143787808284,
+        "grid_bonus": 0.0479254746136701,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 1200,
+        "predicted_notes": 949,
+        "reference_unique_onsets": 1105,
+        "predicted_unique_onsets": 906,
+        "note_count_ratio": 0.7908333333333334,
+        "matched_onset_mae_ms": 17.77789267015691,
+        "last_onset_delta_seconds": 1.474929000000003,
+        "tail_10s_recall": 0.3258426966292135,
+        "reference_types": {
+          "tap": 884,
+          "flick": 76,
+          "hold": 50,
+          "drag": 190
+        },
+        "predicted_types": {
+          "tap": 632,
+          "hold": 24,
+          "flick": 91,
+          "drag": 202
+        },
+        "generated_patterns": {
+          "note_count": 949,
+          "unique_onsets": 906,
+          "type_counts": {
+            "tap": 632,
+            "hold": 24,
+            "flick": 91,
+            "drag": 202
+          },
+          "chord_sizes": {
+            "2": 43,
+            "1": 863
+          },
+          "four_onset_patterns": {
+            "ABAB": 145,
+            "unclassified": 548,
+            "AAAA": 105,
+            "monotonic_run": 1
+          },
+          "singleton_windows": 799,
+          "chord_interrupted_windows": 104,
+          "jack_runs_2_to_3": 47,
+          "jack_runs_4_plus": 14,
+          "longest_jack_run": 41,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.528865814208984,
+        "ram_available_gib": 35.88538360595703,
+        "rss_gib": 1.7550163269042969,
+        "gpu_peak_allocated_gib": 0.19692325592041016,
+        "gpu_peak_reserved_gib": 0.248046875
+      }
+    },
+    {
+      "song_id": 51818,
+      "name": "emp",
+      "run_id": "E14-S",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.6690758905524006,
+        "onset_f1_50ms": 0.7237996902426432,
+        "onset_f1_100ms": 0.771295818275684,
+        "time_type_f1": 0.37761557177615573,
+        "completed_only_time_type_f1": 0.37761557177615573,
+        "grid_bonus": 0.03466896153844141,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 1200,
+        "predicted_notes": 855,
+        "reference_unique_onsets": 1105,
+        "predicted_unique_onsets": 832,
+        "note_count_ratio": 0.7125,
+        "matched_onset_mae_ms": 17.978854493580023,
+        "last_onset_delta_seconds": 1.47470899999999,
+        "tail_10s_recall": 0.0,
+        "reference_types": {
+          "tap": 884,
+          "flick": 76,
+          "hold": 50,
+          "drag": 190
+        },
+        "predicted_types": {
+          "tap": 506,
+          "flick": 32,
+          "drag": 281,
+          "hold": 36
+        },
+        "generated_patterns": {
+          "note_count": 855,
+          "unique_onsets": 832,
+          "type_counts": {
+            "tap": 506,
+            "flick": 32,
+            "drag": 281,
+            "hold": 36
+          },
+          "chord_sizes": {
+            "2": 23,
+            "1": 809
+          },
+          "four_onset_patterns": {
+            "unclassified": 397,
+            "ABAB": 117,
+            "AAAA": 241,
+            "monotonic_run": 1
+          },
+          "singleton_windows": 756,
+          "chord_interrupted_windows": 73,
+          "jack_runs_2_to_3": 45,
+          "jack_runs_4_plus": 8,
+          "longest_jack_run": 159,
+          "hold_overlap_pairs": 2,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 275,
+              "second": 277,
+              "gap_seconds": -0.5008381303367742
+            },
+            {
+              "first": 275,
+              "second": 278,
+              "gap_seconds": -0.24174202847642334
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.50531005859375,
+        "ram_available_gib": 35.91020202636719,
+        "rss_gib": 1.755126953125,
+        "gpu_peak_allocated_gib": 0.19692325592041016,
+        "gpu_peak_reserved_gib": 0.25
+      }
+    },
+    {
+      "song_id": 51818,
+      "name": "emp",
+      "run_id": "E18-A",
+      "mode": "freex",
+      "epoch": 1300,
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.6528835690968444,
+        "onset_f1_50ms": 0.6648531011969532,
+        "onset_f1_100ms": 0.7127312295973884,
+        "time_type_f1": 0.3604593110334498,
+        "completed_only_time_type_f1": 0.3604593110334498,
+        "grid_bonus": 0.0973632087312238,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 1200,
+        "predicted_notes": 803,
+        "reference_unique_onsets": 1105,
+        "predicted_unique_onsets": 733,
+        "note_count_ratio": 0.6691666666666667,
+        "matched_onset_mae_ms": 13.67086252045788,
+        "last_onset_delta_seconds": -19.005081000000004,
+        "tail_10s_recall": 0.0,
+        "reference_types": {
+          "tap": 884,
+          "flick": 76,
+          "hold": 50,
+          "drag": 190
+        },
+        "predicted_types": {
+          "flick": 67,
+          "drag": 209,
+          "tap": 474,
+          "hold": 53
+        },
+        "generated_patterns": {
+          "note_count": 803,
+          "unique_onsets": 733,
+          "type_counts": {
+            "flick": 67,
+            "drag": 209,
+            "tap": 474,
+            "hold": 53
+          },
+          "chord_sizes": {
+            "1": 663,
+            "2": 70
+          },
+          "four_onset_patterns": {
+            "unclassified": 456,
+            "monotonic_run": 36,
+            "AAAA": 20,
+            "ABAB": 12
+          },
+          "singleton_windows": 524,
+          "chord_interrupted_windows": 206,
+          "jack_runs_2_to_3": 48,
+          "jack_runs_4_plus": 8,
+          "longest_jack_run": 9,
+          "hold_overlap_pairs": 11,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 201,
+              "second": 204,
+              "gap_seconds": -0.5852584790426576
+            },
+            {
+              "first": 212,
+              "second": 216,
+              "gap_seconds": -0.577157441915574
+            },
+            {
+              "first": 212,
+              "second": 217,
+              "gap_seconds": -0.33174495498069234
+            },
+            {
+              "first": 216,
+              "second": 217,
+              "gap_seconds": -0.9212541797317826
+            },
+            {
+              "first": 216,
+              "second": 219,
+              "gap_seconds": -0.584515744855878
+            },
+            {
+              "first": 216,
+              "second": 221,
+              "gap_seconds": -0.24609794772400306
+            },
+            {
+              "first": 219,
+              "second": 221,
+              "gap_seconds": -0.8282488695347894
+            },
+            {
+              "first": 219,
+              "second": 225,
+              "gap_seconds": -0.002464041850458898
+            },
+            {
+              "first": 274,
+              "second": 275,
+              "gap_seconds": -0.09019272023587632
+            },
+            {
+              "first": 274,
+              "second": 276,
+              "gap_seconds": -0.00019079645203134987
+            },
+            {
+              "first": 275,
+              "second": 276,
+              "gap_seconds": -0.07666474288281933
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.374469757080078,
+        "ram_available_gib": 37.24761199951172,
+        "rss_gib": 1.7693824768066406,
+        "gpu_peak_allocated_gib": 0.1983327865600586,
+        "gpu_peak_reserved_gib": 0.25
+      }
+    },
+    {
+      "song_id": 51818,
+      "name": "emp",
+      "run_id": "E18-S",
+      "mode": "freex",
+      "epoch": 1400,
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "onset_f1_25ms": 0.5659090909090909,
+        "onset_f1_50ms": 0.6022727272727273,
+        "onset_f1_100ms": 0.6511363636363636,
+        "time_type_f1": 0.28297872340425534,
+        "completed_only_time_type_f1": 0.28297872340425534,
+        "grid_bonus": 0.07336964885493302,
+        "reference_grid_bonus": 1.0,
+        "reference_notes": 1200,
+        "predicted_notes": 680,
+        "reference_unique_onsets": 1105,
+        "predicted_unique_onsets": 655,
+        "note_count_ratio": 0.5666666666666667,
+        "matched_onset_mae_ms": 16.073047169810966,
+        "last_onset_delta_seconds": -15.181502000000009,
+        "tail_10s_recall": 0.0,
+        "reference_types": {
+          "tap": 884,
+          "flick": 76,
+          "hold": 50,
+          "drag": 190
+        },
+        "predicted_types": {
+          "flick": 19,
+          "drag": 227,
+          "hold": 77,
+          "tap": 357
+        },
+        "generated_patterns": {
+          "note_count": 680,
+          "unique_onsets": 655,
+          "type_counts": {
+            "flick": 19,
+            "drag": 227,
+            "hold": 77,
+            "tap": 357
+          },
+          "chord_sizes": {
+            "1": 630,
+            "2": 25
+          },
+          "four_onset_patterns": {
+            "unclassified": 478,
+            "ABAB": 24,
+            "monotonic_run": 40,
+            "AAAA": 23
+          },
+          "singleton_windows": 565,
+          "chord_interrupted_windows": 87,
+          "jack_runs_2_to_3": 35,
+          "jack_runs_4_plus": 5,
+          "longest_jack_run": 15,
+          "hold_overlap_pairs": 2,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 35,
+              "second": 38,
+              "gap_seconds": -0.1612682157416998
+            },
+            {
+              "first": 281,
+              "second": 282,
+              "gap_seconds": -0.0011672530747333099
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.363910675048828,
+        "ram_available_gib": 37.24604415893555,
+        "rss_gib": 1.7694129943847656,
+        "gpu_peak_allocated_gib": 0.1983327865600586,
+        "gpu_peak_reserved_gib": 0.25
+      }
+    },
+    {
+      "song_id": 52417,
+      "name": "匙ノ咒",
+      "run_id": "E14-A",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.3784517881394296,
+        "onset_f1_50ms": 0.38841104572204616,
+        "onset_f1_100ms": 0.3974649162516976,
+        "time_type_f1": 0.1499644633972992,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.36860532363633663,
+        "reference_grid_bonus": 0.9220698433915206,
+        "reference_notes": 2183,
+        "predicted_notes": 631,
+        "reference_unique_onsets": 1604,
+        "predicted_unique_onsets": 605,
+        "note_count_ratio": 0.2890517636280348,
+        "matched_onset_mae_ms": 8.040592074592155,
+        "last_onset_delta_seconds": 12.050131999999962,
+        "tail_10s_recall": 0.225,
+        "reference_types": {
+          "tap": 1286,
+          "drag": 542,
+          "flick": 86,
+          "hold": 269
+        },
+        "predicted_types": {
+          "hold": 26,
+          "tap": 439,
+          "flick": 30,
+          "drag": 136
+        },
+        "generated_patterns": {
+          "note_count": 631,
+          "unique_onsets": 605,
+          "type_counts": {
+            "hold": 26,
+            "tap": 439,
+            "flick": 30,
+            "drag": 136
+          },
+          "chord_sizes": {
+            "1": 579,
+            "2": 26
+          },
+          "four_onset_patterns": {
+            "unclassified": 470,
+            "AAAA": 16,
+            "ABAB": 39,
+            "monotonic_run": 1
+          },
+          "singleton_windows": 526,
+          "chord_interrupted_windows": 76,
+          "jack_runs_2_to_3": 89,
+          "jack_runs_4_plus": 11,
+          "longest_jack_run": 7,
+          "hold_overlap_pairs": 3,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 3,
+              "second": 4,
+              "gap_seconds": -0.48151304381756344
+            },
+            {
+              "first": 3,
+              "second": 5,
+              "gap_seconds": -0.3157236502606615
+            },
+            {
+              "first": 4,
+              "second": 5,
+              "gap_seconds": -0.17903819264999488
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.484283447265625,
+        "ram_available_gib": 35.89064407348633,
+        "rss_gib": 1.7754440307617188,
+        "gpu_peak_allocated_gib": 0.21669578552246094,
+        "gpu_peak_reserved_gib": 0.296875
+      }
+    },
+    {
+      "song_id": 52417,
+      "name": "匙ノ咒",
+      "run_id": "E14-S",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.4887063655030801,
+        "onset_f1_50ms": 0.5010266940451745,
+        "onset_f1_100ms": 0.528952772073922,
+        "time_type_f1": 0.24635332252836303,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.33558023393497727,
+        "reference_grid_bonus": 0.9220698433915206,
+        "reference_notes": 2183,
+        "predicted_notes": 902,
+        "reference_unique_onsets": 1604,
+        "predicted_unique_onsets": 831,
+        "note_count_ratio": 0.41319285387082,
+        "matched_onset_mae_ms": 8.94211475409812,
+        "last_onset_delta_seconds": 12.050131999999962,
+        "tail_10s_recall": 0.25,
+        "reference_types": {
+          "tap": 1286,
+          "drag": 542,
+          "flick": 86,
+          "hold": 269
+        },
+        "predicted_types": {
+          "flick": 30,
+          "tap": 607,
+          "hold": 84,
+          "drag": 181
+        },
+        "generated_patterns": {
+          "note_count": 902,
+          "unique_onsets": 831,
+          "type_counts": {
+            "flick": 30,
+            "tap": 607,
+            "hold": 84,
+            "drag": 181
+          },
+          "chord_sizes": {
+            "2": 71,
+            "1": 760
+          },
+          "four_onset_patterns": {
+            "unclassified": 574,
+            "ABAB": 70,
+            "AAAA": 28,
+            "monotonic_run": 7
+          },
+          "singleton_windows": 679,
+          "chord_interrupted_windows": 149,
+          "jack_runs_2_to_3": 102,
+          "jack_runs_4_plus": 13,
+          "longest_jack_run": 15,
+          "hold_overlap_pairs": 6,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 674,
+              "second": 681,
+              "gap_seconds": -0.43223134962440213
+            },
+            {
+              "first": 690,
+              "second": 692,
+              "gap_seconds": -0.059506633942575604
+            },
+            {
+              "first": 691,
+              "second": 693,
+              "gap_seconds": -0.059506633942575604
+            },
+            {
+              "first": 735,
+              "second": 737,
+              "gap_seconds": -0.08939438607136196
+            },
+            {
+              "first": 815,
+              "second": 817,
+              "gap_seconds": -0.006071757728889793
+            },
+            {
+              "first": 817,
+              "second": 819,
+              "gap_seconds": -0.00011670285536524716
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.433574676513672,
+        "ram_available_gib": 35.900203704833984,
+        "rss_gib": 1.7760429382324219,
+        "gpu_peak_allocated_gib": 0.21669578552246094,
+        "gpu_peak_reserved_gib": 0.296875
+      }
+    },
+    {
+      "song_id": 52417,
+      "name": "匙ノ咒",
+      "run_id": "E18-A",
+      "mode": "freex",
+      "epoch": 1300,
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.3895528995130589,
+        "onset_f1_50ms": 0.4037184594953519,
+        "onset_f1_100ms": 0.42408145196989816,
+        "time_type_f1": 0.1984369690791709,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.3570196079388769,
+        "reference_grid_bonus": 0.9220698433915206,
+        "reference_notes": 2183,
+        "predicted_notes": 760,
+        "reference_unique_onsets": 1604,
+        "predicted_unique_onsets": 655,
+        "note_count_ratio": 0.34814475492441593,
+        "matched_onset_mae_ms": 7.934649122806501,
+        "last_onset_delta_seconds": 12.050131999999962,
+        "tail_10s_recall": 0.0875,
+        "reference_types": {
+          "tap": 1286,
+          "drag": 542,
+          "flick": 86,
+          "hold": 269
+        },
+        "predicted_types": {
+          "flick": 41,
+          "tap": 511,
+          "hold": 97,
+          "drag": 111
+        },
+        "generated_patterns": {
+          "note_count": 760,
+          "unique_onsets": 655,
+          "type_counts": {
+            "flick": 41,
+            "tap": 511,
+            "hold": 97,
+            "drag": 111
+          },
+          "chord_sizes": {
+            "1": 550,
+            "2": 105
+          },
+          "four_onset_patterns": {
+            "unclassified": 315,
+            "monotonic_run": 19,
+            "ABAB": 13,
+            "AAAA": 21
+          },
+          "singleton_windows": 368,
+          "chord_interrupted_windows": 284,
+          "jack_runs_2_to_3": 34,
+          "jack_runs_4_plus": 5,
+          "longest_jack_run": 11,
+          "hold_overlap_pairs": 1,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 45,
+              "second": 49,
+              "gap_seconds": -0.5033527696588447
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.342597961425781,
+        "ram_available_gib": 37.220176696777344,
+        "rss_gib": 1.7848320007324219,
+        "gpu_peak_allocated_gib": 0.21810531616210938,
+        "gpu_peak_reserved_gib": 0.296875
+      }
+    },
+    {
+      "song_id": 52417,
+      "name": "匙ノ咒",
+      "run_id": "E18-S",
+      "mode": "freex",
+      "epoch": 1400,
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.4910973084886128,
+        "onset_f1_50ms": 0.5060041407867495,
+        "onset_f1_100ms": 0.5267080745341615,
+        "time_type_f1": 0.2407694694384114,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.3777163916152183,
+        "reference_grid_bonus": 0.9220698433915206,
+        "reference_notes": 2183,
+        "predicted_notes": 1040,
+        "reference_unique_onsets": 1604,
+        "predicted_unique_onsets": 811,
+        "note_count_ratio": 0.4764086120018323,
+        "matched_onset_mae_ms": 8.027772504090711,
+        "last_onset_delta_seconds": 12.050131999999962,
+        "tail_10s_recall": 0.0625,
+        "reference_types": {
+          "tap": 1286,
+          "drag": 542,
+          "flick": 86,
+          "hold": 269
+        },
+        "predicted_types": {
+          "tap": 757,
+          "flick": 86,
+          "drag": 106,
+          "hold": 91
+        },
+        "generated_patterns": {
+          "note_count": 1040,
+          "unique_onsets": 811,
+          "type_counts": {
+            "tap": 757,
+            "flick": 86,
+            "drag": 106,
+            "hold": 91
+          },
+          "chord_sizes": {
+            "2": 227,
+            "1": 583,
+            "3": 1
+          },
+          "four_onset_patterns": {
+            "unclassified": 334,
+            "ABAB": 14,
+            "AAAA": 37,
+            "monotonic_run": 7
+          },
+          "singleton_windows": 392,
+          "chord_interrupted_windows": 416,
+          "jack_runs_2_to_3": 42,
+          "jack_runs_4_plus": 3,
+          "longest_jack_run": 35,
+          "hold_overlap_pairs": 16,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 176,
+              "second": 178,
+              "gap_seconds": -0.17401455786073683
+            },
+            {
+              "first": 178,
+              "second": 180,
+              "gap_seconds": -0.16941676362422697
+            },
+            {
+              "first": 574,
+              "second": 577,
+              "gap_seconds": -0.16942579572013017
+            },
+            {
+              "first": 577,
+              "second": 580,
+              "gap_seconds": -0.17449751756478804
+            },
+            {
+              "first": 619,
+              "second": 622,
+              "gap_seconds": -0.16787557887232651
+            },
+            {
+              "first": 770,
+              "second": 771,
+              "gap_seconds": -0.0013394179594996558
+            },
+            {
+              "first": 777,
+              "second": 779,
+              "gap_seconds": -0.34100382854457223
+            },
+            {
+              "first": 783,
+              "second": 786,
+              "gap_seconds": -0.17119792310948867
+            },
+            {
+              "first": 802,
+              "second": 804,
+              "gap_seconds": -0.1767071863338714
+            },
+            {
+              "first": 804,
+              "second": 806,
+              "gap_seconds": -0.3364720484660211
+            },
+            {
+              "first": 806,
+              "second": 809,
+              "gap_seconds": -0.0071963295521442205
+            },
+            {
+              "first": 812,
+              "second": 813,
+              "gap_seconds": -0.17343823920832335
+            },
+            {
+              "first": 813,
+              "second": 815,
+              "gap_seconds": -0.17374668203363797
+            },
+            {
+              "first": 815,
+              "second": 818,
+              "gap_seconds": -0.18145770174427867
+            },
+            {
+              "first": 818,
+              "second": 821,
+              "gap_seconds": -0.16979976822582898
+            },
+            {
+              "first": 827,
+              "second": 830,
+              "gap_seconds": -0.0019530331776422827
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.321083068847656,
+        "ram_available_gib": 35.94694137573242,
+        "rss_gib": 1.7860260009765625,
+        "gpu_peak_allocated_gib": 0.21831083297729492,
+        "gpu_peak_reserved_gib": 0.296875
+      }
+    },
+    {
+      "song_id": 52244,
+      "name": "あのね",
+      "run_id": "E14-A",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.4353518821603928,
+        "onset_f1_50ms": 0.4402618657937807,
+        "onset_f1_100ms": 0.4402618657937807,
+        "time_type_f1": 0.22879684418145957,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.28457721179136813,
+        "reference_grid_bonus": 0.9948783610755442,
+        "reference_notes": 999,
+        "predicted_notes": 522,
+        "reference_unique_onsets": 781,
+        "predicted_unique_onsets": 441,
+        "note_count_ratio": 0.5225225225225225,
+        "matched_onset_mae_ms": 6.548728624534176,
+        "last_onset_delta_seconds": 2.9168379999999843,
+        "tail_10s_recall": 0.30952380952380953,
+        "reference_types": {
+          "tap": 615,
+          "hold": 141,
+          "flick": 77,
+          "drag": 166
+        },
+        "predicted_types": {
+          "tap": 360,
+          "flick": 8,
+          "hold": 62,
+          "drag": 92
+        },
+        "generated_patterns": {
+          "note_count": 522,
+          "unique_onsets": 441,
+          "type_counts": {
+            "tap": 360,
+            "flick": 8,
+            "hold": 62,
+            "drag": 92
+          },
+          "chord_sizes": {
+            "2": 81,
+            "1": 360
+          },
+          "four_onset_patterns": {
+            "unclassified": 194,
+            "ABAB": 38,
+            "AAAA": 20,
+            "monotonic_run": 3
+          },
+          "singleton_windows": 255,
+          "chord_interrupted_windows": 183,
+          "jack_runs_2_to_3": 32,
+          "jack_runs_4_plus": 5,
+          "longest_jack_run": 14,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.417808532714844,
+        "ram_available_gib": 35.90770721435547,
+        "rss_gib": 1.7760505676269531,
+        "gpu_peak_allocated_gib": 0.21669578552246094,
+        "gpu_peak_reserved_gib": 0.296875
+      }
+    },
+    {
+      "song_id": 52244,
+      "name": "あのね",
+      "run_id": "E14-S",
+      "mode": "4k",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.03349282296650718,
+        "onset_f1_50ms": 0.03349282296650718,
+        "onset_f1_100ms": 0.03349282296650718,
+        "time_type_f1": 0.013232514177693762,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.2442907927271697,
+        "reference_grid_bonus": 0.9948783610755442,
+        "reference_notes": 999,
+        "predicted_notes": 59,
+        "reference_unique_onsets": 781,
+        "predicted_unique_onsets": 55,
+        "note_count_ratio": 0.05905905905905906,
+        "matched_onset_mae_ms": 8.917785714286554,
+        "last_onset_delta_seconds": 2.9168379999999843,
+        "tail_10s_recall": 0.16666666666666666,
+        "reference_types": {
+          "tap": 615,
+          "hold": 141,
+          "flick": 77,
+          "drag": 166
+        },
+        "predicted_types": {
+          "tap": 52,
+          "flick": 2,
+          "hold": 5
+        },
+        "generated_patterns": {
+          "note_count": 59,
+          "unique_onsets": 55,
+          "type_counts": {
+            "tap": 52,
+            "flick": 2,
+            "hold": 5
+          },
+          "chord_sizes": {
+            "2": 4,
+            "1": 51
+          },
+          "four_onset_patterns": {
+            "unclassified": 30,
+            "ABAB": 12
+          },
+          "singleton_windows": 42,
+          "chord_interrupted_windows": 10,
+          "jack_runs_2_to_3": 2,
+          "jack_runs_4_plus": 0,
+          "longest_jack_run": 2,
+          "hold_overlap_pairs": 0,
+          "hold_touching_pairs": 0,
+          "hold_examples": [],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.40230941772461,
+        "ram_available_gib": 35.56765365600586,
+        "rss_gib": 1.7760543823242188,
+        "gpu_peak_allocated_gib": 0.21669578552246094,
+        "gpu_peak_reserved_gib": 0.296875
+      }
+    },
+    {
+      "song_id": 52244,
+      "name": "あのね",
+      "run_id": "E18-A",
+      "mode": "freex",
+      "epoch": 1300,
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.5042735042735043,
+        "onset_f1_50ms": 0.5164835164835165,
+        "onset_f1_100ms": 0.525030525030525,
+        "time_type_f1": 0.2128069330765527,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.21125032625436418,
+        "reference_grid_bonus": 0.9948783610755442,
+        "reference_notes": 999,
+        "predicted_notes": 1078,
+        "reference_unique_onsets": 781,
+        "predicted_unique_onsets": 857,
+        "note_count_ratio": 1.0790790790790792,
+        "matched_onset_mae_ms": 8.951231678486474,
+        "last_onset_delta_seconds": 2.9168379999999843,
+        "tail_10s_recall": 0.19047619047619047,
+        "reference_types": {
+          "tap": 615,
+          "hold": 141,
+          "flick": 77,
+          "drag": 166
+        },
+        "predicted_types": {
+          "hold": 162,
+          "tap": 462,
+          "drag": 424,
+          "flick": 30
+        },
+        "generated_patterns": {
+          "note_count": 1078,
+          "unique_onsets": 857,
+          "type_counts": {
+            "hold": 162,
+            "tap": 462,
+            "drag": 424,
+            "flick": 30
+          },
+          "chord_sizes": {
+            "2": 217,
+            "1": 638,
+            "3": 2
+          },
+          "four_onset_patterns": {
+            "unclassified": 293,
+            "monotonic_run": 72,
+            "AAAA": 17,
+            "ABAB": 4
+          },
+          "singleton_windows": 386,
+          "chord_interrupted_windows": 468,
+          "jack_runs_2_to_3": 50,
+          "jack_runs_4_plus": 7,
+          "longest_jack_run": 10,
+          "hold_overlap_pairs": 18,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 145,
+              "second": 147,
+              "gap_seconds": -0.4859737658401748
+            },
+            {
+              "first": 171,
+              "second": 174,
+              "gap_seconds": -0.10275254758399299
+            },
+            {
+              "first": 223,
+              "second": 225,
+              "gap_seconds": -0.024597354034661123
+            },
+            {
+              "first": 542,
+              "second": 544,
+              "gap_seconds": -0.24409485045566726
+            },
+            {
+              "first": 547,
+              "second": 550,
+              "gap_seconds": -0.2517221482009404
+            },
+            {
+              "first": 576,
+              "second": 578,
+              "gap_seconds": -0.45375423691533
+            },
+            {
+              "first": 576,
+              "second": 580,
+              "gap_seconds": -0.12085344769339201
+            },
+            {
+              "first": 577,
+              "second": 579,
+              "gap_seconds": -0.45375423691533
+            },
+            {
+              "first": 579,
+              "second": 583,
+              "gap_seconds": -0.15797265198317234
+            },
+            {
+              "first": 590,
+              "second": 592,
+              "gap_seconds": -0.38087506223520506
+            },
+            {
+              "first": 590,
+              "second": 594,
+              "gap_seconds": -0.11985606300139295
+            },
+            {
+              "first": 593,
+              "second": 595,
+              "gap_seconds": -0.47068831783936105
+            },
+            {
+              "first": 888,
+              "second": 891,
+              "gap_seconds": -0.0035366086916326367
+            },
+            {
+              "first": 900,
+              "second": 902,
+              "gap_seconds": -0.23876847974858606
+            },
+            {
+              "first": 900,
+              "second": 904,
+              "gap_seconds": -0.007517628834051493
+            },
+            {
+              "first": 902,
+              "second": 904,
+              "gap_seconds": -0.012651588109861223
+            },
+            {
+              "first": 1008,
+              "second": 1012,
+              "gap_seconds": -0.0033290926204188054
+            },
+            {
+              "first": 1009,
+              "second": 1013,
+              "gap_seconds": -0.0033290926204188054
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.30478286743164,
+        "ram_available_gib": 35.801788330078125,
+        "rss_gib": 1.7792930603027344,
+        "gpu_peak_allocated_gib": 0.21831083297729492,
+        "gpu_peak_reserved_gib": 0.296875
+      }
+    },
+    {
+      "song_id": 52244,
+      "name": "あのね",
+      "run_id": "E18-S",
+      "mode": "freex",
+      "epoch": 1400,
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+      "status": "failed",
+      "error": "continued with no future audio interval",
+      "metrics": {
+        "onset_f1_25ms": 0.42325825039287585,
+        "onset_f1_50ms": 0.4410686223153483,
+        "onset_f1_100ms": 0.4463069669984285,
+        "time_type_f1": 0.13508771929824562,
+        "completed_only_time_type_f1": 0.0,
+        "grid_bonus": 0.18958290496453276,
+        "reference_grid_bonus": 0.9948783610755442,
+        "reference_notes": 999,
+        "predicted_notes": 1281,
+        "reference_unique_onsets": 781,
+        "predicted_unique_onsets": 1128,
+        "note_count_ratio": 1.2822822822822824,
+        "matched_onset_mae_ms": 9.561705463182626,
+        "last_onset_delta_seconds": 2.9168379999999843,
+        "tail_10s_recall": 0.07142857142857142,
+        "reference_types": {
+          "tap": 615,
+          "hold": 141,
+          "flick": 77,
+          "drag": 166
+        },
+        "predicted_types": {
+          "tap": 274,
+          "drag": 819,
+          "hold": 176,
+          "flick": 12
+        },
+        "generated_patterns": {
+          "note_count": 1281,
+          "unique_onsets": 1128,
+          "type_counts": {
+            "tap": 274,
+            "drag": 819,
+            "hold": 176,
+            "flick": 12
+          },
+          "chord_sizes": {
+            "1": 975,
+            "2": 153
+          },
+          "four_onset_patterns": {
+            "unclassified": 540,
+            "AAAA": 76,
+            "monotonic_run": 89,
+            "ABAB": 20
+          },
+          "singleton_windows": 725,
+          "chord_interrupted_windows": 400,
+          "jack_runs_2_to_3": 100,
+          "jack_runs_4_plus": 21,
+          "longest_jack_run": 20,
+          "hold_overlap_pairs": 19,
+          "hold_touching_pairs": 0,
+          "hold_examples": [
+            {
+              "first": 16,
+              "second": 18,
+              "gap_seconds": -0.26443568959079755
+            },
+            {
+              "first": 20,
+              "second": 21,
+              "gap_seconds": -0.006440848268296939
+            },
+            {
+              "first": 22,
+              "second": 23,
+              "gap_seconds": -0.0062568597966068396
+            },
+            {
+              "first": 24,
+              "second": 25,
+              "gap_seconds": -0.09422350862227802
+            },
+            {
+              "first": 47,
+              "second": 50,
+              "gap_seconds": -0.0015079747878239402
+            },
+            {
+              "first": 265,
+              "second": 267,
+              "gap_seconds": -0.3750524699129585
+            },
+            {
+              "first": 645,
+              "second": 646,
+              "gap_seconds": -0.013616495157236841
+            },
+            {
+              "first": 882,
+              "second": 884,
+              "gap_seconds": -0.01514162708244271
+            },
+            {
+              "first": 906,
+              "second": 911,
+              "gap_seconds": -0.011484601202411682
+            },
+            {
+              "first": 907,
+              "second": 912,
+              "gap_seconds": -0.011484601202411682
+            },
+            {
+              "first": 941,
+              "second": 942,
+              "gap_seconds": -0.21431510203325388
+            },
+            {
+              "first": 1026,
+              "second": 1028,
+              "gap_seconds": -0.5512261441352422
+            },
+            {
+              "first": 1094,
+              "second": 1096,
+              "gap_seconds": -0.011688711595638779
+            },
+            {
+              "first": 1128,
+              "second": 1130,
+              "gap_seconds": -0.20788848414491667
+            },
+            {
+              "first": 1132,
+              "second": 1134,
+              "gap_seconds": -0.002756976607656725
+            },
+            {
+              "first": 1145,
+              "second": 1146,
+              "gap_seconds": -0.2100497458296502
+            },
+            {
+              "first": 1146,
+              "second": 1148,
+              "gap_seconds": -0.24312548622884833
+            },
+            {
+              "first": 1258,
+              "second": 1259,
+              "gap_seconds": -0.7278893995034537
+            },
+            {
+              "first": 1275,
+              "second": 1277,
+              "gap_seconds": -0.11462372816927768
+            }
+          ],
+          "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+        }
+      },
+      "artifact_error": null,
+      "resources": {
+        "disk_free_gib": 8.288154602050781,
+        "ram_available_gib": 37.213897705078125,
+        "rss_gib": 1.7803726196289062,
+        "gpu_peak_allocated_gib": 0.21831083297729492,
+        "gpu_peak_reserved_gib": 0.296875
+      }
+    }
+  ]
+}
