@@ -1,0 +1,2218 @@
+{
+  "schema": "audiolab-gap-diagnosis-v1",
+  "experiment": "E20",
+  "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+  "script_sha256": "57f43f583986b60add2ed8e0adb65737d6eaefc956e83c4fe1543ac70d593e4b",
+  "training_updates": 0,
+  "results": [
+    {
+      "song_id": 40717,
+      "song": "天使にふれたよ!",
+      "run": "E14-A",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "source_result": "out/phira_generalization10_20261029/40717/E14-A/result.json",
+      "source_result_sha256": "58e6b33de6a7ee4b490755b761375bb28dc2e0db53b062e84d2381fea46bc628",
+      "largest_gaps": [
+        {
+          "start": 16.853097078838047,
+          "end": 33.27673983688527,
+          "seconds": 16.423642758047222,
+          "reference_notes": 26,
+          "no_active_note_seconds": 16.423642758047222
+        },
+        {
+          "start": 107.61149662009171,
+          "end": 115.29476289571818,
+          "seconds": 7.683266275626465,
+          "reference_notes": 40,
+          "no_active_note_seconds": 7.170445762805954
+        },
+        {
+          "start": 8.379616819628243,
+          "end": 15.572525453459379,
+          "seconds": 7.192908633831136,
+          "reference_notes": 4,
+          "no_active_note_seconds": 6.936498377420881
+        }
+      ],
+      "audio_and_features": {
+        "audio_rms_dbfs": -13.578533172607422,
+        "blocks_100ms": 164,
+        "fraction_blocks_below_minus60dbfs": 0.0,
+        "block_rms_dbfs_min": -33.16393280029297,
+        "block_rms_dbfs_median": -14.032215118408203,
+        "feature_frames": 353,
+        "all_valid": true,
+        "all_finite": true,
+        "zero_feature_frames": 0,
+        "feature_l2_mean": 15.969812393188477,
+        "feature_l2_min": 15.933512687683105,
+        "soft_probability_mean": 0.333749920129776,
+        "soft_probability_max": 0.9896628856658936,
+        "soft_frames_above_half": 79
+      },
+      "export_note_count": 543,
+      "raw_note_count": 543,
+      "cutoff_changes": {
+        "notes_after_audio": 0,
+        "shortened_holds": 0,
+        "incomplete_notes": 0
+      },
+      "diagnostic": {
+        "exact_notes_and_status_reproduced": true,
+        "token_steps": 1701,
+        "pointer_decisions": 513,
+        "jumps": [
+          {
+            "index": 0,
+            "current_seconds": 0.0,
+            "selected_frame": 53,
+            "stop_probability": 1.068998730681392e-12,
+            "top": [
+              {
+                "frame": 53,
+                "frame_start_seconds": 2.4613151927437644,
+                "probability": 0.5791119337081909
+              },
+              {
+                "frame": 9,
+                "frame_start_seconds": 0.4179591836734694,
+                "probability": 0.3842472434043884
+              },
+              {
+                "frame": 291,
+                "frame_start_seconds": 13.514013605442177,
+                "probability": 0.03163359314203262
+              },
+              {
+                "frame": 31,
+                "frame_start_seconds": 1.4396371882086167,
+                "probability": 0.004481073003262281
+              },
+              {
+                "frame": 335,
+                "frame_start_seconds": 15.557369614512472,
+                "probability": 0.00040910797542892396
+              }
+            ],
+            "local_2s_mass": 0.3888154625892639,
+            "local_2s_best": {
+              "frame": 9,
+              "frame_start_seconds": 0.4179591836734694,
+              "probability": 0.3842472434043884,
+              "winner_logit_margin": 0.41020965576171875
+            },
+            "entropy_nats": 0.8217172622680664,
+            "allowed_frames": 3985,
+            "first_allowed_seconds": 0.0,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 2.4862578916657814,
+            "jump_seconds": 2.4862578916657814
+          },
+          {
+            "index": 25,
+            "current_seconds": 8.379616819628243,
+            "selected_frame": 335,
+            "stop_probability": 3.967585266405338e-13,
+            "top": [
+              {
+                "frame": 335,
+                "frame_start_seconds": 15.557369614512472,
+                "probability": 0.9507606625556946
+              },
+              {
+                "frame": 180,
+                "frame_start_seconds": 8.359183673469389,
+                "probability": 0.035308837890625
+              },
+              {
+                "frame": 269,
+                "frame_start_seconds": 12.49233560090703,
+                "probability": 0.012772656977176666
+              },
+              {
+                "frame": 213,
+                "frame_start_seconds": 9.891700680272109,
+                "probability": 0.0006450286018662155
+              },
+              {
+                "frame": 291,
+                "frame_start_seconds": 13.514013605442177,
+                "probability": 0.0003041360469069332
+              }
+            ],
+            "local_2s_mass": 0.035955317318439484,
+            "local_2s_best": {
+              "frame": 180,
+              "frame_start_seconds": 8.359183673469389,
+              "probability": 0.035308837890625,
+              "winner_logit_margin": 3.2931289672851562
+            },
+            "entropy_nats": 0.230900838971138,
+            "allowed_frames": 3805,
+            "first_allowed_seconds": 8.359183673469389,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 15.572525453459379,
+            "jump_seconds": 7.192908633831136
+          },
+          {
+            "index": 29,
+            "current_seconds": 16.853097078838047,
+            "selected_frame": 716,
+            "stop_probability": 1.2297631662994135e-11,
+            "top": [
+              {
+                "frame": 716,
+                "frame_start_seconds": 33.25097505668934,
+                "probability": 0.9679364562034607
+              },
+              {
+                "frame": 572,
+                "frame_start_seconds": 26.563628117913833,
+                "probability": 0.03206179663538933
+              },
+              {
+                "frame": 370,
+                "frame_start_seconds": 17.182766439909297,
+                "probability": 8.168403837771621e-07
+              },
+              {
+                "frame": 710,
+                "frame_start_seconds": 32.97233560090703,
+                "probability": 5.179255140319583e-07
+              },
+              {
+                "frame": 1130,
+                "frame_start_seconds": 52.47709750566894,
+                "probability": 2.0359696861760312e-07
+              }
+            ],
+            "local_2s_mass": 9.593999266144237e-07,
+            "local_2s_best": {
+              "frame": 370,
+              "frame_start_seconds": 17.182766439909297,
+              "probability": 8.168403837771621e-07,
+              "winner_logit_margin": 13.985233306884766
+            },
+            "entropy_nats": 0.14186465740203857,
+            "allowed_frames": 3623,
+            "first_allowed_seconds": 16.81124716553288,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 33.27673983688527,
+            "jump_seconds": 16.423642758047222
+          },
+          {
+            "index": 73,
+            "current_seconds": 49.66801134174373,
+            "selected_frame": 1141,
+            "stop_probability": 9.80019398966192e-11,
+            "top": [
+              {
+                "frame": 1141,
+                "frame_start_seconds": 52.98793650793651,
+                "probability": 0.6427174210548401
+              },
+              {
+                "frame": 1075,
+                "frame_start_seconds": 49.92290249433107,
+                "probability": 0.19316363334655762
+              },
+              {
+                "frame": 1234,
+                "frame_start_seconds": 57.30684807256236,
+                "probability": 0.15885630249977112
+              },
+              {
+                "frame": 1072,
+                "frame_start_seconds": 49.78358276643991,
+                "probability": 0.0028021931648254395
+              },
+              {
+                "frame": 1235,
+                "frame_start_seconds": 57.35328798185941,
+                "probability": 0.001345977303571999
+              }
+            ],
+            "local_2s_mass": 0.19707618653774261,
+            "local_2s_best": {
+              "frame": 1075,
+              "frame_start_seconds": 49.92290249433107,
+              "probability": 0.19316363334655762,
+              "winner_logit_margin": 1.2021675109863281
+            },
+            "entropy_nats": 0.9277023673057556,
+            "allowed_frames": 2916,
+            "first_allowed_seconds": 49.64426303854875,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 53.008084193638396,
+            "jump_seconds": 3.340072851894668
+          },
+          {
+            "index": 78,
+            "current_seconds": 53.79262389583112,
+            "selected_frame": 1229,
+            "stop_probability": 8.65127587623693e-12,
+            "top": [
+              {
+                "frame": 1229,
+                "frame_start_seconds": 57.0746485260771,
+                "probability": 0.8827298283576965
+              },
+              {
+                "frame": 1190,
+                "frame_start_seconds": 55.263492063492066,
+                "probability": 0.0664265900850296
+              },
+              {
+                "frame": 1160,
+                "frame_start_seconds": 53.8702947845805,
+                "probability": 0.02075870893895626
+              },
+              {
+                "frame": 1174,
+                "frame_start_seconds": 54.52045351473923,
+                "probability": 0.01809108443558216
+              },
+              {
+                "frame": 1185,
+                "frame_start_seconds": 55.031292517006804,
+                "probability": 0.011950088664889336
+              }
+            ],
+            "local_2s_mass": 0.11725492775440216,
+            "local_2s_best": {
+              "frame": 1190,
+              "frame_start_seconds": 55.263492063492066,
+              "probability": 0.0664265900850296,
+              "winner_logit_margin": 2.5869216918945312
+            },
+            "entropy_nats": 0.4966530203819275,
+            "allowed_frames": 2827,
+            "first_allowed_seconds": 53.777414965986395,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 57.089058447597786,
+            "jump_seconds": 3.2964345517666658
+          },
+          {
+            "index": 217,
+            "current_seconds": 91.36962494657693,
+            "selected_frame": 2096,
+            "stop_probability": 1.12504901228494e-11,
+            "top": [
+              {
+                "frame": 2096,
+                "frame_start_seconds": 97.33804988662132,
+                "probability": 0.992672860622406
+              },
+              {
+                "frame": 1974,
+                "frame_start_seconds": 91.67238095238095,
+                "probability": 0.006451854016631842
+              },
+              {
+                "frame": 1975,
+                "frame_start_seconds": 91.71882086167801,
+                "probability": 0.0008684729691594839
+              },
+              {
+                "frame": 1972,
+                "frame_start_seconds": 91.57950113378685,
+                "probability": 6.454269168898463e-06
+              },
+              {
+                "frame": 1973,
+                "frame_start_seconds": 91.6259410430839,
+                "probability": 1.5178434864537849e-07
+              }
+            ],
+            "local_2s_mass": 0.007326943799853325,
+            "local_2s_best": {
+              "frame": 1974,
+              "frame_start_seconds": 91.67238095238095,
+              "probability": 0.006451854016631842,
+              "winner_logit_margin": 5.036033630371094
+            },
+            "entropy_nats": 0.04604130610823631,
+            "allowed_frames": 2018,
+            "first_allowed_seconds": 91.34730158730159,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 97.35318449612919,
+            "jump_seconds": 5.983559549552254
+          },
+          {
+            "index": 250,
+            "current_seconds": 107.61149662009171,
+            "selected_frame": 2482,
+            "stop_probability": 1.0728153782002536e-10,
+            "top": [
+              {
+                "frame": 2482,
+                "frame_start_seconds": 115.26385487528344,
+                "probability": 0.664370059967041
+              },
+              {
+                "frame": 2322,
+                "frame_start_seconds": 107.8334693877551,
+                "probability": 0.28802400827407837
+              },
+              {
+                "frame": 2333,
+                "frame_start_seconds": 108.34430839002268,
+                "probability": 0.04744265601038933
+              },
+              {
+                "frame": 2471,
+                "frame_start_seconds": 114.75301587301587,
+                "probability": 0.00013236487575341016
+              },
+              {
+                "frame": 2323,
+                "frame_start_seconds": 107.87990929705215,
+                "probability": 1.7230679077329114e-05
+              }
+            ],
+            "local_2s_mass": 0.33548814058303833,
+            "local_2s_best": {
+              "frame": 2322,
+              "frame_start_seconds": 107.8334693877551,
+              "probability": 0.28802400827407837,
+              "winner_logit_margin": 0.8357954025268555
+            },
+            "entropy_nats": 0.7763327360153198,
+            "allowed_frames": 1668,
+            "first_allowed_seconds": 107.60126984126984,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 115.29476289571818,
+            "jump_seconds": 7.683266275626465
+          },
+          {
+            "index": 281,
+            "current_seconds": 122.71649150545636,
+            "selected_frame": 2714,
+            "stop_probability": 3.896482203731566e-13,
+            "top": [
+              {
+                "frame": 2714,
+                "frame_start_seconds": 126.03791383219955,
+                "probability": 0.9656735062599182
+              },
+              {
+                "frame": 2648,
+                "frame_start_seconds": 122.97287981859411,
+                "probability": 0.034325383603572845
+              },
+              {
+                "frame": 2647,
+                "frame_start_seconds": 122.92643990929706,
+                "probability": 5.206541118241148e-07
+              },
+              {
+                "frame": 2758,
+                "frame_start_seconds": 128.08126984126986,
+                "probability": 4.027379816307075e-07
+              },
+              {
+                "frame": 2659,
+                "frame_start_seconds": 123.48371882086168,
+                "probability": 1.5275352094334949e-09
+              }
+            ],
+            "local_2s_mass": 0.03432590514421463,
+            "local_2s_best": {
+              "frame": 2648,
+              "frame_start_seconds": 122.97287981859411,
+              "probability": 0.034325383603572845,
+              "winner_logit_margin": 3.3369407653808594
+            },
+            "entropy_nats": 0.14948472380638123,
+            "allowed_frames": 1343,
+            "first_allowed_seconds": 122.6942403628118,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 126.05744206919421,
+            "jump_seconds": 3.3409505637378487
+          },
+          {
+            "index": 475,
+            "current_seconds": 165.63002183702255,
+            "selected_frame": 3642,
+            "stop_probability": 5.929038252361352e-06,
+            "top": [
+              {
+                "frame": 3642,
+                "frame_start_seconds": 169.13414965986394,
+                "probability": 0.7722064256668091
+              },
+              {
+                "frame": 3570,
+                "frame_start_seconds": 165.7904761904762,
+                "probability": 0.19133657217025757
+              },
+              {
+                "frame": 3569,
+                "frame_start_seconds": 165.74403628117915,
+                "probability": 0.03489432856440544
+              },
+              {
+                "frame": 3568,
+                "frame_start_seconds": 165.6975963718821,
+                "probability": 0.0015567706432193518
+              },
+              {
+                "frame": 3641,
+                "frame_start_seconds": 169.0877097505669,
+                "probability": 5.734017577196937e-06
+              }
+            ],
+            "local_2s_mass": 0.22778768837451935,
+            "local_2s_best": {
+              "frame": 3570,
+              "frame_start_seconds": 165.7904761904762,
+              "probability": 0.19133657217025757,
+              "winner_logit_margin": 1.3952178955078125
+            },
+            "entropy_nats": 0.6432583332061768,
+            "allowed_frames": 419,
+            "first_allowed_seconds": 165.60471655328797,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 169.1429196090871,
+            "jump_seconds": 3.512897772064548
+          },
+          {
+            "index": 489,
+            "current_seconds": 172.47670345384248,
+            "selected_frame": 3773,
+            "stop_probability": 1.758766132731182e-09,
+            "top": [
+              {
+                "frame": 3773,
+                "frame_start_seconds": 175.21777777777777,
+                "probability": 0.6819078326225281
+              },
+              {
+                "frame": 3717,
+                "frame_start_seconds": 172.61714285714285,
+                "probability": 0.28533950448036194
+              },
+              {
+                "frame": 3718,
+                "frame_start_seconds": 172.6635827664399,
+                "probability": 0.03252236917614937
+              },
+              {
+                "frame": 3766,
+                "frame_start_seconds": 174.89269841269842,
+                "probability": 0.00021493274834938347
+              },
+              {
+                "frame": 3719,
+                "frame_start_seconds": 172.71002267573695,
+                "probability": 9.828095244301949e-06
+              }
+            ],
+            "local_2s_mass": 0.31787246465682983,
+            "local_2s_best": {
+              "frame": 3717,
+              "frame_start_seconds": 172.61714285714285,
+              "probability": 0.28533950448036194,
+              "winner_logit_margin": 0.8712148666381836
+            },
+            "entropy_nats": 0.732327938079834,
+            "allowed_frames": 272,
+            "first_allowed_seconds": 172.43138321995465,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 175.2388392303536,
+            "jump_seconds": 2.7621357765111156
+          },
+          {
+            "index": 510,
+            "current_seconds": 178.80761176076874,
+            "selected_frame": 3984,
+            "stop_probability": 6.909288430279048e-08,
+            "top": [
+              {
+                "frame": 3984,
+                "frame_start_seconds": 185.0165986394558,
+                "probability": 0.9999532699584961
+              },
+              {
+                "frame": 3852,
+                "frame_start_seconds": 178.8865306122449,
+                "probability": 4.13977395510301e-05
+              },
+              {
+                "frame": 3983,
+                "frame_start_seconds": 184.97015873015874,
+                "probability": 3.3118681130872574e-06
+              },
+              {
+                "frame": 3851,
+                "frame_start_seconds": 178.84009070294786,
+                "probability": 1.9409681044635363e-06
+              },
+              {
+                "frame": 3853,
+                "frame_start_seconds": 178.93297052154196,
+                "probability": 9.72792193465466e-08
+              }
+            ],
+            "local_2s_mass": 4.3436051782919094e-05,
+            "local_2s_best": {
+              "frame": 3852,
+              "frame_start_seconds": 178.8865306122449,
+              "probability": 4.13977395510301e-05,
+              "winner_logit_margin": 10.09223747253418
+            },
+            "entropy_nats": 0.0005334238521754742,
+            "allowed_frames": 135,
+            "first_allowed_seconds": 178.79365079365078,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 185.05006122822664,
+            "jump_seconds": 6.242449467457902
+          }
+        ],
+        "largest_gap_original": {
+          "index": 29,
+          "current_seconds": 16.853097078838047,
+          "selected_frame": 716,
+          "stop_probability": 1.2297631662994135e-11,
+          "top": [
+            {
+              "frame": 716,
+              "frame_start_seconds": 33.25097505668934,
+              "probability": 0.9679364562034607
+            },
+            {
+              "frame": 572,
+              "frame_start_seconds": 26.563628117913833,
+              "probability": 0.03206179663538933
+            },
+            {
+              "frame": 370,
+              "frame_start_seconds": 17.182766439909297,
+              "probability": 8.168403837771621e-07
+            },
+            {
+              "frame": 710,
+              "frame_start_seconds": 32.97233560090703,
+              "probability": 5.179255140319583e-07
+            },
+            {
+              "frame": 1130,
+              "frame_start_seconds": 52.47709750566894,
+              "probability": 2.0359696861760312e-07
+            }
+          ],
+          "local_2s_mass": 9.593999266144237e-07,
+          "local_2s_best": {
+            "frame": 370,
+            "frame_start_seconds": 17.182766439909297,
+            "probability": 8.168403837771621e-07,
+            "winner_logit_margin": 13.985233306884766
+          },
+          "entropy_nats": 0.14186465740203857,
+          "allowed_frames": 3623,
+          "first_allowed_seconds": 16.81124716553288,
+          "last_allowed_seconds": 185.0165986394558,
+          "next_seconds": 33.27673983688527,
+          "jump_seconds": 16.423642758047222
+        },
+        "short_self_history_probe": {
+          "top": [
+            {
+              "frame": 572,
+              "frame_start_seconds": 26.563628117913833,
+              "probability": 0.603257954120636
+            },
+            {
+              "frame": 716,
+              "frame_start_seconds": 33.25097505668934,
+              "probability": 0.3966235816478729
+            },
+            {
+              "frame": 365,
+              "frame_start_seconds": 16.950566893424035,
+              "probability": 0.00011845530389109626
+            },
+            {
+              "frame": 366,
+              "frame_start_seconds": 16.99700680272109,
+              "probability": 8.070237811352854e-08
+            },
+            {
+              "frame": 367,
+              "frame_start_seconds": 17.04344671201814,
+              "probability": 8.82040482319546e-11
+            }
+          ],
+          "local_2s_mass": 0.00011853610340040177,
+          "local_2s_best": {
+            "frame": 365,
+            "frame_start_seconds": 16.950566893424035,
+            "probability": 0.00011845530389109626,
+            "winner_logit_margin": 8.535564422607422
+          },
+          "entropy_nats": 0.6727497577667236,
+          "allowed_frames": 3623,
+          "first_allowed_seconds": 16.81124716553288,
+          "last_allowed_seconds": 185.0165986394558,
+          "stop_probability": 9.130626255071661e-10,
+          "retained_tokens": 64,
+          "actual_action": "continue",
+          "interpretation": "self-attention prefix truncated; dense causal history summaries, clock and whole audio unchanged",
+          "pointer_next_seconds": 26.587921967452345
+        },
+        "final_stop_probability": 6.1130754147598054e-06
+      },
+      "cropped_audio_probe": {
+        "start_seconds": 17.853106575963718,
+        "duration_seconds": 12.0,
+        "status": "completed",
+        "error": null,
+        "note_count": 43,
+        "onsets_seconds": [
+          0.5285695712204153,
+          0.5364213661752252,
+          0.7731025401697137,
+          0.8910820765073607,
+          1.0379252254287132,
+          1.5599335228883222,
+          1.8051885501922122,
+          1.809967793326852,
+          1.9012944518627766,
+          2.314279428079826,
+          2.580752678349986,
+          2.855720003089126,
+          3.0245715394312023,
+          3.103696480056867,
+          3.3741303860411356,
+          3.8823030709679704,
+          4.368774920612776,
+          4.628486950932717,
+          4.889013965286636,
+          5.0268745661106236,
+          5.15824644162271,
+          5.299580570835105,
+          5.416645518884637,
+          5.662555047898065,
+          5.928986041356647,
+          6.956252657312926,
+          7.203099138947572,
+          7.72087949860934,
+          7.967738192119296,
+          8.205304201433178,
+          8.478149126186933,
+          8.738292140830941,
+          8.894725685033128,
+          9.245852928248123,
+          10.020811283172122,
+          10.037111779037787,
+          10.141361939306972,
+          10.290289810422868,
+          10.540081975335706,
+          10.784210453509203
+        ],
+        "types": {
+          "tap": 42,
+          "flick": 1
+        },
+        "interpretation": "same checkpoint; missing audio segment re-encoded as independent 12s input; resets chart history and audio context/time origin; not an isolated history intervention"
+      }
+    },
+    {
+      "song_id": 40717,
+      "song": "天使にふれたよ!",
+      "run": "E14-S",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "source_result": "out/phira_generalization10_20261029/40717/E14-S/result.json",
+      "source_result_sha256": "26748f0dc17fe660f693f2e4325ed571e071442f06542c7032b76a135a7b1433",
+      "largest_gaps": [
+        {
+          "start": 132.74605040396693,
+          "end": 170.4382700622974,
+          "seconds": 37.69221965833046,
+          "reference_notes": 214,
+          "no_active_note_seconds": 37.69221965833046
+        },
+        {
+          "start": 33.26798291126346,
+          "end": 62.74414575624358,
+          "seconds": 29.476162844980124,
+          "reference_notes": 107,
+          "no_active_note_seconds": 29.476162844980124
+        },
+        {
+          "start": 76.32450334267821,
+          "end": 98.13237560972875,
+          "seconds": 21.80787226705054,
+          "reference_notes": 104,
+          "no_active_note_seconds": 21.80787226705054
+        }
+      ],
+      "audio_and_features": {
+        "audio_rms_dbfs": -10.577363014221191,
+        "blocks_100ms": 376,
+        "fraction_blocks_below_minus60dbfs": 0.0,
+        "block_rms_dbfs_min": -14.790810585021973,
+        "block_rms_dbfs_median": -10.601481437683105,
+        "feature_frames": 811,
+        "all_valid": true,
+        "all_finite": true,
+        "zero_feature_frames": 0,
+        "feature_l2_mean": 15.960184097290039,
+        "feature_l2_min": 15.934182167053223,
+        "soft_probability_mean": 0.42824628949165344,
+        "soft_probability_max": 0.9841277003288269,
+        "soft_frames_above_half": 254
+      },
+      "export_note_count": 171,
+      "raw_note_count": 171,
+      "cutoff_changes": {
+        "notes_after_audio": 0,
+        "shortened_holds": 0,
+        "incomplete_notes": 0
+      },
+      "diagnostic": {
+        "exact_notes_and_status_reproduced": true,
+        "token_steps": 550,
+        "pointer_decisions": 166,
+        "jumps": [
+          {
+            "index": 24,
+            "current_seconds": 8.37768600360066,
+            "selected_frame": 363,
+            "stop_probability": 6.7040990814337675e-12,
+            "top": [
+              {
+                "frame": 363,
+                "frame_start_seconds": 16.857687074829933,
+                "probability": 0.5539466142654419
+              },
+              {
+                "frame": 351,
+                "frame_start_seconds": 16.300408163265306,
+                "probability": 0.4310801029205322
+              },
+              {
+                "frame": 335,
+                "frame_start_seconds": 15.557369614512472,
+                "probability": 0.007694652769714594
+              },
+              {
+                "frame": 362,
+                "frame_start_seconds": 16.81124716553288,
+                "probability": 0.005846062209457159
+              },
+              {
+                "frame": 188,
+                "frame_start_seconds": 8.730702947845804,
+                "probability": 0.0011944740545004606
+              }
+            ],
+            "local_2s_mass": 0.001417946768924594,
+            "local_2s_best": {
+              "frame": 188,
+              "frame_start_seconds": 8.730702947845804,
+              "probability": 0.0011944740545004606,
+              "winner_logit_margin": 6.139362335205078
+            },
+            "entropy_nats": 0.767707109451294,
+            "allowed_frames": 3805,
+            "first_allowed_seconds": 8.359183673469389,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 16.85863965179374,
+            "jump_seconds": 8.480953648193081
+          },
+          {
+            "index": 25,
+            "current_seconds": 16.85863965179374,
+            "selected_frame": 716,
+            "stop_probability": 1.2304974747467945e-11,
+            "top": [
+              {
+                "frame": 716,
+                "frame_start_seconds": 33.25097505668934,
+                "probability": 0.775005042552948
+              },
+              {
+                "frame": 572,
+                "frame_start_seconds": 26.563628117913833,
+                "probability": 0.2244715690612793
+              },
+              {
+                "frame": 1174,
+                "frame_start_seconds": 54.52045351473923,
+                "probability": 0.0004970869049429893
+              },
+              {
+                "frame": 440,
+                "frame_start_seconds": 20.433560090702947,
+                "probability": 2.1904133973293938e-05
+              },
+              {
+                "frame": 666,
+                "frame_start_seconds": 30.928979591836736,
+                "probability": 4.017673290945822e-06
+              }
+            ],
+            "local_2s_mass": 4.605581338523734e-08,
+            "local_2s_best": {
+              "frame": 379,
+              "frame_start_seconds": 17.60072562358277,
+              "probability": 1.7078496838962565e-08,
+              "winner_logit_margin": 17.63055992126465
+            },
+            "entropy_nats": 0.5369715094566345,
+            "allowed_frames": 3622,
+            "first_allowed_seconds": 16.857687074829933,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 33.26798291126346,
+            "jump_seconds": 16.40934325946972
+          },
+          {
+            "index": 26,
+            "current_seconds": 33.26798291126346,
+            "selected_frame": 1351,
+            "stop_probability": 3.676196291824141e-10,
+            "top": [
+              {
+                "frame": 1351,
+                "frame_start_seconds": 62.74031746031746,
+                "probability": 0.9983748197555542
+              },
+              {
+                "frame": 1174,
+                "frame_start_seconds": 54.52045351473923,
+                "probability": 0.0011036323849111795
+              },
+              {
+                "frame": 1175,
+                "frame_start_seconds": 54.56689342403628,
+                "probability": 0.0002583444875199348
+              },
+              {
+                "frame": 749,
+                "frame_start_seconds": 34.78349206349206,
+                "probability": 0.0002479399845469743
+              },
+              {
+                "frame": 1182,
+                "frame_start_seconds": 54.89197278911565,
+                "probability": 5.036723450757563e-06
+              }
+            ],
+            "local_2s_mass": 0.00025106940302066505,
+            "local_2s_best": {
+              "frame": 749,
+              "frame_start_seconds": 34.78349206349206,
+              "probability": 0.0002479399845469743,
+              "winner_logit_margin": 8.300697326660156
+            },
+            "entropy_nats": 0.0135316988453269,
+            "allowed_frames": 3269,
+            "first_allowed_seconds": 33.25097505668934,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 62.74414575624358,
+            "jump_seconds": 29.476162844980124
+          },
+          {
+            "index": 27,
+            "current_seconds": 62.74414575624358,
+            "selected_frame": 1511,
+            "stop_probability": 1.1803135180343816e-07,
+            "top": [
+              {
+                "frame": 1511,
+                "frame_start_seconds": 70.17070294784581,
+                "probability": 0.5663049817085266
+              },
+              {
+                "frame": 1510,
+                "frame_start_seconds": 70.12426303854875,
+                "probability": 0.4149225354194641
+              },
+              {
+                "frame": 1389,
+                "frame_start_seconds": 64.50503401360544,
+                "probability": 0.007763114292174578
+              },
+              {
+                "frame": 1522,
+                "frame_start_seconds": 70.68154195011338,
+                "probability": 0.005775828380137682
+              },
+              {
+                "frame": 1591,
+                "frame_start_seconds": 73.88589569160997,
+                "probability": 0.0015464783646166325
+              }
+            ],
+            "local_2s_mass": 0.010528070852160454,
+            "local_2s_best": {
+              "frame": 1389,
+              "frame_start_seconds": 64.50503401360544,
+              "probability": 0.007763114292174578,
+              "winner_logit_margin": 4.2897491455078125
+            },
+            "entropy_nats": 0.7919642925262451,
+            "allowed_frames": 2634,
+            "first_allowed_seconds": 62.74031746031746,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 70.1809427212047,
+            "jump_seconds": 7.436796964961118
+          },
+          {
+            "index": 29,
+            "current_seconds": 70.69992645471275,
+            "selected_frame": 1605,
+            "stop_probability": 1.8929467842099257e-06,
+            "top": [
+              {
+                "frame": 1605,
+                "frame_start_seconds": 74.53605442176871,
+                "probability": 0.6570708751678467
+              },
+              {
+                "frame": 1522,
+                "frame_start_seconds": 70.68154195011338,
+                "probability": 0.342803418636322
+              },
+              {
+                "frame": 1523,
+                "frame_start_seconds": 70.72798185941043,
+                "probability": 0.00010177668445976451
+              },
+              {
+                "frame": 1528,
+                "frame_start_seconds": 70.9601814058957,
+                "probability": 1.2352188605291303e-05
+              },
+              {
+                "frame": 1527,
+                "frame_start_seconds": 70.91374149659865,
+                "probability": 4.311121756472858e-06
+              }
+            ],
+            "local_2s_mass": 0.3429223597049713,
+            "local_2s_best": {
+              "frame": 1522,
+              "frame_start_seconds": 70.68154195011338,
+              "probability": 0.342803418636322,
+              "winner_logit_margin": 0.650634765625
+            },
+            "entropy_nats": 0.6441740989685059,
+            "allowed_frames": 2463,
+            "first_allowed_seconds": 70.68154195011338,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 74.54361892527193,
+            "jump_seconds": 3.8436924705591764
+          },
+          {
+            "index": 36,
+            "current_seconds": 76.32450334267821,
+            "selected_frame": 2113,
+            "stop_probability": 2.8740424970474798e-11,
+            "top": [
+              {
+                "frame": 2113,
+                "frame_start_seconds": 98.1275283446712,
+                "probability": 0.9225403666496277
+              },
+              {
+                "frame": 2168,
+                "frame_start_seconds": 100.68172335600907,
+                "probability": 0.04758076369762421
+              },
+              {
+                "frame": 2129,
+                "frame_start_seconds": 98.87056689342404,
+                "probability": 0.02535371482372284
+              },
+              {
+                "frame": 1682,
+                "frame_start_seconds": 78.11192743764173,
+                "probability": 0.0013507152907550335
+              },
+              {
+                "frame": 2124,
+                "frame_start_seconds": 98.63836734693878,
+                "probability": 0.0010708662448450923
+              }
+            ],
+            "local_2s_mass": 0.0014040922978892922,
+            "local_2s_best": {
+              "frame": 1682,
+              "frame_start_seconds": 78.11192743764173,
+              "probability": 0.0013507152907550335,
+              "winner_logit_margin": 6.526496887207031
+            },
+            "entropy_nats": 0.34437790513038635,
+            "allowed_frames": 2342,
+            "first_allowed_seconds": 76.3007709750567,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 98.13237560972875,
+            "jump_seconds": 21.80787226705054
+          },
+          {
+            "index": 66,
+            "current_seconds": 109.65749333042136,
+            "selected_frame": 2449,
+            "stop_probability": 9.22682208415182e-11,
+            "top": [
+              {
+                "frame": 2449,
+                "frame_start_seconds": 113.73133786848072,
+                "probability": 0.9843692779541016
+              },
+              {
+                "frame": 2366,
+                "frame_start_seconds": 109.8768253968254,
+                "probability": 0.009754558093845844
+              },
+              {
+                "frame": 2367,
+                "frame_start_seconds": 109.92326530612245,
+                "probability": 0.005290380213409662
+              },
+              {
+                "frame": 2494,
+                "frame_start_seconds": 115.82113378684808,
+                "probability": 0.0005856531788595021
+              },
+              {
+                "frame": 2493,
+                "frame_start_seconds": 115.77469387755102,
+                "probability": 1.4591863362056756e-07
+              }
+            ],
+            "local_2s_mass": 0.01504494622349739,
+            "local_2s_best": {
+              "frame": 2366,
+              "frame_start_seconds": 109.8768253968254,
+              "probability": 0.009754558093845844,
+              "winner_logit_margin": 4.614266395568848
+            },
+            "entropy_nats": 0.09276451915502548,
+            "allowed_frames": 1624,
+            "first_allowed_seconds": 109.64462585034013,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 113.74671869187128,
+            "jump_seconds": 4.08922536144992
+          },
+          {
+            "index": 140,
+            "current_seconds": 132.74605040396693,
+            "selected_frame": 3670,
+            "stop_probability": 2.5678075984969517e-11,
+            "top": [
+              {
+                "frame": 3670,
+                "frame_start_seconds": 170.4344671201814,
+                "probability": 0.7131559252738953
+              },
+              {
+                "frame": 2869,
+                "frame_start_seconds": 133.23609977324264,
+                "probability": 0.28627195954322815
+              },
+              {
+                "frame": 2863,
+                "frame_start_seconds": 132.95746031746032,
+                "probability": 0.0005057565285824239
+              },
+              {
+                "frame": 2862,
+                "frame_start_seconds": 132.91102040816327,
+                "probability": 6.618435145355761e-05
+              },
+              {
+                "frame": 2861,
+                "frame_start_seconds": 132.86458049886622,
+                "probability": 1.0736066258232313e-07
+              }
+            ],
+            "local_2s_mass": 0.28684401512145996,
+            "local_2s_best": {
+              "frame": 2869,
+              "frame_start_seconds": 133.23609977324264,
+              "probability": 0.28627195954322815,
+              "winner_logit_margin": 0.9127578735351562
+            },
+            "entropy_nats": 0.6036360263824463,
+            "allowed_frames": 1127,
+            "first_allowed_seconds": 132.72526077097507,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 170.4382700622974,
+            "jump_seconds": 37.69221965833046
+          },
+          {
+            "index": 145,
+            "current_seconds": 171.38207303070968,
+            "selected_frame": 3773,
+            "stop_probability": 3.540682858016453e-09,
+            "top": [
+              {
+                "frame": 3773,
+                "frame_start_seconds": 175.21777777777777,
+                "probability": 0.9959530830383301
+              },
+              {
+                "frame": 3766,
+                "frame_start_seconds": 174.89269841269842,
+                "probability": 0.004016553051769733
+              },
+              {
+                "frame": 3692,
+                "frame_start_seconds": 171.45614512471656,
+                "probability": 1.6738804333726875e-05
+              },
+              {
+                "frame": 3743,
+                "frame_start_seconds": 173.82458049886623,
+                "probability": 1.342189443676034e-05
+              },
+              {
+                "frame": 3691,
+                "frame_start_seconds": 171.4097052154195,
+                "probability": 1.0472678013684344e-07
+              }
+            ],
+            "local_2s_mass": 1.6942773072514683e-05,
+            "local_2s_best": {
+              "frame": 3692,
+              "frame_start_seconds": 171.45614512471656,
+              "probability": 1.6738804333726875e-05,
+              "winner_logit_margin": 10.993725776672363
+            },
+            "entropy_nats": 0.026537399739027023,
+            "allowed_frames": 295,
+            "first_allowed_seconds": 171.36326530612246,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 175.24891194384654,
+            "jump_seconds": 3.86683891313686
+          },
+          {
+            "index": 163,
+            "current_seconds": 179.9240174571619,
+            "selected_frame": 3984,
+            "stop_probability": 5.636546229759176e-10,
+            "top": [
+              {
+                "frame": 3984,
+                "frame_start_seconds": 185.0165986394558,
+                "probability": 0.9805025458335876
+              },
+              {
+                "frame": 3878,
+                "frame_start_seconds": 180.09396825396826,
+                "probability": 0.012419762089848518
+              },
+              {
+                "frame": 3877,
+                "frame_start_seconds": 180.0475283446712,
+                "probability": 0.006467876955866814
+              },
+              {
+                "frame": 3876,
+                "frame_start_seconds": 180.00108843537416,
+                "probability": 0.0004850814875680953
+              },
+              {
+                "frame": 3879,
+                "frame_start_seconds": 180.1404081632653,
+                "probability": 0.00012404550216160715
+              }
+            ],
+            "local_2s_mass": 0.019497524946928024,
+            "local_2s_best": {
+              "frame": 3878,
+              "frame_start_seconds": 180.09396825396826,
+              "probability": 0.012419762089848518,
+              "winner_logit_margin": 4.368776321411133
+            },
+            "entropy_nats": 0.11124324053525925,
+            "allowed_frames": 111,
+            "first_allowed_seconds": 179.90820861678006,
+            "last_allowed_seconds": 185.0165986394558,
+            "next_seconds": 185.0513306349151,
+            "jump_seconds": 5.127313177753194
+          }
+        ],
+        "largest_gap_original": {
+          "index": 140,
+          "current_seconds": 132.74605040396693,
+          "selected_frame": 3670,
+          "stop_probability": 2.5678075984969517e-11,
+          "top": [
+            {
+              "frame": 3670,
+              "frame_start_seconds": 170.4344671201814,
+              "probability": 0.7131559252738953
+            },
+            {
+              "frame": 2869,
+              "frame_start_seconds": 133.23609977324264,
+              "probability": 0.28627195954322815
+            },
+            {
+              "frame": 2863,
+              "frame_start_seconds": 132.95746031746032,
+              "probability": 0.0005057565285824239
+            },
+            {
+              "frame": 2862,
+              "frame_start_seconds": 132.91102040816327,
+              "probability": 6.618435145355761e-05
+            },
+            {
+              "frame": 2861,
+              "frame_start_seconds": 132.86458049886622,
+              "probability": 1.0736066258232313e-07
+            }
+          ],
+          "local_2s_mass": 0.28684401512145996,
+          "local_2s_best": {
+            "frame": 2869,
+            "frame_start_seconds": 133.23609977324264,
+            "probability": 0.28627195954322815,
+            "winner_logit_margin": 0.9127578735351562
+          },
+          "entropy_nats": 0.6036360263824463,
+          "allowed_frames": 1127,
+          "first_allowed_seconds": 132.72526077097507,
+          "last_allowed_seconds": 185.0165986394558,
+          "next_seconds": 170.4382700622974,
+          "jump_seconds": 37.69221965833046
+        },
+        "short_self_history_probe": {
+          "top": [
+            {
+              "frame": 2869,
+              "frame_start_seconds": 133.23609977324264,
+              "probability": 0.9579585194587708
+            },
+            {
+              "frame": 3670,
+              "frame_start_seconds": 170.4344671201814,
+              "probability": 0.042040981352329254
+            },
+            {
+              "frame": 2863,
+              "frame_start_seconds": 132.95746031746032,
+              "probability": 4.062402183535596e-07
+            },
+            {
+              "frame": 2862,
+              "frame_start_seconds": 132.91102040816327,
+              "probability": 3.557358185801718e-09
+            },
+            {
+              "frame": 2880,
+              "frame_start_seconds": 133.74693877551022,
+              "probability": 1.8480411645427353e-09
+            }
+          ],
+          "local_2s_mass": 0.9579589366912842,
+          "local_2s_best": {
+            "frame": 2869,
+            "frame_start_seconds": 133.23609977324264,
+            "probability": 0.9579585194587708,
+            "winner_logit_margin": 0.0
+          },
+          "entropy_nats": 0.1743837147951126,
+          "allowed_frames": 1127,
+          "first_allowed_seconds": 132.72526077097507,
+          "last_allowed_seconds": 185.0165986394558,
+          "stop_probability": 1.5452164558744236e-14,
+          "retained_tokens": 64,
+          "actual_action": "continue",
+          "interpretation": "self-attention prefix truncated; dense causal history summaries, clock and whole audio unchanged",
+          "pointer_next_seconds": 133.24910591523394
+        },
+        "final_stop_probability": 7.1067960544235476e-12
+      },
+      "cropped_audio_probe": {
+        "start_seconds": 133.74603174603175,
+        "duration_seconds": 12.0,
+        "status": "failed",
+        "error": "continued with no future audio interval",
+        "note_count": 77,
+        "onsets_seconds": [
+          0.797694428113042,
+          0.9445858965330924,
+          1.1321449387046485,
+          1.2799365179014315,
+          1.405700821995465,
+          1.553345843464339,
+          1.8030305186853388,
+          1.9301268756200396,
+          2.0724117993551587,
+          2.205302995954241,
+          2.338199404761905,
+          2.623968907224348,
+          2.8552367735017183,
+          3.1050423370845737,
+          3.2215942327451814,
+          3.3348510133219955,
+          3.4102916650058464,
+          3.615746184541525,
+          3.7344431932929423,
+          3.878091927526219,
+          3.980229702558107,
+          4.142358042053084,
+          4.649493191950445,
+          4.799970364040799,
+          5.030983645899766,
+          5.1317339409722225,
+          5.2797699459015375,
+          5.326949241447881,
+          5.407652074420263,
+          5.497618064966873,
+          5.6549553848232,
+          5.913435285572563,
+          6.1557464862572635,
+          6.332071004508574,
+          6.682574604060374,
+          6.695596903759877,
+          6.714660196733109,
+          6.91402253512082,
+          6.934092812743588,
+          6.946845959277658,
+          7.035750544195543,
+          7.420416589161706,
+          7.687529687167836,
+          7.964343638171415,
+          8.217150358515802,
+          8.3372066520293,
+          8.48328065764066,
+          8.57419331730088,
+          8.728577623432185,
+          9.000800371580924,
+          9.132616069214144,
+          9.254315804202541,
+          9.522731227745004,
+          9.771248132960867,
+          10.033934747259092,
+          10.274586806524368,
+          10.409705146910651,
+          10.792211080884178,
+          10.926258450808708,
+          11.059231710628588,
+          11.301908494599012,
+          11.990068361840281,
+          11.994858497673833,
+          11.99753939421425,
+          11.998763138421145,
+          11.999361705859526,
+          11.999682692799036,
+          11.999847189446943,
+          11.999925525635108,
+          11.999964515290378,
+          11.999983193831993,
+          11.999992435285359,
+          11.999996737761899,
+          11.999998848380768,
+          11.99999992258416
+        ],
+        "types": {
+          "tap": 45,
+          "hold": 5,
+          "flick": 5,
+          "drag": 22
+        },
+        "interpretation": "same checkpoint; missing audio segment re-encoded as independent 12s input; resets chart history and audio context/time origin; not an isolated history intervention"
+      }
+    },
+    {
+      "song_id": 52417,
+      "song": "匙ノ咒",
+      "run": "E14-A",
+      "epoch": 1400,
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "source_result": "out/phira_generalization10_20261029/52417/E14-A/result.json",
+      "source_result_sha256": "ded28339fa4288d89f658bccc6a4bd958e8559088c5fddb3dc8776a9cea81928",
+      "largest_gaps": [
+        {
+          "start": 89.88492289086858,
+          "end": 253.37241771464446,
+          "seconds": 163.48749482377588,
+          "reference_notes": 1463,
+          "no_active_note_seconds": 163.48749482377588
+        },
+        {
+          "start": 260.21793010962523,
+          "end": 269.90622733256714,
+          "seconds": 9.688297222941912,
+          "reference_notes": 0,
+          "no_active_note_seconds": 9.688297222941912
+        }
+      ],
+      "audio_and_features": {
+        "audio_rms_dbfs": -10.035876274108887,
+        "blocks_100ms": 1634,
+        "fraction_blocks_below_minus60dbfs": 0.0,
+        "block_rms_dbfs_min": -38.80393981933594,
+        "block_rms_dbfs_median": -10.57807445526123,
+        "feature_frames": 3519,
+        "all_valid": true,
+        "all_finite": true,
+        "zero_feature_frames": 0,
+        "feature_l2_mean": 15.96358585357666,
+        "feature_l2_min": 15.927268028259277,
+        "soft_probability_mean": 0.42388269305229187,
+        "soft_probability_max": 0.989203155040741,
+        "soft_frames_above_half": 1216
+      },
+      "export_note_count": 631,
+      "raw_note_count": 631,
+      "cutoff_changes": {
+        "notes_after_audio": 0,
+        "shortened_holds": 0,
+        "incomplete_notes": 0
+      },
+      "diagnostic": {
+        "exact_notes_and_status_reproduced": true,
+        "token_steps": 1868,
+        "pointer_decisions": 605,
+        "jumps": [
+          {
+            "index": 561,
+            "current_seconds": 89.88492289086858,
+            "selected_frame": 5455,
+            "stop_probability": 5.2740968093745264e-15,
+            "top": [
+              {
+                "frame": 5455,
+                "frame_start_seconds": 253.3297052154195,
+                "probability": 0.9100120067596436
+              },
+              {
+                "frame": 1937,
+                "frame_start_seconds": 89.95410430839003,
+                "probability": 0.08620402216911316
+              },
+              {
+                "frame": 1938,
+                "frame_start_seconds": 90.00054421768708,
+                "probability": 0.003307201899588108
+              },
+              {
+                "frame": 5456,
+                "frame_start_seconds": 253.37614512471657,
+                "probability": 0.0004559224471449852
+              },
+              {
+                "frame": 5277,
+                "frame_start_seconds": 245.06340136054422,
+                "probability": 8.492842425766867e-06
+              }
+            ],
+            "local_2s_mass": 0.08951468020677567,
+            "local_2s_best": {
+              "frame": 1937,
+              "frame_start_seconds": 89.95410430839003,
+              "probability": 0.08620402216911316,
+              "winner_logit_margin": 2.356740951538086
+            },
+            "entropy_nats": 0.31974759697914124,
+            "allowed_frames": 3877,
+            "first_allowed_seconds": 89.86122448979592,
+            "last_allowed_seconds": 269.8623129251701,
+            "next_seconds": 253.37241771464446,
+            "jump_seconds": 163.48749482377588
+          },
+          {
+            "index": 601,
+            "current_seconds": 260.21793010962523,
+            "selected_frame": 5811,
+            "stop_probability": 8.334156390184255e-13,
+            "top": [
+              {
+                "frame": 5811,
+                "frame_start_seconds": 269.8623129251701,
+                "probability": 0.999968409538269
+              },
+              {
+                "frame": 5606,
+                "frame_start_seconds": 260.3421315192744,
+                "probability": 1.9291544958832674e-05
+              },
+              {
+                "frame": 5605,
+                "frame_start_seconds": 260.2956916099773,
+                "probability": 6.1070632000337355e-06
+              },
+              {
+                "frame": 5611,
+                "frame_start_seconds": 260.5743310657596,
+                "probability": 3.5987409319204744e-06
+              },
+              {
+                "frame": 5610,
+                "frame_start_seconds": 260.5278911564626,
+                "probability": 2.428670768495067e-06
+              }
+            ],
+            "local_2s_mass": 3.171736898366362e-05,
+            "local_2s_best": {
+              "frame": 5606,
+              "frame_start_seconds": 260.3421315192744,
+              "probability": 1.9291544958832674e-05,
+              "winner_logit_margin": 10.855812072753906
+            },
+            "entropy_nats": 0.00039532367372885346,
+            "allowed_frames": 209,
+            "first_allowed_seconds": 260.2028117913832,
+            "last_allowed_seconds": 269.8623129251701,
+            "next_seconds": 269.90622733256714,
+            "jump_seconds": 9.688297222941912
+          }
+        ],
+        "largest_gap_original": {
+          "index": 561,
+          "current_seconds": 89.88492289086858,
+          "selected_frame": 5455,
+          "stop_probability": 5.2740968093745264e-15,
+          "top": [
+            {
+              "frame": 5455,
+              "frame_start_seconds": 253.3297052154195,
+              "probability": 0.9100120067596436
+            },
+            {
+              "frame": 1937,
+              "frame_start_seconds": 89.95410430839003,
+              "probability": 0.08620402216911316
+            },
+            {
+              "frame": 1938,
+              "frame_start_seconds": 90.00054421768708,
+              "probability": 0.003307201899588108
+            },
+            {
+              "frame": 5456,
+              "frame_start_seconds": 253.37614512471657,
+              "probability": 0.0004559224471449852
+            },
+            {
+              "frame": 5277,
+              "frame_start_seconds": 245.06340136054422,
+              "probability": 8.492842425766867e-06
+            }
+          ],
+          "local_2s_mass": 0.08951468020677567,
+          "local_2s_best": {
+            "frame": 1937,
+            "frame_start_seconds": 89.95410430839003,
+            "probability": 0.08620402216911316,
+            "winner_logit_margin": 2.356740951538086
+          },
+          "entropy_nats": 0.31974759697914124,
+          "allowed_frames": 3877,
+          "first_allowed_seconds": 89.86122448979592,
+          "last_allowed_seconds": 269.8623129251701,
+          "next_seconds": 253.37241771464446,
+          "jump_seconds": 163.48749482377588
+        },
+        "short_self_history_probe": {
+          "top": [
+            {
+              "frame": 2350,
+              "frame_start_seconds": 109.13378684807256,
+              "probability": 0.9548230171203613
+            },
+            {
+              "frame": 2114,
+              "frame_start_seconds": 98.17396825396825,
+              "probability": 0.04169823229312897
+            },
+            {
+              "frame": 2389,
+              "frame_start_seconds": 110.94494331065759,
+              "probability": 0.0018295292975381017
+            },
+            {
+              "frame": 4799,
+              "frame_start_seconds": 222.86512471655328,
+              "probability": 0.0007632491760887206
+            },
+            {
+              "frame": 2289,
+              "frame_start_seconds": 106.30095238095238,
+              "probability": 0.00043067336082458496
+            }
+          ],
+          "local_2s_mass": 4.072917292319289e-08,
+          "local_2s_best": {
+            "frame": 1939,
+            "frame_start_seconds": 90.04698412698413,
+            "probability": 3.3250653785898976e-08,
+            "winner_logit_margin": 17.172962188720703
+          },
+          "entropy_nats": 0.2010871171951294,
+          "allowed_frames": 3877,
+          "first_allowed_seconds": 89.86122448979592,
+          "last_allowed_seconds": 269.8623129251701,
+          "stop_probability": 2.0362060995648967e-11,
+          "retained_tokens": 64,
+          "actual_action": "continue",
+          "interpretation": "self-attention prefix truncated; dense causal history summaries, clock and whole audio unchanged",
+          "pointer_next_seconds": 109.14544942635257
+        },
+        "final_stop_probability": 2.594233023955894e-07
+      },
+      "cropped_audio_probe": {
+        "start_seconds": 90.88494331065759,
+        "duration_seconds": 12.0,
+        "status": "completed",
+        "error": null,
+        "note_count": 62,
+        "onsets_seconds": [
+          1.6289251826625832,
+          1.796926383020656,
+          1.9824900738290108,
+          2.145177736866231,
+          2.3192717384805484,
+          2.4931331380208337,
+          2.569341884621687,
+          2.671213434266936,
+          2.839436660732001,
+          3.0131829515660433,
+          3.181464032715951,
+          3.3622827909646933,
+          3.5256721922167302,
+          3.7023123854033804,
+          3.7824837530226936,
+          3.875459825857426,
+          4.049049669469025,
+          4.218819250682044,
+          4.302358318164506,
+          4.396586429656498,
+          4.561678958814971,
+          4.657881239979716,
+          4.74129462244289,
+          4.905020646767822,
+          4.978344954925329,
+          5.085292224148774,
+          5.167426486545139,
+          5.253915510458741,
+          5.430093119441787,
+          5.5971568329480235,
+          5.770216636052207,
+          5.944968123576539,
+          6.116616437916313,
+          6.282320362878225,
+          6.45964877969824,
+          6.628095265775581,
+          6.810447521944976,
+          6.977152535574777,
+          7.149881403570543,
+          7.323474215206916,
+          7.501954016307044,
+          7.668781433797477,
+          7.842268190967793,
+          8.012585786918933,
+          8.185321591608648,
+          8.35553932657047,
+          8.529991045409048,
+          8.701419843816433,
+          8.877447266870616,
+          9.04658728221106,
+          9.2186191245704,
+          9.38952815395364,
+          9.561139389349488,
+          9.732361758831136,
+          9.907882939552774,
+          10.08083491491893,
+          10.145554539686968,
+          10.255884727426126,
+          10.421491167756164,
+          10.503486209099526,
+          10.59849504535701,
+          10.771079525071746
+        ],
+        "types": {
+          "tap": 62
+        },
+        "interpretation": "same checkpoint; missing audio segment re-encoded as independent 12s input; resets chart history and audio context/time origin; not an isolated history intervention"
+      }
+    },
+    {
+      "song_id": 52417,
+      "song": "匙ノ咒",
+      "run": "E14-S",
+      "epoch": 1400,
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "source_result": "out/phira_generalization10_20261029/52417/E14-S/result.json",
+      "source_result_sha256": "6b9a6a2ad6f0ff6aae3a8d5b6e8790c1318c06f6e0f7a83175697c9b727c2203",
+      "largest_gaps": [
+        {
+          "start": 137.95060637666526,
+          "end": 251.82497717202114,
+          "seconds": 113.87437079535587,
+          "reference_notes": 1002,
+          "no_active_note_seconds": 113.87437079535587
+        },
+        {
+          "start": 259.89760433136473,
+          "end": 269.9079547963391,
+          "seconds": 10.010350464974351,
+          "reference_notes": 0,
+          "no_active_note_seconds": 10.010350464974351
+        },
+        {
+          "start": 124.95105915510736,
+          "end": 134.598281896336,
+          "seconds": 9.647222741228646,
+          "reference_notes": 92,
+          "no_active_note_seconds": 9.647222741228646
+        }
+      ],
+      "audio_and_features": {
+        "audio_rms_dbfs": -10.18873405456543,
+        "blocks_100ms": 1138,
+        "fraction_blocks_below_minus60dbfs": 0.0,
+        "block_rms_dbfs_min": -33.4941520690918,
+        "block_rms_dbfs_median": -10.90506649017334,
+        "feature_frames": 2451,
+        "all_valid": true,
+        "all_finite": true,
+        "zero_feature_frames": 0,
+        "feature_l2_mean": 15.962703704833984,
+        "feature_l2_min": 15.927268028259277,
+        "soft_probability_mean": 0.42323365807533264,
+        "soft_probability_max": 0.989203155040741,
+        "soft_frames_above_half": 832
+      },
+      "export_note_count": 902,
+      "raw_note_count": 902,
+      "cutoff_changes": {
+        "notes_after_audio": 0,
+        "shortened_holds": 0,
+        "incomplete_notes": 0
+      },
+      "diagnostic": {
+        "exact_notes_and_status_reproduced": true,
+        "token_steps": 2654,
+        "pointer_decisions": 831,
+        "jumps": [
+          {
+            "index": 699,
+            "current_seconds": 111.48199537350747,
+            "selected_frame": 2471,
+            "stop_probability": 3.9099182225221796e-10,
+            "top": [
+              {
+                "frame": 2471,
+                "frame_start_seconds": 114.75301587301587,
+                "probability": 0.7626047730445862
+              },
+              {
+                "frame": 2404,
+                "frame_start_seconds": 111.64154195011338,
+                "probability": 0.20452620089054108
+              },
+              {
+                "frame": 2403,
+                "frame_start_seconds": 111.59510204081633,
+                "probability": 0.031108679249882698
+              },
+              {
+                "frame": 2402,
+                "frame_start_seconds": 111.54866213151928,
+                "probability": 0.0017454571789130569
+              },
+              {
+                "frame": 2497,
+                "frame_start_seconds": 115.96045351473923,
+                "probability": 6.604663212783635e-06
+              }
+            ],
+            "local_2s_mass": 0.23738828301429749,
+            "local_2s_best": {
+              "frame": 2404,
+              "frame_start_seconds": 111.64154195011338,
+              "probability": 0.20452620089054108,
+              "winner_logit_margin": 1.3160438537597656
+            },
+            "entropy_nats": 0.6504954099655151,
+            "allowed_frames": 3412,
+            "first_allowed_seconds": 111.45578231292517,
+            "last_allowed_seconds": 269.8623129251701,
+            "next_seconds": 114.77078062165621,
+            "jump_seconds": 3.2887852481487414
+          },
+          {
+            "index": 760,
+            "current_seconds": 124.95105915510736,
+            "selected_frame": 2898,
+            "stop_probability": 1.0151169488326062e-10,
+            "top": [
+              {
+                "frame": 2898,
+                "frame_start_seconds": 134.58285714285714,
+                "probability": 0.9651780724525452
+              },
+              {
+                "frame": 2693,
+                "frame_start_seconds": 125.06267573696145,
+                "probability": 0.033575862646102905
+              },
+              {
+                "frame": 2697,
+                "frame_start_seconds": 125.24843537414966,
+                "probability": 0.000948091212194413
+              },
+              {
+                "frame": 2901,
+                "frame_start_seconds": 134.7221768707483,
+                "probability": 9.624333324609324e-05
+              },
+              {
+                "frame": 2692,
+                "frame_start_seconds": 125.0162358276644,
+                "probability": 8.162334415828809e-05
+              }
+            ],
+            "local_2s_mass": 0.034672997891902924,
+            "local_2s_best": {
+              "frame": 2693,
+              "frame_start_seconds": 125.06267573696145,
+              "probability": 0.033575862646102905,
+              "winner_logit_margin": 3.3585052490234375
+            },
+            "entropy_nats": 0.15768080949783325,
+            "allowed_frames": 3122,
+            "first_allowed_seconds": 124.9233560090703,
+            "last_allowed_seconds": 269.8623129251701,
+            "next_seconds": 134.598281896336,
+            "jump_seconds": 9.647222741228646
+          },
+          {
+            "index": 781,
+            "current_seconds": 137.95060637666526,
+            "selected_frame": 5422,
+            "stop_probability": 1.8610452068301697e-10,
+            "top": [
+              {
+                "frame": 5422,
+                "frame_start_seconds": 251.79718820861677,
+                "probability": 0.9999979734420776
+              },
+              {
+                "frame": 2972,
+                "frame_start_seconds": 138.019410430839,
+                "probability": 2.036308160313638e-06
+              },
+              {
+                "frame": 5423,
+                "frame_start_seconds": 251.84362811791382,
+                "probability": 2.696325628048779e-11
+              },
+              {
+                "frame": 2973,
+                "frame_start_seconds": 138.06585034013605,
+                "probability": 8.766520495639973e-12
+              },
+              {
+                "frame": 5430,
+                "frame_start_seconds": 252.1687074829932,
+                "probability": 1.2254628735386408e-13
+              }
+            ],
+            "local_2s_mass": 2.0363170278869802e-06,
+            "local_2s_best": {
+              "frame": 2972,
+              "frame_start_seconds": 138.019410430839,
+              "probability": 2.036308160313638e-06,
+              "winner_logit_margin": 13.1043701171875
+            },
+            "entropy_nats": 2.8711980121443048e-05,
+            "allowed_frames": 2842,
+            "first_allowed_seconds": 137.9265306122449,
+            "last_allowed_seconds": 269.8623129251701,
+            "next_seconds": 251.82497717202114,
+            "jump_seconds": 113.87437079535587
+          },
+          {
+            "index": 795,
+            "current_seconds": 253.0235821117998,
+            "selected_frame": 5493,
+            "stop_probability": 1.2738467225492656e-10,
+            "top": [
+              {
+                "frame": 5493,
+                "frame_start_seconds": 255.0944217687075,
+                "probability": 0.9951359629631042
+              },
+              {
+                "frame": 5452,
+                "frame_start_seconds": 253.19038548752835,
+                "probability": 0.0035324348136782646
+              },
+              {
+                "frame": 5456,
+                "frame_start_seconds": 253.37614512471657,
+                "probability": 0.001318919938057661
+              },
+              {
+                "frame": 5537,
+                "frame_start_seconds": 257.1377777777778,
+                "probability": 5.872256224392913e-06
+              },
+              {
+                "frame": 5519,
+                "frame_start_seconds": 256.30185941043084,
+                "probability": 4.028344392281724e-06
+              }
+            ],
+            "local_2s_mass": 0.004852532409131527,
+            "local_2s_best": {
+              "frame": 5452,
+              "frame_start_seconds": 253.19038548752835,
+              "probability": 0.0035324348136782646,
+              "winner_logit_margin": 5.640892028808594
+            },
+            "entropy_nats": 0.033701688051223755,
+            "allowed_frames": 364,
+            "first_allowed_seconds": 253.00462585034015,
+            "last_allowed_seconds": 269.8623129251701,
+            "next_seconds": 255.10168160297974,
+            "jump_seconds": 2.078099491179927
+          },
+          {
+            "index": 827,
+            "current_seconds": 259.89760433136473,
+            "selected_frame": 5811,
+            "stop_probability": 2.8008895203157635e-09,
+            "top": [
+              {
+                "frame": 5811,
+                "frame_start_seconds": 269.8623129251701,
+                "probability": 0.790515124797821
+              },
+              {
+                "frame": 5597,
+                "frame_start_seconds": 259.92417233560093,
+                "probability": 0.10798302292823792
+              },
+              {
+                "frame": 5598,
+                "frame_start_seconds": 259.97061224489795,
+                "probability": 0.09058798104524612
+              },
+              {
+                "frame": 5692,
+                "frame_start_seconds": 264.3359637188209,
+                "probability": 0.008579261600971222
+              },
+              {
+                "frame": 5691,
+                "frame_start_seconds": 264.2895238095238,
+                "probability": 0.002322371816262603
+              }
+            ],
+            "local_2s_mass": 0.19858312606811523,
+            "local_2s_best": {
+              "frame": 5597,
+              "frame_start_seconds": 259.92417233560093,
+              "probability": 0.10798302292823792,
+              "winner_logit_margin": 1.990710735321045
+            },
+            "entropy_nats": 0.6987655758857727,
+            "allowed_frames": 216,
+            "first_allowed_seconds": 259.87773242630385,
+            "last_allowed_seconds": 269.8623129251701,
+            "next_seconds": 269.9079547963391,
+            "jump_seconds": 10.010350464974351
+          }
+        ],
+        "largest_gap_original": {
+          "index": 781,
+          "current_seconds": 137.95060637666526,
+          "selected_frame": 5422,
+          "stop_probability": 1.8610452068301697e-10,
+          "top": [
+            {
+              "frame": 5422,
+              "frame_start_seconds": 251.79718820861677,
+              "probability": 0.9999979734420776
+            },
+            {
+              "frame": 2972,
+              "frame_start_seconds": 138.019410430839,
+              "probability": 2.036308160313638e-06
+            },
+            {
+              "frame": 5423,
+              "frame_start_seconds": 251.84362811791382,
+              "probability": 2.696325628048779e-11
+            },
+            {
+              "frame": 2973,
+              "frame_start_seconds": 138.06585034013605,
+              "probability": 8.766520495639973e-12
+            },
+            {
+              "frame": 5430,
+              "frame_start_seconds": 252.1687074829932,
+              "probability": 1.2254628735386408e-13
+            }
+          ],
+          "local_2s_mass": 2.0363170278869802e-06,
+          "local_2s_best": {
+            "frame": 2972,
+            "frame_start_seconds": 138.019410430839,
+            "probability": 2.036308160313638e-06,
+            "winner_logit_margin": 13.1043701171875
+          },
+          "entropy_nats": 2.8711980121443048e-05,
+          "allowed_frames": 2842,
+          "first_allowed_seconds": 137.9265306122449,
+          "last_allowed_seconds": 269.8623129251701,
+          "next_seconds": 251.82497717202114,
+          "jump_seconds": 113.87437079535587
+        },
+        "short_self_history_probe": {
+          "top": [
+            {
+              "frame": 5422,
+              "frame_start_seconds": 251.79718820861677,
+              "probability": 0.9836201667785645
+            },
+            {
+              "frame": 5356,
+              "frame_start_seconds": 248.73215419501133,
+              "probability": 0.010317495092749596
+            },
+            {
+              "frame": 5430,
+              "frame_start_seconds": 252.1687074829932,
+              "probability": 0.0038691600784659386
+            },
+            {
+              "frame": 5423,
+              "frame_start_seconds": 251.84362811791382,
+              "probability": 0.0017002312233671546
+            },
+            {
+              "frame": 2972,
+              "frame_start_seconds": 138.019410430839,
+              "probability": 0.0004897842882201076
+            }
+          ],
+          "local_2s_mass": 0.000492737686727196,
+          "local_2s_best": {
+            "frame": 2972,
+            "frame_start_seconds": 138.019410430839,
+            "probability": 0.0004897842882201076,
+            "winner_logit_margin": 7.605030059814453
+          },
+          "entropy_nats": 0.09954451024532318,
+          "allowed_frames": 2842,
+          "first_allowed_seconds": 137.9265306122449,
+          "last_allowed_seconds": 269.8623129251701,
+          "stop_probability": 2.4284760400533623e-12,
+          "retained_tokens": 64,
+          "actual_action": "continue",
+          "interpretation": "self-attention prefix truncated; dense causal history summaries, clock and whole audio unchanged",
+          "pointer_next_seconds": 251.8229694364725
+        },
+        "final_stop_probability": 9.060949213157699e-11
+      },
+      "cropped_audio_probe": {
+        "start_seconds": 138.95061224489797,
+        "duration_seconds": 12.0,
+        "status": "failed",
+        "error": "continued with no future audio interval",
+        "note_count": 72,
+        "onsets_seconds": [
+          0.6613639828082926,
+          0.8178025046281533,
+          0.9912051550763534,
+          1.0920000708616782,
+          1.1738030618334574,
+          1.3282172530470522,
+          1.5210865115903134,
+          1.6694161662060658,
+          1.6996432197553502,
+          1.8655787364587764,
+          1.970986867891688,
+          2.097525271461124,
+          2.204033978174603,
+          2.3568505361128826,
+          2.5224573667357566,
+          2.6410797852669714,
+          2.7056841847253223,
+          2.8077746332908164,
+          2.891472523661157,
+          3.0415726268534757,
+          3.159438802152534,
+          3.2305246532206633,
+          3.4001280354264103,
+          3.5771746778596287,
+          3.74448200943789,
+          3.786036465530223,
+          3.9132289798243516,
+          4.007710187916312,
+          4.106759145308514,
+          4.298637039288372,
+          4.434107985723586,
+          4.617126095311171,
+          4.7750709613272395,
+          5.121246246545493,
+          5.466347786347613,
+          5.644471698510133,
+          5.986613346022002,
+          6.158991057034793,
+          6.340406189656852,
+          6.845410477341979,
+          7.182224622107958,
+          7.535101250542535,
+          7.688786980938208,
+          7.883713794111395,
+          8.052648262837035,
+          8.232487289186507,
+          8.398261339529302,
+          8.754265061981823,
+          9.093958294580853,
+          9.437468456173159,
+          9.793799622550843,
+          10.117827386488448,
+          10.482167406839038,
+          10.636821968787922,
+          10.815668242231789,
+          10.983593248985793,
+          11.161430416323432,
+          11.848434718817542,
+          11.992259165251337,
+          11.996637536971292,
+          11.998644694670544,
+          11.999460338675116,
+          11.99978647482491,
+          11.9999130754723,
+          11.99996497659526,
+          11.99998706543012,
+          11.999995343191785,
+          11.999998531310288,
+          11.999999814294743
+        ],
+        "types": {
+          "tap": 30,
+          "flick": 8,
+          "hold": 24,
+          "drag": 10
+        },
+        "interpretation": "same checkpoint; missing audio segment re-encoded as independent 12s input; resets chart history and audio context/time origin; not an isolated history intervention"
+      }
+    }
+  ],
+  "resources": {
+    "disk_free_gib": 8.17242431640625,
+    "ram_available_gib": 35.94641876220703,
+    "rss_gib": 1.73486328125,
+    "gpu_peak_allocated_gib": 0.19217872619628906,
+    "gpu_peak_reserved_gib": 0.23046875
+  }
+}

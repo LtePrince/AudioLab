@@ -4203,6 +4203,32 @@
         "new_inference": false,
         "all_eight_selected_predictions_failed": true,
         "reference_position_projection": false
+      },
+      "gap_diagnosis": {
+        "date": "2026-10-30",
+        "kind": "exact_rollout_replay_and_context_probes",
+        "report": "docs/evaluations/phira_gap_diagnosis_20261030.md",
+        "evidence": [
+          "docs/evaluations/assets/phira_gap_diagnosis_20261030/4k.json",
+          "docs/evaluations/assets/phira_gap_diagnosis_20261030/freex.json"
+        ],
+        "selected_chart_ids": [
+          52417,
+          40717
+        ],
+        "exact_original_rollouts_reproduced": 8,
+        "largest_gap_audio_features_present": 8,
+        "export_deleted_notes": 0,
+        "short_self_history_probes": 8,
+        "short_history_next_within_one_second": 3,
+        "independent_12s_crop_rollouts": 8,
+        "nonempty_crops": 8,
+        "natural_completion_crops": 2,
+        "conclusion": "wrong future-frame pointer followed by irreversible chronological advance; long chart context contributes to some errors but is not the sole identified cause",
+        "training_updates": 0,
+        "model_source_changed": false,
+        "weights_changed": false,
+        "quality_passed": false
       }
     }
   ],
