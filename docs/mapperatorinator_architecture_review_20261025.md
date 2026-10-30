@@ -1,5 +1,7 @@
 # Mapperatorinator 对 AudioLab 的架构参考
 
+2026-10-30 补充：[长训后优化决策](model_next_steps_20261030.md)结合 E20 将分窗输出提前为首要实验。用户明确要求始终可见整曲音频；首轮保留全曲原分辨率 memory，仅限制输出责任区间。本文关于全局压缩＋局部高分辨率的设想不作为当前首轮实现要求；原阅读记录保留。
+
 核查日期：2026-10-25。这是代码阅读与后续实验建议，未运行其模型，也未改动正在训练的 E18。
 
 原讨论已原样迁入 [AudioLab_chart_generation_context_2026-10-25.md](AudioLab_chart_generation_context_2026-10-25.md)。原文件8755字节，SHA256为 `52f3b29bf064f2f2498c437b421621faffc73fdf2f2c0bbaac523b0a6b3ab02d`，上级目录原文件已移除。

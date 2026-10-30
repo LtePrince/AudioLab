@@ -1,0 +1,277 @@
+{
+  "schema": "audiolab-optimization-review-v1",
+  "date": "2026-10-30",
+  "experiment": "E16",
+  "kind": "evidence_synthesis_and_plan",
+  "implementation_status": "not_started",
+  "base_commit": "e448a8f9122f8c1d14433fb95b7328c3502726b6",
+  "user_confirmed_architecture": "Every generated token can attend the whole song; note onsets may only be generated in the current output window.",
+  "proposed_window_seconds": 10,
+  "window_size_user_confirmed": false,
+  "new_training": false,
+  "new_inference": false,
+  "weights_changed": false,
+  "comparisons": [
+    {
+      "run": "E14-A",
+      "epoch": 1400,
+      "checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_e1400.pt",
+      "checkpoint_sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "checkpoint_sidecar": "out/ar_saturation_20261023/continued1400/audio/model_e1400.json",
+      "checkpoint_sidecar_sha256": "6ff0fa91e0a23b00f88adf24db6cc6ac807733897b24d8ab606814e0c881ae37",
+      "training_evaluation_full_checkpoint_sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+      "checkpoint_note": "The fixed15 evaluation used the full training checkpoint; the frozen inference snapshot omits optimizer/RNG. Sidecar links both byte hashes at the same epoch.",
+      "train15_source": "out/ar_saturation_20261023/continued1400/audio/evaluation-e1400/fixed15/summary.json",
+      "train15_source_sha256": "1e1673ee30114a1c0495b6a7625d0c2df505d486871bc16f56d32f4fc000b906",
+      "train15": {
+        "mean_raw_onset_f1": 0.9997074429629226,
+        "mean_raw_grid_bonus": 0.704506719582551,
+        "mean_joint_f1": 0.9920900506009109,
+        "completed": 15,
+        "total": 15
+      },
+      "community10": {
+        "mean_onset_f1_50ms": 0.47451945959947855,
+        "mean_grid_bonus": 0.17634872632502105,
+        "completed": 3,
+        "total": 10
+      },
+      "parameters_trainable": 6626691,
+      "decoder_config": {
+        "vocab_size": 129,
+        "hidden_dim": 256,
+        "depth": 6,
+        "num_heads": 8,
+        "mlp_ratio": 4.0,
+        "dropout": 0.1,
+        "mem_dim": 256,
+        "time_dim": 128,
+        "rope_theta": 10000.0,
+        "cross_window": null,
+        "token_dropout": 0.15,
+        "soft_onset_dim": 2,
+        "history_dim": 28,
+        "cross_time_scale": null
+      },
+      "training_monitor_epoch": 1400,
+      "training_monitor_counts": {
+        "time_count": 270200,
+        "layout_count": 633694,
+        "stop_count": 1200,
+        "continue_count": 270200
+      },
+      "teacher_forced_end_stop_recall": 0.9966666666666667
+    },
+    {
+      "run": "E14-S",
+      "epoch": 1400,
+      "checkpoint": "out/ar_saturation_20261023/continued1400/soft/model_e1400.pt",
+      "checkpoint_sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "checkpoint_sidecar": "out/ar_saturation_20261023/continued1400/soft/model_e1400.json",
+      "checkpoint_sidecar_sha256": "ca09a812e52a4906b54e876ce3eaf8b5fa40798e78fd38ed416be92e1b9b6223",
+      "training_evaluation_full_checkpoint_sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+      "checkpoint_note": "The fixed15 evaluation used the full training checkpoint; the frozen inference snapshot omits optimizer/RNG. Sidecar links both byte hashes at the same epoch.",
+      "train15_source": "out/ar_saturation_20261023/continued1400/soft/evaluation-e1400/fixed15/summary.json",
+      "train15_source_sha256": "e223519ed635754dad316da38b4e71e29e508694d3dad638b6e059cf39ed0b46",
+      "train15": {
+        "mean_raw_onset_f1": 0.9986898744540017,
+        "mean_raw_grid_bonus": 0.7044993559501668,
+        "mean_joint_f1": 0.9893132540871934,
+        "completed": 15,
+        "total": 15
+      },
+      "community10": {
+        "mean_onset_f1_50ms": 0.38806853987727535,
+        "mean_grid_bonus": 0.1745695228231164,
+        "completed": 3,
+        "total": 10
+      },
+      "parameters_trainable": 6626691,
+      "decoder_config": {
+        "vocab_size": 129,
+        "hidden_dim": 256,
+        "depth": 6,
+        "num_heads": 8,
+        "mlp_ratio": 4.0,
+        "dropout": 0.1,
+        "mem_dim": 256,
+        "time_dim": 128,
+        "rope_theta": 10000.0,
+        "cross_window": null,
+        "token_dropout": 0.15,
+        "soft_onset_dim": 2,
+        "history_dim": 28,
+        "cross_time_scale": null
+      },
+      "training_monitor_epoch": 1400,
+      "training_monitor_counts": {
+        "time_count": 270200,
+        "layout_count": 633694,
+        "stop_count": 1200,
+        "continue_count": 270200
+      },
+      "teacher_forced_end_stop_recall": 0.9958333333333333
+    },
+    {
+      "run": "E18-A",
+      "epoch": 1300,
+      "checkpoint": "out/freex_anchored_20261025/continued1400/audio/model_e1300.pt",
+      "checkpoint_sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "checkpoint_sidecar": "out/freex_anchored_20261025/continued1400/audio/model_e1300.json",
+      "checkpoint_sidecar_sha256": "3c77a6da9d166a81680b867d0170a67450ec5486a096c6e90ba74e6e1fa99054",
+      "training_evaluation_full_checkpoint_sha256": "9da6973754a250f61ec937c180e7c891086319c40789fb04369dec6af618d0a9",
+      "checkpoint_note": "The fixed15 evaluation used the full training checkpoint; the frozen inference snapshot omits optimizer/RNG. Sidecar links both byte hashes at the same epoch.",
+      "train15_source": "out/freex_anchored_20261025/continued1400/audio/evaluation-e1300/fixed15/summary.json",
+      "train15_source_sha256": "87bdc8942319e33ac5537da73b5828ab626c178e1a714339bcc375b2b349ab72",
+      "train15": {
+        "mean_raw_onset_f1": 0.9190903685333773,
+        "mean_raw_grid_bonus": 0.6609308038558742,
+        "mean_joint_f1": 0.8419337400102376,
+        "completed": 14,
+        "total": 15
+      },
+      "community10": {
+        "mean_onset_f1_50ms": 0.4567101653478654,
+        "mean_grid_bonus": 0.1719501490104257,
+        "completed": 3,
+        "total": 10
+      },
+      "parameters_trainable": 6815860,
+      "decoder_config": {
+        "vocab_size": 369,
+        "hidden_dim": 256,
+        "depth": 6,
+        "num_heads": 8,
+        "mlp_ratio": 4.0,
+        "dropout": 0.1,
+        "mem_dim": 256,
+        "time_dim": 128,
+        "rope_theta": 10000.0,
+        "cross_window": null,
+        "token_dropout": 0.15,
+        "soft_onset_dim": 2,
+        "history_dim": 28,
+        "cross_time_scale": null,
+        "n_lanes": 64,
+        "offset_head": true
+      },
+      "training_monitor_epoch": 1400,
+      "training_monitor_counts": {
+        "time_count": 273769,
+        "layout_count": 645516,
+        "stop_count": 1200,
+        "continue_count": 273769,
+        "coordinate_count": 333986
+      },
+      "teacher_forced_end_stop_recall": 0.9908333333333333
+    },
+    {
+      "run": "E18-S",
+      "epoch": 1400,
+      "checkpoint": "out/freex_anchored_20261025/continued1400/soft/model_e1400.pt",
+      "checkpoint_sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "checkpoint_sidecar": "out/freex_anchored_20261025/continued1400/soft/model_e1400.json",
+      "checkpoint_sidecar_sha256": "94a0a3ec2854c92986973a78dd7a9d95eec54eb0301516ca2fe9902e0612686f",
+      "training_evaluation_full_checkpoint_sha256": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+      "checkpoint_note": "The fixed15 evaluation used the full training checkpoint; the frozen inference snapshot omits optimizer/RNG. Sidecar links both byte hashes at the same epoch.",
+      "train15_source": "out/freex_anchored_20261025/continued1400/soft/evaluation-e1400/fixed15/summary.json",
+      "train15_source_sha256": "0e19069cbe07bcad2b19af1a5fe81ef8343a7044a8db7e640e9fbb46978cac11",
+      "train15": {
+        "mean_raw_onset_f1": 0.9617327507796727,
+        "mean_raw_grid_bonus": 0.6646828233598486,
+        "mean_joint_f1": 0.8703884948337461,
+        "completed": 14,
+        "total": 15
+      },
+      "community10": {
+        "mean_onset_f1_50ms": 0.4769564504809045,
+        "mean_grid_bonus": 0.17275499471260694,
+        "completed": 4,
+        "total": 10
+      },
+      "parameters_trainable": 6815860,
+      "decoder_config": {
+        "vocab_size": 369,
+        "hidden_dim": 256,
+        "depth": 6,
+        "num_heads": 8,
+        "mlp_ratio": 4.0,
+        "dropout": 0.1,
+        "mem_dim": 256,
+        "time_dim": 128,
+        "rope_theta": 10000.0,
+        "cross_window": null,
+        "token_dropout": 0.15,
+        "soft_onset_dim": 2,
+        "history_dim": 28,
+        "cross_time_scale": null,
+        "n_lanes": 64,
+        "offset_head": true
+      },
+      "training_monitor_epoch": 1400,
+      "training_monitor_counts": {
+        "time_count": 273769,
+        "layout_count": 645516,
+        "stop_count": 1200,
+        "continue_count": 273769,
+        "coordinate_count": 333986
+      },
+      "teacher_forced_end_stop_recall": 0.9941666666666666
+    }
+  ],
+  "community_summary_sha256": "3be0a95f61a82e897aa287c2b03996ecc19f8a12111d2ca7ac79fabfc9c04ee8",
+  "gap_evidence": [
+    {
+      "path": "docs/evaluations/assets/phira_gap_diagnosis_20261030/4k.json",
+      "sha256": "e0558639c09689529995403d8a637ca586f13c9b1d458bbf6c67375710c10d4f"
+    },
+    {
+      "path": "docs/evaluations/assets/phira_gap_diagnosis_20261030/freex.json",
+      "sha256": "f3f290aa00a8e0585be47e79f75ce692a3a143aafbe6eab0c91ac12fa2b86a6a"
+    }
+  ],
+  "source_sha256": {
+    "docs/fixed_length_attribution_plan.md": "f76985212f6daaf736f29a764d41ee7f2beb93aacc4798117fc5670897544ee6",
+    "docs/mapperatorinator_architecture_review_20261025.md": "e657a67d8eae7a13f3080d39be0952f2c983100751dd82e6f54895fc55d78c74",
+    "docs/AudioLab_chart_generation_context_2026-10-25.md": "52f3b29bf064f2f2498c437b421621faffc73fdf2f2c0bbaac523b0a6b3ab02d",
+    "docs/evaluations/ar_continue1400_20261028.md": "b43632acd582d517411a4db8afceed59efd5ae074360737d2ec2efbfa038290e",
+    "docs/evaluations/phira_generalization10_20261029.md": "77fa2bd2a4bf61a402f4a03ea6bcc17803d11fdcd3ef367cf1567b33fef3975c",
+    "docs/evaluations/phira_gap_diagnosis_20261030.md": "3aab29deeb6feca9f0484e35dbbd38074b3bfe0199c29b15e1b5cb1af4ae5901",
+    "docs/evaluations/diffusion_ar_attribution_20261023.md": "b22da3388ce97bf84dab779276f949052790dc1798bf3c5924bf885e067591bb",
+    "docs/model_benchmark.md": "3c7f15c7544f0acc840d5c683deea687458861a6078b023ee748933fd2146c0a",
+    "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+    "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+    "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+    "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9"
+  },
+  "external_primary_sources": [
+    {
+      "url": "https://github.com/OliBomby/Mapperatorinator/blob/0e2b0e387aab4b35c64b0b11b12d47578dea7587/osuT5/osuT5/dataset/data_utils.py",
+      "sha256": "b24162b89bda7b4f668729a646b5313026b77ca6a2c852beafebb438694792bb",
+      "bytes": 42966
+    },
+    {
+      "url": "https://github.com/OliBomby/Mapperatorinator/blob/0e2b0e387aab4b35c64b0b11b12d47578dea7587/osuT5/osuT5/inference/logit_processors.py",
+      "sha256": "847fa7ae91e31aa31cb2b59dee9270b2507cd51ae3835a36f8ca9972212f1b3d",
+      "bytes": 8873
+    },
+    {
+      "url": "https://github.com/OliBomby/Mapperatorinator/blob/0e2b0e387aab4b35c64b0b11b12d47578dea7587/osuT5/osuT5/inference/processor.py",
+      "sha256": "7da16354cacbabcd8fa36f0341e1140b9fa6c37f2fc1c3ab5f1a8e7bb46f247c",
+      "bytes": 71465
+    },
+    {
+      "url": "https://github.com/OliBomby/Mapperatorinator/blob/0e2b0e387aab4b35c64b0b11b12d47578dea7587/config.py",
+      "sha256": "fe92346f77858f8d55c5578be022443d8e711d8f064113422d1c411ccc115c07",
+      "bytes": 9301
+    }
+  ],
+  "external_train_config": "https://github.com/OliBomby/Mapperatorinator/blob/0e2b0e387aab4b35c64b0b11b12d47578dea7587/configs/train/v32.yaml",
+  "limitations": [
+    "E20 songs are now development regression data, not a fresh blind test.",
+    "Train joint F1 includes position; community time-type F1 does not.",
+    "Scheduling all windows is not learned whole-song EOS or chart quality.",
+    "History and alternative-architecture proposals remain untrained."
+  ],
+  "disk_free_gib": 8.169742584228516
+}

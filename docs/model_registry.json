@@ -3056,7 +3056,7 @@
       "models": [],
       "status": "not_started",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "方案已保存；E14原配方1000轮已完成，新diffusion、课程训练、历史消融与MTP均未执行。",
+      "result": "原定长归因计划保留；E14/E18四组原配方已完成1400轮，E20新歌评估与缺音诊断已完成。2026-10-30汇总后优先验证全局音频可见、当前窗口输出；新结构、历史纠错与定长diffusion对照均未执行。",
       "evidence": "docs/fixed_length_attribution_plan.md",
       "runs": [],
       "research_update": {
@@ -3094,6 +3094,26 @@
           "current_training": "E18 full300 independent A/S unchanged; E14 4K stopped at1000",
           "generalization": "deferred until user supplies new songs"
         }
+      },
+      "optimization_review": {
+        "date": "2026-10-30",
+        "status": "reviewed_plan_not_implemented",
+        "report": "docs/model_next_steps_20261030.md",
+        "evidence": "docs/evaluations/assets/optimization_review_20261030/evidence.json",
+        "user_confirmed_architecture": "Every generated token can attend the whole song; note onsets may only be generated in the current output window.",
+        "proposed_window_seconds": 10,
+        "window_size_user_confirmed": false,
+        "first_experiment": "4K A matched original-whole-song vs output-window protocol; global full-resolution audio and causal history retained",
+        "subsequent_priorities": [
+          "legal noisy-history recovery training",
+          "separate free-x implementation and independent S confirmation",
+          "type-position representation and pattern tasks",
+          "encoder adaptation and capacity as separate ablations"
+        ],
+        "preserved_alternative": "fixed-duration direct-event diffusion with VAE isolated later",
+        "new_training": false,
+        "new_inference": false,
+        "new_model_versions_registered": false
       }
     },
     {
