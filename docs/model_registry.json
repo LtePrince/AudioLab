@@ -4188,7 +4188,22 @@
         "human_touch_playtest": false
       },
       "training_updates": 0,
-      "updated_at_utc": "2026-10-29T11:30:48.480956+00:00"
+      "updated_at_utc": "2026-10-29T11:30:48.480956+00:00",
+      "layout_visualization": {
+        "date": "2026-10-30",
+        "kind": "saved_prediction_visualization",
+        "report": "docs/evaluations/phira_mid_layout_20261030.md",
+        "manifest": "docs/evaluations/assets/phira_mid_layout_20261030/selection.json",
+        "selection_rule": "rank ten songs by mean unique onset F1 at50ms over all four fixed candidates; choose ranks5 and6; failed prefixes included",
+        "selected_chart_ids": [
+          52417,
+          40717
+        ],
+        "new_training": false,
+        "new_inference": false,
+        "all_eight_selected_predictions_failed": true,
+        "reference_position_projection": false
+      }
     }
   ],
   "bundles": [

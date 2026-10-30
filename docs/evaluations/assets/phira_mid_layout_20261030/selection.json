@@ -1,0 +1,199 @@
+{
+  "schema": "audiolab-phira-mid-layout-v1",
+  "experiment": "E20",
+  "kind": "saved_prediction_visualization",
+  "selection_rule": "rank ten songs by mean unique onset F1 at50ms over all four fixed candidates; choose ranks5 and6; failed prefixes included",
+  "new_training": false,
+  "new_inference": false,
+  "ranking": [
+    {
+      "id": 51818,
+      "name": "emp",
+      "mean_onset_f1_50ms": 0.6876866258242769,
+      "mean_grid_bonus": 0.06333182343456709,
+      "rank": 1
+    },
+    {
+      "id": 23968,
+      "name": "Bunny Bunny Carrot Carrot",
+      "mean_onset_f1_50ms": 0.6365914780653004,
+      "mean_grid_bonus": 0.027653914034923066,
+      "rank": 2
+    },
+    {
+      "id": 6990,
+      "name": "Constant Moderato",
+      "mean_onset_f1_50ms": 0.6161160010552365,
+      "mean_grid_bonus": 0.45931289023562605,
+      "rank": 3
+    },
+    {
+      "id": 37396,
+      "name": "リテラチュア（翻自 上田麗奈）",
+      "mean_onset_f1_50ms": 0.5200248803539526,
+      "mean_grid_bonus": 0.12717465020324203,
+      "rank": 4
+    },
+    {
+      "id": 52417,
+      "name": "匙ノ咒",
+      "mean_onset_f1_50ms": 0.44979008501233053,
+      "mean_grid_bonus": 0.35973038928135226,
+      "rank": 5
+    },
+    {
+      "id": 40717,
+      "name": "天使にふれたよ!",
+      "mean_onset_f1_50ms": 0.3666247178321172,
+      "mean_grid_bonus": 0.12159773552220592,
+      "rank": 6
+    },
+    {
+      "id": 52244,
+      "name": "あのね",
+      "mean_onset_f1_50ms": 0.3578267068897882,
+      "mean_grid_bonus": 0.2324253089343587,
+      "rank": 7
+    },
+    {
+      "id": 51352,
+      "name": "トリックハート",
+      "mean_onset_f1_50ms": 0.34798243291524456,
+      "mean_grid_bonus": 0.040363609022243174,
+      "rank": 8
+    },
+    {
+      "id": 64888,
+      "name": "Yuri on ICE",
+      "mean_onset_f1_50ms": 0.29491585908241313,
+      "mean_grid_bonus": 0.1702641863882218,
+      "rank": 9
+    },
+    {
+      "id": 30114,
+      "name": "Rubia",
+      "mean_onset_f1_50ms": 0.21307775123314981,
+      "mean_grid_bonus": 0.1372039751211852,
+      "rank": 10
+    }
+  ],
+  "selected": [
+    {
+      "id": 52417,
+      "name": "匙ノ咒",
+      "mean_onset_f1_50ms": 0.44979008501233053,
+      "mean_grid_bonus": 0.35973038928135226,
+      "rank": 5,
+      "reference": "out/phira_generalization10_20261029/52417/reference.json",
+      "reference_sha256": "3f510e7fa378b16c45a195946f5f09dce41e6d284b8745e91eec5344a03aaa15",
+      "inputs": [
+        {
+          "path": "out/phira_generalization10_20261029/52417/E14-A/result.json",
+          "sha256": "ded28339fa4288d89f658bccc6a4bd958e8559088c5fddb3dc8776a9cea81928"
+        },
+        {
+          "path": "out/phira_generalization10_20261029/52417/E14-S/result.json",
+          "sha256": "6b9a6a2ad6f0ff6aae3a8d5b6e8790c1318c06f6e0f7a83175697c9b727c2203"
+        },
+        {
+          "path": "out/phira_generalization10_20261029/52417/E18-A/result.json",
+          "sha256": "0ef83d7131cb302203b29b40c49c75bbc23d98c8e02d1fb5e3388f517db76597"
+        },
+        {
+          "path": "out/phira_generalization10_20261029/52417/E18-S/result.json",
+          "sha256": "9c70974a31cc340ae481283069f59cffb6a1b2ca41dc0dfa8feae83624a8e272"
+        }
+      ],
+      "windows": [
+        {
+          "start_seconds": 1.4793103448275864,
+          "end_seconds": 12.513793103448277,
+          "label": "起始 32 拍"
+        },
+        {
+          "start_seconds": 126.99655172413793,
+          "end_seconds": 138.03103448275863,
+          "label": "中段 32 拍"
+        }
+      ],
+      "pdf_pages": 9,
+      "artifacts": [
+        {
+          "path": "docs/evaluations/assets/phira_mid_layout_20261030/52417_full.png",
+          "sha256": "3e688079cfa034afa1bd51ee459b31b43b9c5bbd2463388fc5cc6f815dbf1e74",
+          "bytes": 353194
+        },
+        {
+          "path": "docs/evaluations/assets/phira_mid_layout_20261030/52417_layout.png",
+          "sha256": "3fd1708c8efb158ef2f3ceac3e461489c6a586b597af524484f9b869a90107d0",
+          "bytes": 375296
+        },
+        {
+          "path": "docs/evaluations/assets/phira_mid_layout_20261030/52417_full_detail.pdf",
+          "sha256": "9101a0f976f92fb8c11a5773b5ad8be7874c5756b923d174d70fc4a79b00948f",
+          "bytes": 671605
+        }
+      ]
+    },
+    {
+      "id": 40717,
+      "name": "天使にふれたよ!",
+      "mean_onset_f1_50ms": 0.3666247178321172,
+      "mean_grid_bonus": 0.12159773552220592,
+      "rank": 6,
+      "reference": "out/phira_generalization10_20261029/40717/reference.json",
+      "reference_sha256": "48d4c8489bf105856baa9bb31d269ba6f5a0e4c47b80df6fdb36afab565506ff",
+      "inputs": [
+        {
+          "path": "out/phira_generalization10_20261029/40717/E14-A/result.json",
+          "sha256": "58e6b33de6a7ee4b490755b761375bb28dc2e0db53b062e84d2381fea46bc628"
+        },
+        {
+          "path": "out/phira_generalization10_20261029/40717/E14-S/result.json",
+          "sha256": "26748f0dc17fe660f693f2e4325ed571e071442f06542c7032b76a135a7b1433"
+        },
+        {
+          "path": "out/phira_generalization10_20261029/40717/E18-A/result.json",
+          "sha256": "8396ff550e8c7b2a0b5f507929095232efcb1d1d15a57f9fb2ad9560ab3428cb"
+        },
+        {
+          "path": "out/phira_generalization10_20261029/40717/E18-S/result.json",
+          "sha256": "b30e2400c2ce1bc41dc74bba6ce1f438a7c4cf80e7be266acbafc22b4ce1293e"
+        }
+      ],
+      "windows": [
+        {
+          "start_seconds": 6.562666666666666,
+          "end_seconds": 22.972923076923074,
+          "label": "起始 32 拍"
+        },
+        {
+          "start_seconds": 81.94728205128204,
+          "end_seconds": 98.35753846153845,
+          "label": "中段 32 拍"
+        }
+      ],
+      "pdf_pages": 7,
+      "artifacts": [
+        {
+          "path": "docs/evaluations/assets/phira_mid_layout_20261030/40717_full.png",
+          "sha256": "ca605e65d33d0a26fe7d38da96decf670f2eb3b0c0be3b2f63f6dd5e355fb159",
+          "bytes": 369505
+        },
+        {
+          "path": "docs/evaluations/assets/phira_mid_layout_20261030/40717_layout.png",
+          "sha256": "e9a2b953f669f05a304a81f02f1cc427f2cd0b9f5385d193b3e1f12929eb9668",
+          "bytes": 316221
+        },
+        {
+          "path": "docs/evaluations/assets/phira_mid_layout_20261030/40717_full_detail.pdf",
+          "sha256": "91889138fb3508e386485945c08e4be5908e0eee015814a336882c4614a05132",
+          "bytes": 378833
+        }
+      ]
+    }
+  ],
+  "source_summary_sha256": "3be0a95f61a82e897aa287c2b03996ecc19f8a12111d2ca7ac79fabfc9c04ee8",
+  "plot_script_sha256": "b40d12bbf8b8c6caacbf789cb003f9c59ff88e19741948432edb46a509e260ba",
+  "disk_free_gib": 8.177223205566406
+}
