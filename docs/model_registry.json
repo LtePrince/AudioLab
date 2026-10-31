@@ -209,6 +209,17 @@
       "evidence": "docs/evaluations/windowed_ar_stage2_20261031.md",
       "training_status": "controlled_training_completed",
       "quality_status": "not_evaluated_on_natural_music"
+    },
+    {
+      "id": "AL-FreeX@0.5.0",
+      "family": "AL-FreeX",
+      "version": "0.5.0",
+      "title": "整曲音频注意力＋分窗 free-x；受控独立 A/S 试验",
+      "output_protocol": "audiolab-global-audio-window-output-ar-v1",
+      "delivery": "controlled_experiment_only_not_product",
+      "evidence": "docs/evaluations/windowed_ar_stage4_20261031.md",
+      "training_status": "controlled_training_scheduled",
+      "quality_status": "not_evaluated_on_natural_music"
     }
   ],
   "experiments": [
@@ -3564,6 +3575,142 @@
             }
           },
           "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/h0_h1_controlled_result.json"
+        },
+        {
+          "id": "E16-FA-W0",
+          "kind": "controlled_generation_training",
+          "model": "AL-FreeX@0.4.0",
+          "variant": "A",
+          "architecture": "whole",
+          "status": "scheduled",
+          "delivery": "diagnostic_only",
+          "seed": 42,
+          "training_examples": 32,
+          "training_data_sha256": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066",
+          "parameters": 6815860,
+          "initial_backbone_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
+          "target_epochs": 400,
+          "target_optimizer_steps": 12800,
+          "history_noise_ms": 0.0,
+          "source_commit": "f561be8",
+          "source_sha256": {
+            "script/train_windowed_freex.py": "aba152e0f601c68f6cefe6eff80f5507323f3ef139c294c969fe355540d1610f",
+            "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/history_time_noise.py": "e96a5bc21314467961b1067dca964cbef98efbdc2b5986a0b8450b66f3aa8e36",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+          },
+          "checkpoint": "out/windowed_ar_20261031/freex_a_whole/model_latest.pt",
+          "progress_file": "out/windowed_ar_20261031/freex_a_whole/training.json",
+          "supervisor": "out/windowed_ar_20261031/freex_supervisor.json",
+          "report": "docs/evaluations/windowed_ar_stage4_20261031.md",
+          "quality_status": "pending",
+          "status_is_launch_snapshot": true
+        },
+        {
+          "id": "E16-FS-W0",
+          "kind": "controlled_generation_training",
+          "model": "AL-FreeX@0.4.0",
+          "variant": "S",
+          "architecture": "whole",
+          "status": "scheduled",
+          "delivery": "diagnostic_only",
+          "seed": 42,
+          "training_examples": 32,
+          "training_data_sha256": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066",
+          "parameters": 6815860,
+          "initial_backbone_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
+          "target_epochs": 400,
+          "target_optimizer_steps": 12800,
+          "history_noise_ms": 0.0,
+          "source_commit": "f561be8",
+          "source_sha256": {
+            "script/train_windowed_freex.py": "aba152e0f601c68f6cefe6eff80f5507323f3ef139c294c969fe355540d1610f",
+            "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/history_time_noise.py": "e96a5bc21314467961b1067dca964cbef98efbdc2b5986a0b8450b66f3aa8e36",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+          },
+          "checkpoint": "out/windowed_ar_20261031/freex_s_whole/model_latest.pt",
+          "progress_file": "out/windowed_ar_20261031/freex_s_whole/training.json",
+          "supervisor": "out/windowed_ar_20261031/freex_supervisor.json",
+          "report": "docs/evaluations/windowed_ar_stage4_20261031.md",
+          "quality_status": "pending",
+          "status_is_launch_snapshot": true
+        },
+        {
+          "id": "E16-FA-W1",
+          "kind": "controlled_generation_training",
+          "model": "AL-FreeX@0.5.0",
+          "variant": "A",
+          "architecture": "window",
+          "status": "scheduled",
+          "delivery": "diagnostic_only",
+          "seed": 42,
+          "training_examples": 32,
+          "training_data_sha256": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066",
+          "parameters": 6881396,
+          "initial_backbone_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
+          "target_epochs": 400,
+          "target_optimizer_steps": 12800,
+          "history_noise_ms": 0.0,
+          "source_commit": "f561be8",
+          "source_sha256": {
+            "script/train_windowed_freex.py": "aba152e0f601c68f6cefe6eff80f5507323f3ef139c294c969fe355540d1610f",
+            "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/history_time_noise.py": "e96a5bc21314467961b1067dca964cbef98efbdc2b5986a0b8450b66f3aa8e36",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+          },
+          "checkpoint": "out/windowed_ar_20261031/freex_a_window/model_latest.pt",
+          "progress_file": "out/windowed_ar_20261031/freex_a_window/training.json",
+          "supervisor": "out/windowed_ar_20261031/freex_supervisor.json",
+          "report": "docs/evaluations/windowed_ar_stage4_20261031.md",
+          "quality_status": "pending",
+          "status_is_launch_snapshot": true
+        },
+        {
+          "id": "E16-FS-W1",
+          "kind": "controlled_generation_training",
+          "model": "AL-FreeX@0.5.0",
+          "variant": "S",
+          "architecture": "window",
+          "status": "scheduled",
+          "delivery": "diagnostic_only",
+          "seed": 42,
+          "training_examples": 32,
+          "training_data_sha256": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066",
+          "parameters": 6881396,
+          "initial_backbone_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
+          "target_epochs": 400,
+          "target_optimizer_steps": 12800,
+          "history_noise_ms": 0.0,
+          "source_commit": "f561be8",
+          "source_sha256": {
+            "script/train_windowed_freex.py": "aba152e0f601c68f6cefe6eff80f5507323f3ef139c294c969fe355540d1610f",
+            "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/history_time_noise.py": "e96a5bc21314467961b1067dca964cbef98efbdc2b5986a0b8450b66f3aa8e36",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+          },
+          "checkpoint": "out/windowed_ar_20261031/freex_s_window/model_latest.pt",
+          "progress_file": "out/windowed_ar_20261031/freex_s_window/training.json",
+          "supervisor": "out/windowed_ar_20261031/freex_supervisor.json",
+          "report": "docs/evaluations/windowed_ar_stage4_20261031.md",
+          "quality_status": "pending",
+          "status_is_launch_snapshot": true
         }
       ],
       "research_update": {
@@ -3642,6 +3789,16 @@
           "scope": "small history-clock errors only; full300 training still gated",
           "report": "docs/evaluations/windowed_ar_stage3_20261031.md",
           "quality": "mixed_results_no_recovery_advantage_not_promoted"
+        },
+        "stage4": {
+          "status": "controlled_training_scheduled",
+          "scope": "independent A/S W0/W1 on 32 synthetic examples; full300 codec validation is not training",
+          "report": "docs/evaluations/windowed_ar_stage4_20261031.md",
+          "supervisor": "out/windowed_ar_20261031/freex_supervisor.json"
+        },
+        "stage5": {
+          "status": "not_started",
+          "scope": "separate key representation/pattern, encoder adaptation, and capacity experiments; do not infer completion from earlier diagnostics"
         }
       },
       "additional_evidence": [

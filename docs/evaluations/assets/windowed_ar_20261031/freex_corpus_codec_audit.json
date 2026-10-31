@@ -1,0 +1,1818 @@
+{
+  "scope": "All 300 original free-x references; codec only, no new training or quality evaluation.",
+  "data_cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+  "groups": 217391,
+  "coordinates": 264872,
+  "whole_stop_labels": 300,
+  "window_stop_labels": 4462,
+  "max_time_roundtrip_error_seconds": 0.0,
+  "original_residuals_equal": true,
+  "elapsed_seconds": 68.56569071859121,
+  "rows": [
+    {
+      "id": "-Arkhei-_IN",
+      "groups": 522,
+      "notes": 644,
+      "windows": 16
+    },
+    {
+      "id": "-SURREALISM-_IN",
+      "groups": 740,
+      "notes": 914,
+      "windows": 16
+    },
+    {
+      "id": "000 -Ain Soph Aur-_IN",
+      "groups": 553,
+      "notes": 687,
+      "windows": 16
+    },
+    {
+      "id": "996_IN",
+      "groups": 813,
+      "notes": 984,
+      "windows": 16
+    },
+    {
+      "id": "A journey to the moonlight_IN",
+      "groups": 1052,
+      "notes": 1180,
+      "windows": 16
+    },
+    {
+      "id": "ABYSS MOTION 192.333_IN",
+      "groups": 667,
+      "notes": 779,
+      "windows": 13
+    },
+    {
+      "id": "ATHAZA_IN",
+      "groups": 975,
+      "notes": 1131,
+      "windows": 17
+    },
+    {
+      "id": "AbsoluTe disoRdeR_IN",
+      "groups": 1253,
+      "notes": 1585,
+      "windows": 19
+    },
+    {
+      "id": "Ad astra per aspera_IN",
+      "groups": 1211,
+      "notes": 1448,
+      "windows": 15
+    },
+    {
+      "id": "After Dawn_IN",
+      "groups": 733,
+      "notes": 963,
+      "windows": 15
+    },
+    {
+      "id": "Alb_IN",
+      "groups": 740,
+      "notes": 870,
+      "windows": 16
+    },
+    {
+      "id": "Aleph-0_IN",
+      "groups": 586,
+      "notes": 881,
+      "windows": 15
+    },
+    {
+      "id": "Alice in a xxxxxxxx_IN",
+      "groups": 724,
+      "notes": 904,
+      "windows": 16
+    },
+    {
+      "id": "Another Me_IN",
+      "groups": 425,
+      "notes": 496,
+      "windows": 14
+    },
+    {
+      "id": "Another Round_IN",
+      "groups": 448,
+      "notes": 496,
+      "windows": 15
+    },
+    {
+      "id": "Antithese_IN",
+      "groups": 950,
+      "notes": 1062,
+      "windows": 15
+    },
+    {
+      "id": "Aphasia_IN",
+      "groups": 410,
+      "notes": 553,
+      "windows": 12
+    },
+    {
+      "id": "Aphrodites Child short ver._IN",
+      "groups": 516,
+      "notes": 673,
+      "windows": 17
+    },
+    {
+      "id": "Apocalypse_IN",
+      "groups": 553,
+      "notes": 669,
+      "windows": 17
+    },
+    {
+      "id": "Apocalyptic_IN",
+      "groups": 514,
+      "notes": 672,
+      "windows": 13
+    },
+    {
+      "id": "Archidoxen_IN",
+      "groups": 816,
+      "notes": 908,
+      "windows": 13
+    },
+    {
+      "id": "Ark_IN",
+      "groups": 540,
+      "notes": 679,
+      "windows": 16
+    },
+    {
+      "id": "Artificial Existence_IN",
+      "groups": 582,
+      "notes": 681,
+      "windows": 14
+    },
+    {
+      "id": "Avataar Reincarnation of Kalpa_IN",
+      "groups": 751,
+      "notes": 907,
+      "windows": 18
+    },
+    {
+      "id": "BANGING STRIKE_IN",
+      "groups": 927,
+      "notes": 1213,
+      "windows": 15
+    },
+    {
+      "id": "BRAIN HACKER_IN",
+      "groups": 648,
+      "notes": 772,
+      "windows": 13
+    },
+    {
+      "id": "Believe Light feat. 果丸哒呦_IN",
+      "groups": 823,
+      "notes": 968,
+      "windows": 18
+    },
+    {
+      "id": "Better Graphic Animation_IN",
+      "groups": 575,
+      "notes": 610,
+      "windows": 11
+    },
+    {
+      "id": "Bitterblossom_IN",
+      "groups": 558,
+      "notes": 597,
+      "windows": 15
+    },
+    {
+      "id": "Bloom_IN",
+      "groups": 868,
+      "notes": 972,
+      "windows": 17
+    },
+    {
+      "id": "Bonus Time_IN",
+      "groups": 550,
+      "notes": 689,
+      "windows": 12
+    },
+    {
+      "id": "Bougainvillea_IN",
+      "groups": 522,
+      "notes": 653,
+      "windows": 12
+    },
+    {
+      "id": "Bounded Quietude_IN",
+      "groups": 830,
+      "notes": 1165,
+      "windows": 16
+    },
+    {
+      "id": "Brave Notes_IN",
+      "groups": 607,
+      "notes": 763,
+      "windows": 12
+    },
+    {
+      "id": "Break Over_IN",
+      "groups": 709,
+      "notes": 909,
+      "windows": 13
+    },
+    {
+      "id": "Break Through The Barrier_IN",
+      "groups": 931,
+      "notes": 1090,
+      "windows": 14
+    },
+    {
+      "id": "Broken Sky_IN",
+      "groups": 388,
+      "notes": 425,
+      "windows": 16
+    },
+    {
+      "id": "Burn_IN",
+      "groups": 496,
+      "notes": 707,
+      "windows": 14
+    },
+    {
+      "id": "CROSSSOUL_IN",
+      "groups": 1115,
+      "notes": 1305,
+      "windows": 14
+    },
+    {
+      "id": "Cereris_IN",
+      "groups": 704,
+      "notes": 896,
+      "windows": 17
+    },
+    {
+      "id": "Cervelle Connexion_IN",
+      "groups": 536,
+      "notes": 552,
+      "windows": 15
+    },
+    {
+      "id": "Chronologika_IN",
+      "groups": 597,
+      "notes": 760,
+      "windows": 14
+    },
+    {
+      "id": "Chronomia_IN",
+      "groups": 776,
+      "notes": 991,
+      "windows": 15
+    },
+    {
+      "id": "Chronos Collapse - La Campanella_IN",
+      "groups": 1303,
+      "notes": 1483,
+      "windows": 16
+    },
+    {
+      "id": "Chronostasis_IN",
+      "groups": 1182,
+      "notes": 1324,
+      "windows": 15
+    },
+    {
+      "id": "Cipher  20_IN",
+      "groups": 873,
+      "notes": 1039,
+      "windows": 16
+    },
+    {
+      "id": "Class Memories_IN",
+      "groups": 1055,
+      "notes": 1189,
+      "windows": 15
+    },
+    {
+      "id": "Clock Paradox_IN",
+      "groups": 453,
+      "notes": 520,
+      "windows": 16
+    },
+    {
+      "id": "Colorful Days_IN",
+      "groups": 337,
+      "notes": 407,
+      "windows": 10
+    },
+    {
+      "id": "Comet_IN",
+      "groups": 680,
+      "notes": 868,
+      "windows": 16
+    },
+    {
+      "id": "Compute It With Some Devilish Alcoholic Steampunk Engines_IN",
+      "groups": 944,
+      "notes": 1208,
+      "windows": 18
+    },
+    {
+      "id": "Concvssion_IN",
+      "groups": 664,
+      "notes": 999,
+      "windows": 16
+    },
+    {
+      "id": "Crave Wave_IN",
+      "groups": 741,
+      "notes": 815,
+      "windows": 13
+    },
+    {
+      "id": "Credits_IN",
+      "groups": 528,
+      "notes": 535,
+      "windows": 11
+    },
+    {
+      "id": "Cristalisia_IN",
+      "groups": 628,
+      "notes": 712,
+      "windows": 14
+    },
+    {
+      "id": "Crush BETA_IN",
+      "groups": 838,
+      "notes": 977,
+      "windows": 14
+    },
+    {
+      "id": "Cthugha_IN",
+      "groups": 937,
+      "notes": 1322,
+      "windows": 16
+    },
+    {
+      "id": "Cuvism³_IN",
+      "groups": 651,
+      "notes": 796,
+      "windows": 17
+    },
+    {
+      "id": "DESTRUCTION 321_IN",
+      "groups": 1349,
+      "notes": 1525,
+      "windows": 16
+    },
+    {
+      "id": "Dance with Silence_IN",
+      "groups": 913,
+      "notes": 1108,
+      "windows": 18
+    },
+    {
+      "id": "Dash_IN",
+      "groups": 310,
+      "notes": 346,
+      "windows": 12
+    },
+    {
+      "id": "DataErr0r_IN",
+      "groups": 498,
+      "notes": 609,
+      "windows": 13
+    },
+    {
+      "id": "Dead Soul_IN",
+      "groups": 623,
+      "notes": 761,
+      "windows": 15
+    },
+    {
+      "id": "Demiurge_IN",
+      "groups": 463,
+      "notes": 518,
+      "windows": 17
+    },
+    {
+      "id": "Demonkin_IN",
+      "groups": 641,
+      "notes": 829,
+      "windows": 14
+    },
+    {
+      "id": "Der Richter_IN",
+      "groups": 955,
+      "notes": 1124,
+      "windows": 15
+    },
+    {
+      "id": "DevIAtiOn short ver._IN",
+      "groups": 905,
+      "notes": 1114,
+      "windows": 18
+    },
+    {
+      "id": "Devotion_IN",
+      "groups": 677,
+      "notes": 786,
+      "windows": 16
+    },
+    {
+      "id": "Diamond Dust_IN",
+      "groups": 825,
+      "notes": 974,
+      "windows": 16
+    },
+    {
+      "id": "Diamond Eyes_IN",
+      "groups": 661,
+      "notes": 758,
+      "windows": 14
+    },
+    {
+      "id": "Disorder_IN",
+      "groups": 795,
+      "notes": 918,
+      "windows": 14
+    },
+    {
+      "id": "Distorted Fate_IN",
+      "groups": 1181,
+      "notes": 1431,
+      "windows": 17
+    },
+    {
+      "id": "Dlyrotz_IN",
+      "groups": 494,
+      "notes": 584,
+      "windows": 13
+    },
+    {
+      "id": "Dont Never Around_IN",
+      "groups": 823,
+      "notes": 1028,
+      "windows": 12
+    },
+    {
+      "id": "Doppelganger_IN",
+      "groups": 758,
+      "notes": 918,
+      "windows": 15
+    },
+    {
+      "id": "Dreamland_IN",
+      "groups": 468,
+      "notes": 620,
+      "windows": 16
+    },
+    {
+      "id": "Drop It_IN",
+      "groups": 808,
+      "notes": 1030,
+      "windows": 21
+    },
+    {
+      "id": "ENERGY SYNERGY MATRIX_IN",
+      "groups": 592,
+      "notes": 747,
+      "windows": 13
+    },
+    {
+      "id": "ERABYE CONNEC10N_IN",
+      "groups": 1157,
+      "notes": 1401,
+      "windows": 17
+    },
+    {
+      "id": "El Condor Pasa Phigros Edit_IN",
+      "groups": 894,
+      "notes": 1140,
+      "windows": 14
+    },
+    {
+      "id": "El último baile_IN",
+      "groups": 461,
+      "notes": 568,
+      "windows": 13
+    },
+    {
+      "id": "Electron_IN",
+      "groups": 471,
+      "notes": 576,
+      "windows": 13
+    },
+    {
+      "id": "Eltaw_IN",
+      "groups": 706,
+      "notes": 852,
+      "windows": 14
+    },
+    {
+      "id": "End Me_IN",
+      "groups": 621,
+      "notes": 723,
+      "windows": 14
+    },
+    {
+      "id": "Engine x Start melody mix_IN",
+      "groups": 332,
+      "notes": 431,
+      "windows": 10
+    },
+    {
+      "id": "Eradication Catastrophe_IN",
+      "groups": 552,
+      "notes": 592,
+      "windows": 13
+    },
+    {
+      "id": "Eternal Snow_IN",
+      "groups": 583,
+      "notes": 694,
+      "windows": 16
+    },
+    {
+      "id": "FULi AUTO BUSTER_IN",
+      "groups": 582,
+      "notes": 755,
+      "windows": 13
+    },
+    {
+      "id": "FULi AUTO SHOOTER_IN",
+      "groups": 674,
+      "notes": 842,
+      "windows": 13
+    },
+    {
+      "id": "Feast远东之宴_IN",
+      "groups": 797,
+      "notes": 953,
+      "windows": 16
+    },
+    {
+      "id": "Final Step_IN",
+      "groups": 713,
+      "notes": 925,
+      "windows": 14
+    },
+    {
+      "id": "Find_Me_IN",
+      "groups": 621,
+      "notes": 835,
+      "windows": 13
+    },
+    {
+      "id": "Fixations Toward the Stars_IN",
+      "groups": 681,
+      "notes": 830,
+      "windows": 17
+    },
+    {
+      "id": "Flutter Echo_IN",
+      "groups": 902,
+      "notes": 1043,
+      "windows": 17
+    },
+    {
+      "id": "Fractured Angel_IN",
+      "groups": 862,
+      "notes": 1070,
+      "windows": 19
+    },
+    {
+      "id": "Freaky Undulations Noble Knights of Tune_IN",
+      "groups": 812,
+      "notes": 980,
+      "windows": 14
+    },
+    {
+      "id": "Frozen Heart_IN",
+      "groups": 668,
+      "notes": 881,
+      "windows": 20
+    },
+    {
+      "id": "Future Mind_IN",
+      "groups": 757,
+      "notes": 864,
+      "windows": 14
+    },
+    {
+      "id": "G.V.N. GlitterVomitus and Neon_IN",
+      "groups": 1300,
+      "notes": 1531,
+      "windows": 17
+    },
+    {
+      "id": "GOODBOUNCE_IN",
+      "groups": 804,
+      "notes": 889,
+      "windows": 14
+    },
+    {
+      "id": "GOODFORTUNE_IN",
+      "groups": 740,
+      "notes": 1009,
+      "windows": 14
+    },
+    {
+      "id": "GOODRAGE_IN",
+      "groups": 802,
+      "notes": 1018,
+      "windows": 13
+    },
+    {
+      "id": "GOODTEK_IN",
+      "groups": 772,
+      "notes": 872,
+      "windows": 13
+    },
+    {
+      "id": "GOODWORLD_IN",
+      "groups": 818,
+      "notes": 944,
+      "windows": 14
+    },
+    {
+      "id": "Get Back_IN",
+      "groups": 573,
+      "notes": 708,
+      "windows": 15
+    },
+    {
+      "id": "Get Ready_IN",
+      "groups": 666,
+      "notes": 817,
+      "windows": 14
+    },
+    {
+      "id": "Glaciaxion_IN",
+      "groups": 605,
+      "notes": 727,
+      "windows": 17
+    },
+    {
+      "id": "Grimheart_IN",
+      "groups": 522,
+      "notes": 573,
+      "windows": 16
+    },
+    {
+      "id": "HAZARD_IN",
+      "groups": 404,
+      "notes": 582,
+      "windows": 13
+    },
+    {
+      "id": "Hardcore Kwaya_IN",
+      "groups": 634,
+      "notes": 851,
+      "windows": 13
+    },
+    {
+      "id": "Helios_IN",
+      "groups": 638,
+      "notes": 757,
+      "windows": 14
+    },
+    {
+      "id": "Horizon Blue_IN",
+      "groups": 718,
+      "notes": 1069,
+      "windows": 17
+    },
+    {
+      "id": "HumaN_IN",
+      "groups": 446,
+      "notes": 537,
+      "windows": 14
+    },
+    {
+      "id": "Hydra_IN",
+      "groups": 840,
+      "notes": 1083,
+      "windows": 16
+    },
+    {
+      "id": "I Must Say No_IN",
+      "groups": 421,
+      "notes": 461,
+      "windows": 12
+    },
+    {
+      "id": "INFiNiTE ENERZY -Overdoze-_IN",
+      "groups": 737,
+      "notes": 888,
+      "windows": 12
+    },
+    {
+      "id": "Igallta_IN",
+      "groups": 818,
+      "notes": 1013,
+      "windows": 13
+    },
+    {
+      "id": "Incyde_IN",
+      "groups": 1412,
+      "notes": 1624,
+      "windows": 21
+    },
+    {
+      "id": "Indelible Scar_IN",
+      "groups": 613,
+      "notes": 757,
+      "windows": 14
+    },
+    {
+      "id": "Infinity Heaven_IN",
+      "groups": 864,
+      "notes": 1017,
+      "windows": 16
+    },
+    {
+      "id": "Initialize_IN",
+      "groups": 468,
+      "notes": 580,
+      "windows": 13
+    },
+    {
+      "id": "Inverted World_IN",
+      "groups": 670,
+      "notes": 820,
+      "windows": 14
+    },
+    {
+      "id": "Journey with You_IN",
+      "groups": 482,
+      "notes": 560,
+      "windows": 14
+    },
+    {
+      "id": "JunXionBetweenLifeAndDeathVIPMix_IN",
+      "groups": 685,
+      "notes": 722,
+      "windows": 15
+    },
+    {
+      "id": "K.Moe VIP_IN",
+      "groups": 637,
+      "notes": 1018,
+      "windows": 13
+    },
+    {
+      "id": "KIZUNA Resolution_IN",
+      "groups": 883,
+      "notes": 1030,
+      "windows": 14
+    },
+    {
+      "id": "Kerberos_IN",
+      "groups": 761,
+      "notes": 978,
+      "windows": 13
+    },
+    {
+      "id": "Khalid_IN",
+      "groups": 518,
+      "notes": 620,
+      "windows": 14
+    },
+    {
+      "id": "Khronostasis Katharsis_IN",
+      "groups": 673,
+      "notes": 861,
+      "windows": 14
+    },
+    {
+      "id": "Kirakira Noel Story_IN",
+      "groups": 602,
+      "notes": 769,
+      "windows": 14
+    },
+    {
+      "id": "Komplexe_IN",
+      "groups": 876,
+      "notes": 1039,
+      "windows": 15
+    },
+    {
+      "id": "Labyrinth in Kowloon Walled World_IN",
+      "groups": 918,
+      "notes": 1143,
+      "windows": 19
+    },
+    {
+      "id": "Le temps perdu_IN",
+      "groups": 616,
+      "notes": 696,
+      "windows": 15
+    },
+    {
+      "id": "Leave All Behind_IN",
+      "groups": 425,
+      "notes": 521,
+      "windows": 13
+    },
+    {
+      "id": "Locomotive_IN",
+      "groups": 573,
+      "notes": 660,
+      "windows": 15
+    },
+    {
+      "id": "Luminescence_IN",
+      "groups": 760,
+      "notes": 886,
+      "windows": 16
+    },
+    {
+      "id": "Luminescent_IN",
+      "groups": 510,
+      "notes": 634,
+      "windows": 16
+    },
+    {
+      "id": "Luminous Entities Lost Heart_IN",
+      "groups": 751,
+      "notes": 878,
+      "windows": 17
+    },
+    {
+      "id": "Lyrith -迷宮リリス-_IN",
+      "groups": 958,
+      "notes": 1266,
+      "windows": 15
+    },
+    {
+      "id": "MARENOL_IN",
+      "groups": 563,
+      "notes": 684,
+      "windows": 15
+    },
+    {
+      "id": "MOBILYS_IN",
+      "groups": 768,
+      "notes": 938,
+      "windows": 17
+    },
+    {
+      "id": "Magenta Potion_IN",
+      "groups": 647,
+      "notes": 778,
+      "windows": 15
+    },
+    {
+      "id": "Manifold Hypothesis_IN",
+      "groups": 742,
+      "notes": 892,
+      "windows": 15
+    },
+    {
+      "id": "Miracle Forest VIP Mix_IN",
+      "groups": 703,
+      "notes": 838,
+      "windows": 18
+    },
+    {
+      "id": "NO ONE YES MAN_IN",
+      "groups": 679,
+      "notes": 841,
+      "windows": 13
+    },
+    {
+      "id": "NO x_IN",
+      "groups": 969,
+      "notes": 1107,
+      "windows": 16
+    },
+    {
+      "id": "NYA Phigros ver._IN",
+      "groups": 591,
+      "notes": 666,
+      "windows": 16
+    },
+    {
+      "id": "Next Time_IN",
+      "groups": 321,
+      "notes": 387,
+      "windows": 12
+    },
+    {
+      "id": "Nhelv_IN",
+      "groups": 743,
+      "notes": 832,
+      "windows": 16
+    },
+    {
+      "id": "Nick of Time_IN",
+      "groups": 634,
+      "notes": 745,
+      "windows": 15
+    },
+    {
+      "id": "NightTheater_IN",
+      "groups": 662,
+      "notes": 811,
+      "windows": 14
+    },
+    {
+      "id": "Non-Melodic Ragez MUG Edit_IN",
+      "groups": 882,
+      "notes": 1171,
+      "windows": 14
+    },
+    {
+      "id": "Now Is The Time Do It_IN",
+      "groups": 583,
+      "notes": 790,
+      "windows": 14
+    },
+    {
+      "id": "On And On_IN",
+      "groups": 675,
+      "notes": 828,
+      "windows": 13
+    },
+    {
+      "id": "Originally_IN",
+      "groups": 729,
+      "notes": 936,
+      "windows": 15
+    },
+    {
+      "id": "Orthodox_IN",
+      "groups": 747,
+      "notes": 960,
+      "windows": 15
+    },
+    {
+      "id": "PANIC PARADISE_IN",
+      "groups": 801,
+      "notes": 842,
+      "windows": 13
+    },
+    {
+      "id": "PRAGMATISM -RESURRECTION-_IN",
+      "groups": 808,
+      "notes": 915,
+      "windows": 17
+    },
+    {
+      "id": "PRAW_IN",
+      "groups": 869,
+      "notes": 1157,
+      "windows": 16
+    },
+    {
+      "id": "Palescreen_IN",
+      "groups": 853,
+      "notes": 1059,
+      "windows": 15
+    },
+    {
+      "id": "Parallel RetrogressionGame Ver._IN",
+      "groups": 748,
+      "notes": 835,
+      "windows": 15
+    },
+    {
+      "id": "Pixel Rebelz_IN",
+      "groups": 652,
+      "notes": 921,
+      "windows": 15
+    },
+    {
+      "id": "Poison ANDOR Affection_IN",
+      "groups": 685,
+      "notes": 888,
+      "windows": 13
+    },
+    {
+      "id": "Pont des souvenirs_IN",
+      "groups": 647,
+      "notes": 898,
+      "windows": 17
+    },
+    {
+      "id": "Protoflicker_IN",
+      "groups": 1010,
+      "notes": 1149,
+      "windows": 17
+    },
+    {
+      "id": "QZKago Requiem_IN",
+      "groups": 870,
+      "notes": 1103,
+      "windows": 14
+    },
+    {
+      "id": "Quantum Hyperspace_IN",
+      "groups": 677,
+      "notes": 884,
+      "windows": 12
+    },
+    {
+      "id": "RESSiSTANCE_IN",
+      "groups": 767,
+      "notes": 1026,
+      "windows": 15
+    },
+    {
+      "id": "RIPPER_IN",
+      "groups": 884,
+      "notes": 1185,
+      "windows": 20
+    },
+    {
+      "id": "Radiance_IN",
+      "groups": 587,
+      "notes": 667,
+      "windows": 15
+    },
+    {
+      "id": "Rainy Heart_IN",
+      "groups": 337,
+      "notes": 438,
+      "windows": 16
+    },
+    {
+      "id": "Rainy Season_IN",
+      "groups": 545,
+      "notes": 660,
+      "windows": 12
+    },
+    {
+      "id": "Ramification_IN",
+      "groups": 620,
+      "notes": 730,
+      "windows": 14
+    },
+    {
+      "id": "Random_IN",
+      "groups": 562,
+      "notes": 728,
+      "windows": 14
+    },
+    {
+      "id": "ReEnd of a Dream_IN",
+      "groups": 919,
+      "notes": 1175,
+      "windows": 15
+    },
+    {
+      "id": "Re_Nascence Psystyle Ver._IN",
+      "groups": 681,
+      "notes": 827,
+      "windows": 15
+    },
+    {
+      "id": "Realms_IN",
+      "groups": 513,
+      "notes": 662,
+      "windows": 13
+    },
+    {
+      "id": "Rebirth_IN",
+      "groups": 767,
+      "notes": 934,
+      "windows": 16
+    },
+    {
+      "id": "Reimei_IN",
+      "groups": 781,
+      "notes": 975,
+      "windows": 15
+    },
+    {
+      "id": "Resolver_IN",
+      "groups": 821,
+      "notes": 968,
+      "windows": 17
+    },
+    {
+      "id": "Retribution  Cycle of Redemption_IN",
+      "groups": 1134,
+      "notes": 1482,
+      "windows": 18
+    },
+    {
+      "id": "Retribution_IN",
+      "groups": 1089,
+      "notes": 1304,
+      "windows": 15
+    },
+    {
+      "id": "Rrharil_IN",
+      "groups": 991,
+      "notes": 1202,
+      "windows": 14
+    },
+    {
+      "id": "Rubbish Sorting_IN",
+      "groups": 506,
+      "notes": 613,
+      "windows": 17
+    },
+    {
+      "id": "S.A.T.E.L.L.I.T.E._IN",
+      "groups": 666,
+      "notes": 881,
+      "windows": 20
+    },
+    {
+      "id": "SIGMA_IN",
+      "groups": 642,
+      "notes": 785,
+      "windows": 13
+    },
+    {
+      "id": "Schadenfreude_IN",
+      "groups": 1081,
+      "notes": 1217,
+      "windows": 16
+    },
+    {
+      "id": "Secret Illumination_IN",
+      "groups": 748,
+      "notes": 901,
+      "windows": 16
+    },
+    {
+      "id": "Sein_IN",
+      "groups": 599,
+      "notes": 716,
+      "windows": 12
+    },
+    {
+      "id": "Shadow_IN",
+      "groups": 761,
+      "notes": 840,
+      "windows": 15
+    },
+    {
+      "id": "Shelter_IN",
+      "groups": 600,
+      "notes": 692,
+      "windows": 14
+    },
+    {
+      "id": "Shine After_IN",
+      "groups": 673,
+      "notes": 794,
+      "windows": 17
+    },
+    {
+      "id": "Silence is Golden Speech is Golden_IN",
+      "groups": 1119,
+      "notes": 1272,
+      "windows": 17
+    },
+    {
+      "id": "Snow Desert_IN",
+      "groups": 577,
+      "notes": 655,
+      "windows": 15
+    },
+    {
+      "id": "So laggy feat. Uzumaki_IN",
+      "groups": 617,
+      "notes": 817,
+      "windows": 13
+    },
+    {
+      "id": "Sparkle New Life_IN",
+      "groups": 554,
+      "notes": 684,
+      "windows": 14
+    },
+    {
+      "id": "Spasmodic_IN",
+      "groups": 1229,
+      "notes": 1389,
+      "windows": 16
+    },
+    {
+      "id": "Speed Up_IN",
+      "groups": 668,
+      "notes": 710,
+      "windows": 15
+    },
+    {
+      "id": "Spotlight_IN",
+      "groups": 630,
+      "notes": 777,
+      "windows": 13
+    },
+    {
+      "id": "StardustRAY_IN",
+      "groups": 1181,
+      "notes": 1352,
+      "windows": 17
+    },
+    {
+      "id": "Starduster_IN",
+      "groups": 727,
+      "notes": 872,
+      "windows": 13
+    },
+    {
+      "id": "Stasis_IN",
+      "groups": 1002,
+      "notes": 1309,
+      "windows": 16
+    },
+    {
+      "id": "Sultan Rage_IN",
+      "groups": 418,
+      "notes": 485,
+      "windows": 12
+    },
+    {
+      "id": "Swing Skip Drop_IN",
+      "groups": 767,
+      "notes": 974,
+      "windows": 13
+    },
+    {
+      "id": "TECHNOPOLIS 2085_IN",
+      "groups": 641,
+      "notes": 814,
+      "windows": 14
+    },
+    {
+      "id": "Temporal Shifting_IN",
+      "groups": 771,
+      "notes": 958,
+      "windows": 15
+    },
+    {
+      "id": "The Chariot REVIIVAL_IN",
+      "groups": 835,
+      "notes": 1005,
+      "windows": 15
+    },
+    {
+      "id": "The Mountain Eater_IN",
+      "groups": 576,
+      "notes": 697,
+      "windows": 13
+    },
+    {
+      "id": "The Whole Rest_IN",
+      "groups": 661,
+      "notes": 767,
+      "windows": 15
+    },
+    {
+      "id": "Thrash force_IN",
+      "groups": 720,
+      "notes": 882,
+      "windows": 15
+    },
+    {
+      "id": "Time to Night Sky feat. Lee Yu Jin_IN",
+      "groups": 451,
+      "notes": 540,
+      "windows": 14
+    },
+    {
+      "id": "Triumph  Regret_IN",
+      "groups": 872,
+      "notes": 994,
+      "windows": 13
+    },
+    {
+      "id": "Trojan_IN",
+      "groups": 711,
+      "notes": 1273,
+      "windows": 16
+    },
+    {
+      "id": "Träne_IN",
+      "groups": 533,
+      "notes": 657,
+      "windows": 15
+    },
+    {
+      "id": "Unorthodox Thoughts_IN",
+      "groups": 686,
+      "notes": 724,
+      "windows": 15
+    },
+    {
+      "id": "Upshift_IN",
+      "groups": 777,
+      "notes": 943,
+      "windows": 15
+    },
+    {
+      "id": "Verrückt_IN",
+      "groups": 1129,
+      "notes": 1285,
+      "windows": 13
+    },
+    {
+      "id": "WATER_IN",
+      "groups": 470,
+      "notes": 641,
+      "windows": 16
+    },
+    {
+      "id": "Wavetapper_IN",
+      "groups": 756,
+      "notes": 866,
+      "windows": 17
+    },
+    {
+      "id": "Winter cube_IN",
+      "groups": 582,
+      "notes": 733,
+      "windows": 16
+    },
+    {
+      "id": "With You_IN",
+      "groups": 637,
+      "notes": 774,
+      "windows": 13
+    },
+    {
+      "id": "XING_IN",
+      "groups": 639,
+      "notes": 696,
+      "windows": 14
+    },
+    {
+      "id": "Xenolith_IN",
+      "groups": 639,
+      "notes": 785,
+      "windows": 14
+    },
+    {
+      "id": "Xenophobia_IN",
+      "groups": 1205,
+      "notes": 1549,
+      "windows": 15
+    },
+    {
+      "id": "Xepion_IN",
+      "groups": 636,
+      "notes": 690,
+      "windows": 12
+    },
+    {
+      "id": "You are the Miserable_IN",
+      "groups": 736,
+      "notes": 876,
+      "windows": 17
+    },
+    {
+      "id": "a truth seeker -Communication with Utopia will be lost-_IN",
+      "groups": 767,
+      "notes": 909,
+      "windows": 13
+    },
+    {
+      "id": "bye_IN",
+      "groups": 584,
+      "notes": 713,
+      "windows": 17
+    },
+    {
+      "id": "c.s.q.n._IN",
+      "groups": 915,
+      "notes": 1066,
+      "windows": 13
+    },
+    {
+      "id": "cryout_IN",
+      "groups": 623,
+      "notes": 712,
+      "windows": 13
+    },
+    {
+      "id": "dB doll_IN",
+      "groups": 199,
+      "notes": 237,
+      "windows": 11
+    },
+    {
+      "id": "energy trixxx_IN",
+      "groups": 737,
+      "notes": 917,
+      "windows": 15
+    },
+    {
+      "id": "iL-Artifact_IN",
+      "groups": 1041,
+      "notes": 1269,
+      "windows": 17
+    },
+    {
+      "id": "inferior_IN",
+      "groups": 546,
+      "notes": 751,
+      "windows": 13
+    },
+    {
+      "id": "life flashes before weeb eyes_IN",
+      "groups": 905,
+      "notes": 1052,
+      "windows": 16
+    },
+    {
+      "id": "mechanted_IN",
+      "groups": 567,
+      "notes": 662,
+      "windows": 12
+    },
+    {
+      "id": "micro.wav_IN",
+      "groups": 601,
+      "notes": 649,
+      "windows": 13
+    },
+    {
+      "id": "modulus_IN",
+      "groups": 429,
+      "notes": 750,
+      "windows": 13
+    },
+    {
+      "id": "opia_IN",
+      "groups": 661,
+      "notes": 786,
+      "windows": 15
+    },
+    {
+      "id": "sølips_IN",
+      "groups": 793,
+      "notes": 951,
+      "windows": 15
+    },
+    {
+      "id": "valorstarcross_IN",
+      "groups": 943,
+      "notes": 1068,
+      "windows": 16
+    },
+    {
+      "id": "volcanic_IN",
+      "groups": 895,
+      "notes": 1102,
+      "windows": 14
+    },
+    {
+      "id": "Äventyr_IN",
+      "groups": 781,
+      "notes": 954,
+      "windows": 17
+    },
+    {
+      "id": "Ποσειδών_IN",
+      "groups": 386,
+      "notes": 450,
+      "windows": 13
+    },
+    {
+      "id": "ρarsey_IN",
+      "groups": 701,
+      "notes": 777,
+      "windows": 13
+    },
+    {
+      "id": "いざ参ります_IN",
+      "groups": 619,
+      "notes": 847,
+      "windows": 11
+    },
+    {
+      "id": "ぱぴぷぴぷぴぱ_IN",
+      "groups": 903,
+      "notes": 1123,
+      "windows": 18
+    },
+    {
+      "id": "もぺもぺ_IN",
+      "groups": 371,
+      "notes": 412,
+      "windows": 12
+    },
+    {
+      "id": "アンビバレンス_IN",
+      "groups": 809,
+      "notes": 1087,
+      "windows": 17
+    },
+    {
+      "id": "インフェルノシティ_IN",
+      "groups": 885,
+      "notes": 1147,
+      "windows": 13
+    },
+    {
+      "id": "インマイマインド_IN",
+      "groups": 439,
+      "notes": 562,
+      "windows": 17
+    },
+    {
+      "id": "ジングルベルJingle Bell_IN",
+      "groups": 980,
+      "notes": 1237,
+      "windows": 17
+    },
+    {
+      "id": "ストレイソウルアラウンド_IN",
+      "groups": 727,
+      "notes": 884,
+      "windows": 14
+    },
+    {
+      "id": "ニライカナイ NiraicA_nai Mix_IN",
+      "groups": 573,
+      "notes": 646,
+      "windows": 16
+    },
+    {
+      "id": "万吨匿名信_IN",
+      "groups": 659,
+      "notes": 780,
+      "windows": 17
+    },
+    {
+      "id": "云女孩_IN",
+      "groups": 609,
+      "notes": 669,
+      "windows": 18
+    },
+    {
+      "id": "今天不是明天_IN",
+      "groups": 699,
+      "notes": 901,
+      "windows": 18
+    },
+    {
+      "id": "光_IN",
+      "groups": 397,
+      "notes": 489,
+      "windows": 14
+    },
+    {
+      "id": "千紫万紅_IN",
+      "groups": 928,
+      "notes": 1147,
+      "windows": 15
+    },
+    {
+      "id": "双重间谍 Double Agent_IN",
+      "groups": 1097,
+      "notes": 1336,
+      "windows": 15
+    },
+    {
+      "id": "君往何处 Quo Vadis_IN",
+      "groups": 795,
+      "notes": 934,
+      "windows": 14
+    },
+    {
+      "id": "大和撫子 -Wild Dances-_IN",
+      "groups": 769,
+      "notes": 996,
+      "windows": 13
+    },
+    {
+      "id": "宇宙残骸少女 Cosmic Dusty Girl_IN",
+      "groups": 637,
+      "notes": 688,
+      "windows": 14
+    },
+    {
+      "id": "尊師 The Guru_IN",
+      "groups": 528,
+      "notes": 738,
+      "windows": 13
+    },
+    {
+      "id": "幻影鬼魅 PLEASE_IN",
+      "groups": 996,
+      "notes": 1079,
+      "windows": 13
+    },
+    {
+      "id": "幽世桔梗_IN",
+      "groups": 781,
+      "notes": 980,
+      "windows": 16
+    },
+    {
+      "id": "开心病_IN",
+      "groups": 682,
+      "notes": 840,
+      "windows": 12
+    },
+    {
+      "id": "彩_IN",
+      "groups": 1120,
+      "notes": 1394,
+      "windows": 17
+    },
+    {
+      "id": "彼方へ名もなき海辺より_IN",
+      "groups": 754,
+      "notes": 840,
+      "windows": 18
+    },
+    {
+      "id": "心の記憶_IN",
+      "groups": 697,
+      "notes": 798,
+      "windows": 17
+    },
+    {
+      "id": "心之所向_IN",
+      "groups": 563,
+      "notes": 713,
+      "windows": 14
+    },
+    {
+      "id": "明鏡烈火_IN",
+      "groups": 731,
+      "notes": 869,
+      "windows": 14
+    },
+    {
+      "id": "暗夜苏醒 REANIMATE_IN",
+      "groups": 1096,
+      "notes": 1257,
+      "windows": 16
+    },
+    {
+      "id": "最高傑作_IN",
+      "groups": 548,
+      "notes": 676,
+      "windows": 15
+    },
+    {
+      "id": "月下缭乱_IN",
+      "groups": 751,
+      "notes": 895,
+      "windows": 15
+    },
+    {
+      "id": "月詠に鳴る_IN",
+      "groups": 622,
+      "notes": 857,
+      "windows": 14
+    },
+    {
+      "id": "望影の方舟Six_IN",
+      "groups": 841,
+      "notes": 971,
+      "windows": 12
+    },
+    {
+      "id": "桜樹街道_IN",
+      "groups": 436,
+      "notes": 458,
+      "windows": 15
+    },
+    {
+      "id": "混乱-Confusion_IN",
+      "groups": 757,
+      "notes": 978,
+      "windows": 13
+    },
+    {
+      "id": "游园地_IN",
+      "groups": 444,
+      "notes": 481,
+      "windows": 13
+    },
+    {
+      "id": "狂喜蘭舞_IN",
+      "groups": 847,
+      "notes": 968,
+      "windows": 17
+    },
+    {
+      "id": "瓷岁_IN",
+      "groups": 269,
+      "notes": 288,
+      "windows": 17
+    },
+    {
+      "id": "白と黒のバケモノ_IN",
+      "groups": 931,
+      "notes": 1196,
+      "windows": 15
+    },
+    {
+      "id": "百鬼夜行_IN",
+      "groups": 778,
+      "notes": 920,
+      "windows": 14
+    },
+    {
+      "id": "盏茗_IN",
+      "groups": 563,
+      "notes": 701,
+      "windows": 14
+    },
+    {
+      "id": "祈 -我ら神祖と共に歩む者なり-_IN",
+      "groups": 1695,
+      "notes": 2178,
+      "windows": 18
+    },
+    {
+      "id": "神話_IN",
+      "groups": 537,
+      "notes": 732,
+      "windows": 15
+    },
+    {
+      "id": "聖夜讃歌_IN",
+      "groups": 1001,
+      "notes": 1302,
+      "windows": 19
+    },
+    {
+      "id": "華灯爱_IN",
+      "groups": 440,
+      "notes": 520,
+      "windows": 12
+    },
+    {
+      "id": "萤火虫の怨_IN",
+      "groups": 734,
+      "notes": 885,
+      "windows": 16
+    },
+    {
+      "id": "蝎虎天体 -Lacertid-_IN",
+      "groups": 965,
+      "notes": 1206,
+      "windows": 15
+    },
+    {
+      "id": "贝多芬祝福 Beethoven Blessing_IN",
+      "groups": 678,
+      "notes": 913,
+      "windows": 14
+    },
+    {
+      "id": "重生_IN",
+      "groups": 774,
+      "notes": 898,
+      "windows": 15
+    },
+    {
+      "id": "雪降り 雪が降っている_IN",
+      "groups": 369,
+      "notes": 427,
+      "windows": 15
+    },
+    {
+      "id": "雪降りメリクリ_IN",
+      "groups": 772,
+      "notes": 939,
+      "windows": 16
+    },
+    {
+      "id": "零號車輛_IN",
+      "groups": 998,
+      "notes": 1152,
+      "windows": 15
+    },
+    {
+      "id": "青丘_IN",
+      "groups": 989,
+      "notes": 1281,
+      "windows": 17
+    },
+    {
+      "id": "青芽_IN",
+      "groups": 839,
+      "notes": 1086,
+      "windows": 15
+    },
+    {
+      "id": "风屿_IN",
+      "groups": 972,
+      "notes": 1156,
+      "windows": 18
+    },
+    {
+      "id": "黄金之城 GOLD TOWN_IN",
+      "groups": 693,
+      "notes": 850,
+      "windows": 13
+    }
+  ],
+  "resources": {
+    "disk_free_gib": 9.822254180908203,
+    "ram_available_gib": 38.12901306152344,
+    "rss_gib": 0.6021881103515625
+  }
+}
