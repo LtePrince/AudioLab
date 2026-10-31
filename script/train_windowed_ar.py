@@ -26,6 +26,7 @@ from src.audio_understanding.inference import sha256
 from src.data.audio2mel import AudioGPUprocessor
 from src.data.chart_tokenizer import ChartTokenizer, TokenNote
 from src.pattern_diagnostics import KINDS, LANE_X
+from src.history_time_noise import perturb_history_times
 from src.product.artifacts import write_json
 from src.resource_budget import ResourceBudget, add_resource_args
 from src.soft_onset import state_hash
@@ -33,7 +34,8 @@ from src.windowed_ar import WindowedAR, encode_window_target, generate as window
 
 DATA_SCHEMA='audiolab-controlled-chart-windows-v1'
 SOURCES=('script/train_windowed_ar.py','src/windowed_ar.py','src/chart_windows.py',
-         'src/anchored_ar.py','src/models/chart_decoder.py','src/models/chart_history.py')
+         'src/anchored_ar.py','src/models/chart_decoder.py','src/models/chart_history.py',
+         'src/history_time_noise.py')
 COUNTS=('time_count','layout_count','stop_count','continue_count')
 
 
@@ -180,11 +182,14 @@ def train(args,budget,device):
         source_sha256={p:sha256(p) for p in SOURCES},
         loss='Original anchored per-example normalized losses; window-boundary labels and bounds conditioning only in W1.',
         scope='32 controlled training examples; separate 32 combinations and original fixed probes; not natural music.')
+    config['history_noise_ms']=args.history_noise_ms
+    config['history_noise_seed']=args.seed+2000
     target_fn=(lambda r:encode_window_target(r['route'],r['duration'],width=args.window_seconds)) if args.architecture=='window' \
         else (lambda r:encode_target(r['route'],r['duration']))
     targets={r['id']:target_fn(r) for r in train_rows}
     optimizer=torch.optim.AdamW(model.parameters(),lr=args.lr)
-    sampler=random.Random(args.seed);curves=[];steps=0;started=time.monotonic()
+    sampler=random.Random(args.seed);noise_rng=random.Random(args.seed+2000)
+    curves=[];steps=0;started=time.monotonic()
     # Match initial dropout RNG too; the extra zero-init boundary layer consumes initialization draws.
     torch.manual_seed(args.seed+1000)
     if (args.output/'model_latest.pt').exists():
@@ -192,14 +197,18 @@ def train(args,budget,device):
         old=torch.load(args.output/'model_latest.pt',map_location='cpu',weights_only=True)
         assert old['config']==config,'resume source/config changed'
         model.load_state_dict(old['model']);restore_training(old['training_state'],optimizer,sampler)
+        noise_rng.setstate(old['history_noise_rng'])
         curves=old['curves'];steps=old['steps'];started-=curves[-1]['elapsed_seconds']
     best=min((r['objective'] for r in curves),default=math.inf)
     write_json(args.output/'training.json',dict(status='running',config=config,curves=curves))
     print(json.dumps(dict(status='validated',config=config,resources=budget.log_state())),flush=True)
     for epoch in range(len(curves),min(args.epochs,args.until_epoch or args.epochs)):
-        order=list(train_rows);sampler.shuffle(order);model.train();stats=Counter();objective=0.
+        order=list(train_rows);sampler.shuffle(order);model.train();stats=Counter();noise_stats=Counter();objective=0.
         for row in order:
-            target=targets[row['id']]
+            target,audit=perturb_history_times(targets[row['id']],n_lanes=model.decoder.n_lanes,
+                max_seconds=args.history_noise_ms/1000,rng=noise_rng)
+            noise_stats.update({k:v for k,v in audit.items() if k!='max_absolute_noise_seconds'})
+            noise_stats['max_absolute_noise_seconds']=max(noise_stats['max_absolute_noise_seconds'],audit['max_absolute_noise_seconds'])
             factor=min(1.,(steps+1)/max(1,.05*args.epochs*len(train_rows))) \
                    *(.1+.9*(1+math.cos(math.pi*steps/max(1,args.epochs*len(train_rows)-1)))/2)
             for group in optimizer.param_groups:group['lr']=args.lr*factor
@@ -218,11 +227,13 @@ def train(args,budget,device):
             stop_recall=stats['correct_stops']/max(1,stats['stop_count']),
             false_stop_rate=stats['false_stops']/max(1,stats['continue_count']),counts={k:int(stats[k]) for k in COUNTS},
             learning_rate=optimizer.param_groups[0]['lr'])
+        record['history_noise']=dict(noise_stats)
         curves.append(record)
         last=epoch+1==min(args.epochs,args.until_epoch or args.epochs)
         if (epoch+1)%25==0 or last:
             saved=dict(schema='audiolab-controlled-window-training-v1',config=config,epoch=epoch+1,steps=steps,curves=curves,
-                model={k:v.detach().cpu() for k,v in model.state_dict().items()},training_state=training_state(optimizer,sampler))
+                model={k:v.detach().cpu() for k,v in model.state_dict().items()},training_state=training_state(optimizer,sampler),
+                history_noise_rng=noise_rng.getstate())
             budget.save(saved,args.output/'model_latest.pt')
             if record['objective']<best:
                 best=record['objective'];budget.save({k:v for k,v in saved.items() if k!='training_state'},args.output/'model_best_fit.pt')
@@ -251,8 +262,10 @@ def main():
     parser.add_argument('--seed',type=int,default=42);parser.add_argument('--epochs',type=int,default=400)
     parser.add_argument('--until-epoch',type=int);parser.add_argument('--eval-every',type=int,default=100)
     parser.add_argument('--lr',type=float,default=3e-4);parser.add_argument('--resume',action='store_true')
+    parser.add_argument('--history-noise-ms',type=float,default=0.)
     parser.add_argument('--device',default='cuda:0');add_resource_args(parser);parser.set_defaults(max_rss_gib=4.)
     args=parser.parse_args();torch.set_num_threads(2)
+    if not math.isfinite(args.history_noise_ms) or args.history_noise_ms<0:parser.error('--history-noise-ms must be finite and nonnegative')
     if args.stage=='train' and args.output is None:parser.error('--output is required for training')
     directory=args.output if args.stage=='train' else args.data_root;directory.mkdir(parents=True,exist_ok=True)
     device=torch.device(args.device);budget=ResourceBudget(args,device,directory)
