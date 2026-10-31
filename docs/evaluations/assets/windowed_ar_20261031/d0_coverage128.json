@@ -1,0 +1,520 @@
+{
+  "schema": "audiolab-frozen-feature-localizer-v1",
+  "status": "completed",
+  "kind": "diagnostic_training",
+  "parameters": 94978,
+  "selected_step": 1250,
+  "selection": "lowest training loss; no held-out threshold/weight selection",
+  "checkpoint_sha256": "d07eda00be913af49dc39a803bd56fe784a209e409545bca1e4ca82c0fb2c083",
+  "history": [
+    {
+      "step": 250,
+      "loss": 0.008293384686112404,
+      "at_25ms": {
+        "reference": 272,
+        "predicted": 310,
+        "matched": 272,
+        "precision": 0.8774193548387097,
+        "recall": 1.0,
+        "f1": 0.9347079037800687
+      },
+      "mae_ms": 0.9653492647058888,
+      "elapsed": 1.1984341628849506
+    },
+    {
+      "step": 500,
+      "loss": 0.0010262810392305255,
+      "at_25ms": {
+        "reference": 272,
+        "predicted": 279,
+        "matched": 272,
+        "precision": 0.974910394265233,
+        "recall": 1.0,
+        "f1": 0.9872958257713249
+      },
+      "mae_ms": 0.20827941176470297,
+      "elapsed": 2.4234182462096214
+    },
+    {
+      "step": 750,
+      "loss": 0.00037242835969664156,
+      "at_25ms": {
+        "reference": 272,
+        "predicted": 275,
+        "matched": 272,
+        "precision": 0.9890909090909091,
+        "recall": 1.0,
+        "f1": 0.9945155393053017
+      },
+      "mae_ms": 0.1262683823529592,
+      "elapsed": 3.6213182657957077
+    },
+    {
+      "step": 1000,
+      "loss": 0.00035828707041218877,
+      "at_25ms": {
+        "reference": 272,
+        "predicted": 273,
+        "matched": 272,
+        "precision": 0.9963369963369964,
+        "recall": 1.0,
+        "f1": 0.998165137614679
+      },
+      "mae_ms": 0.3118382352941637,
+      "elapsed": 4.559451792389154
+    },
+    {
+      "step": 1250,
+      "loss": 0.00015159958275035024,
+      "at_25ms": {
+        "reference": 272,
+        "predicted": 272,
+        "matched": 272,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "mae_ms": 0.1808786764705633,
+      "elapsed": 5.744609080255032
+    },
+    {
+      "step": 1500,
+      "loss": 0.0003848682972602546,
+      "at_25ms": {
+        "reference": 272,
+        "predicted": 272,
+        "matched": 272,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "mae_ms": 0.3982426470588326,
+      "elapsed": 6.670324496924877
+    }
+  ],
+  "resources": {
+    "disk_free_gib": 10.264457702636719,
+    "ram_available_gib": 36.97127914428711,
+    "rss_gib": 1.7858314514160156,
+    "gpu_peak_allocated_gib": 0.16060829162597656,
+    "gpu_peak_reserved_gib": 0.19921875
+  },
+  "elapsed_training_seconds": 6.8454714715480804,
+  "decoding": "fixed probability >= 0.5 per frame + continuous offset; no NMS, cap, snapping or known count",
+  "quality_scope": "Acoustic localization from frozen 4K features only; no chart types/positions or music quality claim.",
+  "results": {
+    "boundary_check": {
+      "at_ms": {
+        "25": {
+          "reference": 6,
+          "predicted": 8,
+          "matched": 6,
+          "precision": 0.75,
+          "recall": 1.0,
+          "f1": 0.8571428571428571
+        },
+        "50": {
+          "reference": 6,
+          "predicted": 8,
+          "matched": 6,
+          "precision": 0.75,
+          "recall": 1.0,
+          "f1": 0.8571428571428571
+        },
+        "100": {
+          "reference": 6,
+          "predicted": 8,
+          "matched": 6,
+          "precision": 0.75,
+          "recall": 1.0,
+          "f1": 0.8571428571428571
+        }
+      },
+      "mean_error_25ms": 3.2781666666664986,
+      "silence_false_positives": 0,
+      "mismatches": [
+        {
+          "id": "boundary_sides",
+          "reference": [
+            9.97,
+            10.03,
+            19.97,
+            20.03
+          ],
+          "predictions": [
+            9.969228072739512,
+            10.035798431534886,
+            10.131514266310365,
+            19.968049795276183,
+            20.02004897725285,
+            20.165238992081207
+          ],
+          "matched": {
+            "25": 4,
+            "50": 4,
+            "100": 4
+          }
+        }
+      ]
+    },
+    "boundary_single": {
+      "at_ms": {
+        "25": {
+          "reference": 4,
+          "predicted": 5,
+          "matched": 4,
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.8888888888888888
+        },
+        "50": {
+          "reference": 4,
+          "predicted": 5,
+          "matched": 4,
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.8888888888888888
+        },
+        "100": {
+          "reference": 4,
+          "predicted": 5,
+          "matched": 4,
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.8888888888888888
+        }
+      },
+      "mean_error_25ms": 0.327749999999849,
+      "silence_false_positives": 0,
+      "mismatches": [
+        {
+          "id": "boundary_single-2",
+          "reference": [
+            19.97
+          ],
+          "predictions": [
+            19.968542555205676,
+            19.969742776260894
+          ],
+          "matched": {
+            "25": 1,
+            "50": 1,
+            "100": 1
+          }
+        }
+      ]
+    },
+    "dense_check": {
+      "at_ms": {
+        "25": {
+          "reference": 136,
+          "predicted": 134,
+          "matched": 131,
+          "precision": 0.9776119402985075,
+          "recall": 0.9632352941176471,
+          "f1": 0.9703703703703703
+        },
+        "50": {
+          "reference": 136,
+          "predicted": 134,
+          "matched": 131,
+          "precision": 0.9776119402985075,
+          "recall": 0.9632352941176471,
+          "f1": 0.9703703703703703
+        },
+        "100": {
+          "reference": 136,
+          "predicted": 134,
+          "matched": 131,
+          "precision": 0.9776119402985075,
+          "recall": 0.9632352941176471,
+          "f1": 0.9703703703703703
+        }
+      },
+      "mean_error_25ms": 1.624328244274786,
+      "silence_false_positives": 0,
+      "mismatches": [
+        {
+          "id": "dense_check-006",
+          "reference": [
+            1.1709750566893424,
+            1.3070294784580498,
+            7.078503401360544,
+            7.321451247165533
+          ],
+          "predictions": [
+            1.1718333535399839,
+            7.0787943120770445,
+            7.323456593900581
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        },
+        {
+          "id": "dense_check-020",
+          "reference": [
+            5.760453514739229,
+            5.9327437641723355
+          ],
+          "predictions": [
+            5.7601279695125935,
+            5.939968588346797,
+            5.944526897849951
+          ],
+          "matched": {
+            "25": 2,
+            "50": 2,
+            "100": 2
+          }
+        },
+        {
+          "id": "dense_check-022",
+          "reference": [
+            1.3029478458049886,
+            2.033061224489796,
+            2.174421768707483,
+            7.365532879818594
+          ],
+          "predictions": [
+            1.3035764906141494,
+            2.0274886898118623,
+            7.365367525753792
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        },
+        {
+          "id": "dense_check-041",
+          "reference": [
+            2.927437641723356
+          ],
+          "predictions": [
+            2.925499378299497,
+            2.926180405389695
+          ],
+          "matched": {
+            "25": 1,
+            "50": 1,
+            "100": 1
+          }
+        },
+        {
+          "id": "dense_check-046",
+          "reference": [
+            1.1304308390022675,
+            1.2053968253968255,
+            4.926031746031746,
+            5.74421768707483
+          ],
+          "predictions": [
+            1.1248233482032135,
+            1.2063101272410006,
+            1.209533901084848,
+            4.925457267501728,
+            5.744515037623122
+          ],
+          "matched": {
+            "25": 4,
+            "50": 4,
+            "100": 4
+          }
+        },
+        {
+          "id": "dense_check-060",
+          "reference": [
+            1.0617687074829931,
+            1.2194104308390024
+          ],
+          "predictions": [
+            1.0616048121722648
+          ],
+          "matched": {
+            "25": 1,
+            "50": 1,
+            "100": 1
+          }
+        },
+        {
+          "id": "dense_check-061",
+          "reference": [
+            0.28208616780045354,
+            0.408843537414966,
+            1.0497052154195012
+          ],
+          "predictions": [
+            0.28177299170807646,
+            1.048858304877941
+          ],
+          "matched": {
+            "25": 2,
+            "50": 2,
+            "100": 2
+          }
+        },
+        {
+          "id": "dense_check-063",
+          "reference": [
+            0.8405895691609977,
+            0.9379138321995465,
+            1.05859410430839,
+            1.5062131519274375,
+            6.8001814058956915
+          ],
+          "predictions": [
+            0.8405379723096922,
+            1.0445133920267327,
+            1.5039081917760595,
+            6.799930320272641
+          ],
+          "matched": {
+            "25": 4,
+            "50": 4,
+            "100": 4
+          }
+        }
+      ]
+    },
+    "fixed_probe": {
+      "at_ms": {
+        "25": {
+          "reference": 12,
+          "predicted": 12,
+          "matched": 12,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "50": {
+          "reference": 12,
+          "predicted": 12,
+          "matched": 12,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "100": {
+          "reference": 12,
+          "predicted": 12,
+          "matched": 12,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "mean_error_25ms": 0.38283333333351727,
+      "silence_false_positives": 0,
+      "mismatches": []
+    },
+    "random_check": {
+      "at_ms": {
+        "25": {
+          "reference": 136,
+          "predicted": 136,
+          "matched": 135,
+          "precision": 0.9926470588235294,
+          "recall": 0.9926470588235294,
+          "f1": 0.9926470588235294
+        },
+        "50": {
+          "reference": 136,
+          "predicted": 136,
+          "matched": 135,
+          "precision": 0.9926470588235294,
+          "recall": 0.9926470588235294,
+          "f1": 0.9926470588235294
+        },
+        "100": {
+          "reference": 136,
+          "predicted": 136,
+          "matched": 135,
+          "precision": 0.9926470588235294,
+          "recall": 0.9926470588235294,
+          "f1": 0.9926470588235294
+        }
+      },
+      "mean_error_25ms": 0.5302074074074146,
+      "silence_false_positives": 0,
+      "mismatches": [
+        {
+          "id": "random_check-014",
+          "reference": [
+            1.203265306122449,
+            3.336371882086168,
+            4.7640816326530615,
+            6.454603174603174
+          ],
+          "predictions": [
+            1.2029466306379324,
+            3.3360115476854806,
+            4.763391063456633
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        },
+        {
+          "id": "random_check-053",
+          "reference": [
+            1.4602721088435373,
+            3.714421768707483,
+            6.891337868480726
+          ],
+          "predictions": [
+            1.4603392198350695,
+            3.714389460211168,
+            3.715620489747616,
+            6.89054392427544
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        }
+      ]
+    },
+    "train": {
+      "at_ms": {
+        "25": {
+          "reference": 272,
+          "predicted": 272,
+          "matched": 272,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "50": {
+          "reference": 272,
+          "predicted": 272,
+          "matched": 272,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "100": {
+          "reference": 272,
+          "predicted": 272,
+          "matched": 272,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "mean_error_25ms": 0.1808786764705633,
+      "silence_false_positives": 0,
+      "mismatches": []
+    }
+  },
+  "conditions_manifest": "out/windowed_ar_20261031/d0_coverage128/conditions.json",
+  "conditions_manifest_sha256": "0b3f6040604e815f85c2087c031aab61008e9607ec1d83f03e7012481bc7373e",
+  "frontend_sha256": "62d6a385c3b15ec330df284b0ad1e031ee4053c310babde2f628f50bb038b7b0",
+  "code_sha256": "cd20f5d7c6ce2428bf8b4465768da5e6317d4b739eaa8474b5ffd04c9da0e6a8"
+}

@@ -66,22 +66,28 @@ def sources(directory):
     return clips,metadata
 
 
-def constructed(index,seed,split,clips):
+def constructed(index,seed,split,clips,*,close_pair=False,extended=False):
     rng=np.random.default_rng(seed+1009*index)
     count=(0,1,1,1,2,3,4,5)[index%8]
+    duration=(10.,16.,32.)[index%3] if extended else 10.
     starts=[]
+    minimum_interval=.06 if close_pair else .8
+    if close_pair and count>=2:
+        first=float(rng.uniform(.15,duration-1.3))
+        starts=[first,first+float(rng.uniform(.06,.25))]
     while len(starts)<count:
-        candidate=float(rng.uniform(.15,9.0))
-        if all(abs(candidate-t)>.8 for t in starts):starts.append(candidate)
+        candidate=float(rng.uniform(.15,duration-1.))
+        if all(abs(candidate-t)>minimum_interval for t in starts):starts.append(candidate)
     starts=sorted(round(t*SAMPLE_RATE)/SAMPLE_RATE for t in starts)
     gains=np.exp(rng.uniform(np.log(.02),np.log(1.),count)).tolist()
     voices=rng.integers(0,len(clips),count).tolist()
-    wave=np.zeros(10*SAMPLE_RATE,dtype='float32')
+    wave=np.zeros(round(duration*SAMPLE_RATE),dtype='float32')
     for onset,gain,voice in zip(starts,gains,voices):
         offset=round(onset*SAMPLE_RATE);clip=clips[voice]
         wave[offset:offset+len(clip)]+=gain*clip
-    return wave,dict(id=f'{split}-{index:03d}',split=split,duration=10.,times=starts,
-        gains=gains,voices=voices,waveform_sha256=hashlib.sha256(wave.tobytes()).hexdigest())
+    return wave,dict(id=f'{split}-{index:03d}',split=split,duration=duration,times=starts,
+        gains=gains,voices=voices,close_pair=close_pair,
+        waveform_sha256=hashlib.sha256(wave.tobytes()).hexdigest())
 
 
 @torch.no_grad()
@@ -98,18 +104,26 @@ def encode(wave,encoder,processor,device,budget):
 
 def prepare(args,budget,device):
     cache_path=args.output/'conditions.pt';manifest_path=args.output/'conditions.json'
+    # Keep head initialization identical whether the frozen-feature cache exists.
+    encoder,unused=load_models(args.frontend,device);del unused
     if cache_path.exists() or manifest_path.exists():
         assert cache_path.exists() and manifest_path.exists(),'partial cache; inspect before resuming'
         manifest=json.loads(manifest_path.read_text())
         assert manifest['seed']==args.seed and manifest['cache_sha256']==sha256(cache_path)
         assert manifest['frontend_sha256']==sha256(args.frontend)
+        assert manifest.get('training_examples',32)==args.training_examples
+        del encoder
         return torch.load(cache_path,map_location='cpu',weights_only=True),manifest
-    encoder,unused=load_models(args.frontend,device);del unused
     encoder.requires_grad_(False).eval();processor=AudioGPUprocessor(device='cpu')
     clips,source_metadata=sources(args.samples);rows=[]
-    for split,n,seed in [('train',32,args.seed),('random_check',64,args.seed+10000019)]:
+    specifications=[('train',args.training_examples,args.seed),('random_check',64,args.seed+10000019)]
+    if args.training_examples>32:specifications.append(('dense_check',64,args.seed+20000033))
+    for split,n,seed in specifications:
         for i in range(n):
-            wave,row=constructed(i,seed,split,clips)
+            # Original 32 training examples and random checks remain byte-identical.
+            close_pair=(split=='train' and i>=32) or split=='dense_check'
+            wave,row=constructed(i,seed,split,clips,close_pair=close_pair,
+                                 extended=split=='train' and i>=128)
             row['features']=encode(wave,encoder,processor,device,budget);rows.append(row)
     fixture=json.loads(args.fixed_probes.read_text())
     for original in fixture['rows']:
@@ -128,8 +142,17 @@ def prepare(args,budget,device):
         rows.append(dict(id=name,split='boundary_check',duration=duration,times=starts,
                          waveform_sha256=hashlib.sha256(wave.tobytes()).hexdigest(),
                          features=encode(wave,encoder,processor,device,budget)))
+    # Separate boundary ownership from the additional difficulty of overlapping notes.
+    for i,onset in enumerate((9.97,10.03,19.97,20.03)):
+        wave=np.zeros(32*SAMPLE_RATE,dtype='float32');clip=clips[i%3];start=round(onset*SAMPLE_RATE)
+        wave[start:start+len(clip)]+=clip
+        rows.append(dict(id=f'boundary_single-{i}',split='boundary_single',duration=32.,times=[onset],
+                         waveform_sha256=hashlib.sha256(wave.tobytes()).hexdigest(),
+                         features=encode(wave,encoder,processor,device,budget)))
     budget.save(rows,cache_path)
-    manifest=dict(schema=SCHEMA,seed=args.seed,frontend=str(args.frontend),
+    manifest=dict(schema=SCHEMA,seed=args.seed,training_examples=args.training_examples,
+        additional_training='Original 32; clips 32..127 add close pairs; clips >=128 also cover 10/16/32-second durations.' if args.training_examples>32 else None,
+        frontend=str(args.frontend),
         frontend_sha256=sha256(args.frontend),cache_sha256=sha256(cache_path),sources=source_metadata,
         source_attribution='Piano: Alexander Holm, Salamander Grand Piano / Tonejs/audio, CC BY 3.0; '
                            'two additive timbres constructed in this script.',
@@ -201,6 +224,7 @@ def main():
     parser.add_argument('--fixed-probes',type=Path,default=Path('out/onset_attention_20261022/onsets/fixtures/fixtures.json'))
     parser.add_argument('--device',default='cuda:0');parser.add_argument('--seed',type=int,default=42)
     parser.add_argument('--steps',type=int,default=4000);parser.add_argument('--eval-every',type=int,default=250)
+    parser.add_argument('--training-examples',type=int,default=32)
     add_resource_args(parser);args=parser.parse_args()
     args.output.mkdir(parents=True,exist_ok=True)
     if (args.output/'report.json').exists():raise ValueError('completed run exists; choose a new output for a new experiment')
@@ -209,6 +233,8 @@ def main():
     rows,manifest=prepare(args,budget,device)
     train_rows=[r for r in rows if r['split']=='train']
     tensors=batch(train_rows,device);model=Localizer().to(device)
+    initialization_sha256=hashlib.sha256(b''.join(t.detach().cpu().numpy().tobytes()
+        for t in model.state_dict().values())).hexdigest()
     optimizer=torch.optim.AdamW(model.parameters(),lr=1e-3,weight_decay=1e-4)
     best_loss=math.inf;history=[];fit_checks=0;started=time.monotonic()
     for step in range(1,args.steps+1):
@@ -235,9 +261,10 @@ def main():
     selected=torch.load(args.output/'model_best_train.pt',map_location=device,weights_only=True)
     model.load_state_dict(selected['model'])
     results={split:evaluate(model,[r for r in rows if r['split']==split],device)
-             for split in ('train','random_check','fixed_probe','boundary_check')}
+             for split in sorted({r['split'] for r in rows})}
     report=dict(schema=SCHEMA,status='completed',kind='diagnostic_training',parameters=sum(p.numel() for p in model.parameters()),
-        selected_step=selected['step'],selection='lowest training loss; no held-out threshold/weight selection',
+        selected_step=selected['step'],initialization_sha256=initialization_sha256,
+        selection='lowest training loss; no held-out threshold/weight selection',
         checkpoint_sha256=sha256(args.output/'model_best_train.pt'),conditions=manifest,history=history,results=results,
         resources=budget.log_state(),elapsed_training_seconds=time.monotonic()-started,
         decoding='fixed probability >= 0.5 per frame + continuous offset; no NMS, cap, snapping or known count',

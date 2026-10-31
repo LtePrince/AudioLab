@@ -1,0 +1,596 @@
+{
+  "schema": "audiolab-frozen-feature-localizer-v1",
+  "status": "completed",
+  "kind": "diagnostic_training",
+  "parameters": 94978,
+  "selected_step": 2250,
+  "initialization_sha256": "1584421f3804607dbb4333a9e98bdaff17d5c50897fe68fd7a840cd8de739980",
+  "selection": "lowest training loss; no held-out threshold/weight selection",
+  "checkpoint_sha256": "218acd3ae8fd636ffcadfef7bda28bcc1c683bd60bb78fd2c1e155c7a8a6bfb0",
+  "history": [
+    {
+      "step": 250,
+      "loss": 0.012001879513263702,
+      "at_25ms": {
+        "reference": 1088,
+        "predicted": 1385,
+        "matched": 1088,
+        "precision": 0.7855595667870036,
+        "recall": 1.0,
+        "f1": 0.8799029518803073
+      },
+      "mae_ms": 1.3767003676470566,
+      "elapsed": 6.841343328356743
+    },
+    {
+      "step": 500,
+      "loss": 0.0030874130316078663,
+      "at_25ms": {
+        "reference": 1088,
+        "predicted": 1199,
+        "matched": 1088,
+        "precision": 0.9074228523769808,
+        "recall": 1.0,
+        "f1": 0.9514648010494097
+      },
+      "mae_ms": 0.4119347426470651,
+      "elapsed": 13.63441502675414
+    },
+    {
+      "step": 750,
+      "loss": 0.0013354335678741336,
+      "at_25ms": {
+        "reference": 1088,
+        "predicted": 1137,
+        "matched": 1088,
+        "precision": 0.9569041336851363,
+        "recall": 1.0,
+        "f1": 0.9779775280898877
+      },
+      "mae_ms": 0.2537720588235253,
+      "elapsed": 20.238231878727674
+    },
+    {
+      "step": 1000,
+      "loss": 0.00075946981087327,
+      "at_25ms": {
+        "reference": 1088,
+        "predicted": 1119,
+        "matched": 1088,
+        "precision": 0.9722966934763181,
+        "recall": 1.0,
+        "f1": 0.9859537834164024
+      },
+      "mae_ms": 0.2055661764705603,
+      "elapsed": 26.84652541205287
+    },
+    {
+      "step": 1250,
+      "loss": 0.0010090337600558996,
+      "at_25ms": {
+        "reference": 1088,
+        "predicted": 1110,
+        "matched": 1088,
+        "precision": 0.9801801801801802,
+        "recall": 1.0,
+        "f1": 0.9899909008189263
+      },
+      "mae_ms": 0.5289209558823714,
+      "elapsed": 33.65728259459138
+    },
+    {
+      "step": 1500,
+      "loss": 0.00031999711063690484,
+      "at_25ms": {
+        "reference": 1088,
+        "predicted": 1102,
+        "matched": 1088,
+        "precision": 0.9872958257713249,
+        "recall": 1.0,
+        "f1": 0.993607305936073
+      },
+      "mae_ms": 0.14200367647058773,
+      "elapsed": 40.285243671387434
+    },
+    {
+      "step": 1750,
+      "loss": 0.0004984996048733592,
+      "at_25ms": {
+        "reference": 1088,
+        "predicted": 1099,
+        "matched": 1088,
+        "precision": 0.9899909008189263,
+        "recall": 1.0,
+        "f1": 0.9949702789208962
+      },
+      "mae_ms": 0.37909375000001366,
+      "elapsed": 46.923704363405704
+    },
+    {
+      "step": 2000,
+      "loss": 0.00025282823480665684,
+      "at_25ms": {
+        "reference": 1088,
+        "predicted": 1095,
+        "matched": 1088,
+        "precision": 0.993607305936073,
+        "recall": 1.0,
+        "f1": 0.9967934035730646
+      },
+      "mae_ms": 0.22811121323527056,
+      "elapsed": 53.69631329551339
+    },
+    {
+      "step": 2250,
+      "loss": 0.00015879370039328933,
+      "at_25ms": {
+        "reference": 1088,
+        "predicted": 1091,
+        "matched": 1088,
+        "precision": 0.997250229147571,
+        "recall": 1.0,
+        "f1": 0.9986232216613126
+      },
+      "mae_ms": 0.1561213235293912,
+      "elapsed": 60.348277758806944
+    },
+    {
+      "step": 2500,
+      "loss": 0.00022668138262815773,
+      "at_25ms": {
+        "reference": 1088,
+        "predicted": 1090,
+        "matched": 1088,
+        "precision": 0.998165137614679,
+        "recall": 1.0,
+        "f1": 0.9990817263544536
+      },
+      "mae_ms": 0.26498161764705086,
+      "elapsed": 66.99403100833297
+    }
+  ],
+  "resources": {
+    "disk_free_gib": 10.155860900878906,
+    "ram_available_gib": 37.06744384765625,
+    "rss_gib": 1.8550529479980469,
+    "gpu_peak_allocated_gib": 1.8735880851745605,
+    "gpu_peak_reserved_gib": 2.224609375
+  },
+  "elapsed_training_seconds": 67.6084378324449,
+  "decoding": "fixed probability >= 0.5 per frame + continuous offset; no NMS, cap, snapping or known count",
+  "quality_scope": "Acoustic localization from frozen 4K features only; no chart types/positions or music quality claim.",
+  "results": {
+    "boundary_check": {
+      "at_ms": {
+        "25": {
+          "reference": 6,
+          "predicted": 6,
+          "matched": 6,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "50": {
+          "reference": 6,
+          "predicted": 6,
+          "matched": 6,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "100": {
+          "reference": 6,
+          "predicted": 6,
+          "matched": 6,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "mean_error_25ms": 2.956833333333279,
+      "silence_false_positives": 0,
+      "mismatches": []
+    },
+    "boundary_single": {
+      "at_ms": {
+        "25": {
+          "reference": 4,
+          "predicted": 4,
+          "matched": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "50": {
+          "reference": 4,
+          "predicted": 4,
+          "matched": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "100": {
+          "reference": 4,
+          "predicted": 4,
+          "matched": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "mean_error_25ms": 0.23324999999951856,
+      "silence_false_positives": 0,
+      "mismatches": []
+    },
+    "dense_check": {
+      "at_ms": {
+        "25": {
+          "reference": 136,
+          "predicted": 133,
+          "matched": 131,
+          "precision": 0.9849624060150376,
+          "recall": 0.9632352941176471,
+          "f1": 0.9739776951672863
+        },
+        "50": {
+          "reference": 136,
+          "predicted": 133,
+          "matched": 131,
+          "precision": 0.9849624060150376,
+          "recall": 0.9632352941176471,
+          "f1": 0.9739776951672863
+        },
+        "100": {
+          "reference": 136,
+          "predicted": 133,
+          "matched": 131,
+          "precision": 0.9849624060150376,
+          "recall": 0.9632352941176471,
+          "f1": 0.9739776951672863
+        }
+      },
+      "mean_error_25ms": 0.9443664122137202,
+      "silence_false_positives": 0,
+      "mismatches": [
+        {
+          "id": "dense_check-006",
+          "reference": [
+            1.1709750566893424,
+            1.3070294784580498,
+            7.078503401360544,
+            7.321451247165533
+          ],
+          "predictions": [
+            1.17161342975504,
+            7.0786002521125635,
+            7.32106740938563
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        },
+        {
+          "id": "dense_check-022",
+          "reference": [
+            1.3029478458049886,
+            2.033061224489796,
+            2.174421768707483,
+            7.365532879818594
+          ],
+          "predictions": [
+            1.303020076102951,
+            2.0323804873511904,
+            7.365519191888995
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        },
+        {
+          "id": "dense_check-043",
+          "reference": [
+            3.854875283446712
+          ],
+          "predictions": [
+            3.8541681088125355,
+            3.855183650339001
+          ],
+          "matched": {
+            "25": 1,
+            "50": 1,
+            "100": 1
+          }
+        },
+        {
+          "id": "dense_check-046",
+          "reference": [
+            1.1304308390022675,
+            1.2053968253968255,
+            4.926031746031746,
+            5.74421768707483
+          ],
+          "predictions": [
+            1.1294485051507581,
+            4.9261127515174365,
+            5.743625455064838
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        },
+        {
+          "id": "dense_check-053",
+          "reference": [
+            0.1526984126984127,
+            0.24498866213151926,
+            2.2677551020408164
+          ],
+          "predictions": [
+            0.1493219450866284,
+            0.23153513521293936,
+            0.23625989606861625,
+            2.267644676848604
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        },
+        {
+          "id": "dense_check-060",
+          "reference": [
+            1.0617687074829931,
+            1.2194104308390024
+          ],
+          "predictions": [
+            1.0618934240362814
+          ],
+          "matched": {
+            "25": 1,
+            "50": 1,
+            "100": 1
+          }
+        },
+        {
+          "id": "dense_check-061",
+          "reference": [
+            0.28208616780045354,
+            0.408843537414966,
+            1.0497052154195012
+          ],
+          "predictions": [
+            0.2818531560573448,
+            1.0493289648216058
+          ],
+          "matched": {
+            "25": 2,
+            "50": 2,
+            "100": 2
+          }
+        }
+      ]
+    },
+    "fixed_probe": {
+      "at_ms": {
+        "25": {
+          "reference": 12,
+          "predicted": 12,
+          "matched": 12,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "50": {
+          "reference": 12,
+          "predicted": 12,
+          "matched": 12,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "100": {
+          "reference": 12,
+          "predicted": 12,
+          "matched": 12,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "mean_error_25ms": 0.34175000000002026,
+      "silence_false_positives": 0,
+      "mismatches": []
+    },
+    "random_check": {
+      "at_ms": {
+        "25": {
+          "reference": 136,
+          "predicted": 137,
+          "matched": 135,
+          "precision": 0.9854014598540146,
+          "recall": 0.9926470588235294,
+          "f1": 0.989010989010989
+        },
+        "50": {
+          "reference": 136,
+          "predicted": 137,
+          "matched": 135,
+          "precision": 0.9854014598540146,
+          "recall": 0.9926470588235294,
+          "f1": 0.989010989010989
+        },
+        "100": {
+          "reference": 136,
+          "predicted": 137,
+          "matched": 135,
+          "precision": 0.9854014598540146,
+          "recall": 0.9926470588235294,
+          "f1": 0.989010989010989
+        }
+      },
+      "mean_error_25ms": 0.3738074074074165,
+      "silence_false_positives": 0,
+      "mismatches": [
+        {
+          "id": "random_check-053",
+          "reference": [
+            1.4602721088435373,
+            3.714421768707483,
+            6.891337868480726
+          ],
+          "predictions": [
+            1.4603919439683426,
+            3.7145996038389315,
+            3.71559925100971,
+            6.891015616695897
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        },
+        {
+          "id": "random_check-055",
+          "reference": [
+            1.54843537414966,
+            2.7210430839002266,
+            5.61233560090703,
+            6.414104308390023,
+            8.168616780045351
+          ],
+          "predictions": [
+            1.548304563768867,
+            2.720306640071393,
+            5.611998637019913,
+            8.168370112205038
+          ],
+          "matched": {
+            "25": 4,
+            "50": 4,
+            "100": 4
+          }
+        },
+        {
+          "id": "random_check-061",
+          "reference": [
+            2.1199092970521543,
+            4.6912925170068025,
+            6.691383219954648
+          ],
+          "predictions": [
+            2.1194998300426944,
+            4.689852488684276,
+            4.690887128263374,
+            6.691177292735128
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        }
+      ]
+    },
+    "train": {
+      "at_ms": {
+        "25": {
+          "reference": 1088,
+          "predicted": 1091,
+          "matched": 1088,
+          "precision": 0.997250229147571,
+          "recall": 1.0,
+          "f1": 0.9986232216613126
+        },
+        "50": {
+          "reference": 1088,
+          "predicted": 1091,
+          "matched": 1088,
+          "precision": 0.997250229147571,
+          "recall": 1.0,
+          "f1": 0.9986232216613126
+        },
+        "100": {
+          "reference": 1088,
+          "predicted": 1091,
+          "matched": 1088,
+          "precision": 0.997250229147571,
+          "recall": 1.0,
+          "f1": 0.9986232216613126
+        }
+      },
+      "mean_error_25ms": 0.1561213235293912,
+      "silence_false_positives": 0,
+      "mismatches": [
+        {
+          "id": "train-421",
+          "reference": [
+            10.36766439909297,
+            10.432879818594104,
+            14.860907029478458
+          ],
+          "predictions": [
+            10.367571532926322,
+            10.432853306361606,
+            14.860284570533942,
+            14.861276538918078
+          ],
+          "matched": {
+            "25": 3,
+            "50": 3,
+            "100": 3
+          }
+        },
+        {
+          "id": "train-431",
+          "reference": [
+            7.376916099773243,
+            9.761678004535147,
+            9.871519274376418,
+            16.67238095238095,
+            23.397414965986396
+          ],
+          "predictions": [
+            7.376523276954011,
+            9.761541456711265,
+            9.871415337456598,
+            16.671651010664682,
+            16.672621177059185,
+            23.397179425643955
+          ],
+          "matched": {
+            "25": 5,
+            "50": 5,
+            "100": 5
+          }
+        },
+        {
+          "id": "train-489",
+          "reference": [
+            7.662675736961451
+          ],
+          "predictions": [
+            7.662200025355194,
+            7.66309022795316
+          ],
+          "matched": {
+            "25": 1,
+            "50": 1,
+            "100": 1
+          }
+        }
+      ]
+    }
+  },
+  "conditions_manifest": "out/windowed_ar_20261031/d0_coverage512/conditions.json",
+  "conditions_manifest_sha256": "81ebf12113e6904e35ffff81565a9d5b5a7f5a70e5811939b7606b6190e60cf4",
+  "frontend_sha256": "62d6a385c3b15ec330df284b0ad1e031ee4053c310babde2f628f50bb038b7b0",
+  "code_sha256": "06e1867afd9b5ae32d19fdbb6048c553f685dbb96cdd85b5002c80b8a2ce17e2"
+}
