@@ -3174,7 +3174,7 @@
       "models": [],
       "status": "in_progress",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "Stages 1–4 controlled diagnostics completed; K and C training active, E prepared. Stage 5 and full natural-corpus verification not completed; no runtime weight replacement.",
+      "result": "Controlled stages 1–5 completed with reports. Matched 4K A full300 W0/W1 adaptation running; no production promotion or runtime replacement.",
       "evidence": "docs/fixed_length_attribution_plan.md",
       "runs": [
         {
@@ -3873,7 +3873,7 @@
           "checkpoint": "out/windowed_ar_20261031/kind_position/model_latest.pt",
           "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
           "delivery": "diagnostic_only",
-          "quality_status": "controlled_training_fit_passed_generalization_partial",
+          "quality_status": "controlled_fit_passed_unseen_generation_partial",
           "source_sha256": {
             "script/train_windowed_variants.py": "a1768da8496b06bf2860c9dde740583d246dbcb8e1b0b18e1b18a0891752adc3",
             "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
@@ -3936,7 +3936,8 @@
                 "continue_and_time_correct_25ms": 140
               }
             }
-          }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/stage5_result.json"
         },
         {
           "id": "E16-E1",
@@ -3944,7 +3945,7 @@
           "model": "AL-AR4K@0.6.0",
           "variant": "A",
           "ablation": "encoder_tail",
-          "status": "running",
+          "status": "completed",
           "parameters": 7482563,
           "training_examples": 32,
           "target_epochs": 400,
@@ -3953,7 +3954,7 @@
           "checkpoint": "out/windowed_ar_20261031/encoder_tail/model_latest.pt",
           "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
           "delivery": "diagnostic_only",
-          "quality_status": "not_yet_evaluated",
+          "quality_status": "controlled_fit_passed_unseen_generation_partial",
           "source_sha256": {
             "script/train_windowed_variants.py": "a1768da8496b06bf2860c9dde740583d246dbcb8e1b0b18e1b18a0891752adc3",
             "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
@@ -3966,8 +3967,58 @@
           },
           "progress_file": "out/windowed_ar_20261031/encoder_tail/training.json",
           "source_commit": "525e89d",
-          "epoch": 200,
-          "optimizer_steps": 6400
+          "epoch": 400,
+          "optimizer_steps": 12800,
+          "checkpoint_sha256": "de2a554f20687eef9eda1e4c245ec6ea7974bb5ac35f22e580b97309f0132510",
+          "metrics": {
+            "fixed_probe": {
+              "examples": 5,
+              "positive_examples": 4,
+              "completed": 5,
+              "onset_f1_25ms": 0.6666666666666666,
+              "silence_extra_onsets": 0,
+              "forced_windows": 0
+            },
+            "random_check": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 31,
+              "onset_f1_25ms": 0.5663637110362539,
+              "silence_extra_onsets": 0,
+              "forced_windows": 1,
+              "joint_f1_25ms": 0.32677404295051354,
+              "teacher": {
+                "events": 140,
+                "stops": 80,
+                "false_stops": 17,
+                "correct_stops": 47,
+                "layout_total": 323,
+                "layout_correct": 230,
+                "pointer_correct_25ms": 81,
+                "continue_and_time_correct_25ms": 73
+              }
+            },
+            "train": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "onset_f1_25ms": 1.0,
+              "silence_extra_onsets": 0,
+              "forced_windows": 0,
+              "joint_f1_25ms": 1.0,
+              "teacher": {
+                "events": 140,
+                "stops": 80,
+                "false_stops": 0,
+                "correct_stops": 80,
+                "layout_total": 324,
+                "layout_correct": 324,
+                "pointer_correct_25ms": 140,
+                "continue_and_time_correct_25ms": 140
+              }
+            }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/stage5_result.json"
         },
         {
           "id": "E16-C1",
@@ -3984,7 +4035,7 @@
           "checkpoint": "out/windowed_ar_20261031/capacity512/model_latest.pt",
           "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
           "delivery": "diagnostic_only",
-          "quality_status": "controlled_training_fit_passed_generalization_partial",
+          "quality_status": "controlled_fit_passed_unseen_generation_partial",
           "source_sha256": {
             "script/train_windowed_variants.py": "a1768da8496b06bf2860c9dde740583d246dbcb8e1b0b18e1b18a0891752adc3",
             "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
@@ -4047,7 +4098,8 @@
                 "continue_and_time_correct_25ms": 140
               }
             }
-          }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/stage5_result.json"
         },
         {
           "id": "E16-P0",
@@ -4055,7 +4107,7 @@
           "model": "AL-AR4K@0.6.0",
           "condition": "A",
           "ablation": "base",
-          "status": "running",
+          "status": "completed",
           "training_examples": 40,
           "prefix_notes": 8,
           "suffix_notes": 16,
@@ -4064,13 +4116,111 @@
           "data_sha256": "54451493e896191a466b35bdaf96008dc3b677977bc42729904ff113fdca0387",
           "checkpoint": "out/windowed_ar_20261031/pattern_base/model_latest.pt",
           "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
-          "quality_status": "not_yet_evaluated",
+          "quality_status": "controlled_pattern_task_passed_only",
           "delivery": "diagnostic_only",
           "given_inputs": [
             "onset times",
             "one Tap per onset",
             "first 8 chart positions"
-          ]
+          ],
+          "epoch": 400,
+          "optimizer_steps": 16000,
+          "parameters": 6692227,
+          "checkpoint_sha256": "8c13898115c9ef8eec5c318f171ef2ca8cba7582f54041da34a82cfe21f17a16",
+          "metrics": {
+            "train": {
+              "examples": 40,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 40,
+              "total_positions": 640
+            },
+            "train/jack": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "train/short_jacks": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "train/long_jacks": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "train/alternation": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "train/staircase": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "new_combinations": {
+              "examples": 40,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 40,
+              "total_positions": 640
+            },
+            "new_combinations/jack": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "new_combinations/short_jacks": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "new_combinations/long_jacks": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "new_combinations/alternation": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "new_combinations/staircase": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            }
+          },
+          "source_sha256": {
+            "script/train_pattern_continuation.py": "8440e3abc69fe6e62d80ceae4ef8f5e2805e3a6e9ae3408bad1f922eda9e5cac",
+            "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/stage5_result.json"
         },
         {
           "id": "E16-P1",
@@ -4078,7 +4228,7 @@
           "model": "AL-AR4K@0.6.0",
           "condition": "A",
           "ablation": "kind_position",
-          "status": "prepared",
+          "status": "completed",
           "training_examples": 40,
           "prefix_notes": 8,
           "suffix_notes": 16,
@@ -4087,13 +4237,175 @@
           "data_sha256": "54451493e896191a466b35bdaf96008dc3b677977bc42729904ff113fdca0387",
           "checkpoint": "out/windowed_ar_20261031/pattern_kind_position/model_latest.pt",
           "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
-          "quality_status": "not_yet_evaluated",
+          "quality_status": "controlled_pattern_task_passed_only",
           "delivery": "diagnostic_only",
           "given_inputs": [
             "onset times",
             "one Tap per onset",
             "first 8 chart positions"
-          ]
+          ],
+          "epoch": 400,
+          "optimizer_steps": 16000,
+          "parameters": 6723836,
+          "checkpoint_sha256": "814cce4770a158392eb8df83f2841baf2ec3a6668f664a9ae7874a09cd4890f0",
+          "metrics": {
+            "train": {
+              "examples": 40,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 40,
+              "total_positions": 640
+            },
+            "train/jack": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "train/short_jacks": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "train/long_jacks": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "train/alternation": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "train/staircase": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "new_combinations": {
+              "examples": 40,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 40,
+              "total_positions": 640
+            },
+            "new_combinations/jack": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "new_combinations/short_jacks": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "new_combinations/long_jacks": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "new_combinations/alternation": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            },
+            "new_combinations/staircase": {
+              "examples": 8,
+              "position_accuracy": 1.0,
+              "transition_accuracy": 1.0,
+              "exact_suffix": 8,
+              "total_positions": 128
+            }
+          },
+          "source_sha256": {
+            "script/train_pattern_continuation.py": "8440e3abc69fe6e62d80ceae4ef8f5e2805e3a6e9ae3408bad1f922eda9e5cac",
+            "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/stage5_result.json"
+        },
+        {
+          "id": "E16-NW0",
+          "kind": "full300_matched_protocol_adaptation",
+          "model": "AL-AR4K@0.6.0",
+          "variant": "A",
+          "architecture": "whole",
+          "status": "running",
+          "target_epochs": 20,
+          "target_optimizer_steps": 6000,
+          "training_songs": 300,
+          "parent_checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
+          "parent_sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+          "parent_epoch": 1400,
+          "epoch": 1,
+          "checkpoint": "out/windowed_ar_20261031/natural_whole/model_latest.pt",
+          "progress_file": "out/windowed_ar_20261031/natural_whole/training.json",
+          "source_sha256": {
+            "script/train_windowed_corpus.py": "d7a3063ae9f5e3f366b18e2496f2a8aedeb755a5486af27158464231ba700979",
+            "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2",
+            "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45"
+          },
+          "source_commit": "ba52dc4",
+          "report": "docs/evaluations/windowed_ar_natural_20261031.md",
+          "delivery": "diagnostic_only",
+          "quality_status": "not_yet_evaluated",
+          "initialization": "constant_lr; new AdamW in BOTH arms; matched parent weights and sample/dropout seeds"
+        },
+        {
+          "id": "E16-NW1",
+          "kind": "full300_matched_protocol_adaptation",
+          "model": "AL-AR4K@0.6.0",
+          "variant": "A",
+          "architecture": "window",
+          "status": "running",
+          "target_epochs": 20,
+          "target_optimizer_steps": 6000,
+          "training_songs": 300,
+          "parent_checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
+          "parent_sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+          "parent_epoch": 1400,
+          "epoch": 1,
+          "checkpoint": "out/windowed_ar_20261031/natural_window/model_latest.pt",
+          "progress_file": "out/windowed_ar_20261031/natural_window/training.json",
+          "source_sha256": {
+            "script/train_windowed_corpus.py": "d7a3063ae9f5e3f366b18e2496f2a8aedeb755a5486af27158464231ba700979",
+            "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2",
+            "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45"
+          },
+          "source_commit": "ba52dc4",
+          "report": "docs/evaluations/windowed_ar_natural_20261031.md",
+          "delivery": "diagnostic_only",
+          "quality_status": "not_yet_evaluated",
+          "initialization": "constant_lr; new AdamW in BOTH arms; matched parent weights and sample/dropout seeds"
         }
       ],
       "research_update": {
@@ -4165,9 +4477,9 @@
           "scope": "controlled small-sample W0/W1 first; full-corpus work gated on actual generation",
           "report": "docs/evaluations/windowed_ar_stage2_20261031.md",
           "quality": "not_passed_on_unseen_controlled_examples",
-          "full_corpus_training_started": false,
+          "full_corpus_training_started": true,
           "natural_adaptation": {
-            "status": "prepared_not_launched",
+            "status": "running",
             "arms": [
               "W0",
               "W1"
@@ -4194,10 +4506,11 @@
           "quality": "training_fit_passed_but_unseen_joint_layout_remains_poor"
         },
         "stage5": {
-          "status": "in_progress",
+          "status": "controlled_experiments_completed",
           "scope": "Separate K output factorization, E pretrained audio-tail adaptation, C decoder capacity, and explicit-prefix pattern controls.",
           "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
-          "natural_music_promotion": false
+          "natural_music_promotion": false,
+          "quality": "K1 improves controlled rollouts; both pattern heads pass explicit-prefix task; natural quality unproven"
         }
       },
       "additional_evidence": [

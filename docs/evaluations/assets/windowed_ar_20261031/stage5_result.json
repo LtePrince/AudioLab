@@ -1,0 +1,885 @@
+{
+  "schema": "audiolab-stage5-isolated-comparisons-v1",
+  "runs": {
+    "W1": {
+      "checkpoint": "out/windowed_ar_20261031/window/model_latest.pt",
+      "checkpoint_sha256": "db0d4537b200a541c44af106845d3e2d966900f5dede2b5ec9db0eb97881aefb",
+      "evaluation_sha256": "10f1c01ee7683793c8d377b3c294f8067e921ea8dfe1f45f07462f67f4179695",
+      "config": {
+        "architecture": "window",
+        "condition": "A",
+        "seed": 42,
+        "epochs": 400,
+        "lr": 0.0003,
+        "parameters": 6692227,
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "window_seconds": 10.0,
+        "data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+        "initial_backbone_sha256": "8a4f75f2dcd41e7950df7680f59177883bbb755ac0f8fc6dbaa5d8bc4980e041",
+        "source_sha256": {
+          "script/train_windowed_ar.py": "5e968843ce5286660971069285acdc64b2ffc73dedf53f5c4d8f224f3ef889cd",
+          "src/windowed_ar.py": "2d0cf2233e72f66cf51ad7a0ddfcbcba81af7c4e234b14e9481430661c4a46dd",
+          "src/chart_windows.py": "a799c78053c7a0b9822c91737a629019a0d7a67af68709b7ab550dc6a8308851",
+          "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+          "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+        },
+        "loss": "Original anchored per-example normalized losses; window-boundary labels and bounds conditioning only in W1.",
+        "scope": "32 controlled training examples; separate 32 combinations and original fixed probes; not natural music."
+      },
+      "final_training": {
+        "epoch": 400,
+        "steps": 12800,
+        "objective": 2.6958988033902146e-05,
+        "elapsed_seconds": 789.5802617445588,
+        "frame_accuracy": 1.0,
+        "conditional_time_mae_seconds": 0.00011755255738401408,
+        "stop_recall": 1.0,
+        "false_stop_rate": 0.0,
+        "counts": {
+          "time_count": 140,
+          "layout_count": 324,
+          "stop_count": 80,
+          "continue_count": 140
+        },
+        "learning_rate": 2.9999999999999997e-05
+      },
+      "resources": {
+        "disk_free_gib": 9.943309783935547,
+        "ram_available_gib": 37.16890335083008,
+        "rss_gib": 1.6927337646484375,
+        "gpu_peak_allocated_gib": 0.14250850677490234,
+        "gpu_peak_reserved_gib": 0.169921875
+      },
+      "metrics": {
+        "fixed_probe": {
+          "examples": 5,
+          "positive_examples": 4,
+          "completed": 5,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0,
+          "reference_onsets": 12,
+          "predicted_onsets": 15,
+          "onset_f1": {
+            "25": 0.35,
+            "50": 0.35,
+            "100": 0.35
+          },
+          "grid_bonus": 0.4448515555555563,
+          "reference_grid_bonus": 1.0,
+          "reference_active_windows": 5,
+          "empty_reference_active_windows": 1
+        },
+        "random_check": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 29,
+          "silence_extra_onsets": 0,
+          "forced_windows": 3,
+          "reference_onsets": 140,
+          "predicted_onsets": 381,
+          "onset_f1": {
+            "25": 0.5471807953950811,
+            "50": 0.5471807953950811,
+            "100": 0.5471807953950811
+          },
+          "grid_bonus": 0.23663873167044006,
+          "reference_grid_bonus": 0.20238095238095238,
+          "joint_f1_25ms": 0.33519754055468337,
+          "reference_active_windows": 51,
+          "empty_reference_active_windows": 5
+        },
+        "train": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0,
+          "reference_onsets": 140,
+          "predicted_onsets": 140,
+          "onset_f1": {
+            "25": 1.0,
+            "50": 1.0,
+            "100": 1.0
+          },
+          "grid_bonus": 0.16956725714286103,
+          "reference_grid_bonus": 0.1699404761904762,
+          "joint_f1_25ms": 1.0,
+          "reference_active_windows": 55,
+          "empty_reference_active_windows": 0
+        }
+      }
+    },
+    "K1": {
+      "checkpoint": "out/windowed_ar_20261031/kind_position/model_latest.pt",
+      "checkpoint_sha256": "667a6d839da0a06bd6be3acc608dfd381a981557f6404fa769054b76f97c33e8",
+      "evaluation_sha256": "fbb794440ec9ec45924f544531aa907965efc2b39d1b61f761f4ceee18f2afcb",
+      "config": {
+        "variant": "kind_position",
+        "condition": "A",
+        "seed": 42,
+        "epochs": 400,
+        "lr": 0.0003,
+        "parameters": 6723836,
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "tail_config": null,
+        "encoder_lr": null,
+        "data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+        "tail_data_sha256": null,
+        "common_initial_state_sha256": "bf5d4ec3034e62d91e4f5a4629a9217eb45e821aa3d83385281906b9fe920509",
+        "source_sha256": {
+          "script/train_windowed_variants.py": "a1768da8496b06bf2860c9dde740583d246dbcb8e1b0b18e1b18a0891752adc3",
+          "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
+          "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+          "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+          "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+          "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+          "src/models/transcriber.py": "0f90e27d02f3d460666713f19ae62cc8e7833d925cf5991622810b2d153537dd",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+        },
+        "window_seconds": 10.0,
+        "history_noise_ms": 0.0,
+        "scope": "32-example controlled diagnostic; no natural training"
+      },
+      "final_training": {
+        "epoch": 400,
+        "steps": 12800,
+        "objective": 2.6864243418094023e-05,
+        "elapsed_seconds": 759.2274532094598,
+        "frame_accuracy": 1.0,
+        "conditional_time_mae_seconds": 0.00013650635773972925,
+        "stop_recall": 1.0,
+        "false_stop_rate": 0.0,
+        "counts": {
+          "time_count": 140,
+          "layout_count": 324,
+          "stop_count": 80,
+          "continue_count": 140
+        },
+        "learning_rates": [
+          2.9999999999999997e-05
+        ]
+      },
+      "resources": {
+        "disk_free_gib": 29.020103454589844,
+        "ram_available_gib": 35.660438537597656,
+        "rss_gib": 1.7183952331542969,
+        "gpu_peak_allocated_gib": 0.14309978485107422,
+        "gpu_peak_reserved_gib": 0.169921875
+      },
+      "metrics": {
+        "fixed_probe": {
+          "examples": 5,
+          "positive_examples": 4,
+          "completed": 5,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0,
+          "reference_onsets": 12,
+          "predicted_onsets": 11,
+          "onset_f1": {
+            "25": 0.6726190476190476,
+            "50": 0.6726190476190476,
+            "100": 0.6726190476190476
+          },
+          "grid_bonus": 0.5136653333333435,
+          "reference_grid_bonus": 1.0,
+          "reference_active_windows": 5,
+          "empty_reference_active_windows": 0
+        },
+        "random_check": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0,
+          "reference_onsets": 140,
+          "predicted_onsets": 122,
+          "onset_f1": {
+            "25": 0.6592492766337303,
+            "50": 0.6592492766337303,
+            "100": 0.6592492766337303
+          },
+          "grid_bonus": 0.2363508671201804,
+          "reference_grid_bonus": 0.20238095238095238,
+          "joint_f1_25ms": 0.48303041496318805,
+          "teacher_counts": {
+            "events": 140,
+            "stops": 80,
+            "false_stops": 26,
+            "correct_stops": 54,
+            "layout_total": 323,
+            "layout_correct": 237,
+            "pointer_correct_25ms": 70,
+            "continue_and_time_correct_25ms": 60
+          },
+          "teacher_continue_and_time_25ms": 0.42857142857142855,
+          "teacher_layout_accuracy": 0.7337461300309598,
+          "mean_loss_increase_zeroed_features": 15.550623541466576,
+          "reference_active_windows": 51,
+          "empty_reference_active_windows": 2
+        },
+        "train": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0,
+          "reference_onsets": 140,
+          "predicted_onsets": 140,
+          "onset_f1": {
+            "25": 1.0,
+            "50": 1.0,
+            "100": 1.0
+          },
+          "grid_bonus": 0.169744076190478,
+          "reference_grid_bonus": 0.1699404761904762,
+          "joint_f1_25ms": 1.0,
+          "teacher_counts": {
+            "events": 140,
+            "stops": 80,
+            "false_stops": 0,
+            "correct_stops": 80,
+            "layout_total": 324,
+            "layout_correct": 324,
+            "pointer_correct_25ms": 140,
+            "continue_and_time_correct_25ms": 140
+          },
+          "teacher_continue_and_time_25ms": 1.0,
+          "teacher_layout_accuracy": 1.0,
+          "mean_loss_increase_zeroed_features": 16.301021900653105,
+          "reference_active_windows": 55,
+          "empty_reference_active_windows": 0
+        }
+      }
+    },
+    "E1": {
+      "checkpoint": "out/windowed_ar_20261031/encoder_tail/model_latest.pt",
+      "checkpoint_sha256": "de2a554f20687eef9eda1e4c245ec6ea7974bb5ac35f22e580b97309f0132510",
+      "evaluation_sha256": "d4abda6c10a0ef7dce41b479e892052d2265f3ee9bba48bd39b4c1bbe105b63f",
+      "config": {
+        "variant": "encoder_tail",
+        "condition": "A",
+        "seed": 42,
+        "epochs": 400,
+        "lr": 0.0003,
+        "parameters": 7482563,
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "tail_config": {
+          "hidden_dim": 256,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "rope_theta": 10000.0
+        },
+        "encoder_lr": 3e-05,
+        "data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+        "tail_data_sha256": "398cb6be48d4c1da611a77a0e2b3ea21284b072f627dd9ebd5a37806a6634052",
+        "common_initial_state_sha256": "bf5d4ec3034e62d91e4f5a4629a9217eb45e821aa3d83385281906b9fe920509",
+        "source_sha256": {
+          "script/train_windowed_variants.py": "a1768da8496b06bf2860c9dde740583d246dbcb8e1b0b18e1b18a0891752adc3",
+          "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
+          "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+          "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+          "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+          "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+          "src/models/transcriber.py": "0f90e27d02f3d460666713f19ae62cc8e7833d925cf5991622810b2d153537dd",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+        },
+        "window_seconds": 10.0,
+        "history_noise_ms": 0.0,
+        "scope": "32-example controlled diagnostic; no natural training"
+      },
+      "final_training": {
+        "epoch": 400,
+        "steps": 12800,
+        "objective": 3.9629615278802086e-05,
+        "elapsed_seconds": 829.3600223772228,
+        "frame_accuracy": 1.0,
+        "conditional_time_mae_seconds": 0.00015553424255653403,
+        "stop_recall": 1.0,
+        "false_stop_rate": 0.0,
+        "counts": {
+          "time_count": 140,
+          "layout_count": 324,
+          "stop_count": 80,
+          "continue_count": 140
+        },
+        "learning_rates": [
+          2.9999999999999997e-05,
+          3e-06
+        ]
+      },
+      "resources": {
+        "disk_free_gib": 28.80999755859375,
+        "ram_available_gib": 35.89765167236328,
+        "rss_gib": 1.7569503784179688,
+        "gpu_peak_allocated_gib": 0.15428829193115234,
+        "gpu_peak_reserved_gib": 0.181640625
+      },
+      "metrics": {
+        "fixed_probe": {
+          "examples": 5,
+          "positive_examples": 4,
+          "completed": 5,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0,
+          "reference_onsets": 12,
+          "predicted_onsets": 12,
+          "onset_f1": {
+            "25": 0.6666666666666666,
+            "50": 0.6666666666666666,
+            "100": 0.6666666666666666
+          },
+          "grid_bonus": 0.6632640000000265,
+          "reference_grid_bonus": 1.0,
+          "reference_active_windows": 5,
+          "empty_reference_active_windows": 0
+        },
+        "random_check": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 31,
+          "silence_extra_onsets": 0,
+          "forced_windows": 1,
+          "reference_onsets": 140,
+          "predicted_onsets": 174,
+          "onset_f1": {
+            "25": 0.5663637110362539,
+            "50": 0.5663637110362539,
+            "100": 0.5663637110362539
+          },
+          "grid_bonus": 0.21501489885353237,
+          "reference_grid_bonus": 0.20238095238095238,
+          "joint_f1_25ms": 0.32677404295051354,
+          "teacher_counts": {
+            "events": 140,
+            "stops": 80,
+            "false_stops": 17,
+            "correct_stops": 47,
+            "layout_total": 323,
+            "layout_correct": 230,
+            "pointer_correct_25ms": 81,
+            "continue_and_time_correct_25ms": 73
+          },
+          "teacher_continue_and_time_25ms": 0.5214285714285715,
+          "teacher_layout_accuracy": 0.7120743034055728,
+          "mean_loss_increase_zeroed_features": 13.263861096535104,
+          "reference_active_windows": 51,
+          "empty_reference_active_windows": 2
+        },
+        "train": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0,
+          "reference_onsets": 140,
+          "predicted_onsets": 140,
+          "onset_f1": {
+            "25": 1.0,
+            "50": 1.0,
+            "100": 1.0
+          },
+          "grid_bonus": 0.16925946666666764,
+          "reference_grid_bonus": 0.1699404761904762,
+          "joint_f1_25ms": 1.0,
+          "teacher_counts": {
+            "events": 140,
+            "stops": 80,
+            "false_stops": 0,
+            "correct_stops": 80,
+            "layout_total": 324,
+            "layout_correct": 324,
+            "pointer_correct_25ms": 140,
+            "continue_and_time_correct_25ms": 140
+          },
+          "teacher_continue_and_time_25ms": 1.0,
+          "teacher_layout_accuracy": 1.0,
+          "mean_loss_increase_zeroed_features": 13.64227931272372,
+          "reference_active_windows": 55,
+          "empty_reference_active_windows": 0
+        }
+      }
+    },
+    "C1": {
+      "checkpoint": "out/windowed_ar_20261031/capacity512/model_latest.pt",
+      "checkpoint_sha256": "757b08db2afd47ef66a0c8781b97f7b5cecf990c51cc97a8b232cc8fe7254955",
+      "evaluation_sha256": "ea4aff73dff2f48568684e1f90a1af18c44184442a1a14157e672989d011ba52",
+      "config": {
+        "variant": "capacity",
+        "condition": "A",
+        "seed": 42,
+        "epochs": 400,
+        "lr": 0.0003,
+        "parameters": 25966851,
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 512,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "tail_config": null,
+        "encoder_lr": null,
+        "data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+        "tail_data_sha256": null,
+        "common_initial_state_sha256": "cedc102b65e3441c3804ac742afded35158b634fbb3ad633ebbe6a55b988da80",
+        "source_sha256": {
+          "script/train_windowed_variants.py": "a1768da8496b06bf2860c9dde740583d246dbcb8e1b0b18e1b18a0891752adc3",
+          "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
+          "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+          "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+          "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+          "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+          "src/models/transcriber.py": "0f90e27d02f3d460666713f19ae62cc8e7833d925cf5991622810b2d153537dd",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+        },
+        "window_seconds": 10.0,
+        "history_noise_ms": 0.0,
+        "scope": "32-example controlled diagnostic; no natural training"
+      },
+      "final_training": {
+        "epoch": 400,
+        "steps": 12800,
+        "objective": 2.7193391822917938e-05,
+        "elapsed_seconds": 765.6499707102776,
+        "frame_accuracy": 1.0,
+        "conditional_time_mae_seconds": 0.0001401804419525409,
+        "stop_recall": 1.0,
+        "false_stop_rate": 0.0,
+        "counts": {
+          "time_count": 140,
+          "layout_count": 324,
+          "stop_count": 80,
+          "continue_count": 140
+        },
+        "learning_rates": [
+          2.9999999999999997e-05
+        ]
+      },
+      "resources": {
+        "disk_free_gib": 29.01987075805664,
+        "ram_available_gib": 36.98308563232422,
+        "rss_gib": 1.7723312377929688,
+        "gpu_peak_allocated_gib": 0.5099573135375977,
+        "gpu_peak_reserved_gib": 0.517578125
+      },
+      "metrics": {
+        "fixed_probe": {
+          "examples": 5,
+          "positive_examples": 4,
+          "completed": 5,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0,
+          "reference_onsets": 12,
+          "predicted_onsets": 10,
+          "onset_f1": {
+            "25": 0.5416666666666666,
+            "50": 0.5416666666666666,
+            "100": 0.5416666666666666
+          },
+          "grid_bonus": 0.44033600000000384,
+          "reference_grid_bonus": 1.0,
+          "reference_active_windows": 5,
+          "empty_reference_active_windows": 1
+        },
+        "random_check": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0,
+          "reference_onsets": 140,
+          "predicted_onsets": 146,
+          "onset_f1": {
+            "25": 0.6010928952000381,
+            "50": 0.6010928952000381,
+            "100": 0.6010928952000381
+          },
+          "grid_bonus": 0.23443513992673745,
+          "reference_grid_bonus": 0.20238095238095238,
+          "joint_f1_25ms": 0.38757317791479284,
+          "teacher_counts": {
+            "events": 140,
+            "stops": 80,
+            "false_stops": 26,
+            "correct_stops": 54,
+            "layout_total": 323,
+            "layout_correct": 219,
+            "pointer_correct_25ms": 77,
+            "continue_and_time_correct_25ms": 60
+          },
+          "teacher_continue_and_time_25ms": 0.42857142857142855,
+          "teacher_layout_accuracy": 0.6780185758513931,
+          "mean_loss_increase_zeroed_features": 22.0090946268771,
+          "reference_active_windows": 51,
+          "empty_reference_active_windows": 6
+        },
+        "train": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0,
+          "reference_onsets": 140,
+          "predicted_onsets": 140,
+          "onset_f1": {
+            "25": 1.0,
+            "50": 1.0,
+            "100": 1.0
+          },
+          "grid_bonus": 0.1697753904761918,
+          "reference_grid_bonus": 0.1699404761904762,
+          "joint_f1_25ms": 1.0,
+          "teacher_counts": {
+            "events": 140,
+            "stops": 80,
+            "false_stops": 0,
+            "correct_stops": 80,
+            "layout_total": 324,
+            "layout_correct": 324,
+            "pointer_correct_25ms": 140,
+            "continue_and_time_correct_25ms": 140
+          },
+          "teacher_continue_and_time_25ms": 1.0,
+          "teacher_layout_accuracy": 1.0,
+          "mean_loss_increase_zeroed_features": 21.828568127318448,
+          "reference_active_windows": 55,
+          "empty_reference_active_windows": 0
+        }
+      }
+    }
+  },
+  "patterns": {
+    "P0": {
+      "config": {
+        "variant": "base",
+        "seed": 42,
+        "epochs": 400,
+        "lr": 0.0003,
+        "data_sha256": "54451493e896191a466b35bdaf96008dc3b677977bc42729904ff113fdca0387",
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "parameters": 6692227,
+        "initial_backbone_sha256": "bf5d4ec3034e62d91e4f5a4629a9217eb45e821aa3d83385281906b9fe920509",
+        "source_sha256": {
+          "script/train_pattern_continuation.py": "8440e3abc69fe6e62d80ceae4ef8f5e2805e3a6e9ae3408bad1f922eda9e5cac",
+          "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
+          "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+          "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+        },
+        "policy": "24 known onset slots, each one Tap; eight observed chart notes; predict next 16 positions. No pattern-id input, no future-chart hints, no output-period constraint. All song audio visible."
+      },
+      "checkpoint": "out/windowed_ar_20261031/pattern_base/model_latest.pt",
+      "checkpoint_sha256": "8c13898115c9ef8eec5c318f171ef2ca8cba7582f54041da34a82cfe21f17a16",
+      "evaluation_sha256": "6efcb9e8e9fa61c7409becbf1f16b207e3aed4b84c98c66e5752a1d929186271",
+      "final_training": {
+        "epoch": 400,
+        "steps": 16000,
+        "loss": 0.013412868759405682,
+        "elapsed_seconds": 889.488285433501
+      },
+      "resources": {
+        "disk_free_gib": 28.713558197021484,
+        "ram_available_gib": 36.084678649902344,
+        "rss_gib": 1.58233642578125,
+        "gpu_peak_allocated_gib": 0.14102602005004883,
+        "gpu_peak_reserved_gib": 0.1484375
+      },
+      "metrics": {
+        "train": {
+          "examples": 40,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 40,
+          "total_positions": 640
+        },
+        "train/jack": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "train/short_jacks": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "train/long_jacks": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "train/alternation": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "train/staircase": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "new_combinations": {
+          "examples": 40,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 40,
+          "total_positions": 640
+        },
+        "new_combinations/jack": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "new_combinations/short_jacks": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "new_combinations/long_jacks": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "new_combinations/alternation": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "new_combinations/staircase": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        }
+      }
+    },
+    "P1": {
+      "config": {
+        "variant": "kind_position",
+        "seed": 42,
+        "epochs": 400,
+        "lr": 0.0003,
+        "data_sha256": "54451493e896191a466b35bdaf96008dc3b677977bc42729904ff113fdca0387",
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "parameters": 6723836,
+        "initial_backbone_sha256": "bf5d4ec3034e62d91e4f5a4629a9217eb45e821aa3d83385281906b9fe920509",
+        "source_sha256": {
+          "script/train_pattern_continuation.py": "8440e3abc69fe6e62d80ceae4ef8f5e2805e3a6e9ae3408bad1f922eda9e5cac",
+          "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
+          "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+          "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+        },
+        "policy": "24 known onset slots, each one Tap; eight observed chart notes; predict next 16 positions. No pattern-id input, no future-chart hints, no output-period constraint. All song audio visible."
+      },
+      "checkpoint": "out/windowed_ar_20261031/pattern_kind_position/model_latest.pt",
+      "checkpoint_sha256": "814cce4770a158392eb8df83f2841baf2ec3a6668f664a9ae7874a09cd4890f0",
+      "evaluation_sha256": "6efcb9e8e9fa61c7409becbf1f16b207e3aed4b84c98c66e5752a1d929186271",
+      "final_training": {
+        "epoch": 400,
+        "steps": 16000,
+        "loss": 0.0003850746418891049,
+        "elapsed_seconds": 947.9056359417737
+      },
+      "resources": {
+        "disk_free_gib": 28.711666107177734,
+        "ram_available_gib": 37.24957275390625,
+        "rss_gib": 1.5904922485351562,
+        "gpu_peak_allocated_gib": 0.1416172981262207,
+        "gpu_peak_reserved_gib": 0.1484375
+      },
+      "metrics": {
+        "train": {
+          "examples": 40,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 40,
+          "total_positions": 640
+        },
+        "train/jack": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "train/short_jacks": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "train/long_jacks": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "train/alternation": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "train/staircase": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "new_combinations": {
+          "examples": 40,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 40,
+          "total_positions": 640
+        },
+        "new_combinations/jack": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "new_combinations/short_jacks": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "new_combinations/long_jacks": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "new_combinations/alternation": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        },
+        "new_combinations/staircase": {
+          "examples": 8,
+          "position_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "exact_suffix": 8,
+          "total_positions": 128
+        }
+      }
+    }
+  },
+  "protocol_sha256": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5",
+  "scope": "Controlled tasks; no natural-song quality claim. Baseline reused at same epoch/data/schedule. Pattern times/count/Tap type given; only suffix positions generated."
+}

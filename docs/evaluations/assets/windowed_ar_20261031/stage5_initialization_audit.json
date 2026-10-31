@@ -1,0 +1,27 @@
+{
+  "schema": "audiolab-stage5-initialization-audit-v1",
+  "original_W1_backbone_sha256": "8a4f75f2dcd41e7950df7680f59177883bbb755ac0f8fc6dbaa5d8bc4980e041",
+  "common_non_output_state_sha256": "bf5d4ec3034e62d91e4f5a4629a9217eb45e821aa3d83385281906b9fe920509",
+  "K_and_E_match_W1": true,
+  "pattern_base_matches": true,
+  "encoder_adaptation_parameter_delta_l2": {
+    "block.norm1.weight": 0.045711059123277664,
+    "block.norm1.bias": 0.03270495682954788,
+    "block.qkv.weight": 1.0943461656570435,
+    "block.qkv.bias": 0.058261290192604065,
+    "block.qnorm.scale": 0.016627112403512,
+    "block.knorm.scale": 0.017083127051591873,
+    "block.proj.weight": 0.5967126488685608,
+    "block.proj.bias": 0.020621394738554955,
+    "block.norm2.weight": 0.04507341980934143,
+    "block.norm2.bias": 0.020655499771237373,
+    "block.mlp.0.weight": 0.937706708908081,
+    "block.mlp.0.bias": 0.04749526455998421,
+    "block.mlp.3.weight": 0.8685650825500488,
+    "block.mlp.3.bias": 0.020172927528619766,
+    "norm.weight": 0.06660789251327515,
+    "norm.bias": 0.0387505479156971
+  },
+  "E_checkpoint_sha256": "de2a554f20687eef9eda1e4c245ec6ea7974bb5ac35f22e580b97309f0132510",
+  "caveat": "Capacity changes tensor dimensions; seed/exposure/schedule matched, tensors cannot match. Feature encoder parameters excluded from decoder-only parameter totals in W1/K1/C1."
+}
