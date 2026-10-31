@@ -3148,13 +3148,32 @@
     {
       "id": "E16",
       "title": "定长单起音到复杂编谱的归因计划",
-      "kind": "plan",
+      "kind": "staged_experiment",
       "models": [],
-      "status": "not_started",
+      "status": "in_progress",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "原定长归因计划保留；E14/E18四组原配方已完成1400轮，E20新歌评估与缺音诊断已完成。2026-10-30汇总后优先验证全局音频可见、当前窗口输出；新结构、历史纠错与定长diffusion对照均未执行。",
+      "result": "Execution authorized. D0 frozen-feature diagnostic fitted 32 controlled clips; fixed probes pass but random-arrangement precision/recall and close-pair stress tests need improvement. Windowed generator not trained yet.",
       "evidence": "docs/fixed_length_attribution_plan.md",
-      "runs": [],
+      "runs": [
+        {
+          "id": "E16-D0-32",
+          "kind": "diagnostic_training",
+          "model": "Frozen 4K encoder + 94,978-parameter acoustic localization probe",
+          "status": "completed",
+          "delivery": "diagnostic_only",
+          "seed": 42,
+          "training_examples": 32,
+          "optimizer_steps": 1000,
+          "parameters": 94978,
+          "checkpoint": "out/windowed_ar_20261031/d0/model_best_train.pt",
+          "checkpoint_sha256": "ab31e6bd792217999e9c520251b8ff787e1450b5150d52a45a73e9f6cdbea9dc",
+          "frontend_sha256": "62d6a385c3b15ec330df284b0ad1e031ee4053c310babde2f628f50bb038b7b0",
+          "source_sha256": "541f49439c71211faa3701adbe6acf8e7b08eb874724fc36e3e5566d9d350f2f",
+          "report": "docs/evaluations/assets/windowed_ar_20261031/d0_32.json",
+          "quality_status": "fixed_probes_pass_random_and_close_pair_gates_not_passed",
+          "not_chart_generator": true
+        }
+      ],
       "research_update": {
         "date": "2026-10-24",
         "status": "literature reviewed; diagnosis/training changes not executed",
