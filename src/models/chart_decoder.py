@@ -223,7 +223,7 @@ class ChartDecoder(nn.Module):
 
     def forward(self, tokens: Tensor, tok_frames: Tensor, memory: Tensor,
                 mem_valid: Tensor | None = None, return_hidden: bool = False,
-                history: Tensor | None = None):
+                history: Tensor | None = None, input_condition: Tensor | None = None):
         """
         tokens     : (B, L) long
         tok_frames : (B, L) float — musical time of each token in chart frames
@@ -243,6 +243,10 @@ class ChartDecoder(nn.Module):
             keep = (torch.rand(B, L, 1, device=tok.device) >= self.token_dropout).to(tok.dtype)
             tok = tok * keep
         x = tok + self.time_proj(time_embed(tok_frames, self.time_dim))
+        if input_condition is not None:
+            if input_condition.shape != x.shape or not torch.isfinite(input_condition).all():
+                raise ValueError('input condition must be finite (batch, tokens, hidden)')
+            x = x + input_condition
         x = self.drop(x)
         freqs = rope1d(torch.arange(L, device=x.device).float(), self.head_dim, self.rope_theta)
         mask = self.cross_mask(tok_frames, memory.shape[1], mem_valid)
@@ -261,7 +265,8 @@ class ChartDecoder(nn.Module):
         return [blk.init_cache(memory) for blk in self.blocks]
 
     def step(self, token: Tensor, frame: Tensor, pos: int, caches: list[dict],
-             T_mem: int, mem_valid: Tensor | None, history: Tensor | None = None):
+             T_mem: int, mem_valid: Tensor | None, history: Tensor | None = None,
+             input_condition: Tensor | None = None):
         """One incremental decoding step.
         token (B,) long · frame (B,) float · pos = sequence index of this token.
         Returns (logits (B,V), hidden (B,D))."""
@@ -272,6 +277,10 @@ class ChartDecoder(nn.Module):
             x = x + self.history_proj(history[:,None])
         elif history is not None:
             raise ValueError('decoder does not accept causal history inputs')
+        if input_condition is not None:
+            if input_condition.shape != x[:,0].shape or not torch.isfinite(input_condition).all():
+                raise ValueError('step input condition must be finite (batch, hidden)')
+            x = x + input_condition[:,None]
         freqs = rope1d(torch.tensor([pos], device=x.device).float(), self.head_dim, self.rope_theta)
         mask = self.cross_mask(frame[:, None], T_mem, mem_valid)
         for blk, cache in zip(self.blocks, caches):

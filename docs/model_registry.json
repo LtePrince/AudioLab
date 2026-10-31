@@ -3152,7 +3152,7 @@
       "models": [],
       "status": "in_progress",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "Execution authorized. D0 frozen-feature diagnostic fitted 32 controlled clips; fixed probes pass but random-arrangement precision/recall and close-pair stress tests need improvement. Windowed generator not trained yet.",
+      "result": "Stage 1 completed with three frozen-feature diagnostic trainings and partial quality success; window-output implementation passed initial protocol tests, controlled W0/W1 training next.",
       "evidence": "docs/fixed_length_attribution_plan.md",
       "runs": [
         {
@@ -3171,6 +3171,44 @@
           "source_sha256": "541f49439c71211faa3701adbe6acf8e7b08eb874724fc36e3e5566d9d350f2f",
           "report": "docs/evaluations/assets/windowed_ar_20261031/d0_32.json",
           "quality_status": "fixed_probes_pass_random_and_close_pair_gates_not_passed",
+          "not_chart_generator": true
+        },
+        {
+          "id": "E16-D0-128",
+          "kind": "diagnostic_training",
+          "model": "Frozen 4K encoder + 94,978-parameter acoustic localization probe",
+          "status": "completed",
+          "delivery": "diagnostic_only",
+          "seed": 42,
+          "training_examples": 128,
+          "optimizer_steps": 1500,
+          "selected_step": 1250,
+          "parameters": 94978,
+          "checkpoint": "out/windowed_ar_20261031/d0_coverage128/model_best_train.pt",
+          "checkpoint_sha256": "d07eda00be913af49dc39a803bd56fe784a209e409545bca1e4ca82c0fb2c083",
+          "frontend_sha256": "62d6a385c3b15ec330df284b0ad1e031ee4053c310babde2f628f50bb038b7b0",
+          "source_sha256": "cd20f5d7c6ce2428bf8b4465768da5e6317d4b739eaa8474b5ffd04c9da0e6a8",
+          "report": "docs/evaluations/assets/windowed_ar_20261031/d0_coverage128.json",
+          "quality_status": "not_all_random_dense_precision_recall_gates_passed",
+          "not_chart_generator": true
+        },
+        {
+          "id": "E16-D0-512",
+          "kind": "diagnostic_training",
+          "model": "Frozen 4K encoder + 94,978-parameter acoustic localization probe",
+          "status": "completed",
+          "delivery": "diagnostic_only",
+          "seed": 42,
+          "training_examples": 512,
+          "optimizer_steps": 2500,
+          "selected_step": 2250,
+          "parameters": 94978,
+          "checkpoint": "out/windowed_ar_20261031/d0_coverage512/model_best_train.pt",
+          "checkpoint_sha256": "218acd3ae8fd636ffcadfef7bda28bcc1c683bd60bb78fd2c1e155c7a8a6bfb0",
+          "frontend_sha256": "62d6a385c3b15ec330df284b0ad1e031ee4053c310babde2f628f50bb038b7b0",
+          "source_sha256": "06e1867afd9b5ae32d19fdbb6048c553f685dbb96cdd85b5002c80b8a2ce17e2",
+          "report": "docs/evaluations/assets/windowed_ar_20261031/d0_coverage512.json",
+          "quality_status": "not_all_random_dense_precision_recall_gates_passed",
           "not_chart_generator": true
         }
       ],
@@ -3229,7 +3267,23 @@
         "new_training": false,
         "new_inference": false,
         "new_model_versions_registered": false
-      }
+      },
+      "staged_execution": {
+        "authorized": true,
+        "stage1": {
+          "status": "experiment_completed",
+          "quality": "partial; all original probes pass, dense randomized diagnostic not fully passed",
+          "report": "docs/evaluations/windowed_ar_stage1_20261031.md"
+        },
+        "stage2": {
+          "status": "protocol_implemented_and_tested",
+          "training_started": false,
+          "scope": "controlled small-sample W0/W1 first; full-corpus work gated on actual generation"
+        }
+      },
+      "additional_evidence": [
+        "docs/evaluations/windowed_ar_stage1_20261031.md"
+      ]
     },
     {
       "id": "E17",
