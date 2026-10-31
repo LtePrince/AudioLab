@@ -1,0 +1,2711 @@
+{
+  "scope": "all 300 original 4K references, output protocol validation only, no training/evaluation",
+  "data_cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+  "rows": [
+    {
+      "id": "-Arkhei-_IN",
+      "duration": 157.52272108843536,
+      "groups": 522,
+      "whole_tokens": 1769,
+      "window_tokens": 1784,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "-SURREALISM-_IN",
+      "duration": 153.5288888888889,
+      "groups": 735,
+      "whole_tokens": 2453,
+      "window_tokens": 2468,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "000 -Ain Soph Aur-_IN",
+      "duration": 154.20807256235827,
+      "groups": 553,
+      "whole_tokens": 1887,
+      "window_tokens": 1902,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "996_IN",
+      "duration": 154.31256235827664,
+      "groups": 813,
+      "whole_tokens": 2647,
+      "window_tokens": 2662,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "A journey to the moonlight_IN",
+      "duration": 150.54802721088436,
+      "groups": 1019,
+      "whole_tokens": 3290,
+      "window_tokens": 3305,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "ABYSS MOTION 192.333_IN",
+      "duration": 126.11333333333333,
+      "groups": 655,
+      "whole_tokens": 2212,
+      "window_tokens": 2224,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "ATHAZA_IN",
+      "duration": 167.07192743764173,
+      "groups": 924,
+      "whole_tokens": 3111,
+      "window_tokens": 3127,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "AbsoluTe disoRdeR_IN",
+      "duration": 189.3834013605442,
+      "groups": 1184,
+      "whole_tokens": 3930,
+      "window_tokens": 3948,
+      "windows": 19,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Ad astra per aspera_IN",
+      "duration": 144.54857142857142,
+      "groups": 1211,
+      "whole_tokens": 4005,
+      "window_tokens": 4019,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "After Dawn_IN",
+      "duration": 142.9318820861678,
+      "groups": 722,
+      "whole_tokens": 2518,
+      "window_tokens": 2532,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Alb_IN",
+      "duration": 150.87600907029477,
+      "groups": 740,
+      "whole_tokens": 2495,
+      "window_tokens": 2510,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Aleph-0_IN",
+      "duration": 140.63310657596372,
+      "groups": 586,
+      "whole_tokens": 2097,
+      "window_tokens": 2111,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Alice in a xxxxxxxx_IN",
+      "duration": 155.00625850340137,
+      "groups": 708,
+      "whole_tokens": 2338,
+      "window_tokens": 2353,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Another Me_IN",
+      "duration": 139.91038548752834,
+      "groups": 425,
+      "whole_tokens": 1389,
+      "window_tokens": 1402,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Another Round_IN",
+      "duration": 144.39473922902494,
+      "groups": 448,
+      "whole_tokens": 1504,
+      "window_tokens": 1518,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Antithese_IN",
+      "duration": 140.84208616780046,
+      "groups": 929,
+      "whole_tokens": 3110,
+      "window_tokens": 3124,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Aphasia_IN",
+      "duration": 116.34793650793651,
+      "groups": 410,
+      "whole_tokens": 1366,
+      "window_tokens": 1377,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Aphrodites Child short ver._IN",
+      "duration": 167.35056689342403,
+      "groups": 516,
+      "whole_tokens": 1855,
+      "window_tokens": 1871,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Apocalypse_IN",
+      "duration": 165.28136054421768,
+      "groups": 553,
+      "whole_tokens": 1843,
+      "window_tokens": 1859,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Apocalyptic_IN",
+      "duration": 129.00861678004534,
+      "groups": 514,
+      "whole_tokens": 1731,
+      "window_tokens": 1743,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Archidoxen_IN",
+      "duration": 123.75800453514739,
+      "groups": 813,
+      "whole_tokens": 2595,
+      "window_tokens": 2607,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Ark_IN",
+      "duration": 158.68081632653062,
+      "groups": 534,
+      "whole_tokens": 1870,
+      "window_tokens": 1885,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Artificial Existence_IN",
+      "duration": 134.46240362811793,
+      "groups": 582,
+      "whole_tokens": 1993,
+      "window_tokens": 2006,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Avataar Reincarnation of Kalpa_IN",
+      "duration": 174.6707029478458,
+      "groups": 749,
+      "whole_tokens": 2492,
+      "window_tokens": 2509,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "BANGING STRIKE_IN",
+      "duration": 148.00136054421768,
+      "groups": 911,
+      "whole_tokens": 3150,
+      "window_tokens": 3164,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "BRAIN HACKER_IN",
+      "duration": 121.52598639455782,
+      "groups": 648,
+      "whole_tokens": 2139,
+      "window_tokens": 2151,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Believe Light feat. 果丸哒呦_IN",
+      "duration": 170.4910657596372,
+      "groups": 817,
+      "whole_tokens": 2733,
+      "window_tokens": 2750,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Better Graphic Animation_IN",
+      "duration": 102.02993197278911,
+      "groups": 571,
+      "whole_tokens": 1785,
+      "window_tokens": 1795,
+      "windows": 11,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Bitterblossom_IN",
+      "duration": 144.17414965986396,
+      "groups": 558,
+      "whole_tokens": 1973,
+      "window_tokens": 1987,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Bloom_IN",
+      "duration": 161.62104308390022,
+      "groups": 710,
+      "whole_tokens": 2278,
+      "window_tokens": 2294,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Bonus Time_IN",
+      "duration": 115.47428571428571,
+      "groups": 550,
+      "whole_tokens": 1838,
+      "window_tokens": 1849,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Bougainvillea_IN",
+      "duration": 116.44662131519274,
+      "groups": 517,
+      "whole_tokens": 1810,
+      "window_tokens": 1821,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Bounded Quietude_IN",
+      "duration": 151.62485260770976,
+      "groups": 830,
+      "whole_tokens": 2874,
+      "window_tokens": 2889,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Brave Notes_IN",
+      "duration": 118.14458049886622,
+      "groups": 575,
+      "whole_tokens": 2006,
+      "window_tokens": 2017,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Break Over_IN",
+      "duration": 128.57034013605443,
+      "groups": 697,
+      "whole_tokens": 2411,
+      "window_tokens": 2423,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Break Through The Barrier_IN",
+      "duration": 132.3116553287982,
+      "groups": 921,
+      "whole_tokens": 2974,
+      "window_tokens": 2987,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Broken Sky_IN",
+      "duration": 155.10784580498867,
+      "groups": 388,
+      "whole_tokens": 1341,
+      "window_tokens": 1356,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Burn_IN",
+      "duration": 137.67836734693878,
+      "groups": 496,
+      "whole_tokens": 1715,
+      "window_tokens": 1728,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "CROSSSOUL_IN",
+      "duration": 139.2253968253968,
+      "groups": 1045,
+      "whole_tokens": 3446,
+      "window_tokens": 3459,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Cereris_IN",
+      "duration": 167.9891156462585,
+      "groups": 703,
+      "whole_tokens": 2362,
+      "window_tokens": 2378,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Cervelle Connexion_IN",
+      "duration": 147.04761904761904,
+      "groups": 536,
+      "whole_tokens": 1619,
+      "window_tokens": 1633,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Chronologika_IN",
+      "duration": 134.64816326530612,
+      "groups": 588,
+      "whole_tokens": 2041,
+      "window_tokens": 2054,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Chronomia_IN",
+      "duration": 146.98956916099775,
+      "groups": 775,
+      "whole_tokens": 2606,
+      "window_tokens": 2620,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Chronos Collapse - La Campanella_IN",
+      "duration": 153.1051247165533,
+      "groups": 1273,
+      "whole_tokens": 4008,
+      "window_tokens": 4023,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Chronostasis_IN",
+      "duration": 142.5293424036281,
+      "groups": 1172,
+      "whole_tokens": 3723,
+      "window_tokens": 3737,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Cipher  20_IN",
+      "duration": 154.32126984126984,
+      "groups": 863,
+      "whole_tokens": 2810,
+      "window_tokens": 2825,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Class Memories_IN",
+      "duration": 147.37560090702948,
+      "groups": 1055,
+      "whole_tokens": 3334,
+      "window_tokens": 3348,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Clock Paradox_IN",
+      "duration": 150.89632653061224,
+      "groups": 453,
+      "whole_tokens": 1453,
+      "window_tokens": 1468,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Colorful Days_IN",
+      "duration": 99.73696145124717,
+      "groups": 337,
+      "whole_tokens": 1101,
+      "window_tokens": 1110,
+      "windows": 10,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Comet_IN",
+      "duration": 151.28666666666666,
+      "groups": 670,
+      "whole_tokens": 2315,
+      "window_tokens": 2330,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Compute It With Some Devilish Alcoholic Steampunk Engines_IN",
+      "duration": 171.64916099773242,
+      "groups": 943,
+      "whole_tokens": 3214,
+      "window_tokens": 3231,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Concvssion_IN",
+      "duration": 151.58421768707484,
+      "groups": 661,
+      "whole_tokens": 2394,
+      "window_tokens": 2409,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Crave Wave_IN",
+      "duration": 128.27868480725624,
+      "groups": 741,
+      "whole_tokens": 2374,
+      "window_tokens": 2386,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Credits_IN",
+      "duration": 100.61931972789115,
+      "groups": 526,
+      "whole_tokens": 1626,
+      "window_tokens": 1636,
+      "windows": 11,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Cristalisia_IN",
+      "duration": 136.58122448979591,
+      "groups": 628,
+      "whole_tokens": 2076,
+      "window_tokens": 2089,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Crush BETA_IN",
+      "duration": 135.62340136054422,
+      "groups": 818,
+      "whole_tokens": 2750,
+      "window_tokens": 2763,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Cthugha_IN",
+      "duration": 155.71156462585034,
+      "groups": 923,
+      "whole_tokens": 3288,
+      "window_tokens": 3303,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Cuvism³_IN",
+      "duration": 160.8257596371882,
+      "groups": 651,
+      "whole_tokens": 2153,
+      "window_tokens": 2169,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "DESTRUCTION 321_IN",
+      "duration": 159.09587301587302,
+      "groups": 1267,
+      "whole_tokens": 4021,
+      "window_tokens": 4036,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Dance with Silence_IN",
+      "duration": 179.48299319727892,
+      "groups": 906,
+      "whole_tokens": 3064,
+      "window_tokens": 3081,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Dash_IN",
+      "duration": 114.21460317460317,
+      "groups": 310,
+      "whole_tokens": 991,
+      "window_tokens": 1002,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "DataErr0r_IN",
+      "duration": 124.01922902494331,
+      "groups": 497,
+      "whole_tokens": 1774,
+      "window_tokens": 1786,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Dead Soul_IN",
+      "duration": 147.2972335600907,
+      "groups": 600,
+      "whole_tokens": 1992,
+      "window_tokens": 2006,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Demiurge_IN",
+      "duration": 169.3507029478458,
+      "groups": 463,
+      "whole_tokens": 1512,
+      "window_tokens": 1528,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Demonkin_IN",
+      "duration": 138.67102040816326,
+      "groups": 641,
+      "whole_tokens": 2251,
+      "window_tokens": 2264,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Der Richter_IN",
+      "duration": 146.22040816326532,
+      "groups": 955,
+      "whole_tokens": 3110,
+      "window_tokens": 3124,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "DevIAtiOn short ver._IN",
+      "duration": 171.86975056689343,
+      "groups": 905,
+      "whole_tokens": 3071,
+      "window_tokens": 3088,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Devotion_IN",
+      "duration": 158.09160997732425,
+      "groups": 677,
+      "whole_tokens": 2232,
+      "window_tokens": 2247,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Diamond Dust_IN",
+      "duration": 155.06,
+      "groups": 823,
+      "whole_tokens": 2794,
+      "window_tokens": 2809,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Diamond Eyes_IN",
+      "duration": 133.73469387755102,
+      "groups": 661,
+      "whole_tokens": 2204,
+      "window_tokens": 2217,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Disorder_IN",
+      "duration": 134.34920634920636,
+      "groups": 787,
+      "whole_tokens": 2610,
+      "window_tokens": 2623,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Distorted Fate_IN",
+      "duration": 162.00707482993198,
+      "groups": 1179,
+      "whole_tokens": 3917,
+      "window_tokens": 3933,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Dlyrotz_IN",
+      "duration": 123.71446712018141,
+      "groups": 493,
+      "whole_tokens": 1647,
+      "window_tokens": 1659,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Dont Never Around_IN",
+      "duration": 119.32879818594104,
+      "groups": 813,
+      "whole_tokens": 2668,
+      "window_tokens": 2679,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Doppelganger_IN",
+      "duration": 145.72408163265305,
+      "groups": 758,
+      "whole_tokens": 2508,
+      "window_tokens": 2522,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Dreamland_IN",
+      "duration": 152.0370068027211,
+      "groups": 468,
+      "whole_tokens": 1620,
+      "window_tokens": 1635,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Drop It_IN",
+      "duration": 202.8887074829932,
+      "groups": 770,
+      "whole_tokens": 2601,
+      "window_tokens": 2621,
+      "windows": 21,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "ENERGY SYNERGY MATRIX_IN",
+      "duration": 125.18893424036281,
+      "groups": 592,
+      "whole_tokens": 1969,
+      "window_tokens": 1981,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "ERABYE CONNEC10N_IN",
+      "duration": 168.0326530612245,
+      "groups": 1131,
+      "whole_tokens": 3796,
+      "window_tokens": 3812,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "El Condor Pasa Phigros Edit_IN",
+      "duration": 132.3116553287982,
+      "groups": 893,
+      "whole_tokens": 2987,
+      "window_tokens": 3000,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "El último baile_IN",
+      "duration": 120.80326530612246,
+      "groups": 461,
+      "whole_tokens": 1559,
+      "window_tokens": 1571,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Electron_IN",
+      "duration": 128.9882993197279,
+      "groups": 471,
+      "whole_tokens": 1564,
+      "window_tokens": 1576,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Eltaw_IN",
+      "duration": 135.55083900226757,
+      "groups": 701,
+      "whole_tokens": 2298,
+      "window_tokens": 2311,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "End Me_IN",
+      "duration": 130.2508843537415,
+      "groups": 621,
+      "whole_tokens": 1998,
+      "window_tokens": 2011,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Engine x Start melody mix_IN",
+      "duration": 91.65351473922902,
+      "groups": 332,
+      "whole_tokens": 1111,
+      "window_tokens": 1120,
+      "windows": 10,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Eradication Catastrophe_IN",
+      "duration": 126.69532879818594,
+      "groups": 550,
+      "whole_tokens": 1749,
+      "window_tokens": 1761,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Eternal Snow_IN",
+      "duration": 155.40680272108844,
+      "groups": 583,
+      "whole_tokens": 1906,
+      "window_tokens": 1921,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "FULi AUTO BUSTER_IN",
+      "duration": 124.84934240362811,
+      "groups": 582,
+      "whole_tokens": 1958,
+      "window_tokens": 1970,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "FULi AUTO SHOOTER_IN",
+      "duration": 129.06086167800453,
+      "groups": 674,
+      "whole_tokens": 2217,
+      "window_tokens": 2229,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Feast远东之宴_IN",
+      "duration": 150.00934240362812,
+      "groups": 790,
+      "whole_tokens": 2665,
+      "window_tokens": 2680,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Final Step_IN",
+      "duration": 137.30975056689343,
+      "groups": 705,
+      "whole_tokens": 2355,
+      "window_tokens": 2368,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Find_Me_IN",
+      "duration": 127.09587301587301,
+      "groups": 621,
+      "whole_tokens": 2105,
+      "window_tokens": 2117,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Fixations Toward the Stars_IN",
+      "duration": 169.61201814058956,
+      "groups": 681,
+      "whole_tokens": 2295,
+      "window_tokens": 2311,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Flutter Echo_IN",
+      "duration": 162.93297052154196,
+      "groups": 902,
+      "whole_tokens": 2966,
+      "window_tokens": 2982,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Fractured Angel_IN",
+      "duration": 180.8065306122449,
+      "groups": 861,
+      "whole_tokens": 2926,
+      "window_tokens": 2944,
+      "windows": 19,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Freaky Undulations Noble Knights of Tune_IN",
+      "duration": 136.55333333333334,
+      "groups": 812,
+      "whole_tokens": 2723,
+      "window_tokens": 2736,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Frozen Heart_IN",
+      "duration": 192.65451247165532,
+      "groups": 654,
+      "whole_tokens": 2317,
+      "window_tokens": 2336,
+      "windows": 20,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Future Mind_IN",
+      "duration": 133.6845351473923,
+      "groups": 757,
+      "whole_tokens": 2434,
+      "window_tokens": 2447,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "G.V.N. GlitterVomitus and Neon_IN",
+      "duration": 161.16934240362812,
+      "groups": 1277,
+      "whole_tokens": 4136,
+      "window_tokens": 4152,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "GOODBOUNCE_IN",
+      "duration": 132.72090702947847,
+      "groups": 804,
+      "whole_tokens": 2600,
+      "window_tokens": 2613,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "GOODFORTUNE_IN",
+      "duration": 133.46104308390022,
+      "groups": 740,
+      "whole_tokens": 2612,
+      "window_tokens": 2625,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "GOODRAGE_IN",
+      "duration": 121.09061224489795,
+      "groups": 800,
+      "whole_tokens": 2741,
+      "window_tokens": 2753,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "GOODTEK_IN",
+      "duration": 125.06122448979592,
+      "groups": 772,
+      "whole_tokens": 2462,
+      "window_tokens": 2474,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "GOODWORLD_IN",
+      "duration": 131.67310657596371,
+      "groups": 818,
+      "whole_tokens": 2657,
+      "window_tokens": 2670,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Get Back_IN",
+      "duration": 144.39183673469387,
+      "groups": 573,
+      "whole_tokens": 1855,
+      "window_tokens": 1869,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Get Ready_IN",
+      "duration": 130.16961451247167,
+      "groups": 666,
+      "whole_tokens": 2187,
+      "window_tokens": 2200,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Glaciaxion_IN",
+      "duration": 163.29578231292518,
+      "groups": 605,
+      "whole_tokens": 2035,
+      "window_tokens": 2051,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Grimheart_IN",
+      "duration": 153.20961451247166,
+      "groups": 522,
+      "whole_tokens": 1768,
+      "window_tokens": 1783,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "HAZARD_IN",
+      "duration": 127.53705215419501,
+      "groups": 404,
+      "whole_tokens": 1389,
+      "window_tokens": 1401,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Hardcore Kwaya_IN",
+      "duration": 120.60879818594104,
+      "groups": 634,
+      "whole_tokens": 2261,
+      "window_tokens": 2273,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Helios_IN",
+      "duration": 134.4043537414966,
+      "groups": 636,
+      "whole_tokens": 2094,
+      "window_tokens": 2107,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Horizon Blue_IN",
+      "duration": 167.42,
+      "groups": 707,
+      "whole_tokens": 2566,
+      "window_tokens": 2582,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "HumaN_IN",
+      "duration": 134.244716553288,
+      "groups": 446,
+      "whole_tokens": 1492,
+      "window_tokens": 1505,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Hydra_IN",
+      "duration": 150.02267573696145,
+      "groups": 823,
+      "whole_tokens": 2825,
+      "window_tokens": 2840,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "I Must Say No_IN",
+      "duration": 116.60625850340136,
+      "groups": 421,
+      "whole_tokens": 1322,
+      "window_tokens": 1333,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "INFiNiTE ENERZY -Overdoze-_IN",
+      "duration": 117.36380952380952,
+      "groups": 735,
+      "whole_tokens": 2417,
+      "window_tokens": 2428,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Igallta_IN",
+      "duration": 122.1209977324263,
+      "groups": 811,
+      "whole_tokens": 2652,
+      "window_tokens": 2664,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Incyde_IN",
+      "duration": 200.58412698412698,
+      "groups": 1390,
+      "whole_tokens": 4670,
+      "window_tokens": 4690,
+      "windows": 21,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Indelible Scar_IN",
+      "duration": 137.6087074829932,
+      "groups": 612,
+      "whole_tokens": 2152,
+      "window_tokens": 2165,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Infinity Heaven_IN",
+      "duration": 154.58539682539683,
+      "groups": 864,
+      "whole_tokens": 2783,
+      "window_tokens": 2798,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Initialize_IN",
+      "duration": 127.48770975056689,
+      "groups": 468,
+      "whole_tokens": 1519,
+      "window_tokens": 1531,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Inverted World_IN",
+      "duration": 133.01201814058956,
+      "groups": 670,
+      "whole_tokens": 2212,
+      "window_tokens": 2225,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Journey with You_IN",
+      "duration": 131.214693877551,
+      "groups": 476,
+      "whole_tokens": 1709,
+      "window_tokens": 1722,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "JunXionBetweenLifeAndDeathVIPMix_IN",
+      "duration": 142.61551020408163,
+      "groups": 685,
+      "whole_tokens": 2136,
+      "window_tokens": 2150,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "K.Moe VIP_IN",
+      "duration": 128.03337868480725,
+      "groups": 619,
+      "whole_tokens": 2223,
+      "window_tokens": 2235,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "KIZUNA Resolution_IN",
+      "duration": 134.00666666666666,
+      "groups": 871,
+      "whole_tokens": 2963,
+      "window_tokens": 2976,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Kerberos_IN",
+      "duration": 127.94340136054421,
+      "groups": 761,
+      "whole_tokens": 2579,
+      "window_tokens": 2591,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Khalid_IN",
+      "duration": 131.2754648526077,
+      "groups": 518,
+      "whole_tokens": 1781,
+      "window_tokens": 1794,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Khronostasis Katharsis_IN",
+      "duration": 134.6829931972789,
+      "groups": 671,
+      "whole_tokens": 2245,
+      "window_tokens": 2258,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Kirakira Noel Story_IN",
+      "duration": 137.3532879818594,
+      "groups": 579,
+      "whole_tokens": 1984,
+      "window_tokens": 1997,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Komplexe_IN",
+      "duration": 142.55600907029478,
+      "groups": 870,
+      "whole_tokens": 2941,
+      "window_tokens": 2955,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Labyrinth in Kowloon Walled World_IN",
+      "duration": 180.5772335600907,
+      "groups": 907,
+      "whole_tokens": 3057,
+      "window_tokens": 3075,
+      "windows": 19,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Le temps perdu_IN",
+      "duration": 147.77324263038548,
+      "groups": 616,
+      "whole_tokens": 1975,
+      "window_tokens": 1989,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Leave All Behind_IN",
+      "duration": 127.23519274376417,
+      "groups": 408,
+      "whole_tokens": 1309,
+      "window_tokens": 1321,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Locomotive_IN",
+      "duration": 148.8819954648526,
+      "groups": 573,
+      "whole_tokens": 1868,
+      "window_tokens": 1882,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Luminescence_IN",
+      "duration": 156.54167800453516,
+      "groups": 760,
+      "whole_tokens": 2549,
+      "window_tokens": 2564,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Luminescent_IN",
+      "duration": 157.88843537414965,
+      "groups": 510,
+      "whole_tokens": 1765,
+      "window_tokens": 1780,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Luminous Entities Lost Heart_IN",
+      "duration": 166.81360544217688,
+      "groups": 751,
+      "whole_tokens": 2564,
+      "window_tokens": 2580,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Lyrith -迷宮リリス-_IN",
+      "duration": 147.2043537414966,
+      "groups": 944,
+      "whole_tokens": 3308,
+      "window_tokens": 3322,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "MARENOL_IN",
+      "duration": 149.23609977324264,
+      "groups": 563,
+      "whole_tokens": 1912,
+      "window_tokens": 1926,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "MOBILYS_IN",
+      "duration": 163.36253968253968,
+      "groups": 768,
+      "whole_tokens": 2559,
+      "window_tokens": 2575,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Magenta Potion_IN",
+      "duration": 147.21596371882086,
+      "groups": 647,
+      "whole_tokens": 2166,
+      "window_tokens": 2180,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Manifold Hypothesis_IN",
+      "duration": 149.65115646258502,
+      "groups": 738,
+      "whole_tokens": 2457,
+      "window_tokens": 2471,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Miracle Forest VIP Mix_IN",
+      "duration": 170.02086167800454,
+      "groups": 703,
+      "whole_tokens": 2253,
+      "window_tokens": 2270,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "NO ONE YES MAN_IN",
+      "duration": 124.97414965986394,
+      "groups": 676,
+      "whole_tokens": 2286,
+      "window_tokens": 2298,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "NO x_IN",
+      "duration": 153.16027210884354,
+      "groups": 956,
+      "whole_tokens": 3095,
+      "window_tokens": 3110,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "NYA Phigros ver._IN",
+      "duration": 155.13687074829932,
+      "groups": 591,
+      "whole_tokens": 1993,
+      "window_tokens": 2008,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Next Time_IN",
+      "duration": 110.63333333333334,
+      "groups": 321,
+      "whole_tokens": 1163,
+      "window_tokens": 1174,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Nhelv_IN",
+      "duration": 159.56897959183672,
+      "groups": 743,
+      "whole_tokens": 2387,
+      "window_tokens": 2402,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Nick of Time_IN",
+      "duration": 142.66775510204081,
+      "groups": 634,
+      "whole_tokens": 2041,
+      "window_tokens": 2055,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "NightTheater_IN",
+      "duration": 131.53378684807257,
+      "groups": 662,
+      "whole_tokens": 2200,
+      "window_tokens": 2213,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Non-Melodic Ragez MUG Edit_IN",
+      "duration": 139.40244897959184,
+      "groups": 865,
+      "whole_tokens": 2908,
+      "window_tokens": 2921,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Now Is The Time Do It_IN",
+      "duration": 133.69904761904763,
+      "groups": 583,
+      "whole_tokens": 2017,
+      "window_tokens": 2030,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "On And On_IN",
+      "duration": 120.71909297052154,
+      "groups": 674,
+      "whole_tokens": 2224,
+      "window_tokens": 2236,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Originally_IN",
+      "duration": 144.0319274376417,
+      "groups": 723,
+      "whole_tokens": 2431,
+      "window_tokens": 2445,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Orthodox_IN",
+      "duration": 141.20489795918368,
+      "groups": 744,
+      "whole_tokens": 2486,
+      "window_tokens": 2500,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "PANIC PARADISE_IN",
+      "duration": 129.1827664399093,
+      "groups": 801,
+      "whole_tokens": 2600,
+      "window_tokens": 2612,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "PRAGMATISM -RESURRECTION-_IN",
+      "duration": 161.73736961451246,
+      "groups": 801,
+      "whole_tokens": 2644,
+      "window_tokens": 2660,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "PRAW_IN",
+      "duration": 156.7158276643991,
+      "groups": 863,
+      "whole_tokens": 2933,
+      "window_tokens": 2948,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Palescreen_IN",
+      "duration": 145.677641723356,
+      "groups": 853,
+      "whole_tokens": 2811,
+      "window_tokens": 2825,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Parallel RetrogressionGame Ver._IN",
+      "duration": 142.77224489795918,
+      "groups": 746,
+      "whole_tokens": 2420,
+      "window_tokens": 2434,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Pixel Rebelz_IN",
+      "duration": 142.8477097505669,
+      "groups": 652,
+      "whole_tokens": 2295,
+      "window_tokens": 2309,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Poison ANDOR Affection_IN",
+      "duration": 125.76943310657596,
+      "groups": 685,
+      "whole_tokens": 2409,
+      "window_tokens": 2421,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Pont des souvenirs_IN",
+      "duration": 165.87319727891156,
+      "groups": 644,
+      "whole_tokens": 2556,
+      "window_tokens": 2572,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Protoflicker_IN",
+      "duration": 168.02975056689343,
+      "groups": 964,
+      "whole_tokens": 3081,
+      "window_tokens": 3097,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "QZKago Requiem_IN",
+      "duration": 138.00934240362812,
+      "groups": 847,
+      "whole_tokens": 2843,
+      "window_tokens": 2856,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Quantum Hyperspace_IN",
+      "duration": 115.24934240362812,
+      "groups": 662,
+      "whole_tokens": 2210,
+      "window_tokens": 2221,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "RESSiSTANCE_IN",
+      "duration": 148.69333333333333,
+      "groups": 767,
+      "whole_tokens": 2769,
+      "window_tokens": 2783,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "RIPPER_IN",
+      "duration": 199.37378684807257,
+      "groups": 834,
+      "whole_tokens": 2869,
+      "window_tokens": 2888,
+      "windows": 20,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Radiance_IN",
+      "duration": 146.34267573696144,
+      "groups": 582,
+      "whole_tokens": 1970,
+      "window_tokens": 1984,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Rainy Heart_IN",
+      "duration": 152.55074829931974,
+      "groups": 337,
+      "whole_tokens": 1215,
+      "window_tokens": 1230,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Rainy Season_IN",
+      "duration": 113.58267573696145,
+      "groups": 543,
+      "whole_tokens": 1875,
+      "window_tokens": 1886,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Ramification_IN",
+      "duration": 136.78439909297052,
+      "groups": 620,
+      "whole_tokens": 2082,
+      "window_tokens": 2095,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Random_IN",
+      "duration": 136.9991836734694,
+      "groups": 562,
+      "whole_tokens": 2106,
+      "window_tokens": 2119,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "ReEnd of a Dream_IN",
+      "duration": 141.53868480725623,
+      "groups": 911,
+      "whole_tokens": 3115,
+      "window_tokens": 3129,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Re_Nascence Psystyle Ver._IN",
+      "duration": 147.1114739229025,
+      "groups": 681,
+      "whole_tokens": 2221,
+      "window_tokens": 2235,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Realms_IN",
+      "duration": 128.30331065759637,
+      "groups": 511,
+      "whole_tokens": 1786,
+      "window_tokens": 1798,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Rebirth_IN",
+      "duration": 157.97551020408164,
+      "groups": 767,
+      "whole_tokens": 2606,
+      "window_tokens": 2621,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Reimei_IN",
+      "duration": 148.65850340136055,
+      "groups": 781,
+      "whole_tokens": 2580,
+      "window_tokens": 2594,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Resolver_IN",
+      "duration": 160.02,
+      "groups": 810,
+      "whole_tokens": 2746,
+      "window_tokens": 2762,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Retribution  Cycle of Redemption_IN",
+      "duration": 173.79120181405895,
+      "groups": 1100,
+      "whole_tokens": 3844,
+      "window_tokens": 3861,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Retribution_IN",
+      "duration": 146.94,
+      "groups": 986,
+      "whole_tokens": 3271,
+      "window_tokens": 3285,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Rrharil_IN",
+      "duration": 132.63383219954648,
+      "groups": 985,
+      "whole_tokens": 3161,
+      "window_tokens": 3174,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Rubbish Sorting_IN",
+      "duration": 166.465306122449,
+      "groups": 506,
+      "whole_tokens": 1662,
+      "window_tokens": 1678,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "S.A.T.E.L.L.I.T.E._IN",
+      "duration": 192.00725623582767,
+      "groups": 666,
+      "whole_tokens": 2422,
+      "window_tokens": 2441,
+      "windows": 20,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "SIGMA_IN",
+      "duration": 121.23283446712018,
+      "groups": 640,
+      "whole_tokens": 2097,
+      "window_tokens": 2109,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Schadenfreude_IN",
+      "duration": 152.74,
+      "groups": 1063,
+      "whole_tokens": 3466,
+      "window_tokens": 3481,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Secret Illumination_IN",
+      "duration": 157.52562358276643,
+      "groups": 748,
+      "whole_tokens": 2471,
+      "window_tokens": 2486,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Sein_IN",
+      "duration": 119.50004535147393,
+      "groups": 599,
+      "whole_tokens": 1960,
+      "window_tokens": 1971,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Shadow_IN",
+      "duration": 143.75328798185942,
+      "groups": 761,
+      "whole_tokens": 2487,
+      "window_tokens": 2501,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Shelter_IN",
+      "duration": 138.40666666666667,
+      "groups": 590,
+      "whole_tokens": 1940,
+      "window_tokens": 1953,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Shine After_IN",
+      "duration": 160.8518820861678,
+      "groups": 672,
+      "whole_tokens": 2290,
+      "window_tokens": 2306,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Silence is Golden Speech is Golden_IN",
+      "duration": 164.06802721088437,
+      "groups": 1113,
+      "whole_tokens": 3614,
+      "window_tokens": 3630,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Snow Desert_IN",
+      "duration": 142.13079365079366,
+      "groups": 573,
+      "whole_tokens": 1865,
+      "window_tokens": 1879,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "So laggy feat. Uzumaki_IN",
+      "duration": 122.67868480725623,
+      "groups": 595,
+      "whole_tokens": 2111,
+      "window_tokens": 2123,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Sparkle New Life_IN",
+      "duration": 137.6174149659864,
+      "groups": 554,
+      "whole_tokens": 1831,
+      "window_tokens": 1844,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Spasmodic_IN",
+      "duration": 154.81179138321994,
+      "groups": 1197,
+      "whole_tokens": 3862,
+      "window_tokens": 3877,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Speed Up_IN",
+      "duration": 140.71147392290248,
+      "groups": 665,
+      "whole_tokens": 2096,
+      "window_tokens": 2110,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Spotlight_IN",
+      "duration": 129.00861678004534,
+      "groups": 630,
+      "whole_tokens": 2118,
+      "window_tokens": 2130,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "StardustRAY_IN",
+      "duration": 166.10267573696146,
+      "groups": 1175,
+      "whole_tokens": 3951,
+      "window_tokens": 3967,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Starduster_IN",
+      "duration": 129.91419501133788,
+      "groups": 713,
+      "whole_tokens": 2365,
+      "window_tokens": 2377,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Stasis_IN",
+      "duration": 154.68136054421768,
+      "groups": 1000,
+      "whole_tokens": 3393,
+      "window_tokens": 3408,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Sultan Rage_IN",
+      "duration": 116.0431746031746,
+      "groups": 418,
+      "whole_tokens": 1342,
+      "window_tokens": 1353,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Swing Skip Drop_IN",
+      "duration": 120.59428571428572,
+      "groups": 763,
+      "whole_tokens": 2563,
+      "window_tokens": 2575,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "TECHNOPOLIS 2085_IN",
+      "duration": 138.88,
+      "groups": 641,
+      "whole_tokens": 2193,
+      "window_tokens": 2206,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Temporal Shifting_IN",
+      "duration": 142.48780045351475,
+      "groups": 771,
+      "whole_tokens": 2605,
+      "window_tokens": 2619,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "The Chariot REVIIVAL_IN",
+      "duration": 146.5280725623583,
+      "groups": 834,
+      "whole_tokens": 2807,
+      "window_tokens": 2821,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "The Mountain Eater_IN",
+      "duration": 123.31102040816326,
+      "groups": 576,
+      "whole_tokens": 1886,
+      "window_tokens": 1898,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "The Whole Rest_IN",
+      "duration": 143.52979591836734,
+      "groups": 661,
+      "whole_tokens": 2223,
+      "window_tokens": 2237,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Thrash force_IN",
+      "duration": 148.4321088435374,
+      "groups": 716,
+      "whole_tokens": 2543,
+      "window_tokens": 2557,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Time to Night Sky feat. Lee Yu Jin_IN",
+      "duration": 131.27256235827664,
+      "groups": 451,
+      "whole_tokens": 1548,
+      "window_tokens": 1561,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Triumph  Regret_IN",
+      "duration": 124.14693877551021,
+      "groups": 844,
+      "whole_tokens": 2695,
+      "window_tokens": 2707,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Trojan_IN",
+      "duration": 155.68544217687074,
+      "groups": 711,
+      "whole_tokens": 2459,
+      "window_tokens": 2474,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Träne_IN",
+      "duration": 146.68770975056688,
+      "groups": 533,
+      "whole_tokens": 1762,
+      "window_tokens": 1776,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Unorthodox Thoughts_IN",
+      "duration": 143.08861678004536,
+      "groups": 685,
+      "whole_tokens": 2108,
+      "window_tokens": 2122,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Upshift_IN",
+      "duration": 140.92916099773242,
+      "groups": 777,
+      "whole_tokens": 2724,
+      "window_tokens": 2738,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Verrückt_IN",
+      "duration": 121.24734693877551,
+      "groups": 1107,
+      "whole_tokens": 3532,
+      "window_tokens": 3544,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "WATER_IN",
+      "duration": 156.73034013605442,
+      "groups": 470,
+      "whole_tokens": 1629,
+      "window_tokens": 1644,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Wavetapper_IN",
+      "duration": 161.82131519274375,
+      "groups": 756,
+      "whole_tokens": 2402,
+      "window_tokens": 2418,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Winter cube_IN",
+      "duration": 155.94956916099773,
+      "groups": 580,
+      "whole_tokens": 1970,
+      "window_tokens": 1985,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "With You_IN",
+      "duration": 126.37024943310658,
+      "groups": 620,
+      "whole_tokens": 2005,
+      "window_tokens": 2017,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "XING_IN",
+      "duration": 136.22421768707483,
+      "groups": 639,
+      "whole_tokens": 2022,
+      "window_tokens": 2035,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Xenolith_IN",
+      "duration": 138.56943310657596,
+      "groups": 639,
+      "whole_tokens": 2234,
+      "window_tokens": 2247,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Xenophobia_IN",
+      "duration": 146.60643990929705,
+      "groups": 1182,
+      "whole_tokens": 4005,
+      "window_tokens": 4019,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Xepion_IN",
+      "duration": 117.76435374149659,
+      "groups": 635,
+      "whole_tokens": 1986,
+      "window_tokens": 1997,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "You are the Miserable_IN",
+      "duration": 163.85596371882087,
+      "groups": 736,
+      "whole_tokens": 2444,
+      "window_tokens": 2460,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "a truth seeker -Communication with Utopia will be lost-_IN",
+      "duration": 124.33850340136054,
+      "groups": 753,
+      "whole_tokens": 2472,
+      "window_tokens": 2484,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "bye_IN",
+      "duration": 160.50068027210884,
+      "groups": 580,
+      "whole_tokens": 2044,
+      "window_tokens": 2060,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "c.s.q.n._IN",
+      "duration": 124.1643537414966,
+      "groups": 908,
+      "whole_tokens": 2968,
+      "window_tokens": 2980,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "cryout_IN",
+      "duration": 124.6984126984127,
+      "groups": 622,
+      "whole_tokens": 1960,
+      "window_tokens": 1972,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "dB doll_IN",
+      "duration": 108.59537414965986,
+      "groups": 199,
+      "whole_tokens": 659,
+      "window_tokens": 669,
+      "windows": 11,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "energy trixxx_IN",
+      "duration": 145.51219954648525,
+      "groups": 737,
+      "whole_tokens": 2407,
+      "window_tokens": 2421,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "iL-Artifact_IN",
+      "duration": 161.10267573696146,
+      "groups": 1017,
+      "whole_tokens": 3338,
+      "window_tokens": 3354,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "inferior_IN",
+      "duration": 123.80734693877551,
+      "groups": 545,
+      "whole_tokens": 1861,
+      "window_tokens": 1873,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "life flashes before weeb eyes_IN",
+      "duration": 156.85514739229026,
+      "groups": 896,
+      "whole_tokens": 2884,
+      "window_tokens": 2899,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "mechanted_IN",
+      "duration": 115.8574149659864,
+      "groups": 567,
+      "whole_tokens": 1868,
+      "window_tokens": 1879,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "micro.wav_IN",
+      "duration": 124.20498866213151,
+      "groups": 601,
+      "whole_tokens": 1866,
+      "window_tokens": 1878,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "modulus_IN",
+      "duration": 120.42013605442177,
+      "groups": 429,
+      "whole_tokens": 1631,
+      "window_tokens": 1643,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "opia_IN",
+      "duration": 149.86884353741496,
+      "groups": 653,
+      "whole_tokens": 2171,
+      "window_tokens": 2185,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "sølips_IN",
+      "duration": 144.12666666666667,
+      "groups": 774,
+      "whole_tokens": 2599,
+      "window_tokens": 2613,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "valorstarcross_IN",
+      "duration": 159.78267573696147,
+      "groups": 937,
+      "whole_tokens": 3009,
+      "window_tokens": 3024,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "volcanic_IN",
+      "duration": 136.9904761904762,
+      "groups": 887,
+      "whole_tokens": 2965,
+      "window_tokens": 2978,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Äventyr_IN",
+      "duration": 160.03047619047618,
+      "groups": 781,
+      "whole_tokens": 2589,
+      "window_tokens": 2605,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "Ποσειδών_IN",
+      "duration": 123.17170068027211,
+      "groups": 386,
+      "whole_tokens": 1267,
+      "window_tokens": 1279,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "ρarsey_IN",
+      "duration": 124.01632653061225,
+      "groups": 671,
+      "whole_tokens": 2166,
+      "window_tokens": 2178,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "いざ参ります_IN",
+      "duration": 102.77006802721088,
+      "groups": 618,
+      "whole_tokens": 2112,
+      "window_tokens": 2122,
+      "windows": 11,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "ぱぴぷぴぷぴぱ_IN",
+      "duration": 178.8067120181406,
+      "groups": 903,
+      "whole_tokens": 3623,
+      "window_tokens": 3640,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "もぺもぺ_IN",
+      "duration": 110.4065306122449,
+      "groups": 371,
+      "whole_tokens": 1163,
+      "window_tokens": 1174,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "アンビバレンス_IN",
+      "duration": 161.71868480725624,
+      "groups": 797,
+      "whole_tokens": 2821,
+      "window_tokens": 2837,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "インフェルノシティ_IN",
+      "duration": 123.9107029478458,
+      "groups": 881,
+      "whole_tokens": 3006,
+      "window_tokens": 3018,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "インマイマインド_IN",
+      "duration": 169.57387755102042,
+      "groups": 439,
+      "whole_tokens": 1603,
+      "window_tokens": 1619,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "ジングルベルJingle Bell_IN",
+      "duration": 167.32444444444445,
+      "groups": 960,
+      "whole_tokens": 3198,
+      "window_tokens": 3214,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "ストレイソウルアラウンド_IN",
+      "duration": 136.02104308390022,
+      "groups": 727,
+      "whole_tokens": 2390,
+      "window_tokens": 2403,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "ニライカナイ NiraicA_nai Mix_IN",
+      "duration": 151.39265306122448,
+      "groups": 564,
+      "whole_tokens": 1774,
+      "window_tokens": 1789,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "万吨匿名信_IN",
+      "duration": 164.05913832199548,
+      "groups": 656,
+      "whole_tokens": 2093,
+      "window_tokens": 2109,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "云女孩_IN",
+      "duration": 178.64126984126983,
+      "groups": 609,
+      "whole_tokens": 1901,
+      "window_tokens": 1918,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "今天不是明天_IN",
+      "duration": 173.27868480725624,
+      "groups": 693,
+      "whole_tokens": 2400,
+      "window_tokens": 2417,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "光_IN",
+      "duration": 131.76888888888888,
+      "groups": 397,
+      "whole_tokens": 1341,
+      "window_tokens": 1354,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "千紫万紅_IN",
+      "duration": 147.49201814058958,
+      "groups": 922,
+      "whole_tokens": 3059,
+      "window_tokens": 3073,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "双重间谍 Double Agent_IN",
+      "duration": 146.6296598639456,
+      "groups": 1090,
+      "whole_tokens": 3596,
+      "window_tokens": 3610,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "君往何处 Quo Vadis_IN",
+      "duration": 133.43492063492064,
+      "groups": 789,
+      "whole_tokens": 2595,
+      "window_tokens": 2608,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "大和撫子 -Wild Dances-_IN",
+      "duration": 127.80988662131519,
+      "groups": 769,
+      "whole_tokens": 2572,
+      "window_tokens": 2584,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "宇宙残骸少女 Cosmic Dusty Girl_IN",
+      "duration": 137.1414058956916,
+      "groups": 637,
+      "whole_tokens": 2052,
+      "window_tokens": 2065,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "尊師 The Guru_IN",
+      "duration": 125.92036281179138,
+      "groups": 528,
+      "whole_tokens": 1793,
+      "window_tokens": 1805,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "幻影鬼魅 PLEASE_IN",
+      "duration": 124.49233560090703,
+      "groups": 986,
+      "whole_tokens": 3093,
+      "window_tokens": 3105,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "幽世桔梗_IN",
+      "duration": 154.47510204081632,
+      "groups": 768,
+      "whole_tokens": 2729,
+      "window_tokens": 2744,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "开心病_IN",
+      "duration": 115.44235827664399,
+      "groups": 682,
+      "whole_tokens": 2241,
+      "window_tokens": 2252,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "彩_IN",
+      "duration": 162.37569160997734,
+      "groups": 1097,
+      "whole_tokens": 3683,
+      "window_tokens": 3699,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "彼方へ名もなき海辺より_IN",
+      "duration": 171.9,
+      "groups": 739,
+      "whole_tokens": 2500,
+      "window_tokens": 2517,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "心の記憶_IN",
+      "duration": 164.8195918367347,
+      "groups": 697,
+      "whole_tokens": 2356,
+      "window_tokens": 2372,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "心之所向_IN",
+      "duration": 136.01736961451246,
+      "groups": 563,
+      "whole_tokens": 1987,
+      "window_tokens": 2000,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "明鏡烈火_IN",
+      "duration": 132.2013605442177,
+      "groups": 729,
+      "whole_tokens": 2424,
+      "window_tokens": 2437,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "暗夜苏醒 REANIMATE_IN",
+      "duration": 154.17904761904762,
+      "groups": 1080,
+      "whole_tokens": 3625,
+      "window_tokens": 3640,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "最高傑作_IN",
+      "duration": 144.00934240362812,
+      "groups": 537,
+      "whole_tokens": 1940,
+      "window_tokens": 1954,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "月下缭乱_IN",
+      "duration": 149.51473922902494,
+      "groups": 749,
+      "whole_tokens": 2463,
+      "window_tokens": 2477,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "月詠に鳴る_IN",
+      "duration": 135.02,
+      "groups": 618,
+      "whole_tokens": 2263,
+      "window_tokens": 2276,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "望影の方舟Six_IN",
+      "duration": 113.01006802721088,
+      "groups": 832,
+      "whole_tokens": 2658,
+      "window_tokens": 2669,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "桜樹街道_IN",
+      "duration": 144.93460317460318,
+      "groups": 436,
+      "whole_tokens": 1349,
+      "window_tokens": 1363,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "混乱-Confusion_IN",
+      "duration": 127.79537414965986,
+      "groups": 754,
+      "whole_tokens": 2491,
+      "window_tokens": 2503,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "游园地_IN",
+      "duration": 127.51673469387755,
+      "groups": 444,
+      "whole_tokens": 1470,
+      "window_tokens": 1482,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "狂喜蘭舞_IN",
+      "duration": 161.62684807256235,
+      "groups": 844,
+      "whole_tokens": 2778,
+      "window_tokens": 2794,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "瓷岁_IN",
+      "duration": 165.72807256235828,
+      "groups": 258,
+      "whole_tokens": 790,
+      "window_tokens": 806,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "白と黒のバケモノ_IN",
+      "duration": 140.49668934240364,
+      "groups": 925,
+      "whole_tokens": 3531,
+      "window_tokens": 3545,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "百鬼夜行_IN",
+      "duration": 138.01215419501133,
+      "groups": 776,
+      "whole_tokens": 2659,
+      "window_tokens": 2672,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "盏茗_IN",
+      "duration": 130.0796371882086,
+      "groups": 563,
+      "whole_tokens": 1896,
+      "window_tokens": 1909,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "祈 -我ら神祖と共に歩む者なり-_IN",
+      "duration": 178.29877551020408,
+      "groups": 1612,
+      "whole_tokens": 5261,
+      "window_tokens": 5278,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "神話_IN",
+      "duration": 142.18013605442178,
+      "groups": 537,
+      "whole_tokens": 1930,
+      "window_tokens": 1944,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "聖夜讃歌_IN",
+      "duration": 186.5186394557823,
+      "groups": 979,
+      "whole_tokens": 3399,
+      "window_tokens": 3417,
+      "windows": 19,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "華灯爱_IN",
+      "duration": 114.50485260770975,
+      "groups": 440,
+      "whole_tokens": 1429,
+      "window_tokens": 1440,
+      "windows": 12,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "萤火虫の怨_IN",
+      "duration": 158.45732426303854,
+      "groups": 733,
+      "whole_tokens": 2353,
+      "window_tokens": 2368,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "蝎虎天体 -Lacertid-_IN",
+      "duration": 143.8984126984127,
+      "groups": 945,
+      "whole_tokens": 3159,
+      "window_tokens": 3173,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "贝多芬祝福 Beethoven Blessing_IN",
+      "duration": 133.41460317460317,
+      "groups": 678,
+      "whole_tokens": 2398,
+      "window_tokens": 2411,
+      "windows": 14,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "重生_IN",
+      "duration": 143.41736961451247,
+      "groups": 764,
+      "whole_tokens": 2442,
+      "window_tokens": 2456,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "雪降り 雪が降っている_IN",
+      "duration": 149.23600907029478,
+      "groups": 368,
+      "whole_tokens": 1262,
+      "window_tokens": 1276,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "雪降りメリクリ_IN",
+      "duration": 158.0219501133787,
+      "groups": 769,
+      "whole_tokens": 2532,
+      "window_tokens": 2547,
+      "windows": 16,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "零號車輛_IN",
+      "duration": 142.2439909297052,
+      "groups": 978,
+      "whole_tokens": 3150,
+      "window_tokens": 3164,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "青丘_IN",
+      "duration": 167.83528344671203,
+      "groups": 989,
+      "whole_tokens": 3304,
+      "window_tokens": 3320,
+      "windows": 17,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "青芽_IN",
+      "duration": 147.7993650793651,
+      "groups": 797,
+      "whole_tokens": 2775,
+      "window_tokens": 2789,
+      "windows": 15,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "风屿_IN",
+      "duration": 179.34657596371883,
+      "groups": 972,
+      "whole_tokens": 3135,
+      "window_tokens": 3152,
+      "windows": 18,
+      "max_roundtrip_error_seconds": 0.0
+    },
+    {
+      "id": "黄金之城 GOLD TOWN_IN",
+      "duration": 123.65641723356009,
+      "groups": 693,
+      "whole_tokens": 2399,
+      "window_tokens": 2411,
+      "windows": 13,
+      "max_roundtrip_error_seconds": 0.0
+    }
+  ],
+  "groups": 215174,
+  "whole_stop_labels": 300,
+  "window_stop_labels": 4462,
+  "max_roundtrip_error_seconds": 0.0,
+  "elapsed_seconds": 100.17207859456539
+}

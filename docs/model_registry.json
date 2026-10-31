@@ -3163,7 +3163,7 @@
       "models": [],
       "status": "in_progress",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "Stage 1 completed with three frozen-feature diagnostic trainings and partial quality success; window-output implementation passed initial protocol tests, controlled W0/W1 training next.",
+      "result": "D0 and 400-epoch controlled W0/W1 completed. Both fit all 32 training examples; output windows improve random-combination onset macro F1 but regress original three-note probes. Correct-history diagnostics still fail, so rollout error alone is not the explanation. Full300 training not started.",
       "evidence": "docs/fixed_length_attribution_plan.md",
       "runs": [
         {
@@ -3228,7 +3228,7 @@
           "model": "AL-AR4K@0.5.1",
           "variant": "A",
           "architecture": "whole",
-          "status": "running",
+          "status": "completed",
           "delivery": "diagnostic_only",
           "training_examples": 32,
           "training_data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
@@ -3248,7 +3248,104 @@
             "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
           },
           "report": "docs/evaluations/windowed_ar_stage2_20261031.md",
-          "quality_status": "pending_full_controlled_evaluation"
+          "quality_status": "training_fit_passed_unseen_controlled_combinations_failed",
+          "epoch": 400,
+          "optimizer_steps": 12800,
+          "checkpoint_sha256": "3931d201c06f90e6f19b5cd833c1b5bae2bc0d3651d3da7f7f12983f638a177e",
+          "metrics": {
+            "fixed_probe": {
+              "examples": 5,
+              "positive_examples": 4,
+              "completed": 5,
+              "positive_macro_raw_onset_f1_25ms": 0.5,
+              "positive_macro_raw_onset_f1_50ms": 0.5,
+              "raw_onset_micro_25ms": {
+                "reference": 12,
+                "predicted": 4,
+                "matched": 4,
+                "precision": 1.0,
+                "recall": 0.3333333333333333
+              },
+              "mean_reference_grid": 1.0,
+              "mean_prediction_grid_on_nonempty_outputs": 0.38251200000000196,
+              "silence_extra_onsets": 0
+            },
+            "random_check": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 30,
+              "positive_macro_raw_onset_f1_25ms": 0.4435544355649705,
+              "positive_macro_raw_onset_f1_50ms": 0.4435544355649705,
+              "raw_onset_micro_25ms": {
+                "reference": 140,
+                "predicted": 355,
+                "matched": 78,
+                "precision": 0.21971830985915494,
+                "recall": 0.5571428571428572
+              },
+              "mean_reference_grid": 0.20238095238095238,
+              "mean_prediction_grid_on_nonempty_outputs": 0.21479722433509338,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 0.28400835995574975,
+              "teacher": {
+                "events": 140,
+                "stops": 32,
+                "false_stops": 17,
+                "correct_stops": 13,
+                "layout_total": 323,
+                "layout_correct": 227,
+                "pointer_correct_25ms": 64,
+                "continue_and_time_correct_25ms": 57,
+                "absolute_time_error_sum_seconds": 244.3436082777178
+              },
+              "teacher_pointer_accuracy_25ms": 0.45714285714285713,
+              "teacher_continue_and_time_accuracy_25ms": 0.40714285714285714,
+              "teacher_false_stop_rate": 0.12142857142857143,
+              "teacher_stop_recall": 0.40625,
+              "teacher_layout_accuracy": 0.7027863777089783,
+              "reference_cross_window_holds": 3,
+              "matched_cross_window_holds": 0,
+              "matched_hold_duration_mae_ms": 5.551115123125783e-14
+            },
+            "train": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "positive_macro_raw_onset_f1_25ms": 1.0,
+              "positive_macro_raw_onset_f1_50ms": 1.0,
+              "raw_onset_micro_25ms": {
+                "reference": 140,
+                "predicted": 140,
+                "matched": 140,
+                "precision": 1.0,
+                "recall": 1.0
+              },
+              "mean_reference_grid": 0.1699404761904762,
+              "mean_prediction_grid_on_nonempty_outputs": 0.16960059047619014,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 1.0,
+              "teacher": {
+                "events": 140,
+                "stops": 32,
+                "false_stops": 0,
+                "correct_stops": 32,
+                "layout_total": 324,
+                "layout_correct": 324,
+                "pointer_correct_25ms": 140,
+                "continue_and_time_correct_25ms": 140,
+                "absolute_time_error_sum_seconds": 0.021348639940189595
+              },
+              "teacher_pointer_accuracy_25ms": 1.0,
+              "teacher_continue_and_time_accuracy_25ms": 1.0,
+              "teacher_false_stop_rate": 0.0,
+              "teacher_stop_recall": 1.0,
+              "teacher_layout_accuracy": 1.0,
+              "reference_cross_window_holds": 3,
+              "matched_cross_window_holds": 3,
+              "matched_hold_duration_mae_ms": 4.200843876960052e-14
+            }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/w0_w1_controlled_result.json"
         },
         {
           "id": "E16-W1",
@@ -3256,7 +3353,7 @@
           "model": "AL-AR4K@0.6.0",
           "variant": "A",
           "architecture": "window",
-          "status": "running",
+          "status": "completed",
           "delivery": "diagnostic_only",
           "training_examples": 32,
           "training_data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
@@ -3276,7 +3373,113 @@
             "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
           },
           "report": "docs/evaluations/windowed_ar_stage2_20261031.md",
-          "quality_status": "pending_full_controlled_evaluation"
+          "quality_status": "training_fit_passed_unseen_controlled_combinations_failed",
+          "epoch": 400,
+          "optimizer_steps": 12800,
+          "checkpoint_sha256": "db0d4537b200a541c44af106845d3e2d966900f5dede2b5ec9db0eb97881aefb",
+          "metrics": {
+            "fixed_probe": {
+              "examples": 5,
+              "positive_examples": 4,
+              "completed": 5,
+              "positive_macro_raw_onset_f1_25ms": 0.35,
+              "positive_macro_raw_onset_f1_50ms": 0.35,
+              "raw_onset_micro_25ms": {
+                "reference": 12,
+                "predicted": 15,
+                "matched": 4,
+                "precision": 0.26666666666666666,
+                "recall": 0.3333333333333333
+              },
+              "mean_reference_grid": 1.0,
+              "mean_prediction_grid_on_nonempty_outputs": 0.4448515555555563,
+              "silence_extra_onsets": 0,
+              "windows": 8,
+              "forced_windows": 0,
+              "learned_window_end_micro": 1.0
+            },
+            "random_check": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 29,
+              "positive_macro_raw_onset_f1_25ms": 0.5471807953950811,
+              "positive_macro_raw_onset_f1_50ms": 0.5471807953950811,
+              "raw_onset_micro_25ms": {
+                "reference": 140,
+                "predicted": 381,
+                "matched": 80,
+                "precision": 0.2099737532808399,
+                "recall": 0.5714285714285714
+              },
+              "mean_reference_grid": 0.20238095238095238,
+              "mean_prediction_grid_on_nonempty_outputs": 0.23663873167044006,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 0.33519754055468337,
+              "teacher": {
+                "events": 140,
+                "stops": 80,
+                "false_stops": 23,
+                "correct_stops": 55,
+                "layout_total": 323,
+                "layout_correct": 234,
+                "pointer_correct_25ms": 80,
+                "continue_and_time_correct_25ms": 69,
+                "absolute_time_error_sum_seconds": 162.94139125354934
+              },
+              "teacher_pointer_accuracy_25ms": 0.5714285714285714,
+              "teacher_continue_and_time_accuracy_25ms": 0.4928571428571429,
+              "teacher_false_stop_rate": 0.16428571428571428,
+              "teacher_stop_recall": 0.6875,
+              "teacher_layout_accuracy": 0.7244582043343654,
+              "reference_cross_window_holds": 3,
+              "matched_cross_window_holds": 2,
+              "matched_hold_duration_mae_ms": 3.469446951953614e-14,
+              "windows": 80,
+              "forced_windows": 3,
+              "learned_window_end_micro": 0.9625
+            },
+            "train": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "positive_macro_raw_onset_f1_25ms": 1.0,
+              "positive_macro_raw_onset_f1_50ms": 1.0,
+              "raw_onset_micro_25ms": {
+                "reference": 140,
+                "predicted": 140,
+                "matched": 140,
+                "precision": 1.0,
+                "recall": 1.0
+              },
+              "mean_reference_grid": 0.1699404761904762,
+              "mean_prediction_grid_on_nonempty_outputs": 0.16956725714286103,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 1.0,
+              "teacher": {
+                "events": 140,
+                "stops": 80,
+                "false_stops": 0,
+                "correct_stops": 80,
+                "layout_total": 324,
+                "layout_correct": 324,
+                "pointer_correct_25ms": 140,
+                "continue_and_time_correct_25ms": 140,
+                "absolute_time_error_sum_seconds": 0.011304901365251252
+              },
+              "teacher_pointer_accuracy_25ms": 1.0,
+              "teacher_continue_and_time_accuracy_25ms": 1.0,
+              "teacher_false_stop_rate": 0.0,
+              "teacher_stop_recall": 1.0,
+              "teacher_layout_accuracy": 1.0,
+              "reference_cross_window_holds": 3,
+              "matched_cross_window_holds": 3,
+              "matched_hold_duration_mae_ms": 1.0202049415474412e-13,
+              "windows": 80,
+              "forced_windows": 0,
+              "learned_window_end_micro": 1.0
+            }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/w0_w1_controlled_result.json"
         }
       ],
       "research_update": {
@@ -3343,10 +3546,12 @@
           "report": "docs/evaluations/windowed_ar_stage1_20261031.md"
         },
         "stage2": {
-          "status": "controlled_training_running",
+          "status": "controlled_experiment_completed",
           "training_started": true,
           "scope": "controlled small-sample W0/W1 first; full-corpus work gated on actual generation",
-          "report": "docs/evaluations/windowed_ar_stage2_20261031.md"
+          "report": "docs/evaluations/windowed_ar_stage2_20261031.md",
+          "quality": "not_passed_on_unseen_controlled_examples",
+          "full_corpus_training_started": false
         }
       },
       "additional_evidence": [
