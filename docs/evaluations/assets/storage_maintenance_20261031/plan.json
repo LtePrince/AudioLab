@@ -1,0 +1,56 @@
+{
+  "schema": "audiolab-storage-cleanup-v1",
+  "created_utc": "2026-10-31 07:20:33",
+  "files": [
+    {
+      "path": "/home/ziyaowang/Alvin/WAM/FastWAM/checkpoints/Wan-AI/Wan2.2-TI2V-5B/diffusion_pytorch_model-00001-of-00003.safetensors",
+      "bytes": 9825014472,
+      "allocated_bytes": 9825034240,
+      "sha256": "720b06c4ade5e87c1246bba8ac95b664c638749cd9b102cf84d823bb44c026a1",
+      "inode": 1219866,
+      "device": 66307,
+      "mtime_ns": 1784006949401099238,
+      "nlink": 1
+    },
+    {
+      "path": "/home/ziyaowang/Alvin/WAM/FastWAM/checkpoints/Wan-AI/Wan2.2-TI2V-5B/diffusion_pytorch_model-00002-of-00003.safetensors",
+      "bytes": 9995661736,
+      "allocated_bytes": 9995681792,
+      "sha256": "09ec5ef720d8396f6cfa51fbdcbdb2327e37722afd6e89fd38f1e7e5e782c283",
+      "inode": 1219867,
+      "device": 66307,
+      "mtime_ns": 1784006956902061424,
+      "nlink": 1
+    },
+    {
+      "path": "/home/ziyaowang/Alvin/WAM/FastWAM/checkpoints/Wan-AI/Wan2.2-TI2V-5B/diffusion_pytorch_model-00003-of-00003.safetensors",
+      "bytes": 178558176,
+      "allocated_bytes": 178565120,
+      "sha256": "6306f7894c345de9093ad588771c2abfaeb668a81f7a6d9a918bd26ba3568e49",
+      "inode": 1219868,
+      "device": 66307,
+      "mtime_ns": 1784006577226010153,
+      "nlink": 1
+    }
+  ],
+  "source": {
+    "model_id": "Wan-AI/Wan2.2-TI2V-5B",
+    "origin": "downloaded ModelScope base-model shards; .msc and .mv retained locally",
+    "repository": "https://modelscope.cn/models/Wan-AI/Wan2.2-TI2V-5B",
+    "revision": "c2272aadfec2d95cea869a4e748d5e28275621c6"
+  },
+  "retain": [
+    "all project virtual environments",
+    "WAM training data and custom LoRA weights",
+    "FastWAM released libero_uncond_2cam224.pt and VAE",
+    "AudioLab active experiment data and all latest resume weights"
+  ],
+  "uv_cache": {
+    "path": "/home/ziyaowang/.cache/uv",
+    "unique_disk_gib": 9.056846618652344,
+    "estimated_reclaimable_gib": 1.58734130859375,
+    "external_symlinks_found": 0,
+    "cleanup_policy": "Only stale temporary directories removed; registered archive cache and installed environments retained",
+    "result": "cache_result.json"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "schema": "audiolab-storage-cleanup-v1",
+  "status": "completed",
+  "started_utc": "2026-10-31 12:15:47",
+  "disk_free_before_bytes": 11777126400,
+  "deleted": [
+    {
+      "kind": "downloaded_Wan_base_shard",
+      "path": "/home/ziyaowang/Alvin/WAM/FastWAM/checkpoints/Wan-AI/Wan2.2-TI2V-5B/diffusion_pytorch_model-00001-of-00003.safetensors",
+      "bytes": 9825014472,
+      "allocated_bytes": 9825034240,
+      "sha256": "720b06c4ade5e87c1246bba8ac95b664c638749cd9b102cf84d823bb44c026a1",
+      "inode": 1219866,
+      "device": 66307,
+      "mtime_ns": 1784006949401099238,
+      "nlink": 1
+    },
+    {
+      "kind": "downloaded_Wan_base_shard",
+      "path": "/home/ziyaowang/Alvin/WAM/FastWAM/checkpoints/Wan-AI/Wan2.2-TI2V-5B/diffusion_pytorch_model-00002-of-00003.safetensors",
+      "bytes": 9995661736,
+      "allocated_bytes": 9995681792,
+      "sha256": "09ec5ef720d8396f6cfa51fbdcbdb2327e37722afd6e89fd38f1e7e5e782c283",
+      "inode": 1219867,
+      "device": 66307,
+      "mtime_ns": 1784006956902061424,
+      "nlink": 1
+    },
+    {
+      "kind": "downloaded_Wan_base_shard",
+      "path": "/home/ziyaowang/Alvin/WAM/FastWAM/checkpoints/Wan-AI/Wan2.2-TI2V-5B/diffusion_pytorch_model-00003-of-00003.safetensors",
+      "bytes": 178558176,
+      "allocated_bytes": 178565120,
+      "sha256": "6306f7894c345de9093ad588771c2abfaeb668a81f7a6d9a918bd26ba3568e49",
+      "inode": 1219868,
+      "device": 66307,
+      "mtime_ns": 1784006577226010153,
+      "nlink": 1
+    }
+  ],
+  "protected_before": {
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/ar_saturation_20261023/continued1400/audio/model_latest.pt": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/ar_saturation_20261023/continued1400/soft/model_latest.pt": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/freex_anchored_20261025/continued1400/audio/model_latest.pt": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/freex_anchored_20261025/continued1400/soft/model_latest.pt": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/windowed_ar_20261031/controlled/conditions.pt": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/windowed_ar_20261031/freex_controlled/conditions.pt": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066"
+  },
+  "process_check": "process_check.json",
+  "protected_after": {
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/ar_saturation_20261023/continued1400/audio/model_latest.pt": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/ar_saturation_20261023/continued1400/soft/model_latest.pt": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/freex_anchored_20261025/continued1400/audio/model_latest.pt": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/freex_anchored_20261025/continued1400/soft/model_latest.pt": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/windowed_ar_20261031/controlled/conditions.pt": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/windowed_ar_20261031/freex_controlled/conditions.pt": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066"
+  },
+  "disk_free_after_bytes": 31776403456,
+  "finished_utc": "2026-10-31 12:15:50",
+  "observed_free_increase_bytes": 19999277056
+}

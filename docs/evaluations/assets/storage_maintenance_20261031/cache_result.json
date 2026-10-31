@@ -1,0 +1,42 @@
+{
+  "schema": "audiolab-storage-cleanup-v1",
+  "status": "completed",
+  "started_utc": "2026-10-31 08:34:19",
+  "disk_free_before_bytes": 10077339648,
+  "deleted": [
+    {
+      "kind": "stale_uv_temporary_directory",
+      "path": "/home/ziyaowang/.cache/uv/.tmpcf4Gdw",
+      "files": 10973,
+      "allocated_bytes": 1698893824,
+      "last_modified": 1786513074.2324307
+    },
+    {
+      "kind": "stale_uv_temporary_directory",
+      "path": "/home/ziyaowang/.cache/uv/builds-v0/.tmpcoEp1b",
+      "files": 220,
+      "allocated_bytes": 1839104,
+      "last_modified": 1786512832.10715
+    }
+  ],
+  "protected_before": {
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/ar_saturation_20261023/continued1400/audio/model_latest.pt": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/ar_saturation_20261023/continued1400/soft/model_latest.pt": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/freex_anchored_20261025/continued1400/audio/model_latest.pt": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/freex_anchored_20261025/continued1400/soft/model_latest.pt": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/windowed_ar_20261031/controlled/conditions.pt": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/windowed_ar_20261031/freex_controlled/conditions.pt": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066"
+  },
+  "process_check": "cache_process_check.json",
+  "protected_after": {
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/ar_saturation_20261023/continued1400/audio/model_latest.pt": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/ar_saturation_20261023/continued1400/soft/model_latest.pt": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/freex_anchored_20261025/continued1400/audio/model_latest.pt": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/freex_anchored_20261025/continued1400/soft/model_latest.pt": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/windowed_ar_20261031/controlled/conditions.pt": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+    "/home/ziyaowang/Alvin/Audio/AudioLab/out/windowed_ar_20261031/freex_controlled/conditions.pt": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066"
+  },
+  "disk_free_after_bytes": 11779100672,
+  "finished_utc": "2026-10-31 08:34:20",
+  "observed_free_increase_bytes": 1701761024
+}
