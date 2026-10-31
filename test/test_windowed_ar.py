@@ -5,7 +5,7 @@ import torch
 from src.anchored_ar import AnchoredAR, encode_target, normalized_loss
 from src.data.chart_tokenizer import BOS, ChartTokenizer, TokenNote
 from src.soft_onset import MEMORY_SECONDS
-from src.windowed_ar import WindowedAR, encode_window_target, generate, window_intervals
+from src.windowed_ar import WindowedAR, encode_window_target, generate, window_intervals, window_time_bins
 
 
 CONFIG=dict(vocab_size=129,hidden_dim=32,depth=2,num_heads=4,mem_dim=32,time_dim=16,
@@ -113,6 +113,22 @@ def test_window_boundaries_receive_supervised_gradients():
     assert model.bounds_proj.weight.grad.abs().sum()>0
     assert model.time_query.weight.grad.abs().sum()>0
     assert model.stop_head.weight.grad.abs().sum()>0
+
+
+def test_physical_bins_use_shared_edges_at_one_ulp_boundary():
+    # Actual Drop It_IN reference: division rounds up even though t < edge.
+    edge=2625*MEMORY_SECONDS
+    times=torch.tensor([121.9047619047619,math.nextafter(edge,-math.inf),edge,
+                        math.nextafter(edge,math.inf)],dtype=torch.float64)
+    assert int(torch.floor(times[0]/MEMORY_SECONDS))==2625
+    bins=window_time_bins(times,3000)
+    assert bins.tolist()==[2624,2624,2625,2625]
+    lo,hi,allowed=window_intervals(torch.zeros(4,dtype=torch.float64),torch.full((4,),130.,dtype=torch.float64),
+        3000,torch.ones(1,3000,dtype=torch.bool))
+    rows=torch.arange(4);fractions=(times-lo[rows,bins])/(hi[rows,bins]-lo[rows,bins])
+    assert allowed[rows,bins].all() and ((fractions>=0)&(fractions<1)).all()
+    assert torch.equal(lo[0,1:2800],hi[0,:2799])
+    assert torch.equal(lo[rows,bins]+fractions*(hi[rows,bins]-lo[rows,bins]),times)
 
 
 def test_silent_windows_are_legal_without_claiming_song_eos():

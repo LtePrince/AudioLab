@@ -70,10 +70,23 @@ def encode_window_target(route,duration,*,n_lanes=4,width=10.):
 
 
 def window_intervals(lower,upper,length,valid):
-    edges=torch.arange(length,device=lower.device,dtype=lower.dtype)*MEMORY_SECONDS
-    lo=torch.maximum(edges[None],lower[:,None])
-    hi=torch.minimum(edges[None]+MEMORY_SECONDS,upper[:,None])
+    edges=torch.arange(length+1,device=lower.device,dtype=lower.dtype)*MEMORY_SECONDS
+    lo=torch.maximum(edges[:-1][None],lower[:,None])
+    hi=torch.minimum(edges[1:][None],upper[:,None])
     return lo,hi,valid.reshape(1,length)&(hi>lo)
+
+
+def window_time_bins(seconds,length):
+    """Index the same physical interval edges used by the pointer.
+
+    Division/floor can round a timestamp one ULP below an edge up to the next
+    bin (observed in full-corpus free-x). Search the actual shared edges instead.
+    This changes neither event timestamps nor musical grid positions.
+    """
+    edges=torch.arange(length+1,device=seconds.device,dtype=seconds.dtype)*MEMORY_SECONDS
+    bins=torch.searchsorted(edges,seconds.contiguous(),right=True)-1
+    if ((bins<0)|(bins>=length)).any():raise ValueError('time target outside physical memory intervals')
+    return bins
 
 
 class WindowedAR(AnchoredAR):
@@ -109,7 +122,7 @@ class WindowedAR(AnchoredAR):
             q=h[positive];lower=target['lower_seconds'].to(device)[positive]
             truth=target['next_seconds'].to(device)[positive];upper=bounds[decision_indices[positive],1]
             lo,hi,allowed=window_intervals(lower,upper,memory.shape[1],condition['valid'].to(device))
-            bins=torch.floor(truth/MEMORY_SECONDS).long();rows=torch.arange(len(bins),device=device)
+            bins=window_time_bins(truth,memory.shape[1]);rows=torch.arange(len(bins),device=device)
             if not allowed[rows,bins].all():raise ValueError('reference pointer outside its output window')
             scores=self.frame_logits(q,memory,allowed);frame_ce=F.cross_entropy(scores,bins,reduction='sum')
             fraction=self.fraction(q,memory[0,bins]);a,b=lo[rows,bins],hi[rows,bins]

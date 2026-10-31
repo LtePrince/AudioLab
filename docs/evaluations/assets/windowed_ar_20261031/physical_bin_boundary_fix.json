@@ -1,0 +1,13 @@
+{
+  "regression_song": "Drop It_IN",
+  "reference_time": 121.9047619047619,
+  "old_bin": 2625,
+  "new_bin": 2624,
+  "old_lower_edge": 121.90476190476191,
+  "old_fraction": -3.060052211623259e-13,
+  "controlled_examples": 69,
+  "controlled_time_targets": 292,
+  "controlled_changed_bins": 0,
+  "controlled_max_fraction_difference": 7.471800955727304e-14,
+  "policy": "Shared physical edges and searchsorted; no change to reference events, times, musical grid, or old product checkpoints."
+}
