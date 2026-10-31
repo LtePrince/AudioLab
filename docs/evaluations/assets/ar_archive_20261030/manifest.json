@@ -1,0 +1,227 @@
+{
+  "schema": "audiolab-ar-milestone-archive-v1",
+  "tag": "ar-milestones-20261030",
+  "source_commit": "cb196fdc77233a66cccdf89889f1a5a5fd04bb36",
+  "runs": [
+    {
+      "mode": "4k",
+      "variant": "audio",
+      "condition": "A",
+      "product": "AL-AR4K_v0.5.1",
+      "archive": "AL-AR4K_v0.5.1_A_e1100-e1400.zip",
+      "snapshots": [
+        {
+          "epoch": 1100,
+          "path": "out/ar_saturation_20261023/continued1200/audio/model_e1100.pt",
+          "bytes": 26832325,
+          "sha256": "57e5fd74a1033cff52df869dd4c51fa5ecfb5be2cebf671af773a72746abc08c",
+          "full_checkpoint_sha256": "9c0225269ed8d53711118b0971e7407a11468421fed50db1121208f682175d66",
+          "fixed15_train_joint_f1": 0.6516593995543516,
+          "fixed15_completed": 12
+        },
+        {
+          "epoch": 1200,
+          "path": "out/ar_saturation_20261023/continued1200/audio/model_e1200.pt",
+          "bytes": 26857221,
+          "sha256": "2df3293b56b9b7beabe95be7149423075d6bd21fa48ff0039eca9c75acf701c1",
+          "full_checkpoint_sha256": "4345eaeb350fff4250dec89bd0d81144ba451db30990ab56269777da4ff7d016",
+          "fixed15_train_joint_f1": 0.8352721521738001,
+          "fixed15_completed": 13
+        },
+        {
+          "epoch": 1300,
+          "path": "out/ar_saturation_20261023/continued1400/audio/model_e1300.pt",
+          "bytes": 26883077,
+          "sha256": "904a58234226e055ac4acb8fb98ad9bf917c6e111c0ff923833e658532552cef",
+          "full_checkpoint_sha256": "6075a730d936ca0a70eeef46376020a2134cd6a0997fc37277beed67ffd1cda9",
+          "fixed15_train_joint_f1": 0.9291968820325721,
+          "fixed15_completed": 15
+        },
+        {
+          "epoch": 1400,
+          "path": "out/ar_saturation_20261023/continued1400/audio/model_e1400.pt",
+          "bytes": 26907973,
+          "sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+          "full_checkpoint_sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+          "fixed15_train_joint_f1": 0.9920900506009109,
+          "fixed15_completed": 15
+        }
+      ],
+      "resume": {
+        "path": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
+        "epoch": 1400,
+        "bytes": 80068691,
+        "sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+        "asset": "AL-AR4K_v0.5.1_A_resume_e1400.pt"
+      }
+    },
+    {
+      "mode": "4k",
+      "variant": "soft",
+      "condition": "S",
+      "product": "AL-AR4K_v0.5.1",
+      "archive": "AL-AR4K_v0.5.1_S_e1100-e1400.zip",
+      "snapshots": [
+        {
+          "epoch": 1100,
+          "path": "out/ar_saturation_20261023/continued1200/soft/model_e1100.pt",
+          "bytes": 26832325,
+          "sha256": "1485c59759661e70add4812a675913d7ac85d2ec941b9ffcb8d03710b1c47aa9",
+          "full_checkpoint_sha256": "cbd6f97814e6500ac53c631a781c7f455267fac0da438878aa88607e6cc022eb",
+          "fixed15_train_joint_f1": 0.7638137575183961,
+          "fixed15_completed": 12
+        },
+        {
+          "epoch": 1200,
+          "path": "out/ar_saturation_20261023/continued1200/soft/model_e1200.pt",
+          "bytes": 26857221,
+          "sha256": "b02b8492fa5171a383567a873f3713627417175e901ae0221fb45bb49e561431",
+          "full_checkpoint_sha256": "082a4fc228fbb5adf759a2c1d65f660202cb2b6ae73e8b9ea002cf45826945c8",
+          "fixed15_train_joint_f1": 0.9207938904854147,
+          "fixed15_completed": 14
+        },
+        {
+          "epoch": 1300,
+          "path": "out/ar_saturation_20261023/continued1400/soft/model_e1300.pt",
+          "bytes": 26883013,
+          "sha256": "70e2f4ae9baab0025000c6bec16ce58afb183028f19dc3c110baec488a9b2615",
+          "full_checkpoint_sha256": "127b0ad9baa12ecc2044876dcf72898819cc8083aa9d7964a15e32a0ba544ac0",
+          "fixed15_train_joint_f1": 0.9246861289103072,
+          "fixed15_completed": 14
+        },
+        {
+          "epoch": 1400,
+          "path": "out/ar_saturation_20261023/continued1400/soft/model_e1400.pt",
+          "bytes": 26907973,
+          "sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+          "full_checkpoint_sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+          "fixed15_train_joint_f1": 0.9893132540871934,
+          "fixed15_completed": 15
+        }
+      ],
+      "resume": {
+        "path": "out/ar_saturation_20261023/continued1400/soft/model_latest.pt",
+        "epoch": 1400,
+        "bytes": 80068691,
+        "sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+        "asset": "AL-AR4K_v0.5.1_S_resume_e1400.pt"
+      }
+    },
+    {
+      "mode": "freex",
+      "variant": "audio",
+      "condition": "A",
+      "product": "AL-FreeX_v0.4.0",
+      "archive": "AL-FreeX_v0.4.0_A_e1100-e1400.zip",
+      "snapshots": [
+        {
+          "epoch": 1100,
+          "path": "out/freex_anchored_20261025/continued1200/audio/model_e1100.pt",
+          "bytes": 27571069,
+          "sha256": "c02085f44ebab5138e49ed4d52086d58c80dfc4c0f35db8f2da87fecc90605c6",
+          "full_checkpoint_sha256": "f3dd1c0d5f6e688ebd5075230008c5de344afe6e954cc8a8399f93fdaa1806a7",
+          "fixed15_train_joint_f1": 0.44609520661238994,
+          "fixed15_completed": 12
+        },
+        {
+          "epoch": 1150,
+          "path": "out/freex_anchored_20261025/continued1200/audio/model_e1150.pt",
+          "bytes": 27585405,
+          "sha256": "024fdb85ddbd59bb8562de6ac6824a4bbc2e4fac537683c0c2b013e6b8962532",
+          "full_checkpoint_sha256": "6fa96ec6df595e6a4632ce0d20f912138aa2cc4ce6a191fff91a1fbefe3b498f",
+          "fixed15_train_joint_f1": 0.5315753355733205,
+          "fixed15_completed": 12
+        },
+        {
+          "epoch": 1200,
+          "path": "out/freex_anchored_20261025/continued1200/audio/model_e1200.pt",
+          "bytes": 27599741,
+          "sha256": "957f088bc3b33f101f8027e159c07374b58d618f47944d3d324e81d380a6e199",
+          "full_checkpoint_sha256": "3966fb620cb7ea6107b485108b058e090bd247c0c5c29d2b3a2535e2c5f96e2f",
+          "fixed15_train_joint_f1": 0.5034278111092387,
+          "fixed15_completed": 9
+        },
+        {
+          "epoch": 1300,
+          "path": "out/freex_anchored_20261025/continued1400/audio/model_e1300.pt",
+          "bytes": 27629437,
+          "sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+          "full_checkpoint_sha256": "9da6973754a250f61ec937c180e7c891086319c40789fb04369dec6af618d0a9",
+          "fixed15_train_joint_f1": 0.8419337400102376,
+          "fixed15_completed": 14
+        },
+        {
+          "epoch": 1400,
+          "path": "out/freex_anchored_20261025/continued1400/audio/model_e1400.pt",
+          "bytes": 27658109,
+          "sha256": "c34170a8752e8c61bd8fb16abf036eb3f2e72bea4757b5d463d9af2bf04f30b5",
+          "full_checkpoint_sha256": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+          "fixed15_train_joint_f1": 0.7073604272470686,
+          "fixed15_completed": 11
+        }
+      ],
+      "resume": {
+        "path": "out/freex_anchored_20261025/continued1400/audio/model_latest.pt",
+        "epoch": 1400,
+        "bytes": 82335731,
+        "sha256": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+        "asset": "AL-FreeX_v0.4.0_A_resume_e1400.pt"
+      }
+    },
+    {
+      "mode": "freex",
+      "variant": "soft",
+      "condition": "S",
+      "product": "AL-FreeX_v0.4.0",
+      "archive": "AL-FreeX_v0.4.0_S_e1100-e1400.zip",
+      "snapshots": [
+        {
+          "epoch": 1100,
+          "path": "out/freex_anchored_20261025/continued1200/soft/model_e1100.pt",
+          "bytes": 27571069,
+          "sha256": "d503aa3ad729383b60fec8f7c174027de18d03ae6c219bc9713498ee5b295162",
+          "full_checkpoint_sha256": "b63f54e35341a0662c3440effbaee4df263b2e0f4e5a53c201f602014dc9d544",
+          "fixed15_train_joint_f1": 0.4346604875449794,
+          "fixed15_completed": 13
+        },
+        {
+          "epoch": 1200,
+          "path": "out/freex_anchored_20261025/continued1200/soft/model_e1200.pt",
+          "bytes": 27599741,
+          "sha256": "492dbf3a81d29e08e60e993945933b2b8eaf76aff2027ffb583859a9a4023be6",
+          "full_checkpoint_sha256": "9d9955f37cc4524a72feec945e9c23637d10675fc362b6fa953b7a7ce7d3f320",
+          "fixed15_train_joint_f1": 0.7012732865514586,
+          "fixed15_completed": 14
+        },
+        {
+          "epoch": 1300,
+          "path": "out/freex_anchored_20261025/continued1400/soft/model_e1300.pt",
+          "bytes": 27629437,
+          "sha256": "1da0da4e2a3562c3ccf11d4b1d51d2eed517a27f1f72481d737c2430a15b01ff",
+          "full_checkpoint_sha256": "16a3a6b9444a9f007036743bd21086a5b5ffe7e7e34383880c6611f2c4444069",
+          "fixed15_train_joint_f1": 0.7266503590692571,
+          "fixed15_completed": 15
+        },
+        {
+          "epoch": 1400,
+          "path": "out/freex_anchored_20261025/continued1400/soft/model_e1400.pt",
+          "bytes": 27658109,
+          "sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+          "full_checkpoint_sha256": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+          "fixed15_train_joint_f1": 0.8703884948337461,
+          "fixed15_completed": 14
+        }
+      ],
+      "resume": {
+        "path": "out/freex_anchored_20261025/continued1400/soft/model_latest.pt",
+        "epoch": 1400,
+        "bytes": 82335731,
+        "sha256": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+        "asset": "AL-FreeX_v0.4.0_S_resume_e1400.pt"
+      }
+    }
+  ],
+  "quality": "experimental; training-song fit improved, new-song generalization not passed",
+  "contents": "original inference snapshots plus latest full AdamW/RNG resume checkpoints; no audio/charts/frontends",
+  "published_runtime_bundles_changed": false
+}

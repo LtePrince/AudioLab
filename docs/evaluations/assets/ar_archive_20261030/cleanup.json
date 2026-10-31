@@ -1,0 +1,544 @@
+{
+  "schema": "audiolab-verified-archive-cleanup-v1",
+  "time_utc": "2026-10-31T02:12:38.070749+00:00",
+  "status": "completed",
+  "disk_free_before": 9264979968,
+  "protected": [
+    {
+      "path": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
+      "epoch": 1400,
+      "bytes": 80068691,
+      "sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+      "asset": "AL-AR4K_v0.5.1_A_resume_e1400.pt",
+      "optimizer_state_keys": [
+        "optimizer",
+        "sampler",
+        "torch_rng",
+        "cuda_rng"
+      ]
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1400/soft/model_latest.pt",
+      "epoch": 1400,
+      "bytes": 80068691,
+      "sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+      "asset": "AL-AR4K_v0.5.1_S_resume_e1400.pt",
+      "optimizer_state_keys": [
+        "optimizer",
+        "sampler",
+        "torch_rng",
+        "cuda_rng"
+      ]
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1400/audio/model_latest.pt",
+      "epoch": 1400,
+      "bytes": 82335731,
+      "sha256": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+      "asset": "AL-FreeX_v0.4.0_A_resume_e1400.pt",
+      "optimizer_state_keys": [
+        "optimizer",
+        "sampler",
+        "torch_rng",
+        "cuda_rng"
+      ]
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1400/soft/model_latest.pt",
+      "epoch": 1400,
+      "bytes": 82335731,
+      "sha256": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+      "asset": "AL-FreeX_v0.4.0_S_resume_e1400.pt",
+      "optimizer_state_keys": [
+        "optimizer",
+        "sampler",
+        "torch_rng",
+        "cuda_rng"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "out/ar_saturation_20261023/audio/model_latest.pt",
+      "sha256": "df8e32da135f453f730ee2bd11b80f5bb15610d1b82217d8bc3ee701e13e5e00",
+      "bytes": 79790035,
+      "epoch": 300,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/ar_saturation_20261023/audio/model_e0300.pt",
+      "inference_recovery": {
+        "local_path": "out/ar_saturation_20261023/audio/model_e0300.pt",
+        "sha256": "93073e65860b33e1b8711ed9e9d4b9e09b6acfd17b63195e04d71e58ccfd0539"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1000/audio/model_latest.pt",
+      "sha256": "bb3894c98af9e5d1ece8c57e88ea9c14653dcf98c030cb5f798bf28254019cca",
+      "bytes": 79966931,
+      "epoch": 1000,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/ar_saturation_20261023/continued1000/audio/model_e1000.pt",
+      "inference_recovery": {
+        "local_path": "out/ar_saturation_20261023/continued1000/audio/model_e1000.pt",
+        "sha256": "1ff17401f0a90e98d569c906bf3b6729a8ae5c6900de2f0c808b1970bdf2924a"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1000/soft/model_latest.pt",
+      "sha256": "ba3fe08f51263c3a109291433193d3b08d872c63f49698c3d5f762bef193922c",
+      "bytes": 79966931,
+      "epoch": 1000,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+      "inference_recovery": {
+        "local_path": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+        "sha256": "9c1b3518fb9db1691127cfca2912649d359e468db777e1cfc0b363a447943e01"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1200/audio/model_latest.pt",
+      "sha256": "4345eaeb350fff4250dec89bd0d81144ba451db30990ab56269777da4ff7d016",
+      "bytes": 80017939,
+      "epoch": 1200,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/ar_saturation_20261023/continued1200/audio/model_e1200.pt",
+      "inference_recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_A_e1100-e1400.zip",
+        "archive_sha256": "2228e0b4cae6145f5a925cf648b651e7b8c35c8341d1d5259f0f317747e940c6",
+        "member": "out/ar_saturation_20261023/continued1200/audio/model_e1200.pt",
+        "sha256": "2df3293b56b9b7beabe95be7149423075d6bd21fa48ff0039eca9c75acf701c1"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1200/soft/model_latest.pt",
+      "sha256": "082a4fc228fbb5adf759a2c1d65f660202cb2b6ae73e8b9ea002cf45826945c8",
+      "bytes": 80017939,
+      "epoch": 1200,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/ar_saturation_20261023/continued1200/soft/model_e1200.pt",
+      "inference_recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_S_e1100-e1400.zip",
+        "archive_sha256": "0b1ee3d10cb67e98e161efa363d2e56fa297d5203445d939fdd26a7b9bb5709d",
+        "member": "out/ar_saturation_20261023/continued1200/soft/model_e1200.pt",
+        "sha256": "b02b8492fa5171a383567a873f3713627417175e901ae0221fb45bb49e561431"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/audio/model_latest.pt",
+      "sha256": "a62332a0420b3c400bd89fbe9a40f4dc416a86a9253ab585fdf6ab3d9a91c756",
+      "bytes": 79840531,
+      "epoch": 500,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/ar_saturation_20261023/continued500/audio/model_e0500.pt",
+      "inference_recovery": {
+        "local_path": "out/ar_saturation_20261023/continued500/audio/model_e0500.pt",
+        "sha256": "c7bb8d3979f1fae9eacff97fe66f71d6092340e3d0f5729a421ccb118841ab31"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued500/soft/model_latest.pt",
+      "sha256": "a6a9ed4aab219dbb15d15f20df5a71158c1a8c8381eb90135364c1ee2017c69d",
+      "bytes": 79840531,
+      "epoch": 500,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/ar_saturation_20261023/continued500/soft/model_e0500.pt",
+      "inference_recovery": {
+        "local_path": "out/ar_saturation_20261023/continued500/soft/model_e0500.pt",
+        "sha256": "49943cdde5ebfcfe2bc0635856c652c7dac3e7468add1ee2019a6c91f8824a1e"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued700/audio/model_latest.pt",
+      "sha256": "35c04d5c238ed82e77eb6e8e40af6782ae07689f2655228ead6899fc8940054d",
+      "bytes": 79891283,
+      "epoch": 700,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/ar_saturation_20261023/continued700/audio/model_e0700.pt",
+      "inference_recovery": {
+        "local_path": "out/ar_saturation_20261023/continued700/audio/model_e0700.pt",
+        "sha256": "8e649a966cea60cd780fcab9c1fb1b6327894f9d9e03ec2d7339fa43bbee98ce"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued700/soft/model_latest.pt",
+      "sha256": "f1bb51c54b8d3b7d00570c49721d2667a0de9f162d02c62aad42887ef5861edf",
+      "bytes": 79891283,
+      "epoch": 700,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/ar_saturation_20261023/continued700/soft/model_e0700.pt",
+      "inference_recovery": {
+        "local_path": "out/ar_saturation_20261023/continued700/soft/model_e0700.pt",
+        "sha256": "eb24e6dc456a908ed07c3acb35136b86ad5ae77cace649f7ef2b7c2df5ee3cab"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/soft/model_latest.pt",
+      "sha256": "ea96c65b9cc29e708af29e5e44aab1f8d358e3d302cb63b67b8a8a0006f85e24",
+      "bytes": 79790035,
+      "epoch": 300,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/ar_saturation_20261023/soft/model_e0300.pt",
+      "inference_recovery": {
+        "local_path": "out/ar_saturation_20261023/soft/model_e0300.pt",
+        "sha256": "21b0bddaa0a2b77c576215b7e698d43163a9de8eee181c47b06638cc2c4cb486"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/audio/model_latest.pt",
+      "sha256": "4ab99fe2872b1cde5cca83466384c6019a6288eed35f48eb072c790d8751a756",
+      "bytes": 82219507,
+      "epoch": 1000,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+      "inference_recovery": {
+        "local_path": "out/freex_anchored_20261025/continued1000/audio/model_e1000.pt",
+        "sha256": "43d8542f83caa19e586a043e7a1b83fb86344621349ca34f904cea125ddde3fe"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1000/soft/model_latest.pt",
+      "sha256": "cd27d84233ea281d9ade83ccd29db1728f5af5b2afc3fb251fc807f00a95b225",
+      "bytes": 82219507,
+      "epoch": 1000,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/freex_anchored_20261025/continued1000/soft/model_e1000.pt",
+      "inference_recovery": {
+        "local_path": "out/freex_anchored_20261025/continued1000/soft/model_e1000.pt",
+        "sha256": "22ba58e2370b785db80fc293fba987081792cc5f8299c10a45ba005308e74863"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1200/audio/model_latest.pt",
+      "sha256": "3966fb620cb7ea6107b485108b058e090bd247c0c5c29d2b3a2535e2c5f96e2f",
+      "bytes": 82277299,
+      "epoch": 1200,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/freex_anchored_20261025/continued1200/audio/model_e1200.pt",
+      "inference_recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_A_e1100-e1400.zip",
+        "archive_sha256": "3eca58a843df0eaf593a516632a2bf55f6d35f4eae21c8d49c442a77d311241a",
+        "member": "out/freex_anchored_20261025/continued1200/audio/model_e1200.pt",
+        "sha256": "957f088bc3b33f101f8027e159c07374b58d618f47944d3d324e81d380a6e199"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1200/soft/model_latest.pt",
+      "sha256": "9d9955f37cc4524a72feec945e9c23637d10675fc362b6fa953b7a7ce7d3f320",
+      "bytes": 82277299,
+      "epoch": 1200,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/freex_anchored_20261025/continued1200/soft/model_e1200.pt",
+      "inference_recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_S_e1100-e1400.zip",
+        "archive_sha256": "2bb7a61f5a61aa6e632c63df56f354b97b024e34eac22afa3604ff50923e8150",
+        "member": "out/freex_anchored_20261025/continued1200/soft/model_e1200.pt",
+        "sha256": "492dbf3a81d29e08e60e993945933b2b8eaf76aff2027ffb583859a9a4023be6"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/pilot/audio/model_latest.pt",
+      "sha256": "e6f4f71c8afadb9307acfd02bcda3f56f921cfb7426075e860582942c2f6b5b3",
+      "bytes": 81988211,
+      "epoch": 10,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/freex_anchored_20261025/pilot/audio/model_e0010.pt",
+      "inference_recovery": {
+        "local_path": "out/freex_anchored_20261025/pilot/audio/model_e0010.pt",
+        "sha256": "a67c5939a552f056e787ad3f1166dfcb3d9d3500f73748ce078a8484f7aedb0b"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/pilot/soft/model_latest.pt",
+      "sha256": "aa2e2b0b714a6b546439f12aaa3ff80a74b777017e0e954b0190782a36c22a39",
+      "bytes": 81988211,
+      "epoch": 10,
+      "kind": "superseded_full_resume",
+      "inference_snapshot": "out/freex_anchored_20261025/pilot/soft/model_e0010.pt",
+      "inference_recovery": {
+        "local_path": "out/freex_anchored_20261025/pilot/soft/model_e0010.pt",
+        "sha256": "fc1b5fad2f2fd3aaf13428c21b32181e9db7ef16ecdba7bcc7fe48230215d4fd"
+      },
+      "limitation": "Older optimizer/RNG removed; inference parameters preserved; exact continuation retained at epoch 1400.",
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1200/audio/model_e1100.pt",
+      "sha256": "57e5fd74a1033cff52df869dd4c51fa5ecfb5be2cebf671af773a72746abc08c",
+      "bytes": 26832325,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_A_e1100-e1400.zip",
+        "archive_sha256": "2228e0b4cae6145f5a925cf648b651e7b8c35c8341d1d5259f0f317747e940c6",
+        "member": "out/ar_saturation_20261023/continued1200/audio/model_e1100.pt",
+        "sha256": "57e5fd74a1033cff52df869dd4c51fa5ecfb5be2cebf671af773a72746abc08c"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1200/audio/model_e1200.pt",
+      "sha256": "2df3293b56b9b7beabe95be7149423075d6bd21fa48ff0039eca9c75acf701c1",
+      "bytes": 26857221,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_A_e1100-e1400.zip",
+        "archive_sha256": "2228e0b4cae6145f5a925cf648b651e7b8c35c8341d1d5259f0f317747e940c6",
+        "member": "out/ar_saturation_20261023/continued1200/audio/model_e1200.pt",
+        "sha256": "2df3293b56b9b7beabe95be7149423075d6bd21fa48ff0039eca9c75acf701c1"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1400/audio/model_e1300.pt",
+      "sha256": "904a58234226e055ac4acb8fb98ad9bf917c6e111c0ff923833e658532552cef",
+      "bytes": 26883077,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_A_e1100-e1400.zip",
+        "archive_sha256": "2228e0b4cae6145f5a925cf648b651e7b8c35c8341d1d5259f0f317747e940c6",
+        "member": "out/ar_saturation_20261023/continued1400/audio/model_e1300.pt",
+        "sha256": "904a58234226e055ac4acb8fb98ad9bf917c6e111c0ff923833e658532552cef"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1400/audio/model_e1400.pt",
+      "sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+      "bytes": 26907973,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_A_e1100-e1400.zip",
+        "archive_sha256": "2228e0b4cae6145f5a925cf648b651e7b8c35c8341d1d5259f0f317747e940c6",
+        "member": "out/ar_saturation_20261023/continued1400/audio/model_e1400.pt",
+        "sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1200/soft/model_e1100.pt",
+      "sha256": "1485c59759661e70add4812a675913d7ac85d2ec941b9ffcb8d03710b1c47aa9",
+      "bytes": 26832325,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_S_e1100-e1400.zip",
+        "archive_sha256": "0b1ee3d10cb67e98e161efa363d2e56fa297d5203445d939fdd26a7b9bb5709d",
+        "member": "out/ar_saturation_20261023/continued1200/soft/model_e1100.pt",
+        "sha256": "1485c59759661e70add4812a675913d7ac85d2ec941b9ffcb8d03710b1c47aa9"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1200/soft/model_e1200.pt",
+      "sha256": "b02b8492fa5171a383567a873f3713627417175e901ae0221fb45bb49e561431",
+      "bytes": 26857221,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_S_e1100-e1400.zip",
+        "archive_sha256": "0b1ee3d10cb67e98e161efa363d2e56fa297d5203445d939fdd26a7b9bb5709d",
+        "member": "out/ar_saturation_20261023/continued1200/soft/model_e1200.pt",
+        "sha256": "b02b8492fa5171a383567a873f3713627417175e901ae0221fb45bb49e561431"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1400/soft/model_e1300.pt",
+      "sha256": "70e2f4ae9baab0025000c6bec16ce58afb183028f19dc3c110baec488a9b2615",
+      "bytes": 26883013,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_S_e1100-e1400.zip",
+        "archive_sha256": "0b1ee3d10cb67e98e161efa363d2e56fa297d5203445d939fdd26a7b9bb5709d",
+        "member": "out/ar_saturation_20261023/continued1400/soft/model_e1300.pt",
+        "sha256": "70e2f4ae9baab0025000c6bec16ce58afb183028f19dc3c110baec488a9b2615"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1400/soft/model_e1400.pt",
+      "sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+      "bytes": 26907973,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_S_e1100-e1400.zip",
+        "archive_sha256": "0b1ee3d10cb67e98e161efa363d2e56fa297d5203445d939fdd26a7b9bb5709d",
+        "member": "out/ar_saturation_20261023/continued1400/soft/model_e1400.pt",
+        "sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1200/audio/model_e1100.pt",
+      "sha256": "c02085f44ebab5138e49ed4d52086d58c80dfc4c0f35db8f2da87fecc90605c6",
+      "bytes": 27571069,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_A_e1100-e1400.zip",
+        "archive_sha256": "3eca58a843df0eaf593a516632a2bf55f6d35f4eae21c8d49c442a77d311241a",
+        "member": "out/freex_anchored_20261025/continued1200/audio/model_e1100.pt",
+        "sha256": "c02085f44ebab5138e49ed4d52086d58c80dfc4c0f35db8f2da87fecc90605c6"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1200/audio/model_e1150.pt",
+      "sha256": "024fdb85ddbd59bb8562de6ac6824a4bbc2e4fac537683c0c2b013e6b8962532",
+      "bytes": 27585405,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_A_e1100-e1400.zip",
+        "archive_sha256": "3eca58a843df0eaf593a516632a2bf55f6d35f4eae21c8d49c442a77d311241a",
+        "member": "out/freex_anchored_20261025/continued1200/audio/model_e1150.pt",
+        "sha256": "024fdb85ddbd59bb8562de6ac6824a4bbc2e4fac537683c0c2b013e6b8962532"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1200/audio/model_e1200.pt",
+      "sha256": "957f088bc3b33f101f8027e159c07374b58d618f47944d3d324e81d380a6e199",
+      "bytes": 27599741,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_A_e1100-e1400.zip",
+        "archive_sha256": "3eca58a843df0eaf593a516632a2bf55f6d35f4eae21c8d49c442a77d311241a",
+        "member": "out/freex_anchored_20261025/continued1200/audio/model_e1200.pt",
+        "sha256": "957f088bc3b33f101f8027e159c07374b58d618f47944d3d324e81d380a6e199"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1400/audio/model_e1300.pt",
+      "sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+      "bytes": 27629437,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_A_e1100-e1400.zip",
+        "archive_sha256": "3eca58a843df0eaf593a516632a2bf55f6d35f4eae21c8d49c442a77d311241a",
+        "member": "out/freex_anchored_20261025/continued1400/audio/model_e1300.pt",
+        "sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1400/audio/model_e1400.pt",
+      "sha256": "c34170a8752e8c61bd8fb16abf036eb3f2e72bea4757b5d463d9af2bf04f30b5",
+      "bytes": 27658109,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_A_e1100-e1400.zip",
+        "archive_sha256": "3eca58a843df0eaf593a516632a2bf55f6d35f4eae21c8d49c442a77d311241a",
+        "member": "out/freex_anchored_20261025/continued1400/audio/model_e1400.pt",
+        "sha256": "c34170a8752e8c61bd8fb16abf036eb3f2e72bea4757b5d463d9af2bf04f30b5"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1200/soft/model_e1100.pt",
+      "sha256": "d503aa3ad729383b60fec8f7c174027de18d03ae6c219bc9713498ee5b295162",
+      "bytes": 27571069,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_S_e1100-e1400.zip",
+        "archive_sha256": "2bb7a61f5a61aa6e632c63df56f354b97b024e34eac22afa3604ff50923e8150",
+        "member": "out/freex_anchored_20261025/continued1200/soft/model_e1100.pt",
+        "sha256": "d503aa3ad729383b60fec8f7c174027de18d03ae6c219bc9713498ee5b295162"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1200/soft/model_e1200.pt",
+      "sha256": "492dbf3a81d29e08e60e993945933b2b8eaf76aff2027ffb583859a9a4023be6",
+      "bytes": 27599741,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_S_e1100-e1400.zip",
+        "archive_sha256": "2bb7a61f5a61aa6e632c63df56f354b97b024e34eac22afa3604ff50923e8150",
+        "member": "out/freex_anchored_20261025/continued1200/soft/model_e1200.pt",
+        "sha256": "492dbf3a81d29e08e60e993945933b2b8eaf76aff2027ffb583859a9a4023be6"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1400/soft/model_e1300.pt",
+      "sha256": "1da0da4e2a3562c3ccf11d4b1d51d2eed517a27f1f72481d737c2430a15b01ff",
+      "bytes": 27629437,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_S_e1100-e1400.zip",
+        "archive_sha256": "2bb7a61f5a61aa6e632c63df56f354b97b024e34eac22afa3604ff50923e8150",
+        "member": "out/freex_anchored_20261025/continued1400/soft/model_e1300.pt",
+        "sha256": "1da0da4e2a3562c3ccf11d4b1d51d2eed517a27f1f72481d737c2430a15b01ff"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1400/soft/model_e1400.pt",
+      "sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+      "bytes": 27658109,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_S_e1100-e1400.zip",
+        "archive_sha256": "2bb7a61f5a61aa6e632c63df56f354b97b024e34eac22afa3604ff50923e8150",
+        "member": "out/freex_anchored_20261025/continued1400/soft/model_e1400.pt",
+        "sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1400/soft/model_e1350.pt",
+      "sha256": "10ce2728b068499c3cabac8d5ec968803bb83b9341b61531c6cde6a5b1f581a9",
+      "bytes": 26895493,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR_additional_e1350.zip",
+        "archive_sha256": "7fbda188eacdccebfa5ce99d01b40aaff647e588f71fa08dab232738ebe9d2fe",
+        "member": "out/ar_saturation_20261023/continued1400/soft/model_e1350.pt",
+        "sha256": "10ce2728b068499c3cabac8d5ec968803bb83b9341b61531c6cde6a5b1f581a9"
+      },
+      "deleted": true
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1400/audio/model_e1350.pt",
+      "sha256": "900283e97bacf7b54673fc93396f11e4b02b4d461da737300b8c2392824c728e",
+      "bytes": 27643773,
+      "kind": "remote_verified_compact",
+      "recovery": {
+        "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR_additional_e1350.zip",
+        "archive_sha256": "7fbda188eacdccebfa5ce99d01b40aaff647e588f71fa08dab232738ebe9d2fe",
+        "member": "out/freex_anchored_20261025/continued1400/audio/model_e1350.pt",
+        "sha256": "900283e97bacf7b54673fc93396f11e4b02b4d461da737300b8c2392824c728e"
+      },
+      "deleted": true
+    }
+  ],
+  "retained": "All reports, sidecars, source data, frozen frontends, unarchived snapshots, best-fit files, and four latest e1400 complete resume checkpoints.",
+  "freed_bytes": 1809985983,
+  "disk_free_after": 11074916352
+}

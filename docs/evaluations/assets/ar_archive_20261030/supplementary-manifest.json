@@ -1,0 +1,42 @@
+{
+  "schema": "audiolab-ar-milestone-supplement-v1",
+  "snapshots": [
+    {
+      "product": "AL-AR4K_v0.5.1",
+      "condition": "S",
+      "epoch": 1350,
+      "path": "out/ar_saturation_20261023/continued1400/soft/model_e1350.pt",
+      "sha256": "10ce2728b068499c3cabac8d5ec968803bb83b9341b61531c6cde6a5b1f581a9",
+      "bytes": 26895493,
+      "full_checkpoint_sha256": "db453f39f4ceec338c9e2c8d1cee20668f7afb53e93609847010e01179121296",
+      "metrics": {
+        "mean_joint_f1": 0.9840596964724195,
+        "mean_raw_onset_f1": 0.9993148177491739,
+        "mean_raw_grid_bonus": 0.7015426421345392,
+        "mean_tail_10s_recall": 0.9982470035376736,
+        "completed": 15,
+        "total": 15
+      },
+      "reason": "Slightly higher onset F1 than the selected model; lower primary joint F1. Fixed training songs only, not a new-song quality claim."
+    },
+    {
+      "product": "AL-FreeX_v0.4.0",
+      "condition": "A",
+      "epoch": 1350,
+      "path": "out/freex_anchored_20261025/continued1400/audio/model_e1350.pt",
+      "sha256": "900283e97bacf7b54673fc93396f11e4b02b4d461da737300b8c2392824c728e",
+      "bytes": 27643773,
+      "full_checkpoint_sha256": "6e8a36a28ee28f8ef7b413918ba6e68eb94f57bebcfc78023d6f0c0ec25af41e",
+      "metrics": {
+        "mean_joint_f1": 0.8069821532135026,
+        "mean_raw_onset_f1": 0.9271542437593954,
+        "mean_raw_grid_bonus": 0.6563712956972184,
+        "mean_tail_10s_recall": 0.8521621612178513,
+        "completed": 14,
+        "total": 15
+      },
+      "reason": "Slightly higher onset F1 than the selected model; lower primary joint F1. Fixed training songs only, not a new-song quality claim."
+    }
+  ],
+  "base_manifest_sha256": "ba620b5a2f04d28cdbea3b978aef85940fc5dc2774cd9b424cf5452593c92e50"
+}

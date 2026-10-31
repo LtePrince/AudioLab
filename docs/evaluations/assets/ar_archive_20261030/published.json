@@ -1,0 +1,122 @@
+{
+  "tag": "ar-milestones-20261030",
+  "url": "https://github.com/LtePrince/AudioLab/releases/tag/ar-milestones-20261030",
+  "assets": [
+    {
+      "name": "AL-AR4K_v0.5.1_A_e1100-e1400.zip",
+      "bytes": 107485539,
+      "sha256": "2228e0b4cae6145f5a925cf648b651e7b8c35c8341d1d5259f0f317747e940c6",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_A_e1100-e1400.zip",
+      "id": 694080327
+    },
+    {
+      "name": "AL-AR4K_v0.5.1_A_resume_e1400.pt",
+      "bytes": 80068691,
+      "sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_A_resume_e1400.pt",
+      "id": 694080815
+    },
+    {
+      "name": "AL-AR4K_v0.5.1_S_e1100-e1400.zip",
+      "bytes": 107485449,
+      "sha256": "0b1ee3d10cb67e98e161efa363d2e56fa297d5203445d939fdd26a7b9bb5709d",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_S_e1100-e1400.zip",
+      "id": 694081223
+    },
+    {
+      "name": "AL-AR4K_v0.5.1_S_resume_e1400.pt",
+      "bytes": 80068691,
+      "sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR4K_v0.5.1_S_resume_e1400.pt",
+      "id": 694081534
+    },
+    {
+      "name": "AL-FreeX_v0.4.0_A_e1100-e1400.zip",
+      "bytes": 138049859,
+      "sha256": "3eca58a843df0eaf593a516632a2bf55f6d35f4eae21c8d49c442a77d311241a",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_A_e1100-e1400.zip",
+      "id": 694081923
+    },
+    {
+      "name": "AL-FreeX_v0.4.0_A_resume_e1400.pt",
+      "bytes": 82335731,
+      "sha256": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_A_resume_e1400.pt",
+      "id": 694082452
+    },
+    {
+      "name": "AL-FreeX_v0.4.0_S_e1100-e1400.zip",
+      "bytes": 110463324,
+      "sha256": "2bb7a61f5a61aa6e632c63df56f354b97b024e34eac22afa3604ff50923e8150",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_S_e1100-e1400.zip",
+      "id": 694083174
+    },
+    {
+      "name": "AL-FreeX_v0.4.0_S_resume_e1400.pt",
+      "bytes": 82335731,
+      "sha256": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-FreeX_v0.4.0_S_resume_e1400.pt",
+      "id": 694083689
+    },
+    {
+      "name": "manifest.json",
+      "bytes": 9898,
+      "sha256": "ba620b5a2f04d28cdbea3b978aef85940fc5dc2774cd9b424cf5452593c92e50",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/manifest.json",
+      "id": 694083997
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 876,
+      "sha256": "c0b6e97f509522788b32504e2a2971f4a82a18ff4b708b88f8bd287642f0e48a",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/SHA256SUMS.txt",
+      "id": 694084096
+    },
+    {
+      "name": "AL-AR_additional_e1350.zip",
+      "bytes": 54542571,
+      "sha256": "7fbda188eacdccebfa5ce99d01b40aaff647e588f71fa08dab232738ebe9d2fe",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/AL-AR_additional_e1350.zip",
+      "id": 694085501
+    },
+    {
+      "name": "SHA256SUMS-additional.txt",
+      "bytes": 93,
+      "sha256": "3a17a9522e868efe741b2cec25c83a850ad3e245ad18d06ebf56988ecdee59e9",
+      "url": "https://github.com/LtePrince/AudioLab/releases/download/ar-milestones-20261030/SHA256SUMS-additional.txt",
+      "id": 694085846
+    }
+  ],
+  "status": "verified",
+  "resume_checkpoints_retained_locally": [
+    {
+      "path": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
+      "epoch": 1400,
+      "bytes": 80068691,
+      "sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+      "asset": "AL-AR4K_v0.5.1_A_resume_e1400.pt"
+    },
+    {
+      "path": "out/ar_saturation_20261023/continued1400/soft/model_latest.pt",
+      "epoch": 1400,
+      "bytes": 80068691,
+      "sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+      "asset": "AL-AR4K_v0.5.1_S_resume_e1400.pt"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1400/audio/model_latest.pt",
+      "epoch": 1400,
+      "bytes": 82335731,
+      "sha256": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+      "asset": "AL-FreeX_v0.4.0_A_resume_e1400.pt"
+    },
+    {
+      "path": "out/freex_anchored_20261025/continued1400/soft/model_latest.pt",
+      "epoch": 1400,
+      "bytes": 82335731,
+      "sha256": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+      "asset": "AL-FreeX_v0.4.0_S_resume_e1400.pt"
+    }
+  ],
+  "supplement": "supplementary-manifest.json"
+}

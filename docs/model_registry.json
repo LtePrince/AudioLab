@@ -1744,7 +1744,46 @@
               "schema": "audiolab-absolute-time-group-ar-v1",
               "variant": "audio"
             }
-          ]
+          ],
+          "archived_checkpoints": [
+            {
+              "epoch": 1100,
+              "former_local_path": "out/ar_saturation_20261023/continued1200/audio/model_e1100.pt",
+              "sha256": "57e5fd74a1033cff52df869dd4c51fa5ecfb5be2cebf671af773a72746abc08c",
+              "local_exists": false,
+              "remote_asset": "AL-AR4K_v0.5.1_A_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1200,
+              "former_local_path": "out/ar_saturation_20261023/continued1200/audio/model_e1200.pt",
+              "sha256": "2df3293b56b9b7beabe95be7149423075d6bd21fa48ff0039eca9c75acf701c1",
+              "local_exists": false,
+              "remote_asset": "AL-AR4K_v0.5.1_A_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1300,
+              "former_local_path": "out/ar_saturation_20261023/continued1400/audio/model_e1300.pt",
+              "sha256": "904a58234226e055ac4acb8fb98ad9bf917c6e111c0ff923833e658532552cef",
+              "local_exists": false,
+              "remote_asset": "AL-AR4K_v0.5.1_A_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1400,
+              "former_local_path": "out/ar_saturation_20261023/continued1400/audio/model_e1400.pt",
+              "sha256": "3b457dd5481e5f0fca61f7c5f6cdbc9135a7a8bc74aa3a6ca44e7932bb4c38b3",
+              "local_exists": false,
+              "remote_asset": "AL-AR4K_v0.5.1_A_e1100-e1400.zip"
+            }
+          ],
+          "resume_backup": {
+            "path": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
+            "epoch": 1400,
+            "bytes": 80068691,
+            "sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+            "asset": "AL-AR4K_v0.5.1_A_resume_e1400.pt",
+            "release": "https://github.com/LtePrince/AudioLab/releases/tag/ar-milestones-20261030",
+            "local_exists": true
+          }
         },
         {
           "id": "E14-S",
@@ -2582,7 +2621,53 @@
               "schema": "audiolab-absolute-time-group-ar-v1",
               "variant": "soft"
             }
-          ]
+          ],
+          "archived_checkpoints": [
+            {
+              "epoch": 1100,
+              "former_local_path": "out/ar_saturation_20261023/continued1200/soft/model_e1100.pt",
+              "sha256": "1485c59759661e70add4812a675913d7ac85d2ec941b9ffcb8d03710b1c47aa9",
+              "local_exists": false,
+              "remote_asset": "AL-AR4K_v0.5.1_S_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1200,
+              "former_local_path": "out/ar_saturation_20261023/continued1200/soft/model_e1200.pt",
+              "sha256": "b02b8492fa5171a383567a873f3713627417175e901ae0221fb45bb49e561431",
+              "local_exists": false,
+              "remote_asset": "AL-AR4K_v0.5.1_S_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1300,
+              "former_local_path": "out/ar_saturation_20261023/continued1400/soft/model_e1300.pt",
+              "sha256": "70e2f4ae9baab0025000c6bec16ce58afb183028f19dc3c110baec488a9b2615",
+              "local_exists": false,
+              "remote_asset": "AL-AR4K_v0.5.1_S_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1350,
+              "former_local_path": "out/ar_saturation_20261023/continued1400/soft/model_e1350.pt",
+              "sha256": "10ce2728b068499c3cabac8d5ec968803bb83b9341b61531c6cde6a5b1f581a9",
+              "local_exists": false,
+              "remote_asset": "AL-AR_additional_e1350.zip"
+            },
+            {
+              "epoch": 1400,
+              "former_local_path": "out/ar_saturation_20261023/continued1400/soft/model_e1400.pt",
+              "sha256": "5690396e61774531e6e91dd6580513fc9a08703c64fc3735da9fb22656ea8712",
+              "local_exists": false,
+              "remote_asset": "AL-AR4K_v0.5.1_S_e1100-e1400.zip"
+            }
+          ],
+          "resume_backup": {
+            "path": "out/ar_saturation_20261023/continued1400/soft/model_latest.pt",
+            "epoch": 1400,
+            "bytes": 80068691,
+            "sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+            "asset": "AL-AR4K_v0.5.1_S_resume_e1400.pt",
+            "release": "https://github.com/LtePrince/AudioLab/releases/tag/ar-milestones-20261030",
+            "local_exists": true
+          }
         }
       ],
       "sampling_changes": "deferred_by_user",
@@ -3028,7 +3113,18 @@
       "phase1400_result": "A/S均完成1400轮、420000步。固定15首训练曲主联合F1 A 0.8353→0.9921、S 0.9208→0.9893，两组均自然结束15/15；本阶段最佳均为1400轮。网格均约0.7045，A已在此训练曲评测追上S。原探针仍未通过；未追加训练或更换发布权重。",
       "phase1400_completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
       "phase1400_completed_at_utc": "2026-10-28T14:36:29.908566+00:00",
-      "generalization_evaluation": "E20"
+      "generalization_evaluation": "E20",
+      "storage_archive_20261030": {
+        "status": "published_and_verified",
+        "completed_at_utc": "2026-10-31T02:12:38.070749+00:00",
+        "release": "https://github.com/LtePrince/AudioLab/releases/tag/ar-milestones-20261030",
+        "report": "docs/evaluations/ar_archive_20261030.md",
+        "manifest": "docs/evaluations/assets/ar_archive_20261030/manifest.json",
+        "supplement": "docs/evaluations/assets/ar_archive_20261030/supplementary-manifest.json",
+        "cleanup": "docs/evaluations/assets/ar_archive_20261030/cleanup.json",
+        "latest_resume_retained": true,
+        "older_optimizer_states_retained": false
+      }
     },
     {
       "id": "E15",
@@ -3415,7 +3511,60 @@
               "schema": "audiolab-absolute-time-group-freex-ar-v1",
               "variant": "audio"
             }
-          ]
+          ],
+          "archived_checkpoints": [
+            {
+              "epoch": 1100,
+              "former_local_path": "out/freex_anchored_20261025/continued1200/audio/model_e1100.pt",
+              "sha256": "c02085f44ebab5138e49ed4d52086d58c80dfc4c0f35db8f2da87fecc90605c6",
+              "local_exists": false,
+              "remote_asset": "AL-FreeX_v0.4.0_A_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1150,
+              "former_local_path": "out/freex_anchored_20261025/continued1200/audio/model_e1150.pt",
+              "sha256": "024fdb85ddbd59bb8562de6ac6824a4bbc2e4fac537683c0c2b013e6b8962532",
+              "local_exists": false,
+              "remote_asset": "AL-FreeX_v0.4.0_A_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1200,
+              "former_local_path": "out/freex_anchored_20261025/continued1200/audio/model_e1200.pt",
+              "sha256": "957f088bc3b33f101f8027e159c07374b58d618f47944d3d324e81d380a6e199",
+              "local_exists": false,
+              "remote_asset": "AL-FreeX_v0.4.0_A_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1300,
+              "former_local_path": "out/freex_anchored_20261025/continued1400/audio/model_e1300.pt",
+              "sha256": "39648fc9d49776f31d49931e2948f8cade8d4ab38f0adbc3d9b20c2d640a6103",
+              "local_exists": false,
+              "remote_asset": "AL-FreeX_v0.4.0_A_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1350,
+              "former_local_path": "out/freex_anchored_20261025/continued1400/audio/model_e1350.pt",
+              "sha256": "900283e97bacf7b54673fc93396f11e4b02b4d461da737300b8c2392824c728e",
+              "local_exists": false,
+              "remote_asset": "AL-AR_additional_e1350.zip"
+            },
+            {
+              "epoch": 1400,
+              "former_local_path": "out/freex_anchored_20261025/continued1400/audio/model_e1400.pt",
+              "sha256": "c34170a8752e8c61bd8fb16abf036eb3f2e72bea4757b5d463d9af2bf04f30b5",
+              "local_exists": false,
+              "remote_asset": "AL-FreeX_v0.4.0_A_e1100-e1400.zip"
+            }
+          ],
+          "resume_backup": {
+            "path": "out/freex_anchored_20261025/continued1400/audio/model_latest.pt",
+            "epoch": 1400,
+            "bytes": 82335731,
+            "sha256": "9cc0fa958eed5d0164a9d339e9a8624ad9f5810d2d6004f838520b09dfd7f6c8",
+            "asset": "AL-FreeX_v0.4.0_A_resume_e1400.pt",
+            "release": "https://github.com/LtePrince/AudioLab/releases/tag/ar-milestones-20261030",
+            "local_exists": true
+          }
         },
         {
           "id": "E18-S",
@@ -3667,7 +3816,46 @@
               "schema": "audiolab-absolute-time-group-freex-ar-v1",
               "variant": "soft"
             }
-          ]
+          ],
+          "archived_checkpoints": [
+            {
+              "epoch": 1100,
+              "former_local_path": "out/freex_anchored_20261025/continued1200/soft/model_e1100.pt",
+              "sha256": "d503aa3ad729383b60fec8f7c174027de18d03ae6c219bc9713498ee5b295162",
+              "local_exists": false,
+              "remote_asset": "AL-FreeX_v0.4.0_S_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1200,
+              "former_local_path": "out/freex_anchored_20261025/continued1200/soft/model_e1200.pt",
+              "sha256": "492dbf3a81d29e08e60e993945933b2b8eaf76aff2027ffb583859a9a4023be6",
+              "local_exists": false,
+              "remote_asset": "AL-FreeX_v0.4.0_S_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1300,
+              "former_local_path": "out/freex_anchored_20261025/continued1400/soft/model_e1300.pt",
+              "sha256": "1da0da4e2a3562c3ccf11d4b1d51d2eed517a27f1f72481d737c2430a15b01ff",
+              "local_exists": false,
+              "remote_asset": "AL-FreeX_v0.4.0_S_e1100-e1400.zip"
+            },
+            {
+              "epoch": 1400,
+              "former_local_path": "out/freex_anchored_20261025/continued1400/soft/model_e1400.pt",
+              "sha256": "a29a92d30fb5d6d9b01fb3e0e1780e6fd8bdd5cb56c78cc616d7f23de0b12533",
+              "local_exists": false,
+              "remote_asset": "AL-FreeX_v0.4.0_S_e1100-e1400.zip"
+            }
+          ],
+          "resume_backup": {
+            "path": "out/freex_anchored_20261025/continued1400/soft/model_latest.pt",
+            "epoch": 1400,
+            "bytes": 82335731,
+            "sha256": "f446b17b4cbc63cc4af3c40561cfa5cc5e99924d57cbee471256cd5f44e3c62b",
+            "asset": "AL-FreeX_v0.4.0_S_resume_e1400.pt",
+            "release": "https://github.com/LtePrince/AudioLab/releases/tag/ar-milestones-20261030",
+            "local_exists": true
+          }
         }
       ],
       "launched_at_utc": "2026-10-24T22:39:55.541311+00:00",
@@ -3906,7 +4094,18 @@
       "phase1400_result": "A/S均完成1400轮、420000步。固定15首训练曲主联合F1 A 0.5034→0.7074、S 0.7013→0.8704，最终自然结束11/15及14/15。A本阶段最佳为1300轮0.8419、14/15，1400出现回退；S最佳为1400轮。原探针仍未通过；未追加训练或更换发布权重。",
       "phase1400_completion_assessment": "docs/evaluations/assets/ar_continue1400_20261028/completion.json",
       "phase1400_completed_at_utc": "2026-10-28T15:31:03.889321+00:00",
-      "generalization_evaluation": "E20"
+      "generalization_evaluation": "E20",
+      "storage_archive_20261030": {
+        "status": "published_and_verified",
+        "completed_at_utc": "2026-10-31T02:12:38.070749+00:00",
+        "release": "https://github.com/LtePrince/AudioLab/releases/tag/ar-milestones-20261030",
+        "report": "docs/evaluations/ar_archive_20261030.md",
+        "manifest": "docs/evaluations/assets/ar_archive_20261030/manifest.json",
+        "supplement": "docs/evaluations/assets/ar_archive_20261030/supplementary-manifest.json",
+        "cleanup": "docs/evaluations/assets/ar_archive_20261030/cleanup.json",
+        "latest_resume_retained": true,
+        "older_optimizer_states_retained": false
+      }
     },
     {
       "id": "E19",
@@ -4608,6 +4807,7 @@
     "训练完成不等于质量通过；未通过的输出指标保留partial scope。",
     "epoch/step不能跨AR与diffusion直接当作等计算预算。",
     "硬候选推理解码、连续条件输入、真实历史监督和生成时采样为不同维度。",
-    "legacy_inventory中旧R1/R2等资产保留待核定谱系，不冒充已确认版本。"
+    "legacy_inventory中旧R1/R2等资产保留待核定谱系，不冒充已确认版本。",
+    "2026-10-31: E14/E18 archived checkpoint paths in historical records may no longer exist locally. Consult storage_archive_20261030 and cleanup.json for verified remote recovery; four e1400 exact-resume states remain local. Older optimizer/RNG copies were pruned, inference parameters preserved."
   ]
 }
