@@ -198,6 +198,17 @@
       "evidence": "docs/evaluations/freex_anchored_20261025.md",
       "training_status": "completed",
       "quality_status": "not_passed"
+    },
+    {
+      "id": "AL-AR4K@0.6.0",
+      "family": "AL-AR4K",
+      "version": "0.6.0",
+      "title": "整曲音频注意力＋分窗输出；受控 A 模型试验",
+      "output_protocol": "audiolab-global-audio-window-output-ar-v1",
+      "delivery": "controlled_experiment_only_not_product",
+      "evidence": "docs/evaluations/windowed_ar_stage2_20261031.md",
+      "training_status": "controlled_training_running",
+      "quality_status": "not_evaluated_on_natural_music"
     }
   ],
   "experiments": [
@@ -3210,6 +3221,62 @@
           "report": "docs/evaluations/assets/windowed_ar_20261031/d0_coverage512.json",
           "quality_status": "not_all_random_dense_precision_recall_gates_passed",
           "not_chart_generator": true
+        },
+        {
+          "id": "E16-W0",
+          "kind": "controlled_generation_training",
+          "model": "AL-AR4K@0.5.1",
+          "variant": "A",
+          "architecture": "whole",
+          "status": "running",
+          "delivery": "diagnostic_only",
+          "training_examples": 32,
+          "training_data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+          "parameters": 6626691,
+          "initial_backbone_sha256": "8a4f75f2dcd41e7950df7680f59177883bbb755ac0f8fc6dbaa5d8bc4980e041",
+          "target_epochs": 400,
+          "target_optimizer_steps": 12800,
+          "checkpoint": "out/windowed_ar_20261031/whole/model_latest.pt",
+          "progress_file": "out/windowed_ar_20261031/whole/training.json",
+          "source_commit": "5485df9",
+          "source_sha256": {
+            "script/train_windowed_ar.py": "5e968843ce5286660971069285acdc64b2ffc73dedf53f5c4d8f224f3ef889cd",
+            "src/windowed_ar.py": "2d0cf2233e72f66cf51ad7a0ddfcbcba81af7c4e234b14e9481430661c4a46dd",
+            "src/chart_windows.py": "a799c78053c7a0b9822c91737a629019a0d7a67af68709b7ab550dc6a8308851",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+          },
+          "report": "docs/evaluations/windowed_ar_stage2_20261031.md",
+          "quality_status": "pending_full_controlled_evaluation"
+        },
+        {
+          "id": "E16-W1",
+          "kind": "controlled_generation_training",
+          "model": "AL-AR4K@0.6.0",
+          "variant": "A",
+          "architecture": "window",
+          "status": "running",
+          "delivery": "diagnostic_only",
+          "training_examples": 32,
+          "training_data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+          "parameters": 6692227,
+          "initial_backbone_sha256": "8a4f75f2dcd41e7950df7680f59177883bbb755ac0f8fc6dbaa5d8bc4980e041",
+          "target_epochs": 400,
+          "target_optimizer_steps": 12800,
+          "checkpoint": "out/windowed_ar_20261031/window/model_latest.pt",
+          "progress_file": "out/windowed_ar_20261031/window/training.json",
+          "source_commit": "5485df9",
+          "source_sha256": {
+            "script/train_windowed_ar.py": "5e968843ce5286660971069285acdc64b2ffc73dedf53f5c4d8f224f3ef889cd",
+            "src/windowed_ar.py": "2d0cf2233e72f66cf51ad7a0ddfcbcba81af7c4e234b14e9481430661c4a46dd",
+            "src/chart_windows.py": "a799c78053c7a0b9822c91737a629019a0d7a67af68709b7ab550dc6a8308851",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+          },
+          "report": "docs/evaluations/windowed_ar_stage2_20261031.md",
+          "quality_status": "pending_full_controlled_evaluation"
         }
       ],
       "research_update": {
@@ -3276,13 +3343,15 @@
           "report": "docs/evaluations/windowed_ar_stage1_20261031.md"
         },
         "stage2": {
-          "status": "protocol_implemented_and_tested",
-          "training_started": false,
-          "scope": "controlled small-sample W0/W1 first; full-corpus work gated on actual generation"
+          "status": "controlled_training_running",
+          "training_started": true,
+          "scope": "controlled small-sample W0/W1 first; full-corpus work gated on actual generation",
+          "report": "docs/evaluations/windowed_ar_stage2_20261031.md"
         }
       },
       "additional_evidence": [
-        "docs/evaluations/windowed_ar_stage1_20261031.md"
+        "docs/evaluations/windowed_ar_stage1_20261031.md",
+        "docs/evaluations/windowed_ar_stage2_20261031.md"
       ]
     },
     {

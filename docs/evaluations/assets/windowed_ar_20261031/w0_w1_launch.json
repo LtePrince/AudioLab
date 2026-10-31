@@ -1,0 +1,86 @@
+{
+  "source_commit": "5485df9",
+  "initial_backbone_identical": true,
+  "data_identical": true,
+  "configs": {
+    "whole": {
+      "architecture": "whole",
+      "condition": "A",
+      "seed": 42,
+      "epochs": 400,
+      "lr": 0.0003,
+      "parameters": 6626691,
+      "decoder_config": {
+        "vocab_size": 129,
+        "hidden_dim": 256,
+        "depth": 6,
+        "num_heads": 8,
+        "mlp_ratio": 4.0,
+        "dropout": 0.1,
+        "mem_dim": 256,
+        "time_dim": 128,
+        "rope_theta": 10000.0,
+        "cross_window": null,
+        "token_dropout": 0.15,
+        "soft_onset_dim": 2,
+        "history_dim": 28,
+        "cross_time_scale": null
+      },
+      "window_seconds": 10.0,
+      "data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+      "initial_backbone_sha256": "8a4f75f2dcd41e7950df7680f59177883bbb755ac0f8fc6dbaa5d8bc4980e041",
+      "source_sha256": {
+        "script/train_windowed_ar.py": "5e968843ce5286660971069285acdc64b2ffc73dedf53f5c4d8f224f3ef889cd",
+        "src/windowed_ar.py": "2d0cf2233e72f66cf51ad7a0ddfcbcba81af7c4e234b14e9481430661c4a46dd",
+        "src/chart_windows.py": "a799c78053c7a0b9822c91737a629019a0d7a67af68709b7ab550dc6a8308851",
+        "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+        "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+        "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+      },
+      "loss": "Original anchored per-example normalized losses; window-boundary labels and bounds conditioning only in W1.",
+      "scope": "32 controlled training examples; separate 32 combinations and original fixed probes; not natural music."
+    },
+    "window": {
+      "architecture": "window",
+      "condition": "A",
+      "seed": 42,
+      "epochs": 400,
+      "lr": 0.0003,
+      "parameters": 6692227,
+      "decoder_config": {
+        "vocab_size": 129,
+        "hidden_dim": 256,
+        "depth": 6,
+        "num_heads": 8,
+        "mlp_ratio": 4.0,
+        "dropout": 0.1,
+        "mem_dim": 256,
+        "time_dim": 128,
+        "rope_theta": 10000.0,
+        "cross_window": null,
+        "token_dropout": 0.15,
+        "soft_onset_dim": 2,
+        "history_dim": 28,
+        "cross_time_scale": null
+      },
+      "window_seconds": 10.0,
+      "data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+      "initial_backbone_sha256": "8a4f75f2dcd41e7950df7680f59177883bbb755ac0f8fc6dbaa5d8bc4980e041",
+      "source_sha256": {
+        "script/train_windowed_ar.py": "5e968843ce5286660971069285acdc64b2ffc73dedf53f5c4d8f224f3ef889cd",
+        "src/windowed_ar.py": "2d0cf2233e72f66cf51ad7a0ddfcbcba81af7c4e234b14e9481430661c4a46dd",
+        "src/chart_windows.py": "a799c78053c7a0b9822c91737a629019a0d7a67af68709b7ab550dc6a8308851",
+        "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+        "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+        "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+      },
+      "loss": "Original anchored per-example normalized losses; window-boundary labels and bounds conditioning only in W1.",
+      "scope": "32 controlled training examples; separate 32 combinations and original fixed probes; not natural music."
+    }
+  },
+  "commands": {
+    "whole": ".venv/bin/python -m script.train_models --gpu 0 --worker script.train_windowed_ar -- train --architecture whole --output out/windowed_ar_20261031/whole --epochs 400 --eval-every 100",
+    "window": ".venv/bin/python -m script.train_models --gpu 1 --worker script.train_windowed_ar -- train --architecture window --output out/windowed_ar_20261031/window --epochs 400 --eval-every 100"
+  },
+  "phase": "controlled learning diagnostic; not full 300-song training"
+}
