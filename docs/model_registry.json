@@ -3864,7 +3864,7 @@
           "model": "AL-AR4K@0.6.0",
           "variant": "A",
           "ablation": "kind_position",
-          "status": "running",
+          "status": "completed",
           "parameters": 6723836,
           "training_examples": 32,
           "target_epochs": 400,
@@ -3873,7 +3873,70 @@
           "checkpoint": "out/windowed_ar_20261031/kind_position/model_latest.pt",
           "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
           "delivery": "diagnostic_only",
-          "quality_status": "not_yet_evaluated"
+          "quality_status": "controlled_training_fit_passed_generalization_partial",
+          "source_sha256": {
+            "script/train_windowed_variants.py": "a1768da8496b06bf2860c9dde740583d246dbcb8e1b0b18e1b18a0891752adc3",
+            "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
+            "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/transcriber.py": "0f90e27d02f3d460666713f19ae62cc8e7833d925cf5991622810b2d153537dd",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+          },
+          "progress_file": "out/windowed_ar_20261031/kind_position/training.json",
+          "source_commit": "525e89d",
+          "epoch": 400,
+          "optimizer_steps": 12800,
+          "checkpoint_sha256": "667a6d839da0a06bd6be3acc608dfd381a981557f6404fa769054b76f97c33e8",
+          "metrics": {
+            "fixed_probe": {
+              "examples": 5,
+              "positive_examples": 4,
+              "completed": 5,
+              "onset_f1_25ms": 0.6726190476190476,
+              "silence_extra_onsets": 0,
+              "forced_windows": 0
+            },
+            "random_check": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "onset_f1_25ms": 0.6592492766337303,
+              "silence_extra_onsets": 0,
+              "forced_windows": 0,
+              "joint_f1_25ms": 0.48303041496318805,
+              "teacher": {
+                "events": 140,
+                "stops": 80,
+                "false_stops": 26,
+                "correct_stops": 54,
+                "layout_total": 323,
+                "layout_correct": 237,
+                "pointer_correct_25ms": 70,
+                "continue_and_time_correct_25ms": 60
+              }
+            },
+            "train": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "onset_f1_25ms": 1.0,
+              "silence_extra_onsets": 0,
+              "forced_windows": 0,
+              "joint_f1_25ms": 1.0,
+              "teacher": {
+                "events": 140,
+                "stops": 80,
+                "false_stops": 0,
+                "correct_stops": 80,
+                "layout_total": 324,
+                "layout_correct": 324,
+                "pointer_correct_25ms": 140,
+                "continue_and_time_correct_25ms": 140
+              }
+            }
+          }
         },
         {
           "id": "E16-E1",
@@ -3881,8 +3944,8 @@
           "model": "AL-AR4K@0.6.0",
           "variant": "A",
           "ablation": "encoder_tail",
-          "status": "prepared",
-          "parameters": null,
+          "status": "running",
+          "parameters": 7482563,
           "training_examples": 32,
           "target_epochs": 400,
           "target_optimizer_steps": 12800,
@@ -3890,7 +3953,21 @@
           "checkpoint": "out/windowed_ar_20261031/encoder_tail/model_latest.pt",
           "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
           "delivery": "diagnostic_only",
-          "quality_status": "not_yet_evaluated"
+          "quality_status": "not_yet_evaluated",
+          "source_sha256": {
+            "script/train_windowed_variants.py": "a1768da8496b06bf2860c9dde740583d246dbcb8e1b0b18e1b18a0891752adc3",
+            "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
+            "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/transcriber.py": "0f90e27d02f3d460666713f19ae62cc8e7833d925cf5991622810b2d153537dd",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+          },
+          "progress_file": "out/windowed_ar_20261031/encoder_tail/training.json",
+          "source_commit": "525e89d",
+          "epoch": 200,
+          "optimizer_steps": 6400
         },
         {
           "id": "E16-C1",
@@ -3898,7 +3975,7 @@
           "model": "AL-AR4K@0.6.0",
           "variant": "A",
           "ablation": "capacity",
-          "status": "running",
+          "status": "completed",
           "parameters": 25966851,
           "training_examples": 32,
           "target_epochs": 400,
@@ -3907,7 +3984,116 @@
           "checkpoint": "out/windowed_ar_20261031/capacity512/model_latest.pt",
           "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
           "delivery": "diagnostic_only",
-          "quality_status": "not_yet_evaluated"
+          "quality_status": "controlled_training_fit_passed_generalization_partial",
+          "source_sha256": {
+            "script/train_windowed_variants.py": "a1768da8496b06bf2860c9dde740583d246dbcb8e1b0b18e1b18a0891752adc3",
+            "src/windowed_variants.py": "76618b713cd28bc21819a05f846f4257aacb1b41afd0017f76c1def150766428",
+            "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/transcriber.py": "0f90e27d02f3d460666713f19ae62cc8e7833d925cf5991622810b2d153537dd",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+          },
+          "progress_file": "out/windowed_ar_20261031/capacity512/training.json",
+          "source_commit": "525e89d",
+          "epoch": 400,
+          "optimizer_steps": 12800,
+          "checkpoint_sha256": "757b08db2afd47ef66a0c8781b97f7b5cecf990c51cc97a8b232cc8fe7254955",
+          "metrics": {
+            "fixed_probe": {
+              "examples": 5,
+              "positive_examples": 4,
+              "completed": 5,
+              "onset_f1_25ms": 0.5416666666666666,
+              "silence_extra_onsets": 0,
+              "forced_windows": 0
+            },
+            "random_check": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "onset_f1_25ms": 0.6010928952000381,
+              "silence_extra_onsets": 0,
+              "forced_windows": 0,
+              "joint_f1_25ms": 0.38757317791479284,
+              "teacher": {
+                "events": 140,
+                "stops": 80,
+                "false_stops": 26,
+                "correct_stops": 54,
+                "layout_total": 323,
+                "layout_correct": 219,
+                "pointer_correct_25ms": 77,
+                "continue_and_time_correct_25ms": 60
+              }
+            },
+            "train": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "onset_f1_25ms": 1.0,
+              "silence_extra_onsets": 0,
+              "forced_windows": 0,
+              "joint_f1_25ms": 1.0,
+              "teacher": {
+                "events": 140,
+                "stops": 80,
+                "false_stops": 0,
+                "correct_stops": 80,
+                "layout_total": 324,
+                "layout_correct": 324,
+                "pointer_correct_25ms": 140,
+                "continue_and_time_correct_25ms": 140
+              }
+            }
+          }
+        },
+        {
+          "id": "E16-P0",
+          "kind": "explicit_prefix_pattern_training",
+          "model": "AL-AR4K@0.6.0",
+          "condition": "A",
+          "ablation": "base",
+          "status": "running",
+          "training_examples": 40,
+          "prefix_notes": 8,
+          "suffix_notes": 16,
+          "target_epochs": 400,
+          "target_optimizer_steps": 16000,
+          "data_sha256": "54451493e896191a466b35bdaf96008dc3b677977bc42729904ff113fdca0387",
+          "checkpoint": "out/windowed_ar_20261031/pattern_base/model_latest.pt",
+          "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
+          "quality_status": "not_yet_evaluated",
+          "delivery": "diagnostic_only",
+          "given_inputs": [
+            "onset times",
+            "one Tap per onset",
+            "first 8 chart positions"
+          ]
+        },
+        {
+          "id": "E16-P1",
+          "kind": "explicit_prefix_pattern_training",
+          "model": "AL-AR4K@0.6.0",
+          "condition": "A",
+          "ablation": "kind_position",
+          "status": "prepared",
+          "training_examples": 40,
+          "prefix_notes": 8,
+          "suffix_notes": 16,
+          "target_epochs": 400,
+          "target_optimizer_steps": 16000,
+          "data_sha256": "54451493e896191a466b35bdaf96008dc3b677977bc42729904ff113fdca0387",
+          "checkpoint": "out/windowed_ar_20261031/pattern_kind_position/model_latest.pt",
+          "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
+          "quality_status": "not_yet_evaluated",
+          "delivery": "diagnostic_only",
+          "given_inputs": [
+            "onset times",
+            "one Tap per onset",
+            "first 8 chart positions"
+          ]
         }
       ],
       "research_update": {
@@ -3979,7 +4165,20 @@
           "scope": "controlled small-sample W0/W1 first; full-corpus work gated on actual generation",
           "report": "docs/evaluations/windowed_ar_stage2_20261031.md",
           "quality": "not_passed_on_unseen_controlled_examples",
-          "full_corpus_training_started": false
+          "full_corpus_training_started": false,
+          "natural_adaptation": {
+            "status": "prepared_not_launched",
+            "arms": [
+              "W0",
+              "W1"
+            ],
+            "mode": "4K A",
+            "parent": "AL-AR4K@0.5.1/A/e1400",
+            "training_songs": 300,
+            "planned_epochs": 20,
+            "learning_rate": 3e-05,
+            "report": "docs/evaluations/windowed_ar_natural_20261031.md"
+          }
         },
         "stage3": {
           "status": "controlled_experiment_completed",
