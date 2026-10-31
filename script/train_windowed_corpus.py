@@ -24,6 +24,7 @@ from script.train_grounded_ar import checked_pairs, encode_waveform, load_inputs
 from script.train_soft_onset import cache_inputs, load_sample
 from src.anchored_ar import AnchoredAR, encode_target, normalized_loss, generate as whole_generate
 from src.audio_understanding.inference import sha256
+from src.audio_understanding.evaluation import match_events
 from src.conditional_training import empty_targets
 from src.data.audio2mel import AudioGPUprocessor
 from src.data.chart_tokenizer import ChartTokenizer
@@ -102,12 +103,24 @@ def evaluate(model,args,budget,epoch,full=True):
     def one(id,split,view,reference,clock):
         p=generator(model,view,clock['bpm'],use_soft=False,greedy=True,max_tokens=12000,check=budget.check)
         p.pop('trace',None);score=scorer.score(reference,p,clock,profile)
+        if split=='train15':
+            matched=0
+            for lane in range(4):
+                for kind in KINDS.values():
+                    a=[n['time_seconds'] for n in reference if n['position']==lane and n['type']==kind]
+                    b=[n['time_seconds'] for n in p['notes'] if n['position']==lane and n['type']==kind]
+                    matched+=len(match_events(a,b,.05))
+            score['joint_time_position_type_f1_50ms']=2*matched/(len(reference)+len(p['notes']))
+            score['completed_only_joint_f1_50ms']=score['joint_time_position_type_f1_50ms'] if p['status']=='completed' else 0.
         # Include leading/trailing inactivity, so empty-tail collapse cannot
         # appear as a good longest-gap score merely because it emitted once.
         times=[0.,*p['onsets_seconds'],view['duration']]
         gaps=[dict(start=a,end=b,seconds=b-a,reference_onsets=sum(a<t<b for t in {n['time_seconds'] for n in reference}))
               for a,b in zip(times,times[1:]) if b>a]
         gaps=sorted(gaps,key=lambda g:g['seconds'],reverse=True)
+        for gap in gaps:
+            held_until=max((n['end_seconds'] for n in p['notes'] if n['time_seconds']<=gap['start']),default=gap['start'])
+            gap['no_active_note_seconds']=max(0,gap['end']-max(gap['start'],held_until))
         record=dict(id=id,split=split,status=p['status'],metrics=score,longest_gaps=gaps[:5],
             forced_windows=p.get('forced_windows'),learned_window_end_fraction=p.get('learned_window_end_fraction'))
         write_json(output/f'{id}.json',dict(**record,prediction=p))
@@ -132,6 +145,8 @@ def evaluate(model,args,budget,epoch,full=True):
         part=[r for r in result if r['split']==split]
         aggregates[split]=dict(examples=len(part),completed=sum(r['status']=='completed' for r in part),
             **{k:sum(r['metrics'][k] for r in part)/len(part) for k in ('onset_f1_25ms','onset_f1_50ms','onset_f1_100ms','grid_bonus','time_type_f1')})
+        if split=='train15':
+            aggregates[split]['completed_only_joint_f1_50ms']=sum(r['metrics']['completed_only_joint_f1_50ms'] for r in part)/len(part)
     write_json(output/'summary.json',dict(epoch=epoch,full=full,rows=result,aggregates=aggregates,
         scope='Raw generation; E20 is a development regression set, not a new blind test. '
             'Time+type ignores moving-line coordinates; not time+position+type joint F1.'))
