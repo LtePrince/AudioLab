@@ -207,7 +207,7 @@
       "output_protocol": "audiolab-global-audio-window-output-ar-v1",
       "delivery": "controlled_experiment_only_not_product",
       "evidence": "docs/evaluations/windowed_ar_stage2_20261031.md",
-      "training_status": "controlled_training_running",
+      "training_status": "controlled_training_completed",
       "quality_status": "not_evaluated_on_natural_music"
     }
   ],
@@ -3163,7 +3163,7 @@
       "models": [],
       "status": "in_progress",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "D0 and 400-epoch controlled W0/W1 completed. Both fit all 32 training examples; output windows improve random-combination onset macro F1 but regress original three-note probes. Correct-history diagnostics still fail, so rollout error alone is not the explanation. Full300 training not started.",
+      "result": "D0, W0/W1 and H0/H1 controlled trainings completed. All AR arms fit the 32 training examples; unseen combinations remain poor. Windows improve random-onset macro F1 but regress fixed probes; history noise improves fixed probes but not perturbed-prefix recovery or joint layout. Full300 training not started.",
       "evidence": "docs/fixed_length_attribution_plan.md",
       "runs": [
         {
@@ -3487,7 +3487,7 @@
           "model": "AL-AR4K@0.6.0",
           "variant": "A",
           "architecture": "window",
-          "status": "running",
+          "status": "completed",
           "delivery": "diagnostic_only",
           "training_examples": 32,
           "training_data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
@@ -3510,7 +3510,60 @@
             "src/history_time_noise.py": "e96a5bc21314467961b1067dca964cbef98efbdc2b5986a0b8450b66f3aa8e36"
           },
           "report": "docs/evaluations/windowed_ar_stage3_20261031.md",
-          "quality_status": "pending"
+          "quality_status": "mixed_results_no_recovery_advantage_not_promoted",
+          "epoch": 400,
+          "optimizer_steps": 12800,
+          "checkpoint_sha256": "8779682bd9d157ebc7fe4e355e40be688d869aa31bb5eb6885ba46f1e1cac0de",
+          "rollout_metrics": {
+            "fixed_probe": {
+              "examples": 5,
+              "positive_examples": 4,
+              "completed": 5,
+              "positive_macro_raw_onset_f1_25ms": 0.6166666666666667,
+              "raw_onset_micro": {
+                "reference": 12,
+                "predicted": 11,
+                "matched": 7,
+                "precision": 0.6363636363636364,
+                "recall": 0.5833333333333334
+              },
+              "silence_extra_onsets": 0,
+              "forced_windows": 0
+            },
+            "random_check": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 30,
+              "positive_macro_raw_onset_f1_25ms": 0.5644308964549247,
+              "raw_onset_micro": {
+                "reference": 140,
+                "predicted": 431,
+                "matched": 84,
+                "precision": 0.19489559164733178,
+                "recall": 0.6
+              },
+              "silence_extra_onsets": 0,
+              "forced_windows": 1,
+              "positive_macro_joint_f1_25ms": 0.3239721826065402
+            },
+            "train": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "positive_macro_raw_onset_f1_25ms": 1.0,
+              "raw_onset_micro": {
+                "reference": 140,
+                "predicted": 140,
+                "matched": 140,
+                "precision": 1.0,
+                "recall": 1.0
+              },
+              "silence_extra_onsets": 0,
+              "forced_windows": 0,
+              "positive_macro_joint_f1_25ms": 1.0
+            }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/h0_h1_controlled_result.json"
         }
       ],
       "research_update": {
@@ -3585,9 +3638,10 @@
           "full_corpus_training_started": false
         },
         "stage3": {
-          "status": "controlled_training_running",
+          "status": "controlled_experiment_completed",
           "scope": "small history-clock errors only; full300 training still gated",
-          "report": "docs/evaluations/windowed_ar_stage3_20261031.md"
+          "report": "docs/evaluations/windowed_ar_stage3_20261031.md",
+          "quality": "mixed_results_no_recovery_advantage_not_promoted"
         }
       },
       "additional_evidence": [
