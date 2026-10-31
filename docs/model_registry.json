@@ -3174,7 +3174,7 @@
       "models": [],
       "status": "in_progress",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "Controlled stages 1-4 completed. All AR arms fit 32 constructed training examples; unseen combinations remain weak. Free-x W1 improves mean onset F1 but does not consistently improve joint placement/type. No natural full300 retraining or product replacement; stage 5 remains unexecuted.",
+      "result": "Stages 1–4 controlled diagnostics completed; K and C training active, E prepared. Stage 5 and full natural-corpus verification not completed; no runtime weight replacement.",
       "evidence": "docs/fixed_length_attribution_plan.md",
       "runs": [
         {
@@ -3857,6 +3857,57 @@
             }
           },
           "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/freex_controlled_result.json"
+        },
+        {
+          "id": "E16-K1",
+          "kind": "controlled_generation_training",
+          "model": "AL-AR4K@0.6.0",
+          "variant": "A",
+          "ablation": "kind_position",
+          "status": "running",
+          "parameters": 6723836,
+          "training_examples": 32,
+          "target_epochs": 400,
+          "target_optimizer_steps": 12800,
+          "training_data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+          "checkpoint": "out/windowed_ar_20261031/kind_position/model_latest.pt",
+          "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
+          "delivery": "diagnostic_only",
+          "quality_status": "not_yet_evaluated"
+        },
+        {
+          "id": "E16-E1",
+          "kind": "controlled_generation_training",
+          "model": "AL-AR4K@0.6.0",
+          "variant": "A",
+          "ablation": "encoder_tail",
+          "status": "prepared",
+          "parameters": null,
+          "training_examples": 32,
+          "target_epochs": 400,
+          "target_optimizer_steps": 12800,
+          "training_data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+          "checkpoint": "out/windowed_ar_20261031/encoder_tail/model_latest.pt",
+          "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
+          "delivery": "diagnostic_only",
+          "quality_status": "not_yet_evaluated"
+        },
+        {
+          "id": "E16-C1",
+          "kind": "controlled_generation_training",
+          "model": "AL-AR4K@0.6.0",
+          "variant": "A",
+          "ablation": "capacity",
+          "status": "running",
+          "parameters": 25966851,
+          "training_examples": 32,
+          "target_epochs": 400,
+          "target_optimizer_steps": 12800,
+          "training_data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+          "checkpoint": "out/windowed_ar_20261031/capacity512/model_latest.pt",
+          "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
+          "delivery": "diagnostic_only",
+          "quality_status": "not_yet_evaluated"
         }
       ],
       "research_update": {
@@ -3944,8 +3995,10 @@
           "quality": "training_fit_passed_but_unseen_joint_layout_remains_poor"
         },
         "stage5": {
-          "status": "not_started",
-          "scope": "separate key representation/pattern, encoder adaptation, and capacity experiments; do not infer completion from earlier diagnostics"
+          "status": "in_progress",
+          "scope": "Separate K output factorization, E pretrained audio-tail adaptation, C decoder capacity, and explicit-prefix pattern controls.",
+          "report": "docs/evaluations/windowed_ar_stage5_20261031.md",
+          "natural_music_promotion": false
         }
       },
       "additional_evidence": [
