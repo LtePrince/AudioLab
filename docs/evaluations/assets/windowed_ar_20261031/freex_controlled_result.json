@@ -1,0 +1,464 @@
+{
+  "schema": "audiolab-controlled-freex-comparison-v1",
+  "runs": {
+    "A-W0": {
+      "config": {
+        "architecture": "whole",
+        "condition": "A",
+        "mode": "freex",
+        "seed": 42,
+        "epochs": 400,
+        "lr": 0.0003,
+        "parameters": 6815860,
+        "decoder_config": {
+          "vocab_size": 369,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null,
+          "n_lanes": 64,
+          "offset_head": true
+        },
+        "window_seconds": 10.0,
+        "data_sha256": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066",
+        "history_noise_ms": 0.0,
+        "history_noise_seed": 2042,
+        "initial_backbone_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
+        "source_sha256": {
+          "script/train_windowed_freex.py": "aba152e0f601c68f6cefe6eff80f5507323f3ef139c294c969fe355540d1610f",
+          "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+          "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+          "src/history_time_noise.py": "e96a5bc21314467961b1067dca964cbef98efbdc2b5986a0b8450b66f3aa8e36",
+          "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+          "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+          "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+        },
+        "loss": "Original anchored per-example normalized losses, including coordinate MSE.",
+        "scope": "32 constructed examples; independent random combinations; not natural music or product weights."
+      },
+      "final_training": {
+        "epoch": 400,
+        "steps": 12800,
+        "objective": 0.0001511970329617861,
+        "elapsed_seconds": 869.3708472698927,
+        "frame_accuracy": 1.0,
+        "stop_recall": 1.0,
+        "false_stop_rate": 0.0,
+        "counts": {
+          "time_count": 140,
+          "layout_count": 324,
+          "stop_count": 32,
+          "continue_count": 140,
+          "coordinate_count": 147
+        },
+        "conditional_time_mae_seconds": 0.0001320597488285066,
+        "teacher_screen_x_mae": 0.00013068679824699555,
+        "learning_rate": 2.9999999999999997e-05,
+        "history_noise": {
+          "groups": 0,
+          "restricted_groups": 0,
+          "unchanged_groups": 0,
+          "absolute_noise_seconds": 0.0,
+          "max_absolute_noise_seconds": 0
+        }
+      },
+      "resources": {
+        "disk_free_gib": 9.581951141357422,
+        "ram_available_gib": 37.114288330078125,
+        "rss_gib": 1.7265129089355469,
+        "gpu_peak_allocated_gib": 0.14481210708618164,
+        "gpu_peak_reserved_gib": 0.171875
+      },
+      "checkpoint": "out/windowed_ar_20261031/freex_a_whole/model_latest.pt",
+      "checkpoint_sha256": "73abb49cb5b003659614014a2bb9d81ec0e3be19c6e8373ebb08e74a3ad9dbcd",
+      "evaluation_sha256": "af20d67d996d5825db0a14de8c81ecbc483abfffb7144449bf7f688d843d64a9",
+      "evaluation": {
+        "fixed_probe": {
+          "examples": 5,
+          "positive_examples": 4,
+          "completed": 5,
+          "positive_macro_raw_onset_f1_25ms": 0.5,
+          "silence_extra_onsets": 0
+        },
+        "random_check": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "positive_macro_raw_onset_f1_25ms": 0.5141729781469208,
+          "silence_extra_onsets": 0,
+          "positive_macro_joint_f1_25ms": 0.12472679981083343,
+          "matched_notes": 10,
+          "matched_screen_x_mae": 0.004827260232819283,
+          "coordinate_out_of_bounds": 0
+        },
+        "train": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "positive_macro_raw_onset_f1_25ms": 1.0,
+          "silence_extra_onsets": 0,
+          "positive_macro_joint_f1_25ms": 1.0,
+          "matched_notes": 147,
+          "matched_screen_x_mae": 7.286974974374382e-05,
+          "coordinate_out_of_bounds": 0
+        }
+      }
+    },
+    "A-W1": {
+      "config": {
+        "architecture": "window",
+        "condition": "A",
+        "mode": "freex",
+        "seed": 42,
+        "epochs": 400,
+        "lr": 0.0003,
+        "parameters": 6881396,
+        "decoder_config": {
+          "vocab_size": 369,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null,
+          "n_lanes": 64,
+          "offset_head": true
+        },
+        "window_seconds": 10.0,
+        "data_sha256": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066",
+        "history_noise_ms": 0.0,
+        "history_noise_seed": 2042,
+        "initial_backbone_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
+        "source_sha256": {
+          "script/train_windowed_freex.py": "aba152e0f601c68f6cefe6eff80f5507323f3ef139c294c969fe355540d1610f",
+          "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+          "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+          "src/history_time_noise.py": "e96a5bc21314467961b1067dca964cbef98efbdc2b5986a0b8450b66f3aa8e36",
+          "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+          "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+          "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+        },
+        "loss": "Original anchored per-example normalized losses, including coordinate MSE.",
+        "scope": "32 constructed examples; independent random combinations; not natural music or product weights."
+      },
+      "final_training": {
+        "epoch": 400,
+        "steps": 12800,
+        "objective": 0.00012240338583621415,
+        "elapsed_seconds": 867.0225099511445,
+        "frame_accuracy": 1.0,
+        "stop_recall": 1.0,
+        "false_stop_rate": 0.0,
+        "counts": {
+          "time_count": 140,
+          "layout_count": 324,
+          "stop_count": 80,
+          "continue_count": 140,
+          "coordinate_count": 147
+        },
+        "conditional_time_mae_seconds": 0.00014265165523612606,
+        "teacher_screen_x_mae": 0.00010953185894545547,
+        "learning_rate": 2.9999999999999997e-05,
+        "history_noise": {
+          "groups": 0,
+          "restricted_groups": 0,
+          "unchanged_groups": 0,
+          "absolute_noise_seconds": 0.0,
+          "max_absolute_noise_seconds": 0
+        }
+      },
+      "resources": {
+        "disk_free_gib": 9.582134246826172,
+        "ram_available_gib": 35.796939849853516,
+        "rss_gib": 1.7173385620117188,
+        "gpu_peak_allocated_gib": 0.14603281021118164,
+        "gpu_peak_reserved_gib": 0.173828125
+      },
+      "checkpoint": "out/windowed_ar_20261031/freex_a_window/model_latest.pt",
+      "checkpoint_sha256": "705c43b07e810cad72bd8f8143f40d146627c6fb2cb472ef70be4dbf33195c2a",
+      "evaluation_sha256": "891a031870693dc09dcca7b38a985aaf334d10fd0a11703f767a9b0b345114f7",
+      "evaluation": {
+        "fixed_probe": {
+          "examples": 5,
+          "positive_examples": 4,
+          "completed": 5,
+          "positive_macro_raw_onset_f1_25ms": 0.4880952380952381,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0
+        },
+        "random_check": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "positive_macro_raw_onset_f1_25ms": 0.5809402269679802,
+          "silence_extra_onsets": 0,
+          "positive_macro_joint_f1_25ms": 0.11024659863945578,
+          "matched_notes": 9,
+          "matched_screen_x_mae": 0.004990018896204562,
+          "coordinate_out_of_bounds": 0,
+          "forced_windows": 0
+        },
+        "train": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "positive_macro_raw_onset_f1_25ms": 1.0,
+          "silence_extra_onsets": 0,
+          "positive_macro_joint_f1_25ms": 1.0,
+          "matched_notes": 147,
+          "matched_screen_x_mae": 6.739162182570825e-05,
+          "coordinate_out_of_bounds": 0,
+          "forced_windows": 0
+        }
+      }
+    },
+    "S-W0": {
+      "config": {
+        "architecture": "whole",
+        "condition": "S",
+        "mode": "freex",
+        "seed": 42,
+        "epochs": 400,
+        "lr": 0.0003,
+        "parameters": 6815860,
+        "decoder_config": {
+          "vocab_size": 369,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null,
+          "n_lanes": 64,
+          "offset_head": true
+        },
+        "window_seconds": 10.0,
+        "data_sha256": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066",
+        "history_noise_ms": 0.0,
+        "history_noise_seed": 2042,
+        "initial_backbone_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
+        "source_sha256": {
+          "script/train_windowed_freex.py": "aba152e0f601c68f6cefe6eff80f5507323f3ef139c294c969fe355540d1610f",
+          "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+          "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+          "src/history_time_noise.py": "e96a5bc21314467961b1067dca964cbef98efbdc2b5986a0b8450b66f3aa8e36",
+          "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+          "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+          "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+        },
+        "loss": "Original anchored per-example normalized losses, including coordinate MSE.",
+        "scope": "32 constructed examples; independent random combinations; not natural music or product weights."
+      },
+      "final_training": {
+        "epoch": 400,
+        "steps": 12800,
+        "objective": 0.00014934821723571926,
+        "elapsed_seconds": 779.696041829884,
+        "frame_accuracy": 1.0,
+        "stop_recall": 1.0,
+        "false_stop_rate": 0.0,
+        "counts": {
+          "time_count": 140,
+          "layout_count": 324,
+          "stop_count": 32,
+          "continue_count": 140,
+          "coordinate_count": 147
+        },
+        "conditional_time_mae_seconds": 0.0001181484573977146,
+        "teacher_screen_x_mae": 0.00011313893079130474,
+        "learning_rate": 2.9999999999999997e-05,
+        "history_noise": {
+          "groups": 0,
+          "restricted_groups": 0,
+          "unchanged_groups": 0,
+          "absolute_noise_seconds": 0.0,
+          "max_absolute_noise_seconds": 0
+        }
+      },
+      "resources": {
+        "disk_free_gib": 9.381816864013672,
+        "ram_available_gib": 35.804832458496094,
+        "rss_gib": 1.7004623413085938,
+        "gpu_peak_allocated_gib": 0.14481210708618164,
+        "gpu_peak_reserved_gib": 0.171875
+      },
+      "checkpoint": "out/windowed_ar_20261031/freex_s_whole/model_latest.pt",
+      "checkpoint_sha256": "0d124ecee0c2ae1fdf937e6e134e7a56fedd73e33bed81d872a7cab7bfb7ba20",
+      "evaluation_sha256": "5d81470a9996ec7b188d35c81e70a0ac45ab1ca4e5ac9fbcfe52bee12ac459a3",
+      "evaluation": {
+        "fixed_probe": {
+          "examples": 5,
+          "positive_examples": 4,
+          "completed": 5,
+          "positive_macro_raw_onset_f1_25ms": 0.5,
+          "silence_extra_onsets": 0
+        },
+        "random_check": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 30,
+          "positive_macro_raw_onset_f1_25ms": 0.6035592041994076,
+          "silence_extra_onsets": 0,
+          "positive_macro_joint_f1_25ms": 0.11139455782312925,
+          "matched_notes": 8,
+          "matched_screen_x_mae": 0.005101136851232636,
+          "coordinate_out_of_bounds": 0
+        },
+        "train": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "positive_macro_raw_onset_f1_25ms": 1.0,
+          "silence_extra_onsets": 0,
+          "positive_macro_joint_f1_25ms": 1.0,
+          "matched_notes": 147,
+          "matched_screen_x_mae": 6.867427597778509e-05,
+          "coordinate_out_of_bounds": 0
+        }
+      }
+    },
+    "S-W1": {
+      "config": {
+        "architecture": "window",
+        "condition": "S",
+        "mode": "freex",
+        "seed": 42,
+        "epochs": 400,
+        "lr": 0.0003,
+        "parameters": 6881396,
+        "decoder_config": {
+          "vocab_size": 369,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null,
+          "n_lanes": 64,
+          "offset_head": true
+        },
+        "window_seconds": 10.0,
+        "data_sha256": "466e6cd28126cdf87063730b3a97ba28e2451a3518d43373fe34fcf18805f066",
+        "history_noise_ms": 0.0,
+        "history_noise_seed": 2042,
+        "initial_backbone_sha256": "44889f06022df639497697efdaf0d58e7bc6e81dc7f8d79dda5f0383e42b8caf",
+        "source_sha256": {
+          "script/train_windowed_freex.py": "aba152e0f601c68f6cefe6eff80f5507323f3ef139c294c969fe355540d1610f",
+          "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+          "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+          "src/history_time_noise.py": "e96a5bc21314467961b1067dca964cbef98efbdc2b5986a0b8450b66f3aa8e36",
+          "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+          "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+          "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+        },
+        "loss": "Original anchored per-example normalized losses, including coordinate MSE.",
+        "scope": "32 constructed examples; independent random combinations; not natural music or product weights."
+      },
+      "final_training": {
+        "epoch": 400,
+        "steps": 12800,
+        "objective": 0.00011796465137878007,
+        "elapsed_seconds": 804.8219470903277,
+        "frame_accuracy": 1.0,
+        "stop_recall": 1.0,
+        "false_stop_rate": 0.0,
+        "counts": {
+          "time_count": 140,
+          "layout_count": 324,
+          "stop_count": 80,
+          "continue_count": 140,
+          "coordinate_count": 147
+        },
+        "conditional_time_mae_seconds": 0.00013206971622338787,
+        "teacher_screen_x_mae": 0.00012230709568141217,
+        "learning_rate": 2.9999999999999997e-05,
+        "history_noise": {
+          "groups": 0,
+          "restricted_groups": 0,
+          "unchanged_groups": 0,
+          "absolute_noise_seconds": 0.0,
+          "max_absolute_noise_seconds": 0
+        }
+      },
+      "resources": {
+        "disk_free_gib": 9.381568908691406,
+        "ram_available_gib": 37.137489318847656,
+        "rss_gib": 1.7059822082519531,
+        "gpu_peak_allocated_gib": 0.14603281021118164,
+        "gpu_peak_reserved_gib": 0.173828125
+      },
+      "checkpoint": "out/windowed_ar_20261031/freex_s_window/model_latest.pt",
+      "checkpoint_sha256": "8e701dcc2f7d6e4d97db7270444b17933c1cd0ca6cfa5f1b71039bbf0467223c",
+      "evaluation_sha256": "d3091e241e32b6593952a44cb19606fbd064bd5e627bedf386f50300e015e0cb",
+      "evaluation": {
+        "fixed_probe": {
+          "examples": 5,
+          "positive_examples": 4,
+          "completed": 5,
+          "positive_macro_raw_onset_f1_25ms": 0.5,
+          "silence_extra_onsets": 0,
+          "forced_windows": 0
+        },
+        "random_check": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "positive_macro_raw_onset_f1_25ms": 0.6272307990795386,
+          "silence_extra_onsets": 0,
+          "positive_macro_joint_f1_25ms": 0.11979308390022676,
+          "matched_notes": 10,
+          "matched_screen_x_mae": 0.003469156867703349,
+          "coordinate_out_of_bounds": 0,
+          "forced_windows": 0
+        },
+        "train": {
+          "examples": 32,
+          "positive_examples": 28,
+          "completed": 32,
+          "positive_macro_raw_onset_f1_25ms": 1.0,
+          "silence_extra_onsets": 0,
+          "positive_macro_joint_f1_25ms": 1.0,
+          "matched_notes": 147,
+          "matched_screen_x_mae": 6.983759538527551e-05,
+          "coordinate_out_of_bounds": 0,
+          "forced_windows": 0
+        }
+      }
+    }
+  },
+  "scope": "Constructed mapping only; full-resolution whole audio. No natural full300 training or product replacement."
+}

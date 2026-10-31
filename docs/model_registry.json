@@ -218,8 +218,8 @@
       "output_protocol": "audiolab-global-audio-window-output-ar-v1",
       "delivery": "controlled_experiment_only_not_product",
       "evidence": "docs/evaluations/windowed_ar_stage4_20261031.md",
-      "training_status": "controlled_training_scheduled",
-      "quality_status": "not_evaluated_on_natural_music"
+      "training_status": "controlled_training_completed",
+      "quality_status": "controlled_generalization_not_passed_natural_music_not_evaluated"
     }
   ],
   "experiments": [
@@ -3174,7 +3174,7 @@
       "models": [],
       "status": "in_progress",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "D0, W0/W1 and H0/H1 controlled trainings completed. All AR arms fit the 32 training examples; unseen combinations remain poor. Windows improve random-onset macro F1 but regress fixed probes; history noise improves fixed probes but not perturbed-prefix recovery or joint layout. Full300 training not started.",
+      "result": "Controlled stages 1-4 completed. All AR arms fit 32 constructed training examples; unseen combinations remain weak. Free-x W1 improves mean onset F1 but does not consistently improve joint placement/type. No natural full300 retraining or product replacement; stage 5 remains unexecuted.",
       "evidence": "docs/fixed_length_attribution_plan.md",
       "runs": [
         {
@@ -3582,7 +3582,7 @@
           "model": "AL-FreeX@0.4.0",
           "variant": "A",
           "architecture": "whole",
-          "status": "scheduled",
+          "status": "completed",
           "delivery": "diagnostic_only",
           "seed": 42,
           "training_examples": 32,
@@ -3607,8 +3607,43 @@
           "progress_file": "out/windowed_ar_20261031/freex_a_whole/training.json",
           "supervisor": "out/windowed_ar_20261031/freex_supervisor.json",
           "report": "docs/evaluations/windowed_ar_stage4_20261031.md",
-          "quality_status": "pending",
-          "status_is_launch_snapshot": true
+          "quality_status": "controlled_training_fit_passed_generalization_not_passed",
+          "status_is_launch_snapshot": false,
+          "epoch": 400,
+          "optimizer_steps": 12800,
+          "checkpoint_sha256": "73abb49cb5b003659614014a2bb9d81ec0e3be19c6e8373ebb08e74a3ad9dbcd",
+          "metrics": {
+            "fixed_probe": {
+              "examples": 5,
+              "positive_examples": 4,
+              "completed": 5,
+              "positive_macro_raw_onset_f1_25ms": 0.5,
+              "silence_extra_onsets": 0
+            },
+            "random_check": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "positive_macro_raw_onset_f1_25ms": 0.5141729781469208,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 0.12472679981083343,
+              "matched_notes": 10,
+              "matched_screen_x_mae": 0.004827260232819283,
+              "coordinate_out_of_bounds": 0
+            },
+            "train": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "positive_macro_raw_onset_f1_25ms": 1.0,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 1.0,
+              "matched_notes": 147,
+              "matched_screen_x_mae": 7.286974974374382e-05,
+              "coordinate_out_of_bounds": 0
+            }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/freex_controlled_result.json"
         },
         {
           "id": "E16-FS-W0",
@@ -3616,7 +3651,7 @@
           "model": "AL-FreeX@0.4.0",
           "variant": "S",
           "architecture": "whole",
-          "status": "scheduled",
+          "status": "completed",
           "delivery": "diagnostic_only",
           "seed": 42,
           "training_examples": 32,
@@ -3641,8 +3676,43 @@
           "progress_file": "out/windowed_ar_20261031/freex_s_whole/training.json",
           "supervisor": "out/windowed_ar_20261031/freex_supervisor.json",
           "report": "docs/evaluations/windowed_ar_stage4_20261031.md",
-          "quality_status": "pending",
-          "status_is_launch_snapshot": true
+          "quality_status": "controlled_training_fit_passed_generalization_not_passed",
+          "status_is_launch_snapshot": false,
+          "epoch": 400,
+          "optimizer_steps": 12800,
+          "checkpoint_sha256": "0d124ecee0c2ae1fdf937e6e134e7a56fedd73e33bed81d872a7cab7bfb7ba20",
+          "metrics": {
+            "fixed_probe": {
+              "examples": 5,
+              "positive_examples": 4,
+              "completed": 5,
+              "positive_macro_raw_onset_f1_25ms": 0.5,
+              "silence_extra_onsets": 0
+            },
+            "random_check": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 30,
+              "positive_macro_raw_onset_f1_25ms": 0.6035592041994076,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 0.11139455782312925,
+              "matched_notes": 8,
+              "matched_screen_x_mae": 0.005101136851232636,
+              "coordinate_out_of_bounds": 0
+            },
+            "train": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "positive_macro_raw_onset_f1_25ms": 1.0,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 1.0,
+              "matched_notes": 147,
+              "matched_screen_x_mae": 6.867427597778509e-05,
+              "coordinate_out_of_bounds": 0
+            }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/freex_controlled_result.json"
         },
         {
           "id": "E16-FA-W1",
@@ -3650,7 +3720,7 @@
           "model": "AL-FreeX@0.5.0",
           "variant": "A",
           "architecture": "window",
-          "status": "scheduled",
+          "status": "completed",
           "delivery": "diagnostic_only",
           "seed": 42,
           "training_examples": 32,
@@ -3675,8 +3745,46 @@
           "progress_file": "out/windowed_ar_20261031/freex_a_window/training.json",
           "supervisor": "out/windowed_ar_20261031/freex_supervisor.json",
           "report": "docs/evaluations/windowed_ar_stage4_20261031.md",
-          "quality_status": "pending",
-          "status_is_launch_snapshot": true
+          "quality_status": "controlled_training_fit_passed_generalization_not_passed",
+          "status_is_launch_snapshot": false,
+          "epoch": 400,
+          "optimizer_steps": 12800,
+          "checkpoint_sha256": "705c43b07e810cad72bd8f8143f40d146627c6fb2cb472ef70be4dbf33195c2a",
+          "metrics": {
+            "fixed_probe": {
+              "examples": 5,
+              "positive_examples": 4,
+              "completed": 5,
+              "positive_macro_raw_onset_f1_25ms": 0.4880952380952381,
+              "silence_extra_onsets": 0,
+              "forced_windows": 0
+            },
+            "random_check": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "positive_macro_raw_onset_f1_25ms": 0.5809402269679802,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 0.11024659863945578,
+              "matched_notes": 9,
+              "matched_screen_x_mae": 0.004990018896204562,
+              "coordinate_out_of_bounds": 0,
+              "forced_windows": 0
+            },
+            "train": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "positive_macro_raw_onset_f1_25ms": 1.0,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 1.0,
+              "matched_notes": 147,
+              "matched_screen_x_mae": 6.739162182570825e-05,
+              "coordinate_out_of_bounds": 0,
+              "forced_windows": 0
+            }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/freex_controlled_result.json"
         },
         {
           "id": "E16-FS-W1",
@@ -3684,7 +3792,7 @@
           "model": "AL-FreeX@0.5.0",
           "variant": "S",
           "architecture": "window",
-          "status": "scheduled",
+          "status": "completed",
           "delivery": "diagnostic_only",
           "seed": 42,
           "training_examples": 32,
@@ -3709,8 +3817,46 @@
           "progress_file": "out/windowed_ar_20261031/freex_s_window/training.json",
           "supervisor": "out/windowed_ar_20261031/freex_supervisor.json",
           "report": "docs/evaluations/windowed_ar_stage4_20261031.md",
-          "quality_status": "pending",
-          "status_is_launch_snapshot": true
+          "quality_status": "controlled_training_fit_passed_generalization_not_passed",
+          "status_is_launch_snapshot": false,
+          "epoch": 400,
+          "optimizer_steps": 12800,
+          "checkpoint_sha256": "8e701dcc2f7d6e4d97db7270444b17933c1cd0ca6cfa5f1b71039bbf0467223c",
+          "metrics": {
+            "fixed_probe": {
+              "examples": 5,
+              "positive_examples": 4,
+              "completed": 5,
+              "positive_macro_raw_onset_f1_25ms": 0.5,
+              "silence_extra_onsets": 0,
+              "forced_windows": 0
+            },
+            "random_check": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "positive_macro_raw_onset_f1_25ms": 0.6272307990795386,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 0.11979308390022676,
+              "matched_notes": 10,
+              "matched_screen_x_mae": 0.003469156867703349,
+              "coordinate_out_of_bounds": 0,
+              "forced_windows": 0
+            },
+            "train": {
+              "examples": 32,
+              "positive_examples": 28,
+              "completed": 32,
+              "positive_macro_raw_onset_f1_25ms": 1.0,
+              "silence_extra_onsets": 0,
+              "positive_macro_joint_f1_25ms": 1.0,
+              "matched_notes": 147,
+              "matched_screen_x_mae": 6.983759538527551e-05,
+              "coordinate_out_of_bounds": 0,
+              "forced_windows": 0
+            }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/freex_controlled_result.json"
         }
       ],
       "research_update": {
@@ -3791,10 +3937,11 @@
           "quality": "mixed_results_no_recovery_advantage_not_promoted"
         },
         "stage4": {
-          "status": "controlled_training_scheduled",
+          "status": "controlled_experiment_completed",
           "scope": "independent A/S W0/W1 on 32 synthetic examples; full300 codec validation is not training",
           "report": "docs/evaluations/windowed_ar_stage4_20261031.md",
-          "supervisor": "out/windowed_ar_20261031/freex_supervisor.json"
+          "supervisor": "out/windowed_ar_20261031/freex_supervisor.json",
+          "quality": "training_fit_passed_but_unseen_joint_layout_remains_poor"
         },
         "stage5": {
           "status": "not_started",
