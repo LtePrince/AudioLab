@@ -3480,6 +3480,37 @@
             }
           },
           "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/w0_w1_controlled_result.json"
+        },
+        {
+          "id": "E16-H1",
+          "kind": "controlled_generation_training",
+          "model": "AL-AR4K@0.6.0",
+          "variant": "A",
+          "architecture": "window",
+          "status": "running",
+          "delivery": "diagnostic_only",
+          "training_examples": 32,
+          "training_data_sha256": "f08ecf395fec7dbd4f2beff403a087a9d3dd436beaf8de636892f7e3a72c4a6e",
+          "initial_backbone_sha256": "8a4f75f2dcd41e7950df7680f59177883bbb755ac0f8fc6dbaa5d8bc4980e041",
+          "parameters": 6692227,
+          "target_epochs": 400,
+          "target_optimizer_steps": 12800,
+          "history_noise_ms": 20.0,
+          "history_noise_seed": 2042,
+          "control": "E16-W1 reused as exact zero-noise H0; same initialization, data, order, dropout RNG and optimizer schedule",
+          "checkpoint": "out/windowed_ar_20261031/history20/model_latest.pt",
+          "source_commit": "58701c1",
+          "source_sha256": {
+            "script/train_windowed_ar.py": "46f1f4e7f4b19eee9d64786b512ce44a319d48dbf5cb58127374ec157534feb6",
+            "src/windowed_ar.py": "2d0cf2233e72f66cf51ad7a0ddfcbcba81af7c4e234b14e9481430661c4a46dd",
+            "src/chart_windows.py": "a799c78053c7a0b9822c91737a629019a0d7a67af68709b7ab550dc6a8308851",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "src/history_time_noise.py": "e96a5bc21314467961b1067dca964cbef98efbdc2b5986a0b8450b66f3aa8e36"
+          },
+          "report": "docs/evaluations/windowed_ar_stage3_20261031.md",
+          "quality_status": "pending"
         }
       ],
       "research_update": {
@@ -3552,6 +3583,11 @@
           "report": "docs/evaluations/windowed_ar_stage2_20261031.md",
           "quality": "not_passed_on_unseen_controlled_examples",
           "full_corpus_training_started": false
+        },
+        "stage3": {
+          "status": "controlled_training_running",
+          "scope": "small history-clock errors only; full300 training still gated",
+          "report": "docs/evaluations/windowed_ar_stage3_20261031.md"
         }
       },
       "additional_evidence": [
