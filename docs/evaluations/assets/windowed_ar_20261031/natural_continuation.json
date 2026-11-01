@@ -1,0 +1,34 @@
+{
+  "schema": "audiolab-nw1-continuation-v1",
+  "source": "out/windowed_ar_20261031/natural_window/model_latest.pt",
+  "source_sha256": "0f91f941b2cb08e3470adee2ec09f8ddeba1092642fb6382c741fd9531c73dc3",
+  "source_epoch": 20,
+  "source_steps": 6000,
+  "destination": "out/windowed_ar_20261031/natural_window_fit100",
+  "target_epoch": 100,
+  "changed_fields": {
+    "config.epochs": [
+      20,
+      100
+    ]
+  },
+  "exact_state_preservation_verified": true,
+  "initial_resume_sha256": "74c9ec86e2662d012ac8afd6d11521c4933100d4181f79b2b3d0bee50bae019f",
+  "training_source_sha256": {
+    "script/train_windowed_corpus.py": "d7a3063ae9f5e3f366b18e2496f2a8aedeb755a5486af27158464231ba700979",
+    "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+    "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+    "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+    "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+    "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+    "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2",
+    "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45"
+  },
+  "preparation_script_sha256": "4d2b9edfb7b7c4ef1b7ade60df871104b7807b8f9b41d22f735b05d222d8ff65",
+  "resources": {
+    "disk_free_gib": 28.476726531982422,
+    "ram_available_gib": 37.916778564453125,
+    "rss_gib": 0.72503662109375
+  },
+  "scope": "W1-only fitting study. e20 W0/W1 remain immutable; unequal additional training is not an architecture ablation."
+}

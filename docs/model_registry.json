@@ -3174,7 +3174,7 @@
       "models": [],
       "status": "in_progress",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "Controlled stages 1–5 completed with reports. Matched 4K A full300 W0/W1 adaptation running; no production promotion or runtime replacement.",
+      "result": "Controlled stages 1–5 completed. Matched full300 W0/W1 e20 completed: window protocol underfit, continuous false-empty windows and natural-song regressions remain. W1-only e20→e100 continuation started with complete optimizer/RNG preservation; no production promotion.",
       "evidence": "docs/fixed_length_attribution_plan.md",
       "runs": [
         {
@@ -4349,14 +4349,14 @@
           "model": "AL-AR4K@0.6.0",
           "variant": "A",
           "architecture": "whole",
-          "status": "running",
+          "status": "completed",
           "target_epochs": 20,
           "target_optimizer_steps": 6000,
           "training_songs": 300,
           "parent_checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
           "parent_sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
           "parent_epoch": 1400,
-          "epoch": 1,
+          "epoch": 20,
           "checkpoint": "out/windowed_ar_20261031/natural_whole/model_latest.pt",
           "progress_file": "out/windowed_ar_20261031/natural_whole/training.json",
           "source_sha256": {
@@ -4372,8 +4372,53 @@
           "source_commit": "ba52dc4",
           "report": "docs/evaluations/windowed_ar_natural_20261031.md",
           "delivery": "diagnostic_only",
-          "quality_status": "not_yet_evaluated",
-          "initialization": "constant_lr; new AdamW in BOTH arms; matched parent weights and sample/dropout seeds"
+          "quality_status": "not_passed_natural_music_regression",
+          "initialization": "constant_lr; new AdamW in BOTH arms; matched parent weights and sample/dropout seeds",
+          "optimizer_steps": 6000,
+          "checkpoint_sha256": "2f18e1f0ad9e0bea3486f2f131f9bbc0db51ffe7a81ce6bc57d8d4e860535b68",
+          "metrics": {
+            "E20_development": {
+              "examples": 10,
+              "completed": 4,
+              "onset_f1_25ms": 0.33845630801905857,
+              "onset_f1_50ms": 0.4663878183499808,
+              "onset_f1_100ms": 0.537406598055156,
+              "grid_bonus": 0.17966213576358553,
+              "time_type_f1": 0.22796151580310303
+            },
+            "train15": {
+              "examples": 15,
+              "completed": 15,
+              "onset_f1_25ms": 0.9958866208884469,
+              "onset_f1_50ms": 0.9965797759818992,
+              "onset_f1_100ms": 0.9968768424505215,
+              "grid_bonus": 0.705323078845631,
+              "time_type_f1": 0.9871939402038259,
+              "completed_only_joint_f1_50ms": 0.9794932531417907
+            }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/natural_result.json",
+          "final_training": {
+            "epoch": 20,
+            "steps": 6000,
+            "elapsed_seconds": 1938.1258978620172,
+            "counts": {
+              "time_count": 270200,
+              "layout_count": 633694,
+              "stop_count": 1200,
+              "continue_count": 270200
+            },
+            "frame_ce": 0.005748611547206391,
+            "frame_accuracy": 0.9982827535159141,
+            "subframe_mse": 0.005971066287199719,
+            "layout_ce": 0.11721612403275873,
+            "stop_bce": 0.013448055124554562,
+            "continue_bce": 8.04823530020315e-05,
+            "false_stop_rate": 2.5906735751295337e-05,
+            "end_stop_recall": 0.9966666666666667,
+            "conditional_offset_mae_seconds": 0.0027051188229879446,
+            "objective": 0.04109350250127415
+          }
         },
         {
           "id": "E16-NW1",
@@ -4381,14 +4426,14 @@
           "model": "AL-AR4K@0.6.0",
           "variant": "A",
           "architecture": "window",
-          "status": "running",
+          "status": "completed",
           "target_epochs": 20,
           "target_optimizer_steps": 6000,
           "training_songs": 300,
           "parent_checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
           "parent_sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
           "parent_epoch": 1400,
-          "epoch": 1,
+          "epoch": 20,
           "checkpoint": "out/windowed_ar_20261031/natural_window/model_latest.pt",
           "progress_file": "out/windowed_ar_20261031/natural_window/training.json",
           "source_sha256": {
@@ -4404,8 +4449,89 @@
           "source_commit": "ba52dc4",
           "report": "docs/evaluations/windowed_ar_natural_20261031.md",
           "delivery": "diagnostic_only",
-          "quality_status": "not_yet_evaluated",
-          "initialization": "constant_lr; new AdamW in BOTH arms; matched parent weights and sample/dropout seeds"
+          "quality_status": "not_passed_natural_music_regression",
+          "initialization": "constant_lr; new AdamW in BOTH arms; matched parent weights and sample/dropout seeds",
+          "optimizer_steps": 6000,
+          "checkpoint_sha256": "0f91f941b2cb08e3470adee2ec09f8ddeba1092642fb6382c741fd9531c73dc3",
+          "metrics": {
+            "E20_development": {
+              "examples": 10,
+              "completed": 6,
+              "onset_f1_25ms": 0.3594529789093092,
+              "onset_f1_50ms": 0.45477803278411233,
+              "onset_f1_100ms": 0.4915346192070018,
+              "grid_bonus": 0.15694346591875946,
+              "time_type_f1": 0.20145433844803687
+            },
+            "train15": {
+              "examples": 15,
+              "completed": 6,
+              "onset_f1_25ms": 0.8971961320322779,
+              "onset_f1_50ms": 0.9008353754895978,
+              "onset_f1_100ms": 0.9078614200258118,
+              "grid_bonus": 0.633101613204257,
+              "time_type_f1": 0.8072903609296801,
+              "completed_only_joint_f1_50ms": 0.38805445463912197
+            }
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/natural_result.json",
+          "final_training": {
+            "epoch": 20,
+            "steps": 6000,
+            "elapsed_seconds": 2198.606449816376,
+            "counts": {
+              "time_count": 270200,
+              "layout_count": 633694,
+              "stop_count": 6712,
+              "continue_count": 270200
+            },
+            "frame_ce": 0.013390833009044168,
+            "frame_accuracy": 0.9960658771280533,
+            "subframe_mse": 0.0078104910302424745,
+            "layout_ce": 0.17565567918845967,
+            "stop_bce": 0.32770338875750504,
+            "continue_bce": 0.0053470706948521044,
+            "false_stop_rate": 0.0014470762398223539,
+            "end_stop_recall": 0.8742550655542313,
+            "conditional_offset_mae_seconds": 0.002947786599670519,
+            "objective": 0.07169553585532709
+          }
+        },
+        {
+          "id": "E16-NW1-FIT100",
+          "kind": "training_sufficiency_continuation",
+          "model": "AL-AR4K@0.6.0",
+          "variant": "A",
+          "architecture": "window",
+          "status": "running",
+          "target_epochs": 100,
+          "target_optimizer_steps": 30000,
+          "training_songs": 300,
+          "parent_checkpoint": "out/windowed_ar_20261031/natural_window/model_latest.pt",
+          "parent_sha256": "0f91f941b2cb08e3470adee2ec09f8ddeba1092642fb6382c741fd9531c73dc3",
+          "parent_epoch": 20,
+          "epoch": 20,
+          "checkpoint": "out/windowed_ar_20261031/natural_window_fit100/model_latest.pt",
+          "progress_file": "out/windowed_ar_20261031/natural_window_fit100/training.json",
+          "source_sha256": {
+            "script/train_windowed_corpus.py": "d7a3063ae9f5e3f366b18e2496f2a8aedeb755a5486af27158464231ba700979",
+            "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2",
+            "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45"
+          },
+          "source_commit": "ba52dc4",
+          "report": "docs/evaluations/windowed_ar_natural_20261031.md",
+          "delivery": "diagnostic_only",
+          "quality_status": "training_in_progress_not_evaluated",
+          "initialization": "Exact e20 weights, AdamW and sampler/Torch/CUDA RNG retained; unchanged constant LR; only stopping epoch extended.",
+          "optimizer_steps": 6000,
+          "supervisor": "out/windowed_ar_20261031/natural_window_fit100/supervisor.json",
+          "continuation_evidence": "docs/evaluations/assets/windowed_ar_20261031/natural_continuation.json",
+          "comparison_scope": "W1 only; no equal-budget W0e100 comparator; e20 matched comparison preserved."
         }
       ],
       "research_update": {
@@ -4479,7 +4605,7 @@
           "quality": "not_passed_on_unseen_controlled_examples",
           "full_corpus_training_started": true,
           "natural_adaptation": {
-            "status": "running",
+            "status": "completed",
             "arms": [
               "W0",
               "W1"
@@ -4489,7 +4615,15 @@
             "training_songs": 300,
             "planned_epochs": 20,
             "learning_rate": 3e-05,
-            "report": "docs/evaluations/windowed_ar_natural_20261031.md"
+            "report": "docs/evaluations/windowed_ar_natural_20261031.md",
+            "quality": "not_passed; window training fit incomplete and 96-second tail gap despite learned ends"
+          },
+          "natural_continuation": {
+            "status": "running",
+            "run": "E16-NW1-FIT100",
+            "planned_epochs": 100,
+            "scope": "training sufficiency; W1 only, not matched architecture comparison",
+            "supervisor": "out/windowed_ar_20261031/natural_window_fit100/supervisor.json"
           }
         },
         "stage3": {
@@ -4515,8 +4649,13 @@
       },
       "additional_evidence": [
         "docs/evaluations/windowed_ar_stage1_20261031.md",
-        "docs/evaluations/windowed_ar_stage2_20261031.md"
-      ]
+        "docs/evaluations/windowed_ar_stage2_20261031.md",
+        "docs/evaluations/windowed_ar_stage3_20261031.md",
+        "docs/evaluations/windowed_ar_stage4_20261031.md",
+        "docs/evaluations/windowed_ar_stage5_20261031.md",
+        "docs/evaluations/windowed_ar_natural_20261031.md"
+      ],
+      "execution_snapshot_utc": "2026-11-01T06:36:55.889155+00:00"
     },
     {
       "id": "E17",
