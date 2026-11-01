@@ -1,0 +1,200 @@
+{
+  "schema": "audiolab-early-replay-sanity-v1",
+  "eltaw": {
+    "A0920": {
+      "previous": "out/runtime_delivery_20261026/evaluation/4k-audio-e0920-greedy/00.json",
+      "previous_sha256": "fa8f435b83f9436940eb2289f0a17c38b031fc4b54ea45a042f24c3e73b919be",
+      "replay": "out/ar_early_replay_20261102/A0920/Eltaw_IN.json",
+      "replay_sha256": "f19c0c7150d3ee8c264d9c62d9bd24eaeabab627f6d2083ae35da9af77353935",
+      "exact": {
+        "notes": true,
+        "onsets_seconds": true,
+        "status": true,
+        "types": true,
+        "termination": true
+      }
+    },
+    "S1000": {
+      "previous": "out/runtime_delivery_20261026/evaluation/4k-soft-e1000-greedy/00.json",
+      "previous_sha256": "45681a74631a7f7b3330ab1fd273c2d7f94e2a53f0c69845dc9bef1549cd0253",
+      "replay": "out/ar_early_replay_20261102/S1000/Eltaw_IN.json",
+      "replay_sha256": "ad4a5d6c02ad8eb9ee27ed218eb990063eb3f9fb4f539ce6bf655a9ceb4c3098",
+      "exact": {
+        "notes": true,
+        "onsets_seconds": true,
+        "status": true,
+        "types": true,
+        "termination": true
+      }
+    },
+    "A1400": {
+      "previous": "out/ar_saturation_20261023/continued1400/audio/evaluation-e1400/fixed15/00.json",
+      "previous_sha256": "76e95be02c80522fb6918420f81457b2f8971318ada15e5ef8230c5e77d4fd89",
+      "replay": "out/ar_early_replay_20261102/A1400/Eltaw_IN.json",
+      "replay_sha256": "6913ecdeb8fc037116feddf36193dc9f2c2f41371f318ec7bfbb8d8cf74e5830",
+      "exact": {
+        "notes": true,
+        "onsets_seconds": true,
+        "status": true,
+        "types": true,
+        "termination": true
+      }
+    },
+    "S1400": {
+      "previous": "out/ar_saturation_20261023/continued1400/soft/evaluation-e1400/fixed15/00.json",
+      "previous_sha256": "b3b0e5fd1bb22730561d4cdf942799f80e327fbe7fcd1ae85347f92aeb050f2c",
+      "replay": "out/ar_early_replay_20261102/S1400/Eltaw_IN.json",
+      "replay_sha256": "a8cd8d9e3167b018eec4567b71506432390e833637bd16a2441d35431537ceae",
+      "exact": {
+        "notes": true,
+        "onsets_seconds": true,
+        "status": true,
+        "types": true,
+        "termination": true
+      }
+    }
+  },
+  "original_community_replay": [
+    {
+      "candidate": "A1400",
+      "song_id": 40717,
+      "exact_notes": false,
+      "original_f1": 0.5434962717481359,
+      "replay_f1": 0.5434962717481359
+    },
+    {
+      "candidate": "A1400",
+      "song_id": 52417,
+      "exact_notes": false,
+      "original_f1": 0.38841104572204616,
+      "replay_f1": 0.3827054794520548
+    },
+    {
+      "candidate": "A1400",
+      "song_id": 37396,
+      "exact_notes": false,
+      "original_f1": 0.4831932773109244,
+      "replay_f1": 0.45977011494252873
+    },
+    {
+      "candidate": "A1400",
+      "song_id": 6990,
+      "exact_notes": false,
+      "original_f1": 0.6349480968858131,
+      "replay_f1": 0.6305841924398625
+    },
+    {
+      "candidate": "A1400",
+      "song_id": 30114,
+      "exact_notes": false,
+      "original_f1": 0.2608012568735271,
+      "replay_f1": 0.3561430793157076
+    },
+    {
+      "candidate": "A1400",
+      "song_id": 23968,
+      "exact_notes": false,
+      "original_f1": 0.5784447476125512,
+      "replay_f1": 0.5784447476125512
+    },
+    {
+      "candidate": "A1400",
+      "song_id": 51352,
+      "exact_notes": false,
+      "original_f1": 0.3085250338294993,
+      "replay_f1": 0.32825943084050296
+    },
+    {
+      "candidate": "A1400",
+      "song_id": 64888,
+      "exact_notes": false,
+      "original_f1": 0.3472920156337242,
+      "replay_f1": 0.3472920156337242
+    },
+    {
+      "candidate": "A1400",
+      "song_id": 51818,
+      "exact_notes": false,
+      "original_f1": 0.7598209845847836,
+      "replay_f1": 0.7598209845847836
+    },
+    {
+      "candidate": "A1400",
+      "song_id": 52244,
+      "exact_notes": false,
+      "original_f1": 0.4402618657937807,
+      "replay_f1": 0.4402618657937807
+    },
+    {
+      "candidate": "S1400",
+      "song_id": 40717,
+      "exact_notes": false,
+      "original_f1": 0.2302325581395349,
+      "replay_f1": 0.2122905027932961
+    },
+    {
+      "candidate": "S1400",
+      "song_id": 52417,
+      "exact_notes": false,
+      "original_f1": 0.5010266940451745,
+      "replay_f1": 0.40629213483146065
+    },
+    {
+      "candidate": "S1400",
+      "song_id": 37396,
+      "exact_notes": false,
+      "original_f1": 0.5419354838709678,
+      "replay_f1": 0.5419354838709678
+    },
+    {
+      "candidate": "S1400",
+      "song_id": 6990,
+      "exact_notes": false,
+      "original_f1": 0.6395721925133689,
+      "replay_f1": 0.6395721925133689
+    },
+    {
+      "candidate": "S1400",
+      "song_id": 30114,
+      "exact_notes": false,
+      "original_f1": 0.10764262648008611,
+      "replay_f1": 0.10764262648008611
+    },
+    {
+      "candidate": "S1400",
+      "song_id": 23968,
+      "exact_notes": false,
+      "original_f1": 0.6321401370906321,
+      "replay_f1": 0.63125
+    },
+    {
+      "candidate": "S1400",
+      "song_id": 51352,
+      "exact_notes": false,
+      "original_f1": 0.3225806451612903,
+      "replay_f1": 0.3223593964334705
+    },
+    {
+      "candidate": "S1400",
+      "song_id": 64888,
+      "exact_notes": false,
+      "original_f1": 0.14826254826254825,
+      "replay_f1": 0.14826254826254825
+    },
+    {
+      "candidate": "S1400",
+      "song_id": 51818,
+      "exact_notes": false,
+      "original_f1": 0.7237996902426432,
+      "replay_f1": 0.7237996902426432
+    },
+    {
+      "candidate": "S1400",
+      "song_id": 52244,
+      "exact_notes": false,
+      "original_f1": 0.03349282296650718,
+      "replay_f1": 0.03349282296650718
+    }
+  ],
+  "all_four_eltaw_exact": true
+}

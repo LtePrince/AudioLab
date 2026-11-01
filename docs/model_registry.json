@@ -3172,9 +3172,9 @@
       "title": "定长单起音到复杂编谱的归因计划",
       "kind": "staged_experiment",
       "models": [],
-      "status": "in_progress",
+      "status": "completed",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "Controlled stages 1–5 and matched full300 W0/W1 e20 completed; natural quality still not passed. W1 fitting run stopped at e26 without a logged cause; recovered exact optimizer/RNG checkpoint into a detached supervisor. Target remains e100; next generation check e40.",
+      "result": "Authorized controlled stages 1–5, matched full300 W0/W1 e20, and W1-only fitting continuation to e100 completed. W1e100 train15 onset F1 .9807 and ends13/15; development10 F1 .5168 and ends2/10. Continuous false-empty windows remain. Quality not passed; original direct-diffusion alternative and natural encoder adaptation remain unexecuted plans.",
       "evidence": "docs/fixed_length_attribution_plan.md",
       "runs": [
         {
@@ -4503,14 +4503,14 @@
           "model": "AL-AR4K@0.6.0",
           "variant": "A",
           "architecture": "window",
-          "status": "running",
+          "status": "completed",
           "target_epochs": 100,
           "target_optimizer_steps": 30000,
           "training_songs": 300,
           "parent_checkpoint": "out/windowed_ar_20261031/natural_window/model_latest.pt",
           "parent_sha256": "0f91f941b2cb08e3470adee2ec09f8ddeba1092642fb6382c741fd9531c73dc3",
           "parent_epoch": 20,
-          "epoch": 26,
+          "epoch": 100,
           "checkpoint": "out/windowed_ar_20261031/natural_window_fit100/model_latest.pt",
           "progress_file": "out/windowed_ar_20261031/natural_window_fit100/training.json",
           "source_sha256": {
@@ -4524,18 +4524,69 @@
             "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45"
           },
           "source_commit": "ba52dc4",
-          "report": "docs/evaluations/windowed_ar_natural_20261031.md",
+          "report": "docs/evaluations/windowed_ar_natural_fit100_20261101.md",
           "delivery": "diagnostic_only",
-          "quality_status": "training_in_progress_not_evaluated",
+          "quality_status": "not_passed_window_end_and_coverage_failures",
           "initialization": "Exact e20 weights, AdamW and sampler/Torch/CUDA RNG retained; unchanged constant LR; only stopping epoch extended.",
-          "optimizer_steps": 7800,
+          "optimizer_steps": 30000,
           "supervisor": "out/windowed_ar_20261031/natural_window_fit100/supervisor.json",
           "continuation_evidence": "docs/evaluations/assets/windowed_ar_20261031/natural_continuation.json",
           "comparison_scope": "W1 only; no equal-budget W0e100 comparator; e20 matched comparison preserved.",
           "recovery_evidence": "docs/evaluations/assets/windowed_ar_20261031/natural_recovery_20261102.json",
           "resume_checkpoint_sha256": "9d43ed60d9cd73662d195c39117d4ba120cf0eea8e657c90c7296355362adc0e",
           "last_recovery_epoch": 26,
-          "progress_snapshot_utc": "2026-11-01T13:56:25.675143+00:00"
+          "progress_snapshot_utc": "2026-11-01T16:27:33.003402+00:00",
+          "checkpoint_sha256": "637b80584f2c53cda2235839f0701a3f61fa99f5163a1e3899da5534f73cf87a",
+          "metrics": {
+            "train15": {
+              "examples": 15,
+              "completed": 13,
+              "onset_f1_25ms": 0.9784917416705803,
+              "onset_f1_50ms": 0.9807466317933702,
+              "onset_f1_100ms": 0.9818742163300457,
+              "grid_bonus": 0.684343839657733,
+              "time_type_f1": 0.958326960095173,
+              "completed_only_joint_f1_50ms": 0.8627769675727672
+            },
+            "E20_development": {
+              "examples": 10,
+              "completed": 2,
+              "onset_f1_25ms": 0.38951589533559716,
+              "onset_f1_50ms": 0.5168457473729056,
+              "onset_f1_100ms": 0.588004143391174,
+              "grid_bonus": 0.16588747369314452,
+              "time_type_f1": 0.23199540765943386
+            }
+          },
+          "final_training": {
+            "epoch": 100,
+            "steps": 30000,
+            "elapsed_seconds": 10866.900305133313,
+            "counts": {
+              "time_count": 270200,
+              "layout_count": 633694,
+              "stop_count": 6712,
+              "continue_count": 270200
+            },
+            "frame_ce": 0.007735607618724183,
+            "frame_accuracy": 0.997679496669134,
+            "subframe_mse": 0.0068957067052037935,
+            "layout_ce": 0.13693360771371665,
+            "stop_bce": 0.04339809101624047,
+            "continue_bce": 0.0009391443284682042,
+            "false_stop_rate": 0.00027017024426350853,
+            "end_stop_recall": 0.983015494636472,
+            "conditional_offset_mae_seconds": 0.002836491150589037,
+            "objective": 0.04984886425687322
+          },
+          "resources": {
+            "disk_free_gib": 28.477821350097656,
+            "ram_available_gib": 36.954959869384766,
+            "rss_gib": 1.8717994689941406,
+            "gpu_peak_allocated_gib": 0.3269939422607422,
+            "gpu_peak_reserved_gib": 0.6796875
+          },
+          "evaluation_evidence": "docs/evaluations/assets/windowed_ar_20261031/natural_fit100_result.json"
         }
       ],
       "research_update": {
@@ -4576,7 +4627,7 @@
       },
       "optimization_review": {
         "date": "2026-10-30",
-        "status": "reviewed_plan_not_implemented",
+        "status": "authorized_controlled_stages_implemented_with_reports",
         "report": "docs/model_next_steps_20261030.md",
         "evidence": "docs/evaluations/assets/optimization_review_20261030/evidence.json",
         "user_confirmed_architecture": "Every generated token can attend the whole song; note onsets may only be generated in the current output window.",
@@ -4590,9 +4641,9 @@
           "encoder adaptation and capacity as separate ablations"
         ],
         "preserved_alternative": "fixed-duration direct-event diffusion with VAE isolated later",
-        "new_training": false,
-        "new_inference": false,
-        "new_model_versions_registered": false
+        "new_training": true,
+        "new_inference": true,
+        "new_model_versions_registered": true
       },
       "staged_execution": {
         "authorized": true,
@@ -4623,11 +4674,14 @@
             "quality": "not_passed; window training fit incomplete and 96-second tail gap despite learned ends"
           },
           "natural_continuation": {
-            "status": "running",
+            "status": "completed",
             "run": "E16-NW1-FIT100",
             "planned_epochs": 100,
             "scope": "training sufficiency; W1 only, not matched architecture comparison",
-            "supervisor": "out/windowed_ar_20261031/natural_window_fit100/supervisor.json"
+            "supervisor": "out/windowed_ar_20261031/natural_window_fit100/supervisor.json",
+            "completed_epochs": 100,
+            "report": "docs/evaluations/windowed_ar_natural_fit100_20261101.md",
+            "quality": "not_passed: better correspondence but incomplete window stopping and remaining long gaps"
           }
         },
         "stage3": {
@@ -4657,9 +4711,10 @@
         "docs/evaluations/windowed_ar_stage3_20261031.md",
         "docs/evaluations/windowed_ar_stage4_20261031.md",
         "docs/evaluations/windowed_ar_stage5_20261031.md",
-        "docs/evaluations/windowed_ar_natural_20261031.md"
+        "docs/evaluations/windowed_ar_natural_20261031.md",
+        "docs/evaluations/windowed_ar_natural_fit100_20261101.md"
       ],
-      "execution_snapshot_utc": "2026-11-01T13:56:25.675143+00:00"
+      "execution_snapshot_utc": "2026-11-01T16:27:33.003402+00:00"
     },
     {
       "id": "E17",
@@ -5898,6 +5953,151 @@
         "weights_changed": false,
         "quality_passed": false
       }
+    },
+    {
+      "id": "E21",
+      "title": "800–1000轮早期优选权重与1400轮同条件回测",
+      "kind": "historical_checkpoint_inference_comparison",
+      "models": [
+        "AL-AR4K@0.5.1/A",
+        "AL-AR4K@0.5.1/S"
+      ],
+      "status": "completed",
+      "quality_status": "not_passed",
+      "training_updates": 0,
+      "question": "较早优选是否更少缺音，是否支持训练过久导致退化？",
+      "result": "A920→A1400 development10 onset F1 .4078→.4827 (late wins7/10); S1000→S1400 .4426→.3767 (early wins7/10). Early checkpoints still have ~130-second gaps on 52417. No single overfitting explanation or encoder exoneration.",
+      "evidence": [
+        "docs/evaluations/ar_early_replay_20261102.md",
+        "docs/evaluations/assets/ar_early_replay_20261102/selection.json",
+        "docs/evaluations/assets/ar_early_replay_20261102/summary.json",
+        "docs/evaluations/assets/ar_early_replay_20261102/sanity.json"
+      ],
+      "selection_sha256": "9f4788471179560c08ce454625cfbc2527edf26a9a65c346e4b8fe5e87b65045",
+      "source_sha256": {
+        "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+        "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+        "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+        "src/model_benchmark.py": "c7257da6cb65d8522ae376ecbb23acf5db696cb879a30818a326a780146cf250",
+        "src/audio_understanding/evaluation.py": "c57d0c4eb36df95f04f7772f98d68229946e168a3aa830458d4eb150357194e0",
+        "src/soft_onset.py": "5dfbb511ff0e058b25a6e00d65f479c1a176f12e8b2919b166f4c68101ccb73f",
+        "script/train_windowed_corpus.py": "d7a3063ae9f5e3f366b18e2496f2a8aedeb755a5486af27158464231ba700979",
+        "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+        "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45",
+        "docs/evaluations/assets/phira_generalization10_20261029/benchmark.py": "973f0bf0715a312461029e438d0f4b6d12bc049ca082014b0239e96529b2aecc",
+        "docs/evaluations/assets/windowed_ar_20261031/summarize_natural.py": "7f802eaae87f5d14ad26d374bd7850caa091c7225fb3219ff728ecb14dfaf98d",
+        "benchmarks/v1/protocol.json": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5",
+        "docs/evaluations/assets/ar_early_replay_20261102/replay.py": "d64bdeaf0d797403938c17582c87f133e0dc2b16afe6fc4edb2b63e701a80c86"
+      },
+      "evaluation_scope": "10 already-used E20 development songs plus Eltaw sanity, 44 raw greedy calls. Same CPU-encoded inputs across checkpoints; original whole-song AR, no window migration. Not a blind test or a free-x comparison.",
+      "validation": {
+        "all_four_eltaw_exact": true,
+        "community_1400_not_bitwise_original_GPU_encoding": true,
+        "all_checkpoint_hashes_verified": true
+      },
+      "runs": [
+        {
+          "id": "E21-A0920",
+          "kind": "inference_only",
+          "model": "AL-AR4K@0.5.1",
+          "variant": "A",
+          "epoch": 920,
+          "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0920.pt",
+          "checkpoint_sha256": "a720ad316c4194586793c5d60ef50cc2ce3c425a74bb68f4b099603399c60610",
+          "status": "completed",
+          "metrics": {
+            "candidate": "A0920",
+            "songs": 10,
+            "completed": 3,
+            "onset_f1_25ms": 0.3145110754753578,
+            "onset_f1_50ms": 0.40784048214213614,
+            "onset_f1_100ms": 0.48518963136920973,
+            "grid_bonus": 0.17031057170017705,
+            "time_type_f1": 0.19961250108978457,
+            "tail_10s_recall": 0.30765621507114826,
+            "median_largest_reference_active_gap_seconds": 31.373920934594935
+          },
+          "prediction_root": "out/ar_early_replay_20261102/A0920",
+          "report": "docs/evaluations/ar_early_replay_20261102.md"
+        },
+        {
+          "id": "E21-A1400",
+          "kind": "inference_only",
+          "model": "AL-AR4K@0.5.1",
+          "variant": "A",
+          "epoch": 1400,
+          "checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
+          "checkpoint_sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+          "status": "completed",
+          "metrics": {
+            "candidate": "A1400",
+            "songs": 10,
+            "completed": 4,
+            "onset_f1_25ms": 0.3619868482786318,
+            "onset_f1_50ms": 0.48267781823636324,
+            "onset_f1_100ms": 0.558096888621109,
+            "grid_bonus": 0.17180030245665617,
+            "time_type_f1": 0.22811667736002908,
+            "tail_10s_recall": 0.29809105875939224,
+            "median_largest_reference_active_gap_seconds": 17.28309599653663
+          },
+          "prediction_root": "out/ar_early_replay_20261102/A1400",
+          "report": "docs/evaluations/ar_early_replay_20261102.md"
+        },
+        {
+          "id": "E21-S1000",
+          "kind": "inference_only",
+          "model": "AL-AR4K@0.5.1",
+          "variant": "S",
+          "epoch": 1000,
+          "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+          "checkpoint_sha256": "9c1b3518fb9db1691127cfca2912649d359e468db777e1cfc0b363a447943e01",
+          "status": "completed",
+          "metrics": {
+            "candidate": "S1000",
+            "songs": 10,
+            "completed": 3,
+            "onset_f1_25ms": 0.3154214598561279,
+            "onset_f1_50ms": 0.44261627998360165,
+            "onset_f1_100ms": 0.5124494426484514,
+            "grid_bonus": 0.16786360520196217,
+            "time_type_f1": 0.21819517379093603,
+            "tail_10s_recall": 0.3729127321118452,
+            "median_largest_reference_active_gap_seconds": 28.306635205188847
+          },
+          "prediction_root": "out/ar_early_replay_20261102/S1000",
+          "report": "docs/evaluations/ar_early_replay_20261102.md"
+        },
+        {
+          "id": "E21-S1400",
+          "kind": "inference_only",
+          "model": "AL-AR4K@0.5.1",
+          "variant": "S",
+          "epoch": 1400,
+          "checkpoint": "out/ar_saturation_20261023/continued1400/soft/model_latest.pt",
+          "checkpoint_sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+          "status": "completed",
+          "metrics": {
+            "candidate": "S1400",
+            "songs": 10,
+            "completed": 3,
+            "onset_f1_25ms": 0.2895835609732021,
+            "onset_f1_50ms": 0.3766897398394349,
+            "onset_f1_100ms": 0.4457080429455427,
+            "grid_bonus": 0.17604118199291963,
+            "time_type_f1": 0.18230784544490425,
+            "tail_10s_recall": 0.23507072627285466,
+            "median_largest_reference_active_gap_seconds": 26.59571444712529
+          },
+          "prediction_root": "out/ar_early_replay_20261102/S1400",
+          "report": "docs/evaluations/ar_early_replay_20261102.md"
+        }
+      ],
+      "delivery": {
+        "published_weights_changed": false,
+        "model_version_changed": false
+      },
+      "updated_at_utc": "2026-11-01T16:27:33.003402+00:00"
     }
   ],
   "bundles": [

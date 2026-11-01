@@ -1,0 +1,891 @@
+{
+  "schema": "audiolab-early-checkpoint-replay-v1",
+  "frozen_at_utc": "2026-11-01T16:05:26.423830+00:00",
+  "candidates": [
+    {
+      "id": "A0920",
+      "product": "AL-AR4K v0.5.1",
+      "variant": "audio",
+      "epoch": 920,
+      "checkpoint": "out/ar_saturation_20261023/continued1000/audio/model_e0920.pt",
+      "sha256": "a720ad316c4194586793c5d60ef50cc2ce3c425a74bb68f4b099603399c60610",
+      "config": {
+        "schema": "audiolab-absolute-time-group-ar-v1",
+        "variant": "audio",
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "initialization": "continue parent weights, AdamW moments and sampler/torch RNG; frozen original acoustic frontends",
+        "initial_state_sha256": "cec4395660a99cd53afc53320f01823ea0b3126059344df7033fde3930a675b0",
+        "seed": 42,
+        "epochs": 1000,
+        "lr": 0.0003,
+        "parameters": 6626691,
+        "full_cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+        "pair_cache_sha256": "0c859f21b65b1142a0e3e238b1d6892978c4bc30e754430d89d9324cfc4c3955",
+        "source_sha256": {
+          "src/anchored_ar.py": "bb2467d0bdbdb13a3443a6cfcdd1693e09173163f39a11e2a3bd99620800a566",
+          "script/train_anchored_ar.py": "b1466a8fd6515460da9aa0ae66168b28cc820769a039aff88848752c19928502",
+          "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+          "src/conditional_training.py": "0aad3abd8cec25af461544d19d59131f5bcca54ffbedb22544cc59c6af4ceb7f",
+          "script/train_grounded_ar.py": "45032120b4935811ddaf4e76a6c0643f0c33d3b9fc9ebb32a9f180e1f0916741"
+        },
+        "loss": "frame CE + conditional normalized subframe MSE + .25 layout CE + .5 event-normalized stop/continue BCE; joint update denominators",
+        "policy": "global audio; pointer output chronological intervals; no grid snapping/onset threshold/type quota; continuous seconds export",
+        "continuation": {
+          "parent_path": "out/ar_saturation_20261023/continued700/audio/model_latest.pt",
+          "parent_sha256": "35c04d5c238ed82e77eb6e8e40af6782ae07689f2655228ead6899fc8940054d",
+          "parent_epoch": 700,
+          "parent_steps": 210000,
+          "parent_source_sha256": {
+            "src/anchored_ar.py": "bb2467d0bdbdb13a3443a6cfcdd1693e09173163f39a11e2a3bd99620800a566",
+            "script/train_anchored_ar.py": "b1466a8fd6515460da9aa0ae66168b28cc820769a039aff88848752c19928502",
+            "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "src/conditional_training.py": "0aad3abd8cec25af461544d19d59131f5bcca54ffbedb22544cc59c6af4ceb7f",
+            "script/train_grounded_ar.py": "45032120b4935811ddaf4e76a6c0643f0c33d3b9fc9ebb32a9f180e1f0916741"
+          },
+          "schedule": "constant_parent_terminal_lr",
+          "learning_rates": [
+            2.9999999999999997e-05
+          ]
+        }
+      }
+    },
+    {
+      "id": "A1400",
+      "product": "AL-AR4K v0.5.1",
+      "variant": "audio",
+      "epoch": 1400,
+      "checkpoint": "out/ar_saturation_20261023/continued1400/audio/model_latest.pt",
+      "sha256": "17194a97546312ca3c42aa5c5a3e10759fa8f939686d75a34dbeff87db7ca116",
+      "config": {
+        "schema": "audiolab-absolute-time-group-ar-v1",
+        "variant": "audio",
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "initialization": "continue parent weights, AdamW moments and sampler/torch RNG; frozen original acoustic frontends",
+        "initial_state_sha256": "6b1a3363bf304a65354fc3e7ab5c668e56c69e0472f92790a0496ebccb320d02",
+        "seed": 42,
+        "epochs": 1400,
+        "lr": 0.0003,
+        "parameters": 6626691,
+        "full_cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+        "pair_cache_sha256": "0c859f21b65b1142a0e3e238b1d6892978c4bc30e754430d89d9324cfc4c3955",
+        "source_sha256": {
+          "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+          "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+          "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+          "src/conditional_training.py": "7229cd6dfa83745b46ba236bb486348b34ba969a9948efcab924486cbb018ddc",
+          "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+        },
+        "loss": "frame CE + conditional normalized subframe MSE + .25 layout CE + .5 event-normalized stop/continue BCE; joint update denominators",
+        "policy": "global audio; pointer output chronological intervals; no grid snapping/onset threshold/type quota; continuous seconds export",
+        "continuation": {
+          "parent_path": "out/ar_saturation_20261023/continued1200/audio/model_latest.pt",
+          "parent_sha256": "4345eaeb350fff4250dec89bd0d81144ba451db30990ab56269777da4ff7d016",
+          "parent_epoch": 1200,
+          "parent_steps": 360000,
+          "parent_source_sha256": {
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+            "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "src/conditional_training.py": "7229cd6dfa83745b46ba236bb486348b34ba969a9948efcab924486cbb018ddc",
+            "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+          },
+          "schedule": "constant_parent_terminal_lr",
+          "learning_rates": [
+            2.9999999999999997e-05
+          ]
+        }
+      }
+    },
+    {
+      "id": "S1000",
+      "product": "AL-AR4K v0.5.1",
+      "variant": "soft",
+      "epoch": 1000,
+      "checkpoint": "out/ar_saturation_20261023/continued1000/soft/model_e1000.pt",
+      "sha256": "9c1b3518fb9db1691127cfca2912649d359e468db777e1cfc0b363a447943e01",
+      "config": {
+        "schema": "audiolab-absolute-time-group-ar-v1",
+        "variant": "soft",
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "initialization": "continue parent weights, AdamW moments and sampler/torch RNG; frozen original acoustic frontends",
+        "initial_state_sha256": "883bd0f845adc5ba493232cc6f8f3b5d59c5deedeb35d397f0b563123d564491",
+        "seed": 42,
+        "epochs": 1000,
+        "lr": 0.0003,
+        "parameters": 6626691,
+        "full_cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+        "pair_cache_sha256": "0c859f21b65b1142a0e3e238b1d6892978c4bc30e754430d89d9324cfc4c3955",
+        "source_sha256": {
+          "src/anchored_ar.py": "bb2467d0bdbdb13a3443a6cfcdd1693e09173163f39a11e2a3bd99620800a566",
+          "script/train_anchored_ar.py": "b1466a8fd6515460da9aa0ae66168b28cc820769a039aff88848752c19928502",
+          "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+          "src/conditional_training.py": "0aad3abd8cec25af461544d19d59131f5bcca54ffbedb22544cc59c6af4ceb7f",
+          "script/train_grounded_ar.py": "45032120b4935811ddaf4e76a6c0643f0c33d3b9fc9ebb32a9f180e1f0916741"
+        },
+        "loss": "frame CE + conditional normalized subframe MSE + .25 layout CE + .5 event-normalized stop/continue BCE; joint update denominators",
+        "policy": "global audio; pointer output chronological intervals; no grid snapping/onset threshold/type quota; continuous seconds export",
+        "continuation": {
+          "parent_path": "out/ar_saturation_20261023/continued700/soft/model_latest.pt",
+          "parent_sha256": "f1bb51c54b8d3b7d00570c49721d2667a0de9f162d02c62aad42887ef5861edf",
+          "parent_epoch": 700,
+          "parent_steps": 210000,
+          "parent_source_sha256": {
+            "src/anchored_ar.py": "bb2467d0bdbdb13a3443a6cfcdd1693e09173163f39a11e2a3bd99620800a566",
+            "script/train_anchored_ar.py": "b1466a8fd6515460da9aa0ae66168b28cc820769a039aff88848752c19928502",
+            "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "src/conditional_training.py": "0aad3abd8cec25af461544d19d59131f5bcca54ffbedb22544cc59c6af4ceb7f",
+            "script/train_grounded_ar.py": "45032120b4935811ddaf4e76a6c0643f0c33d3b9fc9ebb32a9f180e1f0916741"
+          },
+          "schedule": "constant_parent_terminal_lr",
+          "learning_rates": [
+            2.9999999999999997e-05
+          ]
+        }
+      }
+    },
+    {
+      "id": "S1400",
+      "product": "AL-AR4K v0.5.1",
+      "variant": "soft",
+      "epoch": 1400,
+      "checkpoint": "out/ar_saturation_20261023/continued1400/soft/model_latest.pt",
+      "sha256": "6dcec43957bcccf21e81aff5bf39226b1c1877eca9db60353f3471efd06743a0",
+      "config": {
+        "schema": "audiolab-absolute-time-group-ar-v1",
+        "variant": "soft",
+        "decoder_config": {
+          "vocab_size": 129,
+          "hidden_dim": 256,
+          "depth": 6,
+          "num_heads": 8,
+          "mlp_ratio": 4.0,
+          "dropout": 0.1,
+          "mem_dim": 256,
+          "time_dim": 128,
+          "rope_theta": 10000.0,
+          "cross_window": null,
+          "token_dropout": 0.15,
+          "soft_onset_dim": 2,
+          "history_dim": 28,
+          "cross_time_scale": null
+        },
+        "initialization": "continue parent weights, AdamW moments and sampler/torch RNG; frozen original acoustic frontends",
+        "initial_state_sha256": "cd58eac06723473b050cfe0b8930ab17e218077b2a4112dc44fbc365eb95a74e",
+        "seed": 42,
+        "epochs": 1400,
+        "lr": 0.0003,
+        "parameters": 6626691,
+        "full_cache_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+        "pair_cache_sha256": "0c859f21b65b1142a0e3e238b1d6892978c4bc30e754430d89d9324cfc4c3955",
+        "source_sha256": {
+          "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+          "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+          "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+          "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+          "src/conditional_training.py": "7229cd6dfa83745b46ba236bb486348b34ba969a9948efcab924486cbb018ddc",
+          "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+        },
+        "loss": "frame CE + conditional normalized subframe MSE + .25 layout CE + .5 event-normalized stop/continue BCE; joint update denominators",
+        "policy": "global audio; pointer output chronological intervals; no grid snapping/onset threshold/type quota; continuous seconds export",
+        "continuation": {
+          "parent_path": "out/ar_saturation_20261023/continued1200/soft/model_latest.pt",
+          "parent_sha256": "082a4fc228fbb5adf759a2c1d65f660202cb2b6ae73e8b9ea002cf45826945c8",
+          "parent_epoch": 1200,
+          "parent_steps": 360000,
+          "parent_source_sha256": {
+            "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+            "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+            "src/models/chart_decoder.py": "747bb4ed4ebaf6429e96b11c96f04c14e0b28ddaf24494d34d2eadeb8be25277",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "src/conditional_training.py": "7229cd6dfa83745b46ba236bb486348b34ba969a9948efcab924486cbb018ddc",
+            "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2"
+          },
+          "schedule": "constant_parent_terminal_lr",
+          "learning_rates": [
+            2.9999999999999997e-05
+          ]
+        }
+      }
+    }
+  ],
+  "songs": [
+    {
+      "id": 40717,
+      "name": "天使にふれたよ!",
+      "difficulty": 13.0,
+      "level": "IN Lv.13",
+      "composer": "放課後ティータイム",
+      "charter": "真夜中フォレスト",
+      "community_url": "https://api.phira.cn/chart/40717",
+      "download_url": "https://phira.5wyxi.com/files/b5a8a22c-006a-40ac-af12-2740840d5a09",
+      "reviewed": true,
+      "rating": 0.96004266,
+      "rating_count": 3897,
+      "original_package_sha256": "1a937a9451da32d67f038dd80aa48f5f980226c4447c95464d6a9cad51d07799",
+      "source_audio_sha256": "1df659fda67d85c0b59bcd41838dc33856334cb4bdfcf59e64681aad8fabc0b2",
+      "source_audio": "out/phira_generalization10_20261029/40717/source.mp3",
+      "chart_sha256": "635c5ccb8945982c2742e3e0373ec876c60ebb26c9a619a81f5d079c69d2aa1a",
+      "audio": "out/phira_generalization10_20261029/40717/audio.wav",
+      "audio_sha256": "d84105337f617fc4c1163651f2374d46d4865ad51ef3f9d2c0685ffe7f7d043b",
+      "duration_seconds": 185.05142857142857,
+      "reference": "out/phira_generalization10_20261029/40717/reference.json",
+      "reference_sha256": "48d4c8489bf105856baa9bb31d269ba6f5a0e4c47b80df6fdb36afab565506ff",
+      "clock": {
+        "bpm": 117.00000000000001,
+        "beat_zero_seconds": -0.104,
+        "source": "Phira RPE BPMList + META.offset + info.offset",
+        "verified": false,
+        "conversion_verified_against_source": true
+      },
+      "screening": {
+        "real_notes": 850,
+        "decorative_fake_notes_excluded": 0,
+        "low_alpha_real_notes": 0,
+        "unusual_size_real_notes": 0,
+        "lines": 24,
+        "type_counts": {
+          "hold": 218,
+          "flick": 71,
+          "drag": 278,
+          "tap": 283
+        },
+        "max_simultaneous_notes": 4,
+        "touch_playtest": "not_executed",
+        "coordinates": "not scored: original moving-line geometry is not a static chart target"
+      },
+      "training_title_overlap": false,
+      "training_audio_byte_overlap": false
+    },
+    {
+      "id": 52417,
+      "name": "匙ノ咒",
+      "difficulty": 15.5,
+      "level": "IN Lv.15",
+      "composer": "r-906",
+      "charter": "【毒の味】",
+      "community_url": "https://api.phira.cn/chart/52417",
+      "download_url": "https://phira.5wyxi.com/files/65747a04-f1b2-4c63-8955-01becbbc53a9",
+      "reviewed": true,
+      "rating": 0.9612102,
+      "rating_count": 1200,
+      "original_package_sha256": "ccdf10ea7380498d8e4ea325e42a31a3bf57cf2ecaa868a1a1ecd23575616db2",
+      "source_audio_sha256": "2b4b78a47f14ab87b2be0111faee5817044c633105564c18442e9c95699b18ee",
+      "source_audio": "out/phira_generalization10_20261029/52417/source.mp3",
+      "chart_sha256": "fdcd04fcee4f86f568b2a34640b7c9256f15ac04d9e18e845850c14fe72245e3",
+      "audio": "out/phira_generalization10_20261029/52417/audio.wav",
+      "audio_sha256": "578b6640abbedcbc697182158abecc6d72080f1be367e052d1b50eadcbf6cb72",
+      "duration_seconds": 269.9087528344671,
+      "reference": "out/phira_generalization10_20261029/52417/reference.json",
+      "reference_sha256": "3f510e7fa378b16c45a195946f5f09dce41e6d284b8745e91eec5344a03aaa15",
+      "clock": {
+        "bpm": 174.0,
+        "beat_zero_seconds": 0.1,
+        "source": "Phira RPE BPMList + META.offset + info.offset",
+        "verified": false,
+        "conversion_verified_against_source": true
+      },
+      "screening": {
+        "real_notes": 2183,
+        "decorative_fake_notes_excluded": 0,
+        "low_alpha_real_notes": 0,
+        "unusual_size_real_notes": 0,
+        "lines": 23,
+        "type_counts": {
+          "tap": 1286,
+          "drag": 542,
+          "flick": 86,
+          "hold": 269
+        },
+        "max_simultaneous_notes": 11,
+        "touch_playtest": "not_executed",
+        "coordinates": "not scored: original moving-line geometry is not a static chart target"
+      },
+      "training_title_overlap": false,
+      "training_audio_byte_overlap": false
+    },
+    {
+      "id": 37396,
+      "name": "リテラチュア（翻自 上田麗奈）",
+      "difficulty": 13.1,
+      "level": "IN Lv.13",
+      "composer": "RIRIKO",
+      "charter": "Q9ks",
+      "community_url": "https://api.phira.cn/chart/37396",
+      "download_url": "https://phira.5wyxi.com/files/8733056d-22fe-4ce8-b1a8-303efa4718ea",
+      "reviewed": true,
+      "rating": 0.96357304,
+      "rating_count": 1839,
+      "original_package_sha256": "92cd28ac297bb5a7c8bd134ab1c51d51f01d2b139335d530804efd3ad9a9afa1",
+      "source_audio_sha256": "b35c54ac1263d7cff433ed4ee905c214ff907835d1e69fe38b81cee73159826b",
+      "source_audio": "out/phira_generalization10_20261029/37396/source.mp3",
+      "chart_sha256": "7bc5e57467838b23a3ff2c44325a9f1fee3cc44de7d874bf31aa3ef72b58f83d",
+      "audio": "out/phira_generalization10_20261029/37396/audio.wav",
+      "audio_sha256": "be071a2a79e094ca287d71b9b57df9216f7cdcd924868716fb5743b1a6022166",
+      "duration_seconds": 89.39537414965986,
+      "reference": "out/phira_generalization10_20261029/37396/reference.json",
+      "reference_sha256": "9f772d44d543292549b9b3d2a4dd29daec894adc79cb2acdf8695eb7ae2b9524",
+      "clock": {
+        "bpm": 118.0,
+        "beat_zero_seconds": 0.33,
+        "source": "Phira RPE BPMList + META.offset + info.offset",
+        "verified": false,
+        "conversion_verified_against_source": true
+      },
+      "screening": {
+        "real_notes": 297,
+        "decorative_fake_notes_excluded": 0,
+        "low_alpha_real_notes": 0,
+        "unusual_size_real_notes": 0,
+        "lines": 24,
+        "type_counts": {
+          "tap": 236,
+          "hold": 40,
+          "drag": 12,
+          "flick": 9
+        },
+        "max_simultaneous_notes": 3,
+        "touch_playtest": "not_executed",
+        "coordinates": "not scored: original moving-line geometry is not a static chart target"
+      },
+      "training_title_overlap": false,
+      "training_audio_byte_overlap": false
+    },
+    {
+      "id": 6990,
+      "name": "Constant Moderato",
+      "difficulty": 13.3,
+      "level": "IN Lv.13",
+      "composer": "ミツキヨ",
+      "charter": "mdw233",
+      "community_url": "https://api.phira.cn/chart/6990",
+      "download_url": "https://phira.5wyxi.com/files/ea7dd2aa-15ba-4913-b511-d42674ea3a44",
+      "reviewed": true,
+      "rating": 0.9579254,
+      "rating_count": 10128,
+      "original_package_sha256": "1a714ae8d753ffa0facf14929bdd7e46edbd86d097a1f2fb674090872f2a54a4",
+      "source_audio_sha256": "1154fc2ac5a50e64161fbb1c3432868fa2649f0823074e183e213960c65dabdc",
+      "source_audio": "out/phira_generalization10_20261029/6990/source.mp3",
+      "chart_sha256": "64f4bbaa14492e0e8d407964ee28e9b4764d1ac7174d73918ed078fa052033ee",
+      "audio": "out/phira_generalization10_20261029/6990/audio.wav",
+      "audio_sha256": "8448914792f01599728a3e8985df0ce82589fe2568d2828b867dd5160045ea4d",
+      "duration_seconds": 140.84267573696144,
+      "reference": "out/phira_generalization10_20261029/6990/reference.json",
+      "reference_sha256": "49ae48afb3f385e6e7bd033f63d86c3f1a35e26236e8d471b2f66022ca028158",
+      "clock": {
+        "bpm": 112.0,
+        "beat_zero_seconds": 0.04,
+        "source": "Phira RPE BPMList + META.offset + info.offset",
+        "verified": false,
+        "conversion_verified_against_source": true
+      },
+      "screening": {
+        "real_notes": 625,
+        "decorative_fake_notes_excluded": 0,
+        "low_alpha_real_notes": 0,
+        "unusual_size_real_notes": 0,
+        "lines": 13,
+        "type_counts": {
+          "flick": 41,
+          "drag": 33,
+          "tap": 539,
+          "hold": 12
+        },
+        "max_simultaneous_notes": 3,
+        "touch_playtest": "not_executed",
+        "coordinates": "not scored: original moving-line geometry is not a static chart target"
+      },
+      "training_title_overlap": false,
+      "training_audio_byte_overlap": false
+    },
+    {
+      "id": 30114,
+      "name": "Rubia",
+      "difficulty": 13.0,
+      "level": "IN Lv.13",
+      "composer": "HOYO-MiX",
+      "charter": "这个人有点懒-",
+      "community_url": "https://api.phira.cn/chart/30114",
+      "download_url": "https://phira.5wyxi.com/files/d0514bfa-7171-4cf7-9058-d5b75914d56c",
+      "reviewed": true,
+      "rating": 0.965573,
+      "rating_count": 6545,
+      "original_package_sha256": "23e2fb9ff21280f907968575d6e86b01a7bef88b656795dd963c7348a2566bd7",
+      "source_audio_sha256": "0c57f9fb81c1dd98217794eab0a8c816e2d44d766584673e1fd2f94990dd5aaf",
+      "source_audio": "out/phira_generalization10_20261029/30114/source.mp3",
+      "chart_sha256": "633ea8caf54bc726c97ad7ff29c1ee526d42e1aaf0cec7a7ab5d09c4bda5b2c9",
+      "audio": "out/phira_generalization10_20261029/30114/audio.wav",
+      "audio_sha256": "119ae9b31a6a2850baa99cfe8c7bf600c9744b60367b33a13509abeeda9f8234",
+      "duration_seconds": 194.55882086167802,
+      "reference": "out/phira_generalization10_20261029/30114/reference.json",
+      "reference_sha256": "de87b9ec838f1a773bdf4bbc01892eaa59c6748815040f0a231fb2f511b00c02",
+      "clock": {
+        "bpm": 136.0,
+        "beat_zero_seconds": -0.03,
+        "source": "Phira RPE BPMList + META.offset + info.offset",
+        "verified": false,
+        "conversion_verified_against_source": true
+      },
+      "screening": {
+        "real_notes": 936,
+        "decorative_fake_notes_excluded": 4,
+        "low_alpha_real_notes": 0,
+        "unusual_size_real_notes": 0,
+        "lines": 56,
+        "type_counts": {
+          "tap": 359,
+          "drag": 407,
+          "hold": 59,
+          "flick": 111
+        },
+        "max_simultaneous_notes": 4,
+        "touch_playtest": "not_executed",
+        "coordinates": "not scored: original moving-line geometry is not a static chart target"
+      },
+      "training_title_overlap": false,
+      "training_audio_byte_overlap": false
+    },
+    {
+      "id": 23968,
+      "name": "Bunny Bunny Carrot Carrot",
+      "difficulty": 14.4,
+      "level": "IN Lv.14",
+      "composer": "ミツキヨ",
+      "charter": "NEKOYO",
+      "community_url": "https://api.phira.cn/chart/23968",
+      "download_url": "https://phira.5wyxi.com/files/1f7c4617-44f4-4a5a-9e93-2b4c42cc3336",
+      "reviewed": true,
+      "rating": 0.9598556,
+      "rating_count": 2444,
+      "original_package_sha256": "97421cdd2d5be7d4fd084d59e99d138ca0a528b6bcb0d1cbdfe23f7a620044d1",
+      "source_audio_sha256": "2765252ac765b17f4d0fab084f0ceaae6e92930cb80a767da453b36dba833f36",
+      "source_audio": "out/phira_generalization10_20261029/23968/source.mp3",
+      "chart_sha256": "9a1f35c2519caba6e44c1350a34ff794f1ff8bf399e302172c5a2991450d47a0",
+      "audio": "out/phira_generalization10_20261029/23968/audio.wav",
+      "audio_sha256": "a78513f8cdae096d74c217725fd2d58fd2e5570c95acb59069a140a209700f38",
+      "duration_seconds": 115.7,
+      "reference": "out/phira_generalization10_20261029/23968/reference.json",
+      "reference_sha256": "bcad0f306a36c227b90d83e7be6724405591fac05dd044ea44dfe06124212e2e",
+      "clock": {
+        "bpm": 170.0,
+        "beat_zero_seconds": -0.015,
+        "source": "Phira RPE BPMList + META.offset + info.offset",
+        "verified": false,
+        "conversion_verified_against_source": true
+      },
+      "screening": {
+        "real_notes": 656,
+        "decorative_fake_notes_excluded": 0,
+        "low_alpha_real_notes": 0,
+        "unusual_size_real_notes": 0,
+        "lines": 24,
+        "type_counts": {
+          "flick": 41,
+          "tap": 463,
+          "drag": 50,
+          "hold": 102
+        },
+        "max_simultaneous_notes": 3,
+        "touch_playtest": "not_executed",
+        "coordinates": "not scored: original moving-line geometry is not a static chart target"
+      },
+      "training_title_overlap": false,
+      "training_audio_byte_overlap": false
+    },
+    {
+      "id": 51352,
+      "name": "トリックハート",
+      "difficulty": 14.6,
+      "level": "IN Lv.14",
+      "composer": "MIMI/重音テト",
+      "charter": "小玖UwUELE",
+      "community_url": "https://api.phira.cn/chart/51352",
+      "download_url": "https://phira.5wyxi.com/files/10df82e9-e79e-4f59-9315-d3d8594e60c9",
+      "reviewed": true,
+      "rating": 0.96040916,
+      "rating_count": 2204,
+      "original_package_sha256": "4a934a638f5c5d9ba82a1981a1ccfdfe224f8e6c92dd2c42a7e17dcff3ff55c4",
+      "source_audio_sha256": "4f97f95f930d6abd04bcfdb38ba7519a88fc432b384bf49b82d32de5a724124a",
+      "source_audio": "out/phira_generalization10_20261029/51352/source.mp3",
+      "chart_sha256": "dc9001f61836a147aca7d9cd4e505dcb4bf432ed187ea4bb56160ca5c47b968a",
+      "audio": "out/phira_generalization10_20261029/51352/audio.wav",
+      "audio_sha256": "e47c42b1013ce29b4b218e4f33dffdfbfbb9b6f0353199ace625d5a9a7acc20a",
+      "duration_seconds": 157.0,
+      "reference": "out/phira_generalization10_20261029/51352/reference.json",
+      "reference_sha256": "8a6f474ddb7b91864d0a6155cc7ce2259045f3b5f276e5a5af3830bb01209a7f",
+      "clock": {
+        "bpm": 150.0,
+        "beat_zero_seconds": 0.0,
+        "source": "Phira RPE BPMList + META.offset + info.offset",
+        "verified": false,
+        "conversion_verified_against_source": true
+      },
+      "screening": {
+        "real_notes": 956,
+        "decorative_fake_notes_excluded": 72,
+        "low_alpha_real_notes": 0,
+        "unusual_size_real_notes": 0,
+        "lines": 35,
+        "type_counts": {
+          "tap": 738,
+          "hold": 52,
+          "drag": 146,
+          "flick": 20
+        },
+        "max_simultaneous_notes": 2,
+        "touch_playtest": "not_executed",
+        "coordinates": "not scored: original moving-line geometry is not a static chart target"
+      },
+      "training_title_overlap": false,
+      "training_audio_byte_overlap": false
+    },
+    {
+      "id": 64888,
+      "name": "Yuri on ICE",
+      "difficulty": 14.5,
+      "level": "IN Lv.14.5",
+      "composer": "梅林太郎",
+      "charter": "LingXueyu on ICE",
+      "community_url": "https://api.phira.cn/chart/64888",
+      "download_url": "https://phira.5wyxi.com/files/360d5c8d-52f5-4c12-b29f-52ab125d6cc3",
+      "reviewed": true,
+      "rating": 0.95819086,
+      "rating_count": 554,
+      "original_package_sha256": "dbc9cd7243e40c6cd0d71904a0feb2f3035fac2ffee2b3a55a94ba49ec76c36c",
+      "source_audio_sha256": "c2a0b022aedbac906b5cc25822762d78c65d5cdeae8c3ae895779571a4b70f8a",
+      "source_audio": "out/phira_generalization10_20261029/64888/source.mp3",
+      "chart_sha256": "397ace52b3ae492caf332da297116fa9e213136ceb3760da8d7f5147e1239af4",
+      "audio": "out/phira_generalization10_20261029/64888/audio.wav",
+      "audio_sha256": "82d3f11c660ab786ec19ff12f6fb50a9d4994a6c5c10dbf4fd7c23b646d3241c",
+      "duration_seconds": 222.01578231292518,
+      "reference": "out/phira_generalization10_20261029/64888/reference.json",
+      "reference_sha256": "d48ad0e621035b97b6f48acaba65ccdc1eb889fbc9c257930a6048e74a36b90c",
+      "clock": {
+        "bpm": 80.0,
+        "beat_zero_seconds": -0.2,
+        "source": "Phira RPE BPMList + META.offset + info.offset",
+        "verified": false,
+        "conversion_verified_against_source": true
+      },
+      "screening": {
+        "real_notes": 1299,
+        "decorative_fake_notes_excluded": 0,
+        "low_alpha_real_notes": 0,
+        "unusual_size_real_notes": 0,
+        "lines": 24,
+        "type_counts": {
+          "tap": 889,
+          "drag": 276,
+          "flick": 24,
+          "hold": 110
+        },
+        "max_simultaneous_notes": 3,
+        "touch_playtest": "not_executed",
+        "coordinates": "not scored: original moving-line geometry is not a static chart target"
+      },
+      "training_title_overlap": false,
+      "training_audio_byte_overlap": false
+    },
+    {
+      "id": 51818,
+      "name": "emp",
+      "difficulty": 15.0,
+      "level": "IN Lv.15",
+      "composer": "夜抒",
+      "charter": "Mull",
+      "community_url": "https://api.phira.cn/chart/51818",
+      "download_url": "https://phira.5wyxi.com/files/26841017-5717-4cce-8a2a-211036d694dd",
+      "reviewed": true,
+      "rating": 0.9580606,
+      "rating_count": 256,
+      "original_package_sha256": "149c0dc412fea7b1203e2a4cfee41f44ac49f1fe4993c4f16ec3ddb6f5a2df1b",
+      "source_audio_sha256": "f3541689a89d2a12731a5566dd68091aaef1064a4d943a3bf5d23ae6dabc87bf",
+      "source_audio": "out/phira_generalization10_20261029/51818/source.ogg",
+      "chart_sha256": "5c7179f59ff527a49b2a31a5f59347a9ecad98e74b05b21b8fa99f9477c8862f",
+      "audio": "out/phira_generalization10_20261029/51818/audio.wav",
+      "audio_sha256": "4773aa92e28ae1b268817ab150471abb441a90823a1d02be275675e2246b5ef8",
+      "duration_seconds": 132.00108843537416,
+      "reference": "out/phira_generalization10_20261029/51818/reference.json",
+      "reference_sha256": "bd3f1d7a7f3d10209f9338b30454d73acfed3ce7b5d97cb615252420e82b6e32",
+      "clock": {
+        "bpm": 180.0,
+        "beat_zero_seconds": -0.14500000000000002,
+        "source": "Phira RPE BPMList + META.offset + info.offset",
+        "verified": false,
+        "conversion_verified_against_source": true
+      },
+      "screening": {
+        "real_notes": 1200,
+        "decorative_fake_notes_excluded": 0,
+        "low_alpha_real_notes": 0,
+        "unusual_size_real_notes": 0,
+        "lines": 18,
+        "type_counts": {
+          "tap": 884,
+          "flick": 76,
+          "hold": 50,
+          "drag": 190
+        },
+        "max_simultaneous_notes": 2,
+        "touch_playtest": "not_executed",
+        "coordinates": "not scored: original moving-line geometry is not a static chart target"
+      },
+      "training_title_overlap": false,
+      "training_audio_byte_overlap": false
+    },
+    {
+      "id": 52244,
+      "name": "あのね",
+      "difficulty": 15.0,
+      "level": "IN  Lv.15",
+      "composer": "ナナツカゼ",
+      "charter": "Ezcape ~らったった~",
+      "community_url": "https://api.phira.cn/chart/52244",
+      "download_url": "https://phira.5wyxi.com/files/a550756c-dafe-4f43-acfc-f52cf3347f7e",
+      "reviewed": true,
+      "rating": 0.9645841,
+      "rating_count": 2552,
+      "original_package_sha256": "664941db60d211ad51219a0aa2f00007e89edbf7427379c257f06720f61848dc",
+      "source_audio_sha256": "23765987051a08f9833226024d9df378d6a525e390a4287b480fe1e98d3d554a",
+      "source_audio": "out/phira_generalization10_20261029/52244/source.mp3",
+      "chart_sha256": "a490cb93fec614f6a8ebb83c9a1232805d2bf72030a55f0db6dad728dcfc511d",
+      "audio": "out/phira_generalization10_20261029/52244/audio.wav",
+      "audio_sha256": "6d97bb4f6aae8ad284bfc0b98656ad3d30476aaf24442abbab79e70a4e866a26",
+      "duration_seconds": 199.02439909297053,
+      "reference": "out/phira_generalization10_20261029/52244/reference.json",
+      "reference_sha256": "b5fcc9319ab297ba82fbbb59f998be06c991bf384b5b8a69180d144843bef3fb",
+      "clock": {
+        "bpm": 246.0,
+        "beat_zero_seconds": 0.010000000000000009,
+        "source": "Phira RPE BPMList + META.offset + info.offset",
+        "verified": false,
+        "conversion_verified_against_source": true
+      },
+      "screening": {
+        "real_notes": 999,
+        "decorative_fake_notes_excluded": 53,
+        "low_alpha_real_notes": 0,
+        "unusual_size_real_notes": 0,
+        "lines": 65,
+        "type_counts": {
+          "tap": 615,
+          "hold": 141,
+          "flick": 77,
+          "drag": 166
+        },
+        "max_simultaneous_notes": 4,
+        "touch_playtest": "not_executed",
+        "coordinates": "not scored: original moving-line geometry is not a static chart target"
+      },
+      "training_title_overlap": false,
+      "training_audio_byte_overlap": false
+    }
+  ],
+  "eltaw": {
+    "id": "Eltaw_IN",
+    "split": "train",
+    "file": "sample-082.pt",
+    "sha256": "473bd697862b01e2f6d4ab1597751e42d5ebc9e4ebcc60d68b31381ed15601ab",
+    "audio": {
+      "path": "/home/ziyaowang/Alvin/Audio/AudioLab/data/chart/Eltaw_IN/3571772270130511.ogg",
+      "sha256": "253c107a59aae0c7e027511ddb66025d6c831649d2ce584edde8ef56ea166708",
+      "bytes": 1818364
+    },
+    "duration": 135.55083900226757,
+    "token_counts": {
+      "4k": 1616,
+      "freex": 1627
+    },
+    "feature_storage": {
+      "4k": {
+        "dtype": "float16",
+        "training_dtype": "float32",
+        "stored": {
+          "shape": [
+            1,
+            2919,
+            256
+          ],
+          "dtype": "torch.float16",
+          "sha256": "d5f09a16d98d4fbc3eea924c2a213939f964a664b67c7a6d08b87f9d54b2d66e"
+        },
+        "max_abs_roundtrip_error": 0.0018301010131835938
+      },
+      "freex": {
+        "dtype": "float16",
+        "training_dtype": "float32",
+        "stored": {
+          "shape": [
+            1,
+            2919,
+            256
+          ],
+          "dtype": "torch.float16",
+          "sha256": "22b87f38f73d15e636f10367c6034c8cf882abcb0aa3f611242bfcc9e4513681"
+        },
+        "max_abs_roundtrip_error": 0.0019521713256835938
+      }
+    },
+    "condition": {
+      "shape": [
+        1,
+        2919,
+        2
+      ],
+      "dtype": "torch.float32",
+      "sha256": "db3839dfae8c31793ea75553d36fa3c2f6da19d4e2aef2268789bb9e8d6bc1ad"
+    },
+    "valid": {
+      "shape": [
+        1,
+        2919
+      ],
+      "dtype": "torch.bool",
+      "sha256": "27890e035c6b05bf8eab5e117309ddc4cab2a35fb42fa296ba286d0d4f852f07"
+    }
+  },
+  "cache_manifest_sha256": "23b81f26252b3545ab4481164544bb30ca04d6802b10c7ddb5c3f53979fdaa91",
+  "checks": {
+    "schema": "audiolab-full300-window-adaptation-v1",
+    "selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+    "frontend_sha256": "62d6a385c3b15ec330df284b0ad1e031ee4053c310babde2f628f50bb038b7b0",
+    "rows": [
+      {
+        "id": 40717,
+        "file": "40717.pt",
+        "sha256": "fc245f0d8461ea67e12c6ee2c14f24d075856567499e2449fbc0b6f73632b551"
+      },
+      {
+        "id": 37396,
+        "file": "37396.pt",
+        "sha256": "92253b41b8c8b023755536f3e50b7ca537e2dc7d62fb334e8e3d06e79f5e2d20"
+      },
+      {
+        "id": 6990,
+        "file": "6990.pt",
+        "sha256": "7b53c60447ba7a708016bc1b7c6300caa8d2a0e90223cc01b529bb3092611f78"
+      },
+      {
+        "id": 30114,
+        "file": "30114.pt",
+        "sha256": "c90ac2506370fa7660104b969cb0fe94c9ee7d9bcce1726e142c4b4c5d59667b"
+      },
+      {
+        "id": 23968,
+        "file": "23968.pt",
+        "sha256": "a88602d0434100e26927ffce0a09739ffb8897e0be11a6940375a6fcf7405d3b"
+      },
+      {
+        "id": 51352,
+        "file": "51352.pt",
+        "sha256": "fd8094d17d9e2dd4716f0ab79a7834b72bac1815f18a43f5b81fe94b37ddee1c"
+      },
+      {
+        "id": 64888,
+        "file": "64888.pt",
+        "sha256": "97f9b458110300e5663ed08629b29fe59d636acb02af1b483d0ee58d8ae298e1"
+      },
+      {
+        "id": 51818,
+        "file": "51818.pt",
+        "sha256": "c09402e55c567ccdc55350807be59c826a964f90e9d72bac65bd3d1e6735fd94"
+      },
+      {
+        "id": 52417,
+        "file": "52417.pt",
+        "sha256": "a449bf055235d51440a9a3a31a0e10088547b932f5f8d36eaa1b70651ec27582"
+      },
+      {
+        "id": 52244,
+        "file": "52244.pt",
+        "sha256": "f5467067973bb8cc60eca2fd72f9a6156d658cf203ebafde5e8a2cb3ab4405d3"
+      }
+    ]
+  },
+  "prior_selection_sha256": "04790f4fff9fd6c57be2381557ee62e364fdbb0dd9e5c7f651d9bdb2bc3d5419",
+  "original_selection_sha256": "862af32d69f780aae95d44d2e8dc164e60cdfedfb0d55766777d0c11974e175a",
+  "source_sha256": {
+    "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+    "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+    "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+    "src/model_benchmark.py": "c7257da6cb65d8522ae376ecbb23acf5db696cb879a30818a326a780146cf250",
+    "src/audio_understanding/evaluation.py": "c57d0c4eb36df95f04f7772f98d68229946e168a3aa830458d4eb150357194e0",
+    "src/soft_onset.py": "5dfbb511ff0e058b25a6e00d65f479c1a176f12e8b2919b166f4c68101ccb73f",
+    "script/train_windowed_corpus.py": "d7a3063ae9f5e3f366b18e2496f2a8aedeb755a5486af27158464231ba700979",
+    "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+    "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45",
+    "docs/evaluations/assets/phira_generalization10_20261029/benchmark.py": "973f0bf0715a312461029e438d0f4b6d12bc049ca082014b0239e96529b2aecc",
+    "docs/evaluations/assets/windowed_ar_20261031/summarize_natural.py": "7f802eaae87f5d14ad26d374bd7850caa091c7225fb3219ff728ecb14dfaf98d",
+    "benchmarks/v1/protocol.json": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5",
+    "docs/evaluations/assets/ar_early_replay_20261102/replay.py": "d64bdeaf0d797403938c17582c87f133e0dc2b16afe6fc4edb2b63e701a80c86"
+  },
+  "controls": {
+    "training_updates": 0,
+    "architecture": "original whole-song AnchoredAR in all arms",
+    "greedy": true,
+    "seed": 42,
+    "max_tokens": 12000,
+    "grid_repair": false,
+    "bpm": "frozen reference clock; no tempo estimation",
+    "positions_scored": false
+  },
+  "selection_reason": "Previously delivered A920 and S1000, chosen on 15 training songs before E20. Compare each with its own A/S1400; do not select an early epoch based on new-song results.",
+  "input_scope": "Eltaw uses original full-song training cache. All community inputs use the same CPU-encoded frozen features/onsets from the window pilot. Not a bitwise replay of the original GPU-encoded E20.",
+  "scope": "4K A/S only; E20 is development data. No free-x conclusion, new training or runtime replacement.",
+  "scoring_metadata_correction": {
+    "recorded_at_utc": "2026-11-01T16:10:00.961067+00:00",
+    "previous_script_sha256": "3c3587fd0468a2a608958d0847ea1dc9feec667f8c4e996eded8641e7216e73b",
+    "reason": "Eltaw scoring clock lacked source metadata; first sanity inference stopped in scorer before any result was saved.",
+    "model_or_community_inputs_changed": false
+  }
+}
