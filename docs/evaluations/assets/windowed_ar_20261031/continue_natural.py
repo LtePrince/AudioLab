@@ -75,6 +75,50 @@ def budget(directory):
     return ResourceBudget(args, torch.device('cpu'), directory)
 
 
+def process_alive(pid, marker):
+    if not pid:
+        return False
+    try:
+        process = Path('/proc') / str(int(pid))
+        command = process.joinpath('cmdline').read_bytes().split(b'\0')
+        return any(marker.encode() in arg for arg in command)
+    except (FileNotFoundError, ProcessLookupError, PermissionError):
+        return False
+
+
+def runtime_status(state):
+    supervisor_alive = process_alive(state.get('pid'), 'continue_natural.py')
+    worker_alive = process_alive(state.get('worker_pid'), 'script.train_windowed_corpus')
+    age = time.time() - state.get('updated', state.get('created', 0))
+    effective = state['status']
+    if effective in ('running', 'starting'):
+        if not supervisor_alive:
+            effective = 'orphaned_worker' if worker_alive else 'interrupted'
+        elif age > 90:
+            effective = 'heartbeat_stale'
+    return dict(recorded_status=state['status'], effective_status=effective,
+                supervisor_alive=supervisor_alive, worker_alive=worker_alive,
+                heartbeat_age_seconds=age, epoch=state.get('epoch'))
+
+
+def validate_interrupted_checkpoint(checkpoint, expected_config):
+    if checkpoint['schema'] != SCHEMA or checkpoint['config'] != expected_config:
+        raise ValueError('resume config changed')
+    epoch = checkpoint['epoch']
+    if not 20 <= epoch < 100 or len(checkpoint['curves']) != epoch:
+        raise ValueError('resume requires a complete intermediate epoch')
+    if checkpoint['steps'] != epoch * 300 or checkpoint['curves'][-1]['steps'] != checkpoint['steps']:
+        raise ValueError('resume step/epoch mismatch')
+    state = checkpoint['training_state']
+    if not all(k in state for k in ('optimizer', 'sampler', 'torch_rng', 'cuda_rng')):
+        raise ValueError('resume requires complete optimizer and RNG state')
+    if len(state['cuda_rng']) != 2:
+        raise ValueError('original two-device RNG topology required')
+    if any(g['lr'] != expected_config['lr'] for g in state['optimizer']['param_groups']):
+        raise ValueError('resume optimizer LR changed')
+    return epoch
+
+
 def prepare():
     training = read(SOURCE / 'training.json')
     if training['status'] != 'completed' or training['curves'][-1]['epoch'] != 20:
@@ -164,13 +208,20 @@ def report():
     print(json.dumps(dict(status='reported', metrics=final['aggregates']), ensure_ascii=False), flush=True)
 
 
-def run():
+def run(resume=False):
     record = read(DEST / 'continuation.json')
     lock = (DEST / '.supervisor.lock').open('a')
     fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     state_path = DEST / 'supervisor.json'
-    if state_path.exists():
+    if state_path.exists() and not resume:
         raise RuntimeError('existing supervisor state; inspect before relaunch')
+    previous = read(state_path) if state_path.exists() else None
+    if resume and previous is None:
+        raise RuntimeError('no interrupted supervisor to resume')
+    if previous:
+        health = runtime_status(previous)
+        if health['worker_alive'] or health['supervisor_alive']:
+            raise RuntimeError('original process still alive; refusing duplicate training')
     sources = dict(record['training_source_sha256'])
     extras = ('script/train_alignment_scratch.py', 'src/resource_budget.py',
               'docs/evaluations/assets/phira_generalization10_20261029/benchmark.py',
@@ -181,7 +232,15 @@ def run():
     for path, digest in sources.items():
         if sha256(ROOT / path) != digest:
             raise RuntimeError(f'source mismatch: {path}')
-    if sha256(DEST / 'model_latest.pt') != record['initial_resume_sha256']:
+    checkpoint_path = DEST / 'model_latest.pt'
+    resume_hash = sha256(checkpoint_path)
+    resume_epoch = 20
+    if resume:
+        checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=True)
+        original_config = read(SOURCE / 'training.json')['config']
+        resume_epoch = validate_interrupted_checkpoint(checkpoint, dict(original_config, epochs=100))
+        del checkpoint
+    elif resume_hash != record['initial_resume_sha256']:
         raise RuntimeError('prepared resume checkpoint changed before launch')
     # Preserve physical GPU index 1 and the original two-device RNG topology.
     if os.environ.get('CUDA_VISIBLE_DEVICES') or torch.cuda.device_count() != 2:
@@ -190,16 +249,28 @@ def run():
            '--architecture', 'window', '--device', 'cuda:1', '--epochs', '100', '--eval-every', '20',
            '--resume', '--output', str(DEST.relative_to(ROOT))]
     state = dict(schema='audiolab-nw1-fitting-supervisor-v1', status='starting', pid=os.getpid(),
-                 command=cmd, source_sha256=sources, created=time.time())
+                 command=cmd, source_sha256=sources, created=time.time(),
+                 resume_epoch=resume_epoch, resume_checkpoint_sha256=resume_hash,
+                 session_id=os.getsid(0), parent_pid=os.getppid())
+    suffix = f'resume-e{resume_epoch:04d}-{time.time_ns()}' if resume else 'initial'
+    log_path = DEST / (f'worker-{suffix}.log' if resume else 'worker.log')
+    state['worker_log'] = str(log_path.relative_to(ROOT))
+    if previous:
+        incident = dict(previous=previous, observed=health, recovered_epoch=resume_epoch,
+                        recovered_checkpoint_sha256=resume_hash, detected_at=time.time(),
+                        cause='Unknown: both processes absent; no terminal exception in worker log.',
+                        recovery='Detached session with file-backed standard streams; unchanged training code, weights, AdamW and RNG.')
+        write_json(DEST / f'interruption-{suffix}.json', incident)
     child = None
 
     def interrupted(signum, frame):
         raise KeyboardInterrupt(f'signal {signum}')
 
     signal.signal(signal.SIGTERM, interrupted)
+    signal.signal(signal.SIGHUP, signal.SIG_IGN)
     try:
         budget(DEST).check(force=True)
-        with (DEST / 'worker.log').open('xb', buffering=0) as log:
+        with log_path.open('xb', buffering=0) as log:
             child = subprocess.Popen(cmd, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT)
             state.update(status='running', worker_pid=child.pid)
             write_json(state_path, state)
@@ -210,7 +281,7 @@ def run():
                     raise RuntimeError('training source changed during continuation')
                 training_path = DEST / 'training.json'
                 training = read(training_path) if training_path.exists() else {}
-                curve = training.get('curves', [{}])[-1]
+                curve = (training.get('curves') or [{}])[-1]
                 state.update(epoch=curve.get('epoch', 20), loss=curve.get('objective'),
                              stop_recall=curve.get('end_stop_recall'), resources=snapshot, updated=time.time())
                 write_json(state_path, state)
@@ -236,10 +307,44 @@ def run():
         lock.close()
 
 
+def launch(resume=False):
+    """The short-lived launcher exits; the supervisor owns a separate session."""
+    with (DEST / '.launch.lock').open('a') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        path = DEST / 'supervisor.json'
+        if path.exists():
+            health = runtime_status(read(path))
+            if health['supervisor_alive'] or health['worker_alive']:
+                raise RuntimeError('supervisor or worker still alive; refusing another launch')
+        log_path = DEST / f'detached-supervisor-{time.time_ns()}.log'
+        with log_path.open('xb', buffering=0) as log:
+            child = subprocess.Popen([sys.executable, '-u', str(Path(__file__).resolve()),
+                                      'resume' if resume else 'run'], cwd=ROOT,
+                                     stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
+                                     start_new_session=True)
+        # A bounded startup check, not a persistent CLI session holding training.
+        for _ in range(30):
+            if child.poll() is not None:
+                raise RuntimeError(f'supervisor startup failed: {log_path.read_text()[-2000:]}')
+            if path.exists():
+                state = read(path)
+                if state.get('pid') == child.pid and state.get('status') == 'running':
+                    print(json.dumps(dict(detached_pid=child.pid, session_id=os.getsid(child.pid),
+                                          worker_pid=state['worker_pid'], resume_epoch=state['resume_epoch'],
+                                          supervisor_log=str(log_path.relative_to(ROOT)),
+                                          worker_log=state['worker_log'])), flush=True)
+                    return
+            time.sleep(1)
+        raise RuntimeError(f'startup still pending; inspect {log_path} before attempting another launch')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=('prepare', 'run', 'report'))
+    parser.add_argument('action', choices=('prepare', 'run', 'resume', 'launch', 'launch-resume', 'status', 'report'))
     args = parser.parse_args()
     os.chdir(ROOT)
     torch.set_num_threads(2)
-    {'prepare': prepare, 'run': run, 'report': report}[args.action]()
+    {'prepare': prepare, 'run': run, 'resume': lambda: run(resume=True),
+     'launch': launch, 'launch-resume': lambda: launch(resume=True),
+     'status': lambda: print(json.dumps(runtime_status(read(DEST / 'supervisor.json')))),
+     'report': report}[args.action]()

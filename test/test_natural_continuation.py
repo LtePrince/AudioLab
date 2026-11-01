@@ -1,10 +1,12 @@
 from copy import deepcopy
 import random
+import time
 
 import pytest
 import torch
 
 from docs.evaluations.assets.windowed_ar_20261031.continue_natural import equal_tree, extend_checkpoint
+from docs.evaluations.assets.windowed_ar_20261031 import continue_natural as continuation
 from script.train_alignment_scratch import restore_training
 from script.train_windowed_corpus import SCHEMA
 
@@ -68,3 +70,29 @@ def test_extension_rejects_non_equivalent_or_incomplete_resume(change):
         state['config']['epochs'] = 2
     with pytest.raises(ValueError):
         extend_checkpoint(state, 100)
+
+
+def test_running_file_does_not_override_missing_processes(monkeypatch):
+    state = dict(status='running', pid=123, worker_pid=456, updated=time.time(), epoch=26)
+    monkeypatch.setattr(continuation, 'process_alive', lambda *args: False)
+    assert continuation.runtime_status(state)['effective_status'] == 'interrupted'
+    # A worker may outlive its supervisor; it must not be mistaken for idle.
+    monkeypatch.setattr(continuation, 'process_alive', lambda pid, marker: pid == 456)
+    health = continuation.runtime_status(state)
+    assert health['effective_status'] == 'orphaned_worker' and health['worker_alive']
+
+
+def test_interrupted_checkpoint_keeps_full_training_state_and_rejects_changed_recipe():
+    state = checkpoint()
+    state.update(epoch=26, steps=7800,
+                 curves=[dict(epoch=i, steps=i * 300) for i in range(1, 27)])
+    state['config']['epochs'] = 100
+    state['training_state']['cuda_rng'] = [torch.zeros(8, dtype=torch.uint8) for _ in range(2)]
+    before = deepcopy(state)
+    assert continuation.validate_interrupted_checkpoint(state, deepcopy(state['config'])) == 26
+    assert equal_tree(state, before)
+    with pytest.raises(ValueError, match='config changed'):
+        continuation.validate_interrupted_checkpoint(state, dict(state['config'], lr=.01))
+    del state['training_state']['sampler']
+    with pytest.raises(ValueError, match='complete optimizer and RNG'):
+        continuation.validate_interrupted_checkpoint(state, state['config'])

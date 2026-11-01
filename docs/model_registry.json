@@ -3174,7 +3174,7 @@
       "models": [],
       "status": "in_progress",
       "question": "先建立明确变量与结构对应，再逐级增加复杂度",
-      "result": "Controlled stages 1–5 completed. Matched full300 W0/W1 e20 completed: window protocol underfit, continuous false-empty windows and natural-song regressions remain. W1-only e20→e100 continuation started with complete optimizer/RNG preservation; no production promotion.",
+      "result": "Controlled stages 1–5 and matched full300 W0/W1 e20 completed; natural quality still not passed. W1 fitting run stopped at e26 without a logged cause; recovered exact optimizer/RNG checkpoint into a detached supervisor. Target remains e100; next generation check e40.",
       "evidence": "docs/fixed_length_attribution_plan.md",
       "runs": [
         {
@@ -4510,7 +4510,7 @@
           "parent_checkpoint": "out/windowed_ar_20261031/natural_window/model_latest.pt",
           "parent_sha256": "0f91f941b2cb08e3470adee2ec09f8ddeba1092642fb6382c741fd9531c73dc3",
           "parent_epoch": 20,
-          "epoch": 20,
+          "epoch": 26,
           "checkpoint": "out/windowed_ar_20261031/natural_window_fit100/model_latest.pt",
           "progress_file": "out/windowed_ar_20261031/natural_window_fit100/training.json",
           "source_sha256": {
@@ -4528,10 +4528,14 @@
           "delivery": "diagnostic_only",
           "quality_status": "training_in_progress_not_evaluated",
           "initialization": "Exact e20 weights, AdamW and sampler/Torch/CUDA RNG retained; unchanged constant LR; only stopping epoch extended.",
-          "optimizer_steps": 6000,
+          "optimizer_steps": 7800,
           "supervisor": "out/windowed_ar_20261031/natural_window_fit100/supervisor.json",
           "continuation_evidence": "docs/evaluations/assets/windowed_ar_20261031/natural_continuation.json",
-          "comparison_scope": "W1 only; no equal-budget W0e100 comparator; e20 matched comparison preserved."
+          "comparison_scope": "W1 only; no equal-budget W0e100 comparator; e20 matched comparison preserved.",
+          "recovery_evidence": "docs/evaluations/assets/windowed_ar_20261031/natural_recovery_20261102.json",
+          "resume_checkpoint_sha256": "9d43ed60d9cd73662d195c39117d4ba120cf0eea8e657c90c7296355362adc0e",
+          "last_recovery_epoch": 26,
+          "progress_snapshot_utc": "2026-11-01T13:56:25.675143+00:00"
         }
       ],
       "research_update": {
@@ -4655,7 +4659,7 @@
         "docs/evaluations/windowed_ar_stage5_20261031.md",
         "docs/evaluations/windowed_ar_natural_20261031.md"
       ],
-      "execution_snapshot_utc": "2026-11-01T06:36:55.889155+00:00"
+      "execution_snapshot_utc": "2026-11-01T13:56:25.675143+00:00"
     },
     {
       "id": "E17",

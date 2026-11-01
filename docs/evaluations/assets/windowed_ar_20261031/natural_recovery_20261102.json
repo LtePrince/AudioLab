@@ -1,0 +1,111 @@
+{
+  "schema": "audiolab-nw1-interruption-recovery-v1",
+  "recorded_at_utc": "2026-11-01T13:56:25.675143+00:00",
+  "incident": {
+    "previous": {
+      "schema": "audiolab-nw1-fitting-supervisor-v1",
+      "status": "running",
+      "pid": 3622809,
+      "command": [
+        "/home/ziyaowang/Alvin/Audio/AudioLab/.venv/bin/python",
+        "-u",
+        "-m",
+        "script.train_windowed_corpus",
+        "train",
+        "--architecture",
+        "window",
+        "--device",
+        "cuda:1",
+        "--epochs",
+        "100",
+        "--eval-every",
+        "20",
+        "--resume",
+        "--output",
+        "out/windowed_ar_20261031/natural_window_fit100"
+      ],
+      "source_sha256": {
+        "script/train_windowed_corpus.py": "d7a3063ae9f5e3f366b18e2496f2a8aedeb755a5486af27158464231ba700979",
+        "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+        "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+        "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+        "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+        "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+        "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2",
+        "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45",
+        "script/train_alignment_scratch.py": "fbe986e1ee0d78def6c09a9300c5e153de241f120b808dd4ed96484859404eed",
+        "src/resource_budget.py": "b26ae4c3608a223b144d93de88e32fce02ce63f75c85277c91b6ae0432220c91",
+        "docs/evaluations/assets/phira_generalization10_20261029/benchmark.py": "973f0bf0715a312461029e438d0f4b6d12bc049ca082014b0239e96529b2aecc",
+        "docs/evaluations/assets/windowed_ar_20261031/continue_natural.py": "4d2b9edfb7b7c4ef1b7ade60df871104b7807b8f9b41d22f735b05d222d8ff65",
+        "docs/evaluations/assets/windowed_ar_20261031/summarize_natural.py": "7f802eaae87f5d14ad26d374bd7850caa091c7225fb3219ff728ecb14dfaf98d",
+        "benchmarks/v1/protocol.json": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5"
+      },
+      "created": 1793514920.8740866,
+      "worker_pid": 3622865,
+      "epoch": 25,
+      "loss": 0.06661011179669556,
+      "stop_recall": 0.9052443384982122,
+      "resources": {
+        "disk_free_gib": 28.44491958618164,
+        "ram_available_gib": 36.68796157836914,
+        "rss_gib": 0.586334228515625
+      },
+      "updated": 1793515610.9338498
+    },
+    "observed": {
+      "recorded_status": "running",
+      "effective_status": "interrupted",
+      "supervisor_alive": false,
+      "worker_alive": false,
+      "heartbeat_age_seconds": 25658.15523791313,
+      "epoch": 25
+    },
+    "recovered_epoch": 26,
+    "recovered_checkpoint_sha256": "9d43ed60d9cd73662d195c39117d4ba120cf0eea8e657c90c7296355362adc0e",
+    "detected_at": 1793541269.588421,
+    "cause": "Unknown: both processes absent; no terminal exception in worker log.",
+    "recovery": "Detached session with file-backed standard streams; unchanged training code, weights, AdamW and RNG."
+  },
+  "restarted_supervisor": {
+    "pid": 3865067,
+    "worker_pid": 3865137,
+    "session_id": 3865067,
+    "resume_epoch": 26,
+    "resume_checkpoint_sha256": "9d43ed60d9cd73662d195c39117d4ba120cf0eea8e657c90c7296355362adc0e",
+    "worker_log": "out/windowed_ar_20261031/natural_window_fit100/worker-resume-e0026-1793541269588391018.log",
+    "source_sha256": {
+      "script/train_windowed_corpus.py": "d7a3063ae9f5e3f366b18e2496f2a8aedeb755a5486af27158464231ba700979",
+      "script/train_anchored_ar.py": "7a6abf6a3a3c86ead16ff4437e1b8b7c1cb934ab6db4cb59874db48da05306b9",
+      "src/anchored_ar.py": "c80271a7481888b206c90a80604e5c78e05a52ee49a80bfe6ed295d28bc8a109",
+      "src/windowed_ar.py": "b23045f6d297f49538ddfe5d2e4be6e8075d69c1d27cbdd93cbf713e4d982aa3",
+      "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+      "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+      "script/train_grounded_ar.py": "369c4ab147d4356459ecccae4cf2179ac4154722423753f7e073d379533cd9a2",
+      "script/train_soft_onset.py": "9632065fb754b6aa5f84521d5318b917e846f633e1375481869e1a090bae5b45",
+      "script/train_alignment_scratch.py": "fbe986e1ee0d78def6c09a9300c5e153de241f120b808dd4ed96484859404eed",
+      "src/resource_budget.py": "b26ae4c3608a223b144d93de88e32fce02ce63f75c85277c91b6ae0432220c91",
+      "docs/evaluations/assets/phira_generalization10_20261029/benchmark.py": "973f0bf0715a312461029e438d0f4b6d12bc049ca082014b0239e96529b2aecc",
+      "docs/evaluations/assets/windowed_ar_20261031/continue_natural.py": "bb21dca45b772fe41321845030546cde9bfe3e92868275a019e75086e7c11057",
+      "docs/evaluations/assets/windowed_ar_20261031/summarize_natural.py": "7f802eaae87f5d14ad26d374bd7850caa091c7225fb3219ff728ecb14dfaf98d",
+      "benchmarks/v1/protocol.json": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5"
+    },
+    "created": 1793541269.5883849
+  },
+  "tests": "8 continuation/state/health tests passed",
+  "checks": [
+    "Old supervisor and worker absent in host process table; GPU idle.",
+    "Complete e26 checkpoint and unchanged training config validated.",
+    "Short-lived launcher exited successfully; supervisor has its own POSIX session."
+  ],
+  "quality_scope": "No new generation evaluation since e20; e40 is the next scheduled check.",
+  "post_launcher_exit_progress": {
+    "checked_at_utc": "2026-11-01T13:57:08.732208+00:00",
+    "training": {
+      "stage": "train",
+      "epoch": 27,
+      "songs": 300,
+      "steps": 8100
+    },
+    "last_completed_epoch": 27
+  }
+}
