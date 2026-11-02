@@ -105,6 +105,9 @@ class WindowedAR(AnchoredAR):
         device=next(self.parameters()).device
         soft=condition['soft_onsets'].to(device)
         if not use_soft:soft=torch.zeros_like(soft)
+        if self.decoder.soft_onset_proj is None:
+            if use_soft:raise ValueError('audio-only decoder has no soft-onset input')
+            soft=None
         memory=self.decoder.prepare_memory(condition['features'].float().to(device),soft)
         bounds=target['bounds'].to(device)
         logits,hidden=self.decoder(target['tokens'][None].to(device),target['frames'][None].to(device),
@@ -150,6 +153,9 @@ def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=1200
     windows=chart_windows(duration,model.window_width);window_index=0;window_records=[]
     soft=condition['soft_onsets'].to(device)
     if not use_soft:soft=torch.zeros_like(soft)
+    if decoder.soft_onset_proj is None:
+        if use_soft:raise ValueError('audio-only decoder has no soft-onset input')
+        soft=None
     memory=decoder.prepare_memory(condition['features'].float().to(device),soft)
     valid=condition['valid'].to(device);caches=decoder.init_cache(memory)
     rng=torch.Generator(device=device).manual_seed(seed)

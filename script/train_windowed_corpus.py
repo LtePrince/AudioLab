@@ -90,7 +90,7 @@ def scoring_module():
 
 
 @torch.no_grad()
-def evaluate(model,args,budget,epoch,full=True):
+def evaluate(model,args,budget,epoch,full=True,*,condition_provider=None):
     model.eval();generator=window_generate if args.architecture=='window' else whole_generate
     profile=read('benchmarks/v1/protocol.json')['rhythm'];scorer=scoring_module();result=[]
     cache=cache_inputs(args.cache);pool=[r for r in cache['rows'] if r['id']!='Eltaw_IN']
@@ -132,13 +132,15 @@ def evaluate(model,args,budget,epoch,full=True):
         # Canonical training notes already use physical audio time; clock offset
         # comes only from the same frozen reference metadata used in old checks.
         clock=dict(bpm=meta['timebase_bpm'],beat_zero_seconds=meta.get('offset_seconds',0.),source='training reference',verified=True)
-        one(row['id'],'train15',condition(sample),natural_reference(sample),clock)
+        view=condition(sample) if condition_provider is None else condition_provider(row['id'],'train15')
+        one(row['id'],'train15',view,natural_reference(sample),clock)
         del sample
     songs=selected['songs'] if full else [s for s in selected['songs'] if s['id'] in (40717,52417)]
     for song in songs:
         row=next(r for r in check_manifest['rows'] if r['id']==song['id']);path=args.checks/row['file']
         if sha256(path)!=row['sha256']:raise ValueError('evaluation features changed')
-        view=torch.load(path,map_location='cpu',weights_only=True)
+        view=(torch.load(path,map_location='cpu',weights_only=True) if condition_provider is None
+              else condition_provider(str(song['id']),'E20_development'))
         one(str(song['id']),'E20_development',view,read(song['reference'])['notes'],song['clock']);del view
     aggregates={}
     for split in {r['split'] for r in result}:

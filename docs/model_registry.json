@@ -220,6 +220,17 @@
       "evidence": "docs/evaluations/windowed_ar_stage4_20261031.md",
       "training_status": "controlled_training_completed",
       "quality_status": "controlled_generalization_not_passed_natural_music_not_evaluated"
+    },
+    {
+      "id": "AL-AR4K@0.7.0",
+      "family": "AL-AR4K",
+      "version": "0.7.0",
+      "title": "A 全音频编码器与分窗解码器端到端适配",
+      "output_protocol": "audiolab-joint-audio-window-ar-v1",
+      "delivery": "research_only_joint_frontend_required",
+      "evidence": "docs/evaluations/joint_audio_a_20261102.md",
+      "training_status": "baseline_evaluation",
+      "quality_status": "not_evaluated"
     }
   ],
   "experiments": [
@@ -6098,6 +6109,73 @@
         "model_version_changed": false
       },
       "updated_at_utc": "2026-11-01T16:27:33.003402+00:00"
+    },
+    {
+      "id": "E22",
+      "title": "暂停 S；全 300 首 A 全参数联合适配",
+      "kind": "joint_encoder_decoder_training",
+      "models": [
+        "AL-AR4K@0.7.0/A"
+      ],
+      "status": "in_progress",
+      "question": "允许谱面损失更新全部音频编码器是否改善缺音和窗口结束？",
+      "result": "49 tests passed. Real-song checks on Eltaw and longest audio/target examples: all 279 parameter tensors have finite gradients and change after optimization; all six audio blocks connected. Detached A-only job starts with online-encoder e0 evaluation before 20 full300 epochs. No new quality result yet.",
+      "evidence": [
+        "docs/evaluations/joint_audio_a_20261102.md",
+        "docs/evaluations/assets/joint_audio_a_20261102/startup.json",
+        "docs/evaluations/assets/joint_audio_a_20261102/gradient_probe.json",
+        "docs/evaluations/assets/joint_audio_a_20261102/config.json"
+      ],
+      "runs": [
+        {
+          "id": "E22-A",
+          "model": "AL-AR4K@0.7.0",
+          "variant": "A",
+          "status": "baseline_evaluation",
+          "parent_checkpoint": "out/windowed_ar_20261031/natural_window_fit100/model_latest.pt",
+          "parent_sha256": "637b80584f2c53cda2235839f0701a3f61fa99f5163a1e3899da5534f73cf87a",
+          "parent_epoch": 100,
+          "frontend_checkpoint": "checkpoints/timing_v1/decoder/decoder_best.pt",
+          "frontend_sha256": "62d6a385c3b15ec330df284b0ad1e031ee4053c310babde2f628f50bb038b7b0",
+          "planned_epochs": 20,
+          "planned_updates": 6000,
+          "training_songs": 300,
+          "decoder_lr": 3e-05,
+          "encoder_lr": 3e-06,
+          "checkpoint": "out/joint_audio_a_20261102/model_latest.pt",
+          "progress_file": "out/joint_audio_a_20261102/training.json",
+          "report": "docs/evaluations/joint_audio_a_20261102.md",
+          "quality_status": "not_evaluated",
+          "delivery": "research_only",
+          "parameters": 13371139,
+          "encoder_parameters": 6679424,
+          "decoder_parameters": 6691715,
+          "source_sha256": {
+            "script/train_joint_audio_a.py": "3ebe34ff4f7a8cd86b6b0f3cf7c2efc3af3ee53c8825b9d4908c1f35a4eb4a6d",
+            "script/train_models.py": "9c8caf326672fa67bc6246ce638e06c318ba3513c91898f22af938935b453aad",
+            "src/joint_audio_ar.py": "69f1d255748100a784ddd8adb3af92af5b505376336b337a147d160f054a5a03",
+            "src/models/transcriber.py": "0f90e27d02f3d460666713f19ae62cc8e7833d925cf5991622810b2d153537dd",
+            "src/models/attention.py": "90dfa37bf305558c82758cae339bdcaa5536b7915e257cb9acd37249f6f66a40",
+            "src/condition/wave.py": "1f01a44f4d4b05a55c4ab06233d40414019903f8b23442dc2f5018f39748047c",
+            "src/data/audio2mel.py": "00d73fa0afee5949e725cc6f57b352daeefb5ff4d08ef8e15fe23a0b5724ea0d",
+            "src/windowed_ar.py": "6c972249fee21c3f20229534374e5615f8132cfb46f10a65b9cea750e074d392",
+            "src/anchored_ar.py": "908570d02c450dbf101d9fa023371a6ffe5b2c2aa1a754e5eae6e58d16fd386a",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+            "script/train_windowed_corpus.py": "00aea033b20879a493e0567fe3478192776e35257e35f9b3e5b93228dd16d082",
+            "src/conditional_training.py": "7229cd6dfa83745b46ba236bb486348b34ba969a9948efcab924486cbb018ddc",
+            "script/train_alignment_scratch.py": "fbe986e1ee0d78def6c09a9300c5e153de241f120b808dd4ed96484859404eed",
+            "docs/evaluations/assets/phira_generalization10_20261029/benchmark.py": "973f0bf0715a312461029e438d0f4b6d12bc049ca082014b0239e96529b2aecc",
+            "benchmarks/v1/protocol.json": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5"
+          },
+          "mel_manifest_sha256": "dd5c2e7e638e26b736a44457f47de8f5bade4e2d385152c36c13f8bcfc8a0ea3",
+          "optimizer_steps": 0,
+          "progress_snapshot_utc": "2026-11-02T01:42:02.706123+00:00",
+          "launch_file": "out/joint_audio_a_20261102/launch.json",
+          "gradient_evidence": "docs/evaluations/assets/joint_audio_a_20261102/gradient_probe.json"
+        }
+      ],
+      "updated_at_utc": "2026-11-02T01:42:02.706123+00:00"
     }
   ],
   "bundles": [
@@ -6458,5 +6536,18 @@
     "硬候选推理解码、连续条件输入、真实历史监督和生成时采样为不同维度。",
     "legacy_inventory中旧R1/R2等资产保留待核定谱系，不冒充已确认版本。",
     "2026-10-31: E14/E18 archived checkpoint paths in historical records may no longer exist locally. Consult storage_archive_20261030 and cleanup.json for verified remote recovery; four e1400 exact-resume states remain local. Older optimizer/RNG copies were pruned, inference parameters preserved."
-  ]
+  ],
+  "route_policy": {
+    "updated_at_utc": "2026-11-02T01:42:02.706123+00:00",
+    "user_decision": "Pause S; train all parameters in A.",
+    "S": {
+      "status": "paused_by_user",
+      "scope": "future training/optimization for 4K and free-x; retain historical weights/results"
+    },
+    "A": {
+      "status": "baseline_evaluation",
+      "active_run": "E22-A",
+      "scope": "current 4K window model first; free-x joint adaptation not executed"
+    }
+  }
 }

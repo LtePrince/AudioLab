@@ -1,0 +1,32 @@
+{
+  "snapshot_utc": "2026-11-02T01:42:02.706123+00:00",
+  "recorded_phase": "baseline_evaluation",
+  "pid": 60134,
+  "optimizer_steps": 0,
+  "launch": {
+    "pid": 60134,
+    "started": 1793583631.6808317,
+    "command": [
+      "/home/ziyaowang/Alvin/Audio/AudioLab/.venv/bin/python",
+      "-u",
+      "-m",
+      "script.train_models",
+      "--gpu",
+      "0",
+      "--worker",
+      "script.train_joint_audio_a",
+      "--",
+      "run"
+    ],
+    "log": "/home/ziyaowang/Alvin/Audio/AudioLab/out/joint_audio_a_20261102/worker.log",
+    "scope": "A only, all 300 songs, all active encoder/decoder parameters, 20 epochs"
+  },
+  "mel_cache_gib": 1.4379260521382093,
+  "mel_training_songs": 300,
+  "mel_development_songs": 10,
+  "tests": {
+    "passed": 49,
+    "command": ".venv/bin/python -m pytest -q test/test_joint_audio_ar.py test/test_windowed_ar.py test/test_windowed_freex.py test/test_windowed_corpus.py test/test_anchored_ar.py test/test_anchored_freex.py test/test_anchored_runtime.py"
+  },
+  "scope": "Startup snapshot, not a quality evaluation; probe updates discarded before training. S paused by user."
+}

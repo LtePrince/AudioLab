@@ -117,7 +117,7 @@ class AnchoredAR(nn.Module):
     def __init__(self, decoder_config, *, pointer_dim=64):
         super().__init__()
         self.decoder=ChartDecoder(**decoder_config)
-        if self.decoder.n_lanes not in (4,64) or self.decoder.history_dim!=28 or self.decoder.soft_onset_dim!=2 \
+        if self.decoder.n_lanes not in (4,64) or self.decoder.history_dim!=28 or self.decoder.soft_onset_dim not in (0,2) \
                 or self.decoder.cross_window is not None or self.decoder.cross_time_scale is not None:
             raise ValueError('anchored experiment requires global 4K/free-x decoder with causal history')
         if self.decoder.n_lanes==64 and self.decoder.offset_head is None:
@@ -139,6 +139,9 @@ class AnchoredAR(nn.Module):
         device=next(self.parameters()).device
         soft=condition['soft_onsets'].to(device)
         if not use_soft:soft=torch.zeros_like(soft)
+        if self.decoder.soft_onset_proj is None:
+            if use_soft:raise ValueError('audio-only decoder has no soft-onset input')
+            soft=None
         memory=self.decoder.prepare_memory(condition['features'].float().to(device),soft)
         logits,hidden=self.decoder(target['tokens'][None].to(device),target['frames'][None].to(device),
             memory,condition['valid'].to(device),history=target['history'][None].to(device),return_hidden=True)
@@ -199,6 +202,9 @@ def generate(model,condition,bpm,*,use_soft,greedy=False,seed=42,max_tokens=1200
     anchor,end_group=tk.cond(0),tk.cond(1)
     soft=condition['soft_onsets'].to(device)
     if not use_soft:soft=torch.zeros_like(soft)
+    if decoder.soft_onset_proj is None:
+        if use_soft:raise ValueError('audio-only decoder has no soft-onset input')
+        soft=None
     memory=decoder.prepare_memory(condition['features'].float().to(device),soft)
     valid=condition['valid'].to(device);caches=decoder.init_cache(memory)
     rng=torch.Generator(device=device).manual_seed(seed)
