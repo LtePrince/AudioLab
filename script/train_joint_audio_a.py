@@ -51,11 +51,19 @@ def mel_from_wave(processor, waveform):
     return F.pad(mel, (0, mel.shape[-1] % 2)).contiguous(), duration
 
 
+def mel_directory(args):
+    return getattr(args, 'mel_cache', None) or args.output/'mel'
+
+
 def prepare(args, budget):
     cache = cache_inputs(args.cache)
     pairs = checked_pairs(args)
     pair_rows = {r['id']:r for r in pairs['rows']}
-    directory = args.output / 'mel'
+    directory = mel_directory(args)
+    if getattr(args, 'mel_cache', None) is not None:
+        manifest_path=directory/'manifest.json'
+        if not manifest_path.exists() or read(manifest_path).get('status')!='completed':
+            raise ValueError('shared Mel cache must already be complete; refusing to modify it')
     directory.mkdir(exist_ok=True)
     path = directory / 'manifest.json'
     contract = dict(schema=SCHEMA, cache_sha256=sha256(args.cache/'cache.json'),
@@ -128,25 +136,45 @@ def prepare(args, budget):
 
 
 def load_initial(args, device):
-    parent = torch.load(args.parent, map_location='cpu', weights_only=True)
-    frontend = torch.load(args.frontend, map_location='cpu', weights_only=True)
-    cache = read(args.cache/'cache.json')
-    if sha256(args.frontend) != cache['models']['4k']['sha256']:
-        raise ValueError('initial encoder must match the original acoustic cache')
     torch.manual_seed(args.seed)
-    model, decoder_config = JointAudioWindowAR.from_parents(parent, frontend)
-    config = dict(schema=SCHEMA, product='AL-AR4K@0.7.0', run='E22-A', variant='audio',
-                  architecture='joint_audio_window', encoder_config=frontend['enc_config'],
-                  decoder_config=decoder_config, parent=str(args.parent), parent_sha256=sha256(args.parent),
-                  parent_epoch=parent['epoch'], frontend=str(args.frontend), frontend_sha256=sha256(args.frontend),
+    initialization=getattr(args,'initialization','pretrained')
+    if initialization=='scratch':
+        # Read only a small JSON of architecture dimensions. No .pt file is
+        # opened and no learned tensor/optimizer/RNG is inherited in this branch.
+        architecture=read(args.architecture_config)
+        encoder_config=architecture['encoder_config'];decoder_config=architecture['decoder_config']
+        model=JointAudioWindowAR(encoder_config,decoder_config)
+        ancestry=dict(parent=None,parent_sha256=None,parent_epoch=None,frontend=None,frontend_sha256=None,
+                      architecture_config=str(args.architecture_config),
+                      architecture_config_sha256=sha256(args.architecture_config),inherited_parameter_tensors=0)
+    elif initialization=='pretrained':
+        parent=torch.load(args.parent,map_location='cpu',weights_only=True)
+        frontend=torch.load(args.frontend,map_location='cpu',weights_only=True)
+        cache=read(args.cache/'cache.json')
+        if sha256(args.frontend)!=cache['models']['4k']['sha256']:
+            raise ValueError('initial encoder must match the original acoustic cache')
+        model,decoder_config=JointAudioWindowAR.from_parents(parent,frontend)
+        encoder_config=frontend['enc_config']
+        ancestry=dict(parent=str(args.parent),parent_sha256=sha256(args.parent),parent_epoch=parent['epoch'],
+                      frontend=str(args.frontend),frontend_sha256=sha256(args.frontend))
+    else:
+        raise ValueError('unsupported initialization')
+    config = dict(schema=SCHEMA, product='AL-AR4K@0.7.0', run=args.run_id, variant='audio',
+                  architecture='joint_audio_window', encoder_config=encoder_config,
+                  decoder_config=decoder_config, initialization=initialization, **ancestry,
+                  initial_state_sha256=state_hash(model.state_dict()),
+                  initial_encoder_sha256=state_hash(model.acoustic.state_dict()),
+                  initial_decoder_sha256=state_hash(model.chart.state_dict()),
                   epochs=args.epochs, seed=args.seed, decoder_lr=args.lr, encoder_lr=args.encoder_lr,
-                  schedule='new AdamW; constant two-group LR; no frozen A parameters',
+                  warmup_steps=args.warmup_steps,baseline_evaluation=args.baseline_eval,
+                  eval_every=args.eval_every,full_eval_every=args.full_eval_every,
+                  schedule='new AdamW; linear step warmup then constant two-group LR; no frozen A parameters',
                   feature_precision='float32 network; differentiable float16->float32 memory matching parent',
-                  encoder_dropout='original pretrained dropout enabled during joint training',
+                  encoder_dropout='configured dropout enabled during joint training',
                   policy='all 300 full songs + original two crops + real silence; full bidirectional audio; '
                          'unchanged 10-second output windows and loss; no S, no grid snap or type quota',
                   removed_unused_parameters=['encoder transcription output head', 'zero-input soft-onset projection'],
-                  mel_manifest_sha256=sha256(args.output/'mel/manifest.json'),
+                  mel_directory=str(mel_directory(args)),mel_manifest_sha256=sha256(mel_directory(args)/'manifest.json'),
                   source_sha256={p:sha256(p) for p in SOURCES},
                   parameters=sum(p.numel() for p in model.parameters()),
                   encoder_parameters=sum(p.numel() for p in model.acoustic.parameters()),
@@ -155,7 +183,13 @@ def load_initial(args, device):
 
 
 def load_row(args, row):
-    return torch.load(args.output/'mel'/row['file'], map_location='cpu', weights_only=True)
+    return torch.load(mel_directory(args)/row['file'], map_location='cpu', weights_only=True)
+
+
+def set_learning_rates(optimizer,args,steps):
+    factor=min(1.,(steps+1)/args.warmup_steps) if args.warmup_steps else 1.
+    for group,base in zip(optimizer.param_groups,(args.lr,args.encoder_lr),strict=True):
+        group['lr']=base*factor
 
 
 def preflight(model, view, budget, device):
@@ -185,6 +219,7 @@ def probe(args, budget, manifest, device):
     for id in selected:
         sample = load_row(args,rows[id]); model.train()
         optimizer = torch.optim.AdamW(model.optimizer_groups(decoder_lr=args.lr,encoder_lr=args.encoder_lr))
+        set_learning_rates(optimizer,args,0)
         before = {k:v.detach().cpu().clone() for k,v in model.state_dict().items()}
         totals = {k:sum(v['target'][k] for v in sample['views']) for k in COUNTS}
         optimizer.zero_grad(set_to_none=True)
@@ -244,10 +279,10 @@ def train(args,budget,manifest,device):
     def status(state,**extra):
         write_json(args.output/'training.json',dict(status=state,pid=os.getpid(),updated=time.time(),
             config=config,curves=curves,steps=steps,resources=budget.log_state(),**extra))
-    if not curves:
+    if not curves and args.baseline_eval!='none':
         status('baseline_evaluation')
         with torch.random.fork_rng(devices=[device.index or 0] if device.type=='cuda' else []):
-            evaluate_joint(model,args,budget,manifest,0,full=True)
+            evaluate_joint(model,args,budget,manifest,0,full=args.baseline_eval=='full')
     best=min((r['objective'] for r in curves),default=math.inf)
     status('running')
     for epoch in range(len(curves),args.epochs):
@@ -255,6 +290,7 @@ def train(args,budget,manifest,device):
         for index,row in enumerate(order):
             sample=load_row(args,row);views=sample['views']
             totals={k:sum(v['target'][k] for v in views) for k in COUNTS}
+            set_learning_rates(optimizer,args,steps)
             optimizer.zero_grad(set_to_none=True)
             for view in views:
                 preflight(model,view,budget,device)
@@ -276,6 +312,7 @@ def train(args,budget,manifest,device):
                 print(json.dumps(dict(stage='train',epoch=epoch+1,songs=index+1,steps=steps,
                                       resources=budget.log_state())),flush=True)
         record=dict(epoch=epoch+1,steps=steps,elapsed_seconds=time.monotonic()-started,
+            learning_rates=[g['lr'] for g in optimizer.param_groups],
             counts={k:int(stats[k]) for k in COUNTS},frame_ce=stats['frame_ce']/stats['time_count'],
             frame_accuracy=stats['frame_correct']/stats['time_count'],subframe_mse=stats['subframe_mse']/stats['time_count'],
             layout_ce=stats['layout_ce']/stats['layout_count'],stop_bce=stats['stop_bce']/stats['stop_count'],
@@ -291,10 +328,11 @@ def train(args,budget,manifest,device):
             best=record['objective'];budget.save({k:v for k,v in saved.items() if k!='training_state'},args.output/'model_best_fit.pt')
         del saved
         print(json.dumps(record),flush=True);status('running')
-        if (epoch+1)%args.eval_every==0 or epoch+1==args.epochs:
+        full=(epoch+1==args.epochs or (args.full_eval_every>0 and (epoch+1)%args.full_eval_every==0))
+        if (epoch+1)%args.eval_every==0 or full:
             status('evaluating',active_epoch=epoch+1)
             with torch.random.fork_rng(devices=[device.index or 0] if device.type=='cuda' else []):
-                evaluate_joint(model,args,budget,manifest,epoch+1,full=epoch+1==args.epochs)
+                evaluate_joint(model,args,budget,manifest,epoch+1,full=full)
             gc.collect()
             if device.type=='cuda':torch.cuda.empty_cache()
     final_summary=args.output/f'evaluation-e{args.epochs:04d}'/'summary.json'
@@ -310,15 +348,24 @@ def main():
     parser.add_argument('--output',type=Path,default=Path('out/joint_audio_a_20261102'))
     parser.add_argument('--parent',type=Path,default=Path('out/windowed_ar_20261031/natural_window_fit100/model_latest.pt'))
     parser.add_argument('--frontend',type=Path,default=Path('checkpoints/timing_v1/decoder/decoder_best.pt'))
+    parser.add_argument('--initialization',choices=('pretrained','scratch'),default='pretrained')
+    parser.add_argument('--architecture-config',type=Path)
+    parser.add_argument('--run-id',default='E22-A')
+    parser.add_argument('--mel-cache',type=Path,help='Read-only completed Mel cache shared with another run')
     parser.add_argument('--cache',type=Path,default=Path('out/full_corpus_v1/cache'))
     parser.add_argument('--pairs',type=Path,default=Path('out/grounded_ar_20261023/pairs'))
     parser.add_argument('--checks',type=Path,default=Path('out/windowed_ar_20261031/natural_checks'))
     parser.add_argument('--epochs',type=int,default=20);parser.add_argument('--eval-every',type=int,default=5)
+    parser.add_argument('--full-eval-every',type=int,default=0)
+    parser.add_argument('--baseline-eval',choices=('none','focus','full'),default='full')
+    parser.add_argument('--warmup-steps',type=int,default=0)
     parser.add_argument('--lr',type=float,default=3e-5);parser.add_argument('--encoder-lr',type=float,default=3e-6)
     parser.add_argument('--seed',type=int,default=42);parser.add_argument('--resume',action='store_true')
     parser.add_argument('--device',default='cuda:0');add_resource_args(parser);parser.set_defaults(max_rss_gib=6.)
     args=parser.parse_args();args.mode='4k';args.architecture='window'
     if args.epochs<1 or args.eval_every<1:parser.error('positive epoch/evaluation intervals required')
+    if args.warmup_steps<0 or args.full_eval_every<0:parser.error('warmup/full evaluation intervals must be nonnegative')
+    if args.initialization=='scratch' and args.architecture_config is None:parser.error('scratch requires --architecture-config JSON')
     torch.set_num_threads(2);args.output.mkdir(parents=True,exist_ok=True)
     device=torch.device('cpu' if args.stage=='prepare' else args.device)
     lock=(args.output/'.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
