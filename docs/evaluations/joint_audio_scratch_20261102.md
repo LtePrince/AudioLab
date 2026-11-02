@@ -27,3 +27,13 @@
 独立后台任务已启动，先运行三首随机基线，再自动训练。完整配置见[配置与初始化指纹](assets/joint_audio_scratch_20261102/config.json)，梯度见[真实整曲证据](assets/joint_audio_scratch_20261102/gradient_probe.json)。实时状态：`out/joint_audio_scratch_20261102/training.json`，日志：`worker.log`；此时尚无训练后质量结论。
 
 上一组 E22 联合微调已完整结束 20 轮，权重和报告作为对照保留，见[E22 最终结果](joint_audio_a_20261102.md)。不替换已发布模型包。
+
+## 第177轮曲线快照
+
+用户请求训练曲线，已冻结到完整 e177：总损失 4.4681→0.1070，训练帧内条件 MAE 约 2.95 ms；这是给定正确历史和正确时间帧的指标，不是自由生成起点误差。图使用每轮原始值，没有平滑。
+
+![E23-A 训练与固定三首生成曲线](assets/joint_audio_scratch_20261102/curves_e0177/training_curves.png)
+
+[PDF](assets/joint_audio_scratch_20261102/curves_e0177/training_curves.pdf) · [训练 CSV](assets/joint_audio_scratch_20261102/curves_e0177/training.csv) · [生成评测 CSV](assets/joint_audio_scratch_20261102/curves_e0177/evaluation.csv) · [快照与来源](assets/joint_audio_scratch_20261102/curves_e0177/provenance.json)。
+
+下排始终是 Eltaw、天使、匙三首独立曲线，不把第100轮的15首训练曲/10首开发曲均值混入。最新生成检查为 e160：Eltaw F1@50ms 0.9129、网格0.7010并正常结束；天使0.5089/0.1578、仍有3个强制窗口；匙0.6710/0.5319、仍有10个强制窗口，最长参考有音空档约7.60秒。F1及网格保留了结束失败的输出，不能代替成功率或可玩性。这是阶段快照，300轮训练仍按原计划继续。
