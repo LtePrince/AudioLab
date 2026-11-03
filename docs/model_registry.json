@@ -229,8 +229,8 @@
       "output_protocol": "audiolab-joint-audio-window-ar-v1",
       "delivery": "research_only_joint_frontend_required",
       "evidence": "docs/evaluations/joint_audio_scratch_20261102.md",
-      "training_status": "E22_completed_E23_scratch_in_progress",
-      "quality_status": "E22_not_passed_E23_not_evaluated"
+      "training_status": "E22_and_E23_completed",
+      "quality_status": "not_passed"
     }
   ],
   "experiments": [
@@ -6217,23 +6217,25 @@
       "models": [
         "AL-AR4K@0.7.0/A"
       ],
-      "status": "in_progress",
-      "quality_status": "not_evaluated",
+      "status": "completed",
+      "quality_status": "not_passed",
       "question": "随机初始化整个 A 后，新结构能否独立学会编谱、段落覆盖和窗口结束？",
-      "result": "E177 snapshot: training objective4.4681→.1070; raw curves exported. E160 fixed-song rollout F1 Eltaw .9129, 40717 .5089, 52417 .6710; only Eltaw completes. Training remains active toward300; no quality-pass claim.",
+      "result": "Completed 300 epochs/90000 updates and all25 final evaluations. Train15 F1@50ms .9641, grid .6879, time+type .8843, completed14/15; development10 .6407/.1844/.3520, completed3/10. Eltaw F1 .9993 and completes. Development F1 plateaus after200; 52417 has a56.54s reference-active gap. No automatic extension or product-quality pass.",
       "evidence": [
         "docs/evaluations/joint_audio_scratch_20261102.md",
         "docs/evaluations/assets/joint_audio_scratch_20261102/config.json",
         "docs/evaluations/assets/joint_audio_scratch_20261102/gradient_probe.json",
         "docs/evaluations/assets/joint_audio_scratch_20261102/startup.json",
-        "docs/evaluations/assets/joint_audio_scratch_20261102/curves_e0177/provenance.json"
+        "docs/evaluations/assets/joint_audio_scratch_20261102/curves_e0177/provenance.json",
+        "docs/evaluations/assets/joint_audio_scratch_20261102/curves_e0300/provenance.json",
+        "docs/evaluations/assets/joint_audio_scratch_20261102/final_result.json"
       ],
       "runs": [
         {
           "id": "E23-A",
           "model": "AL-AR4K@0.7.0",
           "variant": "A",
-          "status": "running",
+          "status": "completed",
           "initialization": "scratch",
           "parent_checkpoint": null,
           "frontend_checkpoint": null,
@@ -6252,7 +6254,7 @@
           "decoder_lr": 0.0003,
           "encoder_lr": 0.0003,
           "warmup_steps": 1500,
-          "optimizer_steps": 53100,
+          "optimizer_steps": 90000,
           "source_sha256": {
             "script/train_joint_audio_a.py": "f20a41ac9e1072531b3a1040f5853fc30bc07acd38941de8805f8009211698d6",
             "script/train_models.py": "9c8caf326672fa67bc6246ce638e06c318ba3513c91898f22af938935b453aad",
@@ -6276,74 +6278,85 @@
           "progress_file": "out/joint_audio_scratch_20261102/training.json",
           "launch_file": "out/joint_audio_scratch_20261102/launch.json",
           "report": "docs/evaluations/joint_audio_scratch_20261102.md",
-          "progress_snapshot_utc": "2026-11-02T12:09:13.534503+00:00",
-          "quality_status": "not_evaluated",
+          "progress_snapshot_utc": "2026-11-02T18:17:11.072349+00:00",
+          "quality_status": "not_passed",
           "delivery": "research_only",
-          "completed_epochs": 177,
-          "training_objective": 0.10703428958810385,
-          "curve_evidence": "docs/evaluations/assets/joint_audio_scratch_20261102/curves_e0177/provenance.json",
+          "completed_epochs": 300,
+          "training_objective": 0.05364144992773005,
+          "curve_evidence": "docs/evaluations/assets/joint_audio_scratch_20261102/curves_e0300/provenance.json",
           "latest_full_evaluation": {
-            "epoch": 100,
+            "epoch": 300,
             "aggregates": {
               "train15": {
                 "examples": 15,
-                "completed": 3,
-                "onset_f1_25ms": 0.778076001775678,
-                "onset_f1_50ms": 0.7819544094657079,
-                "onset_f1_100ms": 0.7883542211796939,
-                "grid_bonus": 0.5661310110686498,
-                "time_type_f1": 0.4114360799887219,
-                "completed_only_joint_f1_50ms": 0.02794720590103886
+                "completed": 14,
+                "onset_f1_25ms": 0.9634237673519921,
+                "onset_f1_50ms": 0.9640736767172131,
+                "onset_f1_100ms": 0.9655913529806335,
+                "grid_bonus": 0.6879140113005681,
+                "time_type_f1": 0.8843396915116261,
+                "completed_only_joint_f1_50ms": 0.7730105842473773
               },
               "E20_development": {
                 "examples": 10,
-                "completed": 1,
-                "onset_f1_25ms": 0.4398359815460419,
-                "onset_f1_50ms": 0.5888346232154233,
-                "onset_f1_100ms": 0.651971865723455,
-                "grid_bonus": 0.18862861342452905,
-                "time_type_f1": 0.3248680299456402
+                "completed": 3,
+                "onset_f1_25ms": 0.43944933932265356,
+                "onset_f1_50ms": 0.6407128760390823,
+                "onset_f1_100ms": 0.6767688501899303,
+                "grid_bonus": 0.1843916909020822,
+                "time_type_f1": 0.35201378531018807
               }
             }
           },
           "latest_focus_evaluation": {
-            "epoch": 160,
+            "epoch": 300,
             "rows": [
               {
-                "epoch": 160,
+                "epoch": 300,
                 "song": "Eltaw_IN",
                 "status": "completed",
-                "onset_f1_50ms": 0.9128869690424766,
-                "grid_bonus": 0.7009606767442147,
-                "time_type_f1": 0.4619750283768445,
+                "onset_f1_50ms": 0.9992862241256245,
+                "grid_bonus": 0.7858135497142796,
+                "time_type_f1": 0.9923213230950975,
                 "forced_windows": 0,
-                "longest_reference_active_gap_seconds": 4.9897812685458405
+                "longest_reference_active_gap_seconds": 2.489248353434803
               },
               {
-                "epoch": 160,
+                "epoch": 300,
                 "song": "40717",
-                "status": "failed",
-                "onset_f1_50ms": 0.5088547815820543,
-                "grid_bonus": 0.15783465439990055,
-                "time_type_f1": 0.13863134657836645,
-                "forced_windows": 3,
-                "longest_reference_active_gap_seconds": 6.172998935414029
+                "status": "completed",
+                "onset_f1_50ms": 0.6490156143923965,
+                "grid_bonus": 0.1624950367135738,
+                "time_type_f1": 0.24658918645780697,
+                "forced_windows": 0,
+                "longest_reference_active_gap_seconds": 4.50415539523101
               },
               {
-                "epoch": 160,
+                "epoch": 300,
                 "song": "52417",
                 "status": "failed",
-                "onset_f1_50ms": 0.6709928617780662,
-                "grid_bonus": 0.5319414733422214,
-                "time_type_f1": 0.33926656658803345,
-                "forced_windows": 10,
-                "longest_reference_active_gap_seconds": 7.597491978236604
+                "onset_f1_50ms": 0.6110294117647059,
+                "grid_bonus": 0.555336392831433,
+                "time_type_f1": 0.30947775628626695,
+                "forced_windows": 3,
+                "longest_reference_active_gap_seconds": 56.54427961492215
               }
             ]
+          },
+          "finished_at_utc": "2026-11-02T18:17:11.072349+00:00",
+          "checkpoint_sha256": "b1bfc4a3ba85f86b338f201204b3e9bd354349d3a8a4398b4db5d5b8aeefe17a",
+          "source_commit": "9a7f38f",
+          "final_result": "docs/evaluations/assets/joint_audio_scratch_20261102/final_result.json",
+          "resources": {
+            "disk_free_gib": 26.546173095703125,
+            "ram_available_gib": 37.209739685058594,
+            "rss_gib": 2.0673065185546875,
+            "gpu_peak_allocated_gib": 0.4747037887573242,
+            "gpu_peak_reserved_gib": 0.8984375
           }
         }
       ],
-      "updated_at_utc": "2026-11-02T12:11:21.966183+00:00"
+      "updated_at_utc": "2026-11-03T13:03:34.791161+00:00"
     }
   ],
   "bundles": [
@@ -6706,17 +6719,18 @@
     "2026-10-31: E14/E18 archived checkpoint paths in historical records may no longer exist locally. Consult storage_archive_20261030 and cleanup.json for verified remote recovery; four e1400 exact-resume states remain local. Older optimizer/RNG copies were pruned, inference parameters preserved."
   ],
   "route_policy": {
-    "updated_at_utc": "2026-11-02T03:43:31.932856+00:00",
+    "updated_at_utc": "2026-11-03T13:03:34.791161+00:00",
     "user_decision": "Pause S; A full encoder and decoder now train from random initialization.",
     "S": {
       "status": "paused_by_user",
       "scope": "future training/optimization for 4K and free-x; retain historical weights/results"
     },
     "A": {
-      "status": "running",
-      "active_run": "E23-A",
+      "status": "completed",
+      "active_run": null,
       "scope": "4K joint window AR first; free-x joint adaptation not executed",
-      "initialization": "scratch"
+      "initialization": "scratch",
+      "latest_completed_run": "E23-A"
     }
   }
 }

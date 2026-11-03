@@ -1,0 +1,632 @@
+{
+  "snapshot_utc": "2026-11-03T13:03:11.536295+00:00",
+  "run": "E23-A",
+  "product": "AL-AR4K v0.7.0 / A",
+  "completed_epoch": 300,
+  "latest_rollout_epoch": 300,
+  "training_source_sha256": "5dbfbbb537f883f751afb1e2f4df0fa9d48cd561fd34c72fd8766135f288ffc8",
+  "plot_source_sha256": "72392c9395eefe86339ed863540ed7d3d180faf5f54ac84d8465df0fd9acd17f",
+  "evaluation_sources": [
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0000/summary.json",
+      "sha256": "452c349fb9758b8c9dad519dc8779a9b63e1d995546682d208fdd33470254ca5"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0020/summary.json",
+      "sha256": "d7b589fa72b9c664660d0d6057f0bf019854a3cee441112d23d82eb2594c1df4"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0040/summary.json",
+      "sha256": "4c5d506dc98bf51bf4cf61f908fa4ff5f41e21844753ed4052ea5f245d474779"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0060/summary.json",
+      "sha256": "d6ab7a8e10ee69c58d804d8ae9df211ee3f2f75f8407611feb3bfed729c7cfe7"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0080/summary.json",
+      "sha256": "85e0aef65e4a0f35ecdd132b42b53ac5654ca4d497b70481f42a082fc929e27c"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0100/summary.json",
+      "sha256": "1390abb942c29add35ccd9b05fe2f3e41384ede0f4d83b68c061f902542e8f2e"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0120/summary.json",
+      "sha256": "bb9ce1cc0322d0b08f8a0ecc9cbf42678e766bc3e782594aecb02d86182bd3ae"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0140/summary.json",
+      "sha256": "890759c96c16ed047e5c86f2ddb0f141f540d060a01607076643416137c2c09c"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0160/summary.json",
+      "sha256": "86a3dd01767ee7e5747d3bcfe83baf82600f2cf233946a2ecc32da5fad8b58fa"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0180/summary.json",
+      "sha256": "93109e9180ecc484ead5b8464536e514587842e51d6efe6b075cfdd3603f557e"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0200/summary.json",
+      "sha256": "581692faa690d32aee483f7ca336915a2bfe055ef0cecf21df96d272a7238f48"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0220/summary.json",
+      "sha256": "6763328ee519891964e6426365f337da3ac611db3f3eb15ed1159d39d02d76f5"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0240/summary.json",
+      "sha256": "51116025d5edb846723c18d6c452b643947efb09d16c9c958df32bcedd2be195"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0260/summary.json",
+      "sha256": "dbe8d9d54e9500fe072dfba68b7305911c5fc84b6cfffc6ad72059b882fae97d"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0280/summary.json",
+      "sha256": "e0dc4c7668796c2f18937a8d3eb8564204fa8219f8d8a187e682773a022ce772"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/evaluation-e0300/summary.json",
+      "sha256": "1dbaaa26a1e97da93c2205aa701dbd5d3a4c9f1e28ad6fc7eafb34f6eef92cff"
+    }
+  ],
+  "evaluation": [
+    {
+      "epoch": 0,
+      "song": "Eltaw_IN",
+      "status": "failed",
+      "onset_f1_50ms": 0.05822102425876011,
+      "grid_bonus": 0.1799175768919696,
+      "time_type_f1": 0.015255813953488372,
+      "forced_windows": 11,
+      "longest_reference_active_gap_seconds": 16.441567451678154
+    },
+    {
+      "epoch": 0,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.05222171323866239,
+      "grid_bonus": 0.1578937928811222,
+      "time_type_f1": 0.012956419316843345,
+      "forced_windows": 15,
+      "longest_reference_active_gap_seconds": 14.51414951700309
+    },
+    {
+      "epoch": 0,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.05180327868852459,
+      "grid_bonus": 0.12619303125865852,
+      "time_type_f1": 0.01599793575022578,
+      "forced_windows": 16,
+      "longest_reference_active_gap_seconds": 29.979949710352884
+    },
+    {
+      "epoch": 20,
+      "song": "Eltaw_IN",
+      "status": "failed",
+      "onset_f1_50ms": 0.7655703289013296,
+      "grid_bonus": 0.5843532659340567,
+      "time_type_f1": 0.5434920634920635,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 1.521206378547518
+    },
+    {
+      "epoch": 20,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.5724137931034483,
+      "grid_bonus": 0.1395462878305388,
+      "time_type_f1": 0.20921544209215442,
+      "forced_windows": 3,
+      "longest_reference_active_gap_seconds": 1.8170092109109248
+    },
+    {
+      "epoch": 20,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.6454924606993905,
+      "grid_bonus": 0.26877225115649434,
+      "time_type_f1": 0.4042207792207792,
+      "forced_windows": 11,
+      "longest_reference_active_gap_seconds": 9.662266759202055
+    },
+    {
+      "epoch": 40,
+      "song": "Eltaw_IN",
+      "status": "failed",
+      "onset_f1_50ms": 0.8319444444444445,
+      "grid_bonus": 0.571064012990529,
+      "time_type_f1": 0.5699873896595208,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 2.487221679687501
+    },
+    {
+      "epoch": 40,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.4583090379008746,
+      "grid_bonus": 0.16186368971590026,
+      "time_type_f1": 0.10154997327632283,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 7.150368275891083
+    },
+    {
+      "epoch": 40,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.6337887370876375,
+      "grid_bonus": 0.3741222367929529,
+      "time_type_f1": 0.3941931881630374,
+      "forced_windows": 9,
+      "longest_reference_active_gap_seconds": 9.655482722345141
+    },
+    {
+      "epoch": 60,
+      "song": "Eltaw_IN",
+      "status": "failed",
+      "onset_f1_50ms": 0.8163001293661061,
+      "grid_bonus": 0.6113223769625277,
+      "time_type_f1": 0.5508274231678487,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 7.123715428635663
+    },
+    {
+      "epoch": 60,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.4896421845574388,
+      "grid_bonus": 0.15708339999976612,
+      "time_type_f1": 0.21182266009852216,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 6.1597649665538405
+    },
+    {
+      "epoch": 60,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.6142098273572377,
+      "grid_bonus": 0.4431929022725712,
+      "time_type_f1": 0.35657319269359405,
+      "forced_windows": 6,
+      "longest_reference_active_gap_seconds": 14.974319689138667
+    },
+    {
+      "epoch": 80,
+      "song": "Eltaw_IN",
+      "status": "failed",
+      "onset_f1_50ms": 0.8083028083028083,
+      "grid_bonus": 0.5613470599786569,
+      "time_type_f1": 0.4745383324006715,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 2.488862746188971
+    },
+    {
+      "epoch": 80,
+      "song": "40717",
+      "status": "completed",
+      "onset_f1_50ms": 0.46402877697841727,
+      "grid_bonus": 0.18104083942493163,
+      "time_type_f1": 0.10964912280701754,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 6.158784286256822
+    },
+    {
+      "epoch": 80,
+      "song": "52417",
+      "status": "completed",
+      "onset_f1_50ms": 0.5722615576842982,
+      "grid_bonus": 0.466695853450207,
+      "time_type_f1": 0.3136074891340689,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 53.442498643663214
+    },
+    {
+      "epoch": 100,
+      "song": "Eltaw_IN",
+      "status": "failed",
+      "onset_f1_50ms": 0.8303735456215554,
+      "grid_bonus": 0.5949874243204754,
+      "time_type_f1": 0.21348314606741572,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 1.2353638013636328
+    },
+    {
+      "epoch": 100,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.5596608116293156,
+      "grid_bonus": 0.1430732137930125,
+      "time_type_f1": 0.1993645750595711,
+      "forced_windows": 3,
+      "longest_reference_active_gap_seconds": 5.289343258950723
+    },
+    {
+      "epoch": 100,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.5881913303437967,
+      "grid_bonus": 0.46715787462670166,
+      "time_type_f1": 0.28216216216216217,
+      "forced_windows": 5,
+      "longest_reference_active_gap_seconds": 62.90681104837361
+    },
+    {
+      "epoch": 120,
+      "song": "Eltaw_IN",
+      "status": "failed",
+      "onset_f1_50ms": 0.8102692548528491,
+      "grid_bonus": 0.6016839500000145,
+      "time_type_f1": 0.39369326325848064,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 2.4907946116475586
+    },
+    {
+      "epoch": 120,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.5451936872309899,
+      "grid_bonus": 0.15700779199985776,
+      "time_type_f1": 0.2246670526925304,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 10.140546959425052
+    },
+    {
+      "epoch": 120,
+      "song": "52417",
+      "status": "completed",
+      "onset_f1_50ms": 0.5688960515713135,
+      "grid_bonus": 0.594580318906552,
+      "time_type_f1": 0.29298981426003595,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 80.5146264371634
+    },
+    {
+      "epoch": 140,
+      "song": "Eltaw_IN",
+      "status": "completed",
+      "onset_f1_50ms": 0.9009265858873842,
+      "grid_bonus": 0.7145311232668325,
+      "time_type_f1": 0.5861434702636419,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 2.4910704521473264
+    },
+    {
+      "epoch": 140,
+      "song": "40717",
+      "status": "completed",
+      "onset_f1_50ms": 0.5884802220680083,
+      "grid_bonus": 0.145681525033306,
+      "time_type_f1": 0.17130846032580135,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 12.555820324956159
+    },
+    {
+      "epoch": 140,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.6146341463414634,
+      "grid_bonus": 0.5365250744578997,
+      "time_type_f1": 0.29983792544570503,
+      "forced_windows": 2,
+      "longest_reference_active_gap_seconds": 65.60845592611233
+    },
+    {
+      "epoch": 160,
+      "song": "Eltaw_IN",
+      "status": "completed",
+      "onset_f1_50ms": 0.9128869690424766,
+      "grid_bonus": 0.7009606767442147,
+      "time_type_f1": 0.4619750283768445,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 4.9897812685458405
+    },
+    {
+      "epoch": 160,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.5088547815820543,
+      "grid_bonus": 0.15783465439990055,
+      "time_type_f1": 0.13863134657836645,
+      "forced_windows": 3,
+      "longest_reference_active_gap_seconds": 6.172998935414029
+    },
+    {
+      "epoch": 160,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.6709928617780662,
+      "grid_bonus": 0.5319414733422214,
+      "time_type_f1": 0.33926656658803345,
+      "forced_windows": 10,
+      "longest_reference_active_gap_seconds": 7.597491978236604
+    },
+    {
+      "epoch": 180,
+      "song": "Eltaw_IN",
+      "status": "completed",
+      "onset_f1_50ms": 0.8604501607717042,
+      "grid_bonus": 0.6575888905542644,
+      "time_type_f1": 0.6274725274725275,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 4.986168394196881
+    },
+    {
+      "epoch": 180,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.5330160618679357,
+      "grid_bonus": 0.15868447254290355,
+      "time_type_f1": 0.13494949494949496,
+      "forced_windows": 2,
+      "longest_reference_active_gap_seconds": 8.286100602268903
+    },
+    {
+      "epoch": 180,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.6371794871794871,
+      "grid_bonus": 0.46581228073863185,
+      "time_type_f1": 0.3076923076923077,
+      "forced_windows": 8,
+      "longest_reference_active_gap_seconds": 9.65843674363461
+    },
+    {
+      "epoch": 200,
+      "song": "Eltaw_IN",
+      "status": "failed",
+      "onset_f1_50ms": 0.8535620052770448,
+      "grid_bonus": 0.6470359198364064,
+      "time_type_f1": 0.3828689370485036,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 3.2534726016312696
+    },
+    {
+      "epoch": 200,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.6198997852541159,
+      "grid_bonus": 0.11197032375519467,
+      "time_type_f1": 0.20711297071129708,
+      "forced_windows": 2,
+      "longest_reference_active_gap_seconds": 4.430135572091814
+    },
+    {
+      "epoch": 200,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.7114864864864865,
+      "grid_bonus": 0.5314402737461539,
+      "time_type_f1": 0.3806921675774135,
+      "forced_windows": 10,
+      "longest_reference_active_gap_seconds": 8.449176866873046
+    },
+    {
+      "epoch": 220,
+      "song": "Eltaw_IN",
+      "status": "completed",
+      "onset_f1_50ms": 0.9033674963396779,
+      "grid_bonus": 0.7269986550375904,
+      "time_type_f1": 0.6174575278265964,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 4.990891027472173
+    },
+    {
+      "epoch": 220,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.5404157043879908,
+      "grid_bonus": 0.15999572870892873,
+      "time_type_f1": 0.1742254153569825,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 3.8634283820950373
+    },
+    {
+      "epoch": 220,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.6582189369940162,
+      "grid_bonus": 0.5137588721097901,
+      "time_type_f1": 0.35428281804358847,
+      "forced_windows": 6,
+      "longest_reference_active_gap_seconds": 19.134107234548253
+    },
+    {
+      "epoch": 240,
+      "song": "Eltaw_IN",
+      "status": "completed",
+      "onset_f1_50ms": 1.0,
+      "grid_bonus": 0.7999399303851497,
+      "time_type_f1": 0.9976387249114522,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 4.982228441995289
+    },
+    {
+      "epoch": 240,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.6149106592729513,
+      "grid_bonus": 0.1662740047361758,
+      "time_type_f1": 0.23396567299006324,
+      "forced_windows": 1,
+      "longest_reference_active_gap_seconds": 3.8601909777583074
+    },
+    {
+      "epoch": 240,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.6914963744232037,
+      "grid_bonus": 0.5428029560837722,
+      "time_type_f1": 0.39186507936507936,
+      "forced_windows": 7,
+      "longest_reference_active_gap_seconds": 9.652942698645205
+    },
+    {
+      "epoch": 260,
+      "song": "Eltaw_IN",
+      "status": "completed",
+      "onset_f1_50ms": 0.997864768683274,
+      "grid_bonus": 0.8021228409090887,
+      "time_type_f1": 0.9634864546525324,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 4.989137023787379
+    },
+    {
+      "epoch": 260,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.5706246482836241,
+      "grid_bonus": 0.14637408088629628,
+      "time_type_f1": 0.2033747779751332,
+      "forced_windows": 3,
+      "longest_reference_active_gap_seconds": 8.48694811485791
+    },
+    {
+      "epoch": 260,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.6635451505016723,
+      "grid_bonus": 0.4915868698411074,
+      "time_type_f1": 0.3481681829358249,
+      "forced_windows": 9,
+      "longest_reference_active_gap_seconds": 9.658733846443852
+    },
+    {
+      "epoch": 280,
+      "song": "Eltaw_IN",
+      "status": "completed",
+      "onset_f1_50ms": 0.9672016748080949,
+      "grid_bonus": 0.7588373100182417,
+      "time_type_f1": 0.8229721728833629,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 4.988104545610554
+    },
+    {
+      "epoch": 280,
+      "song": "40717",
+      "status": "failed",
+      "onset_f1_50ms": 0.5860989355040701,
+      "grid_bonus": 0.15209006777396136,
+      "time_type_f1": 0.21152929966650785,
+      "forced_windows": 2,
+      "longest_reference_active_gap_seconds": 4.096997702116312
+    },
+    {
+      "epoch": 280,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.7046564636926083,
+      "grid_bonus": 0.5277592016358446,
+      "time_type_f1": 0.3635050553683197,
+      "forced_windows": 9,
+      "longest_reference_active_gap_seconds": 9.657078839083653
+    },
+    {
+      "epoch": 300,
+      "song": "Eltaw_IN",
+      "status": "completed",
+      "onset_f1_50ms": 0.9992862241256245,
+      "grid_bonus": 0.7858135497142796,
+      "time_type_f1": 0.9923213230950975,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 2.489248353434803
+    },
+    {
+      "epoch": 300,
+      "song": "40717",
+      "status": "completed",
+      "onset_f1_50ms": 0.6490156143923965,
+      "grid_bonus": 0.1624950367135738,
+      "time_type_f1": 0.24658918645780697,
+      "forced_windows": 0,
+      "longest_reference_active_gap_seconds": 4.50415539523101
+    },
+    {
+      "epoch": 300,
+      "song": "52417",
+      "status": "failed",
+      "onset_f1_50ms": 0.6110294117647059,
+      "grid_bonus": 0.555336392831433,
+      "time_type_f1": 0.30947775628626695,
+      "forced_windows": 3,
+      "longest_reference_active_gap_seconds": 56.54427961492215
+    }
+  ],
+  "full_evaluation_aggregates": [
+    {
+      "epoch": 100,
+      "aggregates": {
+        "train15": {
+          "examples": 15,
+          "completed": 3,
+          "onset_f1_25ms": 0.778076001775678,
+          "onset_f1_50ms": 0.7819544094657079,
+          "onset_f1_100ms": 0.7883542211796939,
+          "grid_bonus": 0.5661310110686498,
+          "time_type_f1": 0.4114360799887219,
+          "completed_only_joint_f1_50ms": 0.02794720590103886
+        },
+        "E20_development": {
+          "examples": 10,
+          "completed": 1,
+          "onset_f1_25ms": 0.4398359815460419,
+          "onset_f1_50ms": 0.5888346232154233,
+          "onset_f1_100ms": 0.651971865723455,
+          "grid_bonus": 0.18862861342452905,
+          "time_type_f1": 0.3248680299456402
+        }
+      }
+    },
+    {
+      "epoch": 200,
+      "aggregates": {
+        "train15": {
+          "examples": 15,
+          "completed": 11,
+          "onset_f1_25ms": 0.8841749382684068,
+          "onset_f1_50ms": 0.8865222639277838,
+          "onset_f1_100ms": 0.8907749801390656,
+          "grid_bonus": 0.6416868761701243,
+          "time_type_f1": 0.6198405124977735,
+          "completed_only_joint_f1_50ms": 0.32705802511834
+        },
+        "E20_development": {
+          "examples": 10,
+          "completed": 2,
+          "onset_f1_25ms": 0.4664852822296243,
+          "onset_f1_50ms": 0.6398720579677295,
+          "onset_f1_100ms": 0.6895310441743173,
+          "grid_bonus": 0.18684930370989133,
+          "time_type_f1": 0.34712066552779003
+        }
+      }
+    },
+    {
+      "epoch": 300,
+      "aggregates": {
+        "train15": {
+          "examples": 15,
+          "completed": 14,
+          "onset_f1_25ms": 0.9634237673519921,
+          "onset_f1_50ms": 0.9640736767172131,
+          "onset_f1_100ms": 0.9655913529806335,
+          "grid_bonus": 0.6879140113005681,
+          "time_type_f1": 0.8843396915116261,
+          "completed_only_joint_f1_50ms": 0.7730105842473773
+        },
+        "E20_development": {
+          "examples": 10,
+          "completed": 3,
+          "onset_f1_25ms": 0.43944933932265356,
+          "onset_f1_50ms": 0.6407128760390823,
+          "onset_f1_100ms": 0.6767688501899303,
+          "grid_bonus": 0.1843916909020822,
+          "time_type_f1": 0.35201378531018807
+        }
+      }
+    }
+  ],
+  "scope": "Raw epoch values, no smoothing. Training uses true history. Rollout curves always use the same three songs; never join the 15/10-song means to these individual curves. Failed outputs included; F1/grid are not completion or playability scores."
+}

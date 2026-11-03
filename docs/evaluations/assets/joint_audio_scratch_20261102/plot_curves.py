@@ -104,7 +104,7 @@ def main():
             ax.plot([r['epoch'] for r in rows],[r[metric] for r in rows],marker='o',ms=4,color=color,lw=1.7,label=label)
         ax.set_ylim(0,1.03);ax.set_title(title,loc='left');ax.set_ylabel('分数')
         ax.legend(frameon=False,fontsize=8.5,loc='upper left' if metric=='grid_bonus' else 'lower right')
-    fig.text(.065,.074,f'自由生成最新检查：e{latest_eval:04d}。第 100 轮的 15 首／10 首均值未混入下排曲线。',fontsize=10)
+    fig.text(.065,.074,f'自由生成最新检查：e{latest_eval:04d}。完整评测的 15 首／10 首均值未混入下排曲线。',fontsize=10)
     fig.text(.065,.049,'高训练准确率不等于自主生成成功；帧内误差不包含选错时间帧。F1／网格保留结束失败的输出，不能代替结束率。',fontsize=9,color='#526074')
     fig.savefig(dest/'training_curves.png',dpi=150,facecolor=fig.get_facecolor())
     fig.savefig(dest/'training_curves.pdf',facecolor=fig.get_facecolor())

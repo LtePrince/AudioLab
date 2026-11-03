@@ -1,0 +1,3122 @@
+{
+  "schema": "audiolab-joint-audio-final-v1",
+  "run": "E23-A",
+  "product": "AL-AR4K v0.7.0 / A",
+  "status": "completed",
+  "quality_status": "not_passed",
+  "archived_at_utc": "2026-11-03T13:03:34.791161+00:00",
+  "finished_at_utc": "2026-11-02T18:17:11.072349+00:00",
+  "source_commit": "9a7f38f",
+  "source_sha256": {
+    "script/train_joint_audio_a.py": "f20a41ac9e1072531b3a1040f5853fc30bc07acd38941de8805f8009211698d6",
+    "script/train_models.py": "9c8caf326672fa67bc6246ce638e06c318ba3513c91898f22af938935b453aad",
+    "src/joint_audio_ar.py": "69f1d255748100a784ddd8adb3af92af5b505376336b337a147d160f054a5a03",
+    "src/models/transcriber.py": "0f90e27d02f3d460666713f19ae62cc8e7833d925cf5991622810b2d153537dd",
+    "src/models/attention.py": "90dfa37bf305558c82758cae339bdcaa5536b7915e257cb9acd37249f6f66a40",
+    "src/condition/wave.py": "1f01a44f4d4b05a55c4ab06233d40414019903f8b23442dc2f5018f39748047c",
+    "src/data/audio2mel.py": "00d73fa0afee5949e725cc6f57b352daeefb5ff4d08ef8e15fe23a0b5724ea0d",
+    "src/windowed_ar.py": "6c972249fee21c3f20229534374e5615f8132cfb46f10a65b9cea750e074d392",
+    "src/anchored_ar.py": "908570d02c450dbf101d9fa023371a6ffe5b2c2aa1a754e5eae6e58d16fd386a",
+    "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+    "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d",
+    "script/train_windowed_corpus.py": "00aea033b20879a493e0567fe3478192776e35257e35f9b3e5b93228dd16d082",
+    "src/conditional_training.py": "7229cd6dfa83745b46ba236bb486348b34ba969a9948efcab924486cbb018ddc",
+    "script/train_alignment_scratch.py": "fbe986e1ee0d78def6c09a9300c5e153de241f120b808dd4ed96484859404eed",
+    "docs/evaluations/assets/phira_generalization10_20261029/benchmark.py": "973f0bf0715a312461029e438d0f4b6d12bc049ca082014b0239e96529b2aecc",
+    "benchmarks/v1/protocol.json": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5"
+  },
+  "completed_epochs": 300,
+  "optimizer_steps": 90000,
+  "wall_hours": 14.621899455255932,
+  "final_training": {
+    "epoch": 300,
+    "steps": 90000,
+    "elapsed_seconds": 51838.08341069892,
+    "learning_rates": [
+      0.0003,
+      0.0003
+    ],
+    "counts": {
+      "time_count": 270200,
+      "layout_count": 633694,
+      "stop_count": 6712,
+      "continue_count": 270200
+    },
+    "frame_ce": 0.013355629152214523,
+    "frame_accuracy": 0.996039970392302,
+    "subframe_mse": 0.006128382779744675,
+    "layout_ce": 0.13500559696682432,
+    "stop_bce": 0.017225032022422367,
+    "continue_bce": 0.00040436562545029524,
+    "false_stop_rate": 0.00013693560325684677,
+    "end_stop_recall": 0.9943384982121574,
+    "conditional_offset_mae_seconds": 0.002630703406026568,
+    "objective": 0.05364144992773005
+  },
+  "full_evaluation_aggregates": [
+    {
+      "epoch": 100,
+      "aggregates": {
+        "train15": {
+          "examples": 15,
+          "completed": 3,
+          "onset_f1_25ms": 0.778076001775678,
+          "onset_f1_50ms": 0.7819544094657079,
+          "onset_f1_100ms": 0.7883542211796939,
+          "grid_bonus": 0.5661310110686498,
+          "time_type_f1": 0.4114360799887219,
+          "completed_only_joint_f1_50ms": 0.02794720590103886
+        },
+        "E20_development": {
+          "examples": 10,
+          "completed": 1,
+          "onset_f1_25ms": 0.4398359815460419,
+          "onset_f1_50ms": 0.5888346232154233,
+          "onset_f1_100ms": 0.651971865723455,
+          "grid_bonus": 0.18862861342452905,
+          "time_type_f1": 0.3248680299456402
+        }
+      }
+    },
+    {
+      "epoch": 200,
+      "aggregates": {
+        "train15": {
+          "examples": 15,
+          "completed": 11,
+          "onset_f1_25ms": 0.8841749382684068,
+          "onset_f1_50ms": 0.8865222639277838,
+          "onset_f1_100ms": 0.8907749801390656,
+          "grid_bonus": 0.6416868761701243,
+          "time_type_f1": 0.6198405124977735,
+          "completed_only_joint_f1_50ms": 0.32705802511834
+        },
+        "E20_development": {
+          "examples": 10,
+          "completed": 2,
+          "onset_f1_25ms": 0.4664852822296243,
+          "onset_f1_50ms": 0.6398720579677295,
+          "onset_f1_100ms": 0.6895310441743173,
+          "grid_bonus": 0.18684930370989133,
+          "time_type_f1": 0.34712066552779003
+        }
+      }
+    },
+    {
+      "epoch": 300,
+      "aggregates": {
+        "train15": {
+          "examples": 15,
+          "completed": 14,
+          "onset_f1_25ms": 0.9634237673519921,
+          "onset_f1_50ms": 0.9640736767172131,
+          "onset_f1_100ms": 0.9655913529806335,
+          "grid_bonus": 0.6879140113005681,
+          "time_type_f1": 0.8843396915116261,
+          "completed_only_joint_f1_50ms": 0.7730105842473773
+        },
+        "E20_development": {
+          "examples": 10,
+          "completed": 3,
+          "onset_f1_25ms": 0.43944933932265356,
+          "onset_f1_50ms": 0.6407128760390823,
+          "onset_f1_100ms": 0.6767688501899303,
+          "grid_bonus": 0.1843916909020822,
+          "time_type_f1": 0.35201378531018807
+        }
+      }
+    }
+  ],
+  "final_evaluation": {
+    "epoch": 300,
+    "full": true,
+    "rows": [
+      {
+        "id": "Eltaw_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.9992862241256245,
+          "onset_f1_50ms": 0.9992862241256245,
+          "onset_f1_100ms": 0.9992862241256245,
+          "time_type_f1": 0.9923213230950975,
+          "completed_only_time_type_f1": 0.9923213230950975,
+          "grid_bonus": 0.7858135497142796,
+          "reference_grid_bonus": 0.9914408711364703,
+          "reference_notes": 847,
+          "predicted_notes": 846,
+          "reference_unique_onsets": 701,
+          "predicted_unique_onsets": 700,
+          "note_count_ratio": 0.9988193624557261,
+          "matched_onset_mae_ms": 2.0445842857147216,
+          "last_onset_delta_seconds": 0.002294999999975289,
+          "tail_10s_recall": 1.0,
+          "reference_types": {
+            "tap": 604,
+            "drag": 156,
+            "hold": 41,
+            "flick": 46
+          },
+          "predicted_types": {
+            "tap": 599,
+            "drag": 156,
+            "hold": 43,
+            "flick": 48
+          },
+          "generated_patterns": {
+            "note_count": 846,
+            "unique_onsets": 700,
+            "type_counts": {
+              "tap": 599,
+              "drag": 156,
+              "hold": 43,
+              "flick": 48
+            },
+            "chord_sizes": {
+              "1": 554,
+              "2": 146
+            },
+            "four_onset_patterns": {
+              "unclassified": 343,
+              "AAAA": 9,
+              "monotonic_run": 7,
+              "ABAB": 48
+            },
+            "singleton_windows": 407,
+            "chord_interrupted_windows": 290,
+            "jack_runs_2_to_3": 65,
+            "jack_runs_4_plus": 8,
+            "longest_jack_run": 5,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.9875959834613113,
+          "completed_only_joint_f1_50ms": 0.9875959834613113
+        },
+        "longest_gaps": [
+          {
+            "start": 130.57224288006216,
+            "end": 135.55083900226757,
+            "seconds": 4.978596122205403,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 4.978596122205403
+          },
+          {
+            "start": 54.7146712938512,
+            "end": 57.203919647286,
+            "seconds": 2.489248353434803,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 2.489248353434803
+          },
+          {
+            "start": 57.203919647286,
+            "end": 59.68985293710583,
+            "seconds": 2.485933289819833,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 2.485933289819833
+          },
+          {
+            "start": 52.230645176201996,
+            "end": 54.7146712938512,
+            "seconds": 2.4840261176492007,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 2.4840261176492007
+          },
+          {
+            "start": 50.97917739003154,
+            "end": 52.230645176201996,
+            "seconds": 1.2514677861704584,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 1.2514677861704584
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "DESTRUCTION 321_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.8900275916436736,
+          "onset_f1_50ms": 0.8900275916436736,
+          "onset_f1_100ms": 0.8986992510839574,
+          "time_type_f1": 0.7579462102689487,
+          "completed_only_time_type_f1": 0.7579462102689487,
+          "grid_bonus": 0.41386432117049965,
+          "reference_grid_bonus": 0.9013417921237568,
+          "reference_notes": 1439,
+          "predicted_notes": 1424,
+          "reference_unique_onsets": 1267,
+          "predicted_unique_onsets": 1270,
+          "note_count_ratio": 0.9895760945100764,
+          "matched_onset_mae_ms": 3.9754083259524573,
+          "last_onset_delta_seconds": -0.008565000000004375,
+          "tail_10s_recall": 0.9252336448598131,
+          "reference_types": {
+            "hold": 45,
+            "tap": 907,
+            "drag": 461,
+            "flick": 26
+          },
+          "predicted_types": {
+            "hold": 29,
+            "tap": 950,
+            "drag": 431,
+            "flick": 14
+          },
+          "generated_patterns": {
+            "note_count": 1424,
+            "unique_onsets": 1270,
+            "type_counts": {
+              "hold": 29,
+              "tap": 950,
+              "drag": 431,
+              "flick": 14
+            },
+            "chord_sizes": {
+              "1": 1116,
+              "2": 154
+            },
+            "four_onset_patterns": {
+              "unclassified": 717,
+              "ABAB": 113,
+              "monotonic_run": 8,
+              "AAAA": 25
+            },
+            "singleton_windows": 863,
+            "chord_interrupted_windows": 404,
+            "jack_runs_2_to_3": 147,
+            "jack_runs_4_plus": 12,
+            "longest_jack_run": 12,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.5902899056933287,
+          "completed_only_joint_f1_50ms": 0.5902899056933287
+        },
+        "longest_gaps": [
+          {
+            "start": 9.716227945686738,
+            "end": 15.678875367041348,
+            "seconds": 5.96264742135461,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 5.96264742135461
+          },
+          {
+            "start": 82.5630002240793,
+            "end": 87.02271799377303,
+            "seconds": 4.459717769693725,
+            "reference_onsets": 34,
+            "no_active_note_seconds": 4.459717769693725
+          },
+          {
+            "start": 91.92831813128898,
+            "end": 95.79580593532987,
+            "seconds": 3.8674878040408913,
+            "reference_onsets": 20,
+            "no_active_note_seconds": 3.8674878040408913
+          },
+          {
+            "start": 53.579901599148776,
+            "end": 56.76636019544537,
+            "seconds": 3.186458596296596,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 2.4395419615294927
+          },
+          {
+            "start": 156.09701176995864,
+            "end": 159.09587301587302,
+            "seconds": 2.9988612459143837,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 2.905496666568496
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "Incyde_IN",
+        "split": "train15",
+        "status": "failed",
+        "metrics": {
+          "onset_f1_25ms": 0.9170426935091982,
+          "onset_f1_50ms": 0.9219021173203749,
+          "onset_f1_100ms": 0.9281499479347449,
+          "time_type_f1": 0.6856594110115237,
+          "completed_only_time_type_f1": 0.0,
+          "grid_bonus": 0.35528805902082894,
+          "reference_grid_bonus": 0.94243915971224,
+          "reference_notes": 1565,
+          "predicted_notes": 1559,
+          "reference_unique_onsets": 1390,
+          "predicted_unique_onsets": 1491,
+          "note_count_ratio": 0.9961661341853035,
+          "matched_onset_mae_ms": 3.7430760542168917,
+          "last_onset_delta_seconds": 10.417460000000005,
+          "tail_10s_recall": 0.98989898989899,
+          "reference_types": {
+            "drag": 547,
+            "tap": 793,
+            "hold": 207,
+            "flick": 18
+          },
+          "predicted_types": {
+            "drag": 576,
+            "tap": 775,
+            "hold": 195,
+            "flick": 13
+          },
+          "generated_patterns": {
+            "note_count": 1559,
+            "unique_onsets": 1491,
+            "type_counts": {
+              "drag": 576,
+              "tap": 775,
+              "hold": 195,
+              "flick": 13
+            },
+            "chord_sizes": {
+              "2": 68,
+              "1": 1423
+            },
+            "four_onset_patterns": {
+              "unclassified": 1122,
+              "monotonic_run": 13,
+              "ABAB": 120,
+              "AAAA": 54
+            },
+            "singleton_windows": 1309,
+            "chord_interrupted_windows": 179,
+            "jack_runs_2_to_3": 234,
+            "jack_runs_4_plus": 35,
+            "longest_jack_run": 7,
+            "hold_overlap_pairs": 1,
+            "hold_touching_pairs": 0,
+            "hold_examples": [
+              {
+                "first": 298,
+                "second": 300,
+                "gap_seconds": -0.21868015695862653
+              }
+            ],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.4660691421254802,
+          "completed_only_joint_f1_50ms": 0.0
+        },
+        "longest_gaps": [
+          {
+            "start": 0.0,
+            "end": 9.324319708514915,
+            "seconds": 9.324319708514915,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 9.324319708514915
+          },
+          {
+            "start": 190.51127980896135,
+            "end": 198.1365123958112,
+            "seconds": 7.625232586849847,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 7.625232586849847
+          },
+          {
+            "start": 62.665665403612614,
+            "end": 68.00104717228689,
+            "seconds": 5.335381768674274,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 5.335381768674274
+          },
+          {
+            "start": 126.66168624774129,
+            "end": 129.3289917102909,
+            "seconds": 2.6673054625496064,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 2.6673054625496064
+          },
+          {
+            "start": 38.669543409974665,
+            "end": 40.49771727252709,
+            "seconds": 1.8281738625524255,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 1.7448405292190898
+          }
+        ],
+        "forced_windows": 3,
+        "learned_window_end_fraction": 0.8571428571428571
+      },
+      {
+        "id": "Diamond Dust_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.9754931261207412,
+          "onset_f1_50ms": 0.9754931261207412,
+          "onset_f1_100ms": 0.976688583383144,
+          "time_type_f1": 0.8936825885978429,
+          "completed_only_time_type_f1": 0.8936825885978429,
+          "grid_bonus": 0.668310839215694,
+          "reference_grid_bonus": 0.9283110571081453,
+          "reference_notes": 973,
+          "predicted_notes": 974,
+          "reference_unique_onsets": 823,
+          "predicted_unique_onsets": 850,
+          "note_count_ratio": 1.0010277492291881,
+          "matched_onset_mae_ms": 2.7697634803918443,
+          "last_onset_delta_seconds": 0.0006849999999758438,
+          "tail_10s_recall": 0.9868421052631579,
+          "reference_types": {
+            "hold": 162,
+            "tap": 615,
+            "flick": 121,
+            "drag": 75
+          },
+          "predicted_types": {
+            "hold": 146,
+            "tap": 596,
+            "flick": 127,
+            "drag": 105
+          },
+          "generated_patterns": {
+            "note_count": 974,
+            "unique_onsets": 850,
+            "type_counts": {
+              "hold": 146,
+              "tap": 596,
+              "flick": 127,
+              "drag": 105
+            },
+            "chord_sizes": {
+              "2": 120,
+              "1": 728,
+              "3": 2
+            },
+            "four_onset_patterns": {
+              "unclassified": 423,
+              "ABAB": 67,
+              "AAAA": 55,
+              "monotonic_run": 6
+            },
+            "singleton_windows": 551,
+            "chord_interrupted_windows": 296,
+            "jack_runs_2_to_3": 72,
+            "jack_runs_4_plus": 9,
+            "longest_jack_run": 40,
+            "hold_overlap_pairs": 1,
+            "hold_touching_pairs": 0,
+            "hold_examples": [
+              {
+                "first": 787,
+                "second": 788,
+                "gap_seconds": -0.0011217708111956881
+              }
+            ],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.7847971237801746,
+          "completed_only_joint_f1_50ms": 0.7847971237801746
+        },
+        "longest_gaps": [
+          {
+            "start": 0.0,
+            "end": 10.799863541445223,
+            "seconds": 10.799863541445223,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 10.799863541445223
+          },
+          {
+            "start": 145.42568476739655,
+            "end": 155.06,
+            "seconds": 9.634315232603456,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 6.334315232603444
+          },
+          {
+            "start": 81.59752224738367,
+            "end": 86.39989550808932,
+            "seconds": 4.80237326070565,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 2.4023732607056445
+          },
+          {
+            "start": 79.19423006295617,
+            "end": 81.59752224738367,
+            "seconds": 2.4032921844274995,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 0.9032921844274995
+          },
+          {
+            "start": 76.79833078674179,
+            "end": 79.19423006295617,
+            "seconds": 2.3958992762143794,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 2.3958992762143794
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "インフェルノシティ_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.9252873563218391,
+          "onset_f1_50ms": 0.9264367816091954,
+          "onset_f1_100ms": 0.9275862068965517,
+          "time_type_f1": 0.7461139896373057,
+          "completed_only_time_type_f1": 0.7461139896373057,
+          "grid_bonus": 0.6567967869615544,
+          "reference_grid_bonus": 0.9580022701475596,
+          "reference_notes": 1142,
+          "predicted_notes": 981,
+          "reference_unique_onsets": 881,
+          "predicted_unique_onsets": 859,
+          "note_count_ratio": 0.8590192644483362,
+          "matched_onset_mae_ms": 2.8441464019850144,
+          "last_onset_delta_seconds": 0.05692899999999668,
+          "tail_10s_recall": 1.0,
+          "reference_types": {
+            "drag": 259,
+            "tap": 780,
+            "flick": 14,
+            "hold": 89
+          },
+          "predicted_types": {
+            "drag": 208,
+            "tap": 698,
+            "flick": 10,
+            "hold": 65
+          },
+          "generated_patterns": {
+            "note_count": 981,
+            "unique_onsets": 859,
+            "type_counts": {
+              "drag": 208,
+              "tap": 698,
+              "flick": 10,
+              "hold": 65
+            },
+            "chord_sizes": {
+              "1": 737,
+              "2": 122
+            },
+            "four_onset_patterns": {
+              "AAAA": 90,
+              "unclassified": 422,
+              "ABAB": 57,
+              "monotonic_run": 3
+            },
+            "singleton_windows": 572,
+            "chord_interrupted_windows": 284,
+            "jack_runs_2_to_3": 79,
+            "jack_runs_4_plus": 24,
+            "longest_jack_run": 13,
+            "hold_overlap_pairs": 1,
+            "hold_touching_pairs": 0,
+            "hold_examples": [
+              {
+                "first": 253,
+                "second": 255,
+                "gap_seconds": -0.13779540803194834
+              }
+            ],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.5209609043805935,
+          "completed_only_joint_f1_50ms": 0.5209609043805935
+        },
+        "longest_gaps": [
+          {
+            "start": 50.236560739530184,
+            "end": 57.2082836388136,
+            "seconds": 6.971722899283414,
+            "reference_onsets": 56,
+            "no_active_note_seconds": 5.715908945795043
+          },
+          {
+            "start": 0.0,
+            "end": 6.695591775284333,
+            "seconds": 6.695591775284333,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 6.695591775284333
+          },
+          {
+            "start": 119.41157995107223,
+            "end": 123.9107029478458,
+            "seconds": 4.499122996773579,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 4.499122996773579
+          },
+          {
+            "start": 102.33361664994774,
+            "end": 103.67442105870668,
+            "seconds": 1.3408044087589417,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 1.3408044087589417
+          },
+          {
+            "start": 45.769488511550456,
+            "end": 46.46282665434338,
+            "seconds": 0.6933381427929248,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 0.69246429387033
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "The Whole Rest_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.9992429977289932,
+          "onset_f1_50ms": 0.9992429977289932,
+          "onset_f1_100ms": 0.9992429977289932,
+          "time_type_f1": 0.9973718791064389,
+          "completed_only_time_type_f1": 0.9973718791064389,
+          "grid_bonus": 0.7420687797980047,
+          "reference_grid_bonus": 0.9092284417549168,
+          "reference_notes": 762,
+          "predicted_notes": 760,
+          "reference_unique_onsets": 661,
+          "predicted_unique_onsets": 660,
+          "note_count_ratio": 0.9973753280839895,
+          "matched_onset_mae_ms": 2.2709121212120547,
+          "last_onset_delta_seconds": 0.004864000000026181,
+          "tail_10s_recall": 1.0,
+          "reference_types": {
+            "tap": 418,
+            "flick": 57,
+            "hold": 120,
+            "drag": 167
+          },
+          "predicted_types": {
+            "tap": 418,
+            "flick": 55,
+            "hold": 121,
+            "drag": 166
+          },
+          "generated_patterns": {
+            "note_count": 760,
+            "unique_onsets": 660,
+            "type_counts": {
+              "tap": 418,
+              "flick": 55,
+              "hold": 121,
+              "drag": 166
+            },
+            "chord_sizes": {
+              "2": 100,
+              "1": 560
+            },
+            "four_onset_patterns": {
+              "unclassified": 333,
+              "AAAA": 32,
+              "ABAB": 38,
+              "monotonic_run": 8
+            },
+            "singleton_windows": 411,
+            "chord_interrupted_windows": 246,
+            "jack_runs_2_to_3": 77,
+            "jack_runs_4_plus": 9,
+            "longest_jack_run": 15,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.9934296977660972,
+          "completed_only_joint_f1_50ms": 0.9934296977660972
+        },
+        "longest_gaps": [
+          {
+            "start": 0.0,
+            "end": 7.646581333705357,
+            "seconds": 7.646581333705357,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 7.646581333705357
+          },
+          {
+            "start": 136.0558192412707,
+            "end": 143.52979591836734,
+            "seconds": 7.47397667709663,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 7.47397667709663
+          },
+          {
+            "start": 131.08647078118355,
+            "end": 136.0558192412707,
+            "seconds": 4.969348460087161,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 3.0585204346094486
+          },
+          {
+            "start": 59.68335225699981,
+            "end": 61.90972714274919,
+            "seconds": 2.2263748857493795,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 2.2263748857493795
+          },
+          {
+            "start": 18.14954906783677,
+            "end": 19.86883413717049,
+            "seconds": 1.719285069333722,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 0.9549538591426376
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "混乱-Confusion_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.9914191419141914,
+          "onset_f1_50ms": 0.9927392739273927,
+          "onset_f1_100ms": 0.994059405940594,
+          "time_type_f1": 0.9332654100866021,
+          "completed_only_time_type_f1": 0.9332654100866021,
+          "grid_bonus": 0.7319954586071313,
+          "reference_grid_bonus": 0.9496021220159151,
+          "reference_notes": 975,
+          "predicted_notes": 988,
+          "reference_unique_onsets": 754,
+          "predicted_unique_onsets": 761,
+          "note_count_ratio": 1.0133333333333334,
+          "matched_onset_mae_ms": 2.5660425531914406,
+          "last_onset_delta_seconds": 3.999999999848569e-05,
+          "tail_10s_recall": 1.0,
+          "reference_types": {
+            "tap": 650,
+            "drag": 299,
+            "flick": 19,
+            "hold": 7
+          },
+          "predicted_types": {
+            "tap": 630,
+            "drag": 329,
+            "flick": 16,
+            "hold": 13
+          },
+          "generated_patterns": {
+            "note_count": 988,
+            "unique_onsets": 761,
+            "type_counts": {
+              "tap": 630,
+              "drag": 329,
+              "flick": 16,
+              "hold": 13
+            },
+            "chord_sizes": {
+              "1": 535,
+              "2": 225,
+              "3": 1
+            },
+            "four_onset_patterns": {
+              "unclassified": 233,
+              "ABAB": 24,
+              "monotonic_run": 4,
+              "AAAA": 1
+            },
+            "singleton_windows": 262,
+            "chord_interrupted_windows": 496,
+            "jack_runs_2_to_3": 57,
+            "jack_runs_4_plus": 1,
+            "longest_jack_run": 4,
+            "hold_overlap_pairs": 1,
+            "hold_touching_pairs": 0,
+            "hold_examples": [
+              {
+                "first": 723,
+                "second": 728,
+                "gap_seconds": -0.07915968568417497
+              }
+            ],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.8925114620478859,
+          "completed_only_joint_f1_50ms": 0.8925114620478859
+        },
+        "longest_gaps": [
+          {
+            "start": 100.00055589775853,
+            "end": 110.66680565304226,
+            "seconds": 10.66624975528373,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 10.66624975528373
+          },
+          {
+            "start": 122.66670688343697,
+            "end": 127.79537414965986,
+            "seconds": 5.128667266222891,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 5.128667266222891
+          },
+          {
+            "start": 55.66678623190813,
+            "end": 58.66769217078107,
+            "seconds": 3.000905938872947,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 3.000905938872947
+          },
+          {
+            "start": 61.24799824340543,
+            "end": 64.00069346594432,
+            "seconds": 2.7526952225388897,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 2.7526952225388897
+          },
+          {
+            "start": 121.3315652929466,
+            "end": 122.66670688343697,
+            "seconds": 1.335141590490366,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 1.335141590490366
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "Cipher  20_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 1.0,
+          "onset_f1_50ms": 1.0,
+          "onset_f1_100ms": 1.0,
+          "time_type_f1": 0.9990253411306043,
+          "completed_only_time_type_f1": 0.9990253411306043,
+          "grid_bonus": 0.7490643374275409,
+          "reference_grid_bonus": 0.936268829663963,
+          "reference_notes": 1026,
+          "predicted_notes": 1026,
+          "reference_unique_onsets": 863,
+          "predicted_unique_onsets": 863,
+          "note_count_ratio": 1.0,
+          "matched_onset_mae_ms": 2.186855156431819,
+          "last_onset_delta_seconds": 0.0050010000000213495,
+          "tail_10s_recall": 1.0,
+          "reference_types": {
+            "drag": 465,
+            "tap": 459,
+            "flick": 49,
+            "hold": 53
+          },
+          "predicted_types": {
+            "drag": 465,
+            "tap": 458,
+            "flick": 50,
+            "hold": 53
+          },
+          "generated_patterns": {
+            "note_count": 1026,
+            "unique_onsets": 863,
+            "type_counts": {
+              "drag": 465,
+              "tap": 458,
+              "flick": 50,
+              "hold": 53
+            },
+            "chord_sizes": {
+              "1": 700,
+              "2": 163
+            },
+            "four_onset_patterns": {
+              "ABAB": 44,
+              "unclassified": 359,
+              "AAAA": 53,
+              "monotonic_run": 11
+            },
+            "singleton_windows": 467,
+            "chord_interrupted_windows": 393,
+            "jack_runs_2_to_3": 80,
+            "jack_runs_4_plus": 18,
+            "longest_jack_run": 16,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.9951267056530214,
+          "completed_only_joint_f1_50ms": 0.9951267056530214
+        },
+        "longest_gaps": [
+          {
+            "start": 147.4910349375753,
+            "end": 154.32126984126984,
+            "seconds": 6.830234903694532,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 3.8134751271582275
+          },
+          {
+            "start": 0.0,
+            "end": 6.706339465636515,
+            "seconds": 6.706339465636515,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 6.706339465636515
+          },
+          {
+            "start": 136.7605206506431,
+            "end": 140.11125181513847,
+            "seconds": 3.350731164495386,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 0
+          },
+          {
+            "start": 81.78722348167783,
+            "end": 85.13667544410343,
+            "seconds": 3.3494519624256043,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 0.06034581717420906
+          },
+          {
+            "start": 92.51633013044085,
+            "end": 95.86430325255103,
+            "seconds": 3.347973122110176,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 3.347973122110176
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "A journey to the moonlight_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.8153046764289088,
+          "onset_f1_50ms": 0.8162494095418045,
+          "onset_f1_100ms": 0.8181388757675957,
+          "time_type_f1": 0.722318339100346,
+          "completed_only_time_type_f1": 0.722318339100346,
+          "grid_bonus": 0.49752084225865245,
+          "reference_grid_bonus": 0.8115799803729146,
+          "reference_notes": 1143,
+          "predicted_notes": 1169,
+          "reference_unique_onsets": 1019,
+          "predicted_unique_onsets": 1098,
+          "note_count_ratio": 1.0227471566054243,
+          "matched_onset_mae_ms": 3.7900995370369692,
+          "last_onset_delta_seconds": 0.0009610000000179753,
+          "tail_10s_recall": 1.0,
+          "reference_types": {
+            "flick": 85,
+            "tap": 410,
+            "hold": 102,
+            "drag": 546
+          },
+          "predicted_types": {
+            "flick": 44,
+            "tap": 338,
+            "hold": 66,
+            "drag": 721
+          },
+          "generated_patterns": {
+            "note_count": 1169,
+            "unique_onsets": 1098,
+            "type_counts": {
+              "flick": 44,
+              "tap": 338,
+              "hold": 66,
+              "drag": 721
+            },
+            "chord_sizes": {
+              "1": 1027,
+              "2": 71
+            },
+            "four_onset_patterns": {
+              "unclassified": 235,
+              "ABAB": 34,
+              "AAAA": 573,
+              "monotonic_run": 2
+            },
+            "singleton_windows": 844,
+            "chord_interrupted_windows": 251,
+            "jack_runs_2_to_3": 37,
+            "jack_runs_4_plus": 24,
+            "longest_jack_run": 161,
+            "hold_overlap_pairs": 1,
+            "hold_touching_pairs": 0,
+            "hold_examples": [
+              {
+                "first": 568,
+                "second": 570,
+                "gap_seconds": -0.3462289163122705
+              }
+            ],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.6859861591695502,
+          "completed_only_joint_f1_50ms": 0.6859861591695502
+        },
+        "longest_gaps": [
+          {
+            "start": 142.0699267010678,
+            "end": 150.54802721088436,
+            "seconds": 8.478100509816556,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 8.478100509816556
+          },
+          {
+            "start": 111.80762982634461,
+            "end": 120.1696737151892,
+            "seconds": 8.362043888844596,
+            "reference_onsets": 131,
+            "no_active_note_seconds": 8.362043888844596
+          },
+          {
+            "start": 10.688206227274438,
+            "end": 18.01161892914718,
+            "seconds": 7.323412701872741,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 5.599274770838258
+          },
+          {
+            "start": 1.3753778311454792,
+            "end": 6.983388620666365,
+            "seconds": 5.608010789520886,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 5.608010789520886
+          },
+          {
+            "start": 92.24503830682664,
+            "end": 96.0642439058957,
+            "seconds": 3.8192055990690505,
+            "reference_onsets": 13,
+            "no_active_note_seconds": 3.8192055990690505
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "The Chariot REVIIVAL_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.99581589958159,
+          "onset_f1_50ms": 0.99581589958159,
+          "onset_f1_100ms": 0.99581589958159,
+          "time_type_f1": 0.923,
+          "completed_only_time_type_f1": 0.923,
+          "grid_bonus": 0.7806550274135908,
+          "reference_grid_bonus": 0.9964028776978417,
+          "reference_notes": 998,
+          "predicted_notes": 1002,
+          "reference_unique_onsets": 834,
+          "predicted_unique_onsets": 839,
+          "note_count_ratio": 1.0040080160320641,
+          "matched_onset_mae_ms": 2.117289315726205,
+          "last_onset_delta_seconds": -0.0010170000000186974,
+          "tail_10s_recall": 1.0,
+          "reference_types": {
+            "hold": 127,
+            "tap": 601,
+            "flick": 58,
+            "drag": 212
+          },
+          "predicted_types": {
+            "hold": 113,
+            "tap": 634,
+            "flick": 54,
+            "drag": 201
+          },
+          "generated_patterns": {
+            "note_count": 1002,
+            "unique_onsets": 839,
+            "type_counts": {
+              "hold": 113,
+              "tap": 634,
+              "flick": 54,
+              "drag": 201
+            },
+            "chord_sizes": {
+              "1": 676,
+              "2": 163
+            },
+            "four_onset_patterns": {
+              "unclassified": 400,
+              "AAAA": 4,
+              "ABAB": 94,
+              "monotonic_run": 8
+            },
+            "singleton_windows": 506,
+            "chord_interrupted_windows": 330,
+            "jack_runs_2_to_3": 79,
+            "jack_runs_4_plus": 4,
+            "longest_jack_run": 4,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.876,
+          "completed_only_joint_f1_50ms": 0.876
+        },
+        "longest_gaps": [
+          {
+            "start": 122.52866790563881,
+            "end": 132.63046035455196,
+            "seconds": 10.101792448913145,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 7.57547665943946
+          },
+          {
+            "start": 143.3674043180505,
+            "end": 146.5280725623583,
+            "seconds": 3.1606682443078,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 3.1606682443078
+          },
+          {
+            "start": 141.31259334088455,
+            "end": 143.3674043180505,
+            "seconds": 2.0548109771659426,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 2.0548109771659426
+          },
+          {
+            "start": 60.548972754792025,
+            "end": 61.89300752739247,
+            "seconds": 1.3440347726004447,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 1.3440347726004447
+          },
+          {
+            "start": 80.84066644024146,
+            "end": 82.10107400561137,
+            "seconds": 1.2604075653699027,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 1.2604075653699027
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "风屿_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.9856115107913669,
+          "onset_f1_50ms": 0.9856115107913669,
+          "onset_f1_100ms": 0.986639260020555,
+          "time_type_f1": 0.8113759933082393,
+          "completed_only_time_type_f1": 0.8113759933082393,
+          "grid_bonus": 0.7737640410677442,
+          "reference_grid_bonus": 1.0,
+          "reference_notes": 1156,
+          "predicted_notes": 1235,
+          "reference_unique_onsets": 972,
+          "predicted_unique_onsets": 974,
+          "note_count_ratio": 1.0683391003460208,
+          "matched_onset_mae_ms": 2.4620980187692663,
+          "last_onset_delta_seconds": 0.0047739999999976135,
+          "tail_10s_recall": 0.9841269841269841,
+          "reference_types": {
+            "tap": 707,
+            "drag": 423,
+            "hold": 21,
+            "flick": 5
+          },
+          "predicted_types": {
+            "tap": 754,
+            "drag": 465,
+            "hold": 11,
+            "flick": 5
+          },
+          "generated_patterns": {
+            "note_count": 1235,
+            "unique_onsets": 974,
+            "type_counts": {
+              "tap": 754,
+              "drag": 465,
+              "hold": 11,
+              "flick": 5
+            },
+            "chord_sizes": {
+              "2": 261,
+              "1": 713
+            },
+            "four_onset_patterns": {
+              "ABAB": 78,
+              "unclassified": 409,
+              "AAAA": 32,
+              "monotonic_run": 3
+            },
+            "singleton_windows": 522,
+            "chord_interrupted_windows": 449,
+            "jack_runs_2_to_3": 83,
+            "jack_runs_4_plus": 10,
+            "longest_jack_run": 12,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.7143454621497282,
+          "completed_only_joint_f1_50ms": 0.7143454621497282
+        },
+        "longest_gaps": [
+          {
+            "start": 170.81654060900078,
+            "end": 175.24006776424764,
+            "seconds": 4.423527155246859,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 0.07793891995271451
+          },
+          {
+            "start": 175.24006776424764,
+            "end": 179.34657596371883,
+            "seconds": 4.106508199471193,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 4.106508199471193
+          },
+          {
+            "start": 22.58576958688749,
+            "end": 25.41239151035577,
+            "seconds": 2.826621923468281,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 0.35603368817416126
+          },
+          {
+            "start": 0.0,
+            "end": 1.411954614202452,
+            "seconds": 1.411954614202452,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 1.411954614202452
+          },
+          {
+            "start": 47.99413857665462,
+            "end": 49.06109198953019,
+            "seconds": 1.06695341287557,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 1.06695341287557
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "Rrharil_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.9964556962025316,
+          "onset_f1_50ms": 0.9964556962025316,
+          "onset_f1_100ms": 0.9964556962025316,
+          "time_type_f1": 0.9503296703296703,
+          "completed_only_time_type_f1": 0.9503296703296703,
+          "grid_bonus": 0.7009572309764361,
+          "reference_grid_bonus": 0.957360525211509,
+          "reference_notes": 1137,
+          "predicted_notes": 1138,
+          "reference_unique_onsets": 985,
+          "predicted_unique_onsets": 990,
+          "note_count_ratio": 1.0008795074758134,
+          "matched_onset_mae_ms": 2.7355030487804846,
+          "last_onset_delta_seconds": -0.006482000000005428,
+          "tail_10s_recall": 0.9852941176470589,
+          "reference_types": {
+            "tap": 768,
+            "drag": 285,
+            "flick": 33,
+            "hold": 51
+          },
+          "predicted_types": {
+            "tap": 732,
+            "drag": 321,
+            "flick": 32,
+            "hold": 53
+          },
+          "generated_patterns": {
+            "note_count": 1138,
+            "unique_onsets": 990,
+            "type_counts": {
+              "tap": 732,
+              "drag": 321,
+              "flick": 32,
+              "hold": 53
+            },
+            "chord_sizes": {
+              "2": 146,
+              "1": 843,
+              "3": 1
+            },
+            "four_onset_patterns": {
+              "unclassified": 500,
+              "AAAA": 53,
+              "ABAB": 63,
+              "monotonic_run": 8
+            },
+            "singleton_windows": 624,
+            "chord_interrupted_windows": 363,
+            "jack_runs_2_to_3": 97,
+            "jack_runs_4_plus": 9,
+            "longest_jack_run": 33,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.8905494505494506,
+          "completed_only_joint_f1_50ms": 0.8905494505494506
+        },
+        "longest_gaps": [
+          {
+            "start": 0.0,
+            "end": 6.311102427787521,
+            "seconds": 6.311102427787521,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 6.311102427787521
+          },
+          {
+            "start": 79.49072809266936,
+            "end": 84.62329237265382,
+            "seconds": 5.132564279984464,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 5.132564279984464
+          },
+          {
+            "start": 125.04845426044767,
+            "end": 130.09878050096992,
+            "seconds": 5.050326240522253,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 2.2082209773643626
+          },
+          {
+            "start": 130.09878050096992,
+            "end": 132.63383219954648,
+            "seconds": 2.5350516985765523,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 2.5350516985765523
+          },
+          {
+            "start": 74.52758584504765,
+            "end": 77.05423250574644,
+            "seconds": 2.5266466606987876,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 0.05954139754088317
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "Rainy Heart_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.9955423476968797,
+          "onset_f1_50ms": 0.9955423476968797,
+          "onset_f1_100ms": 0.9955423476968797,
+          "time_type_f1": 0.9954128440366973,
+          "completed_only_time_type_f1": 0.9954128440366973,
+          "grid_bonus": 0.8384263809523996,
+          "reference_grid_bonus": 1.0,
+          "reference_notes": 437,
+          "predicted_notes": 435,
+          "reference_unique_onsets": 337,
+          "predicted_unique_onsets": 336,
+          "note_count_ratio": 0.9954233409610984,
+          "matched_onset_mae_ms": 2.1484985074622727,
+          "last_onset_delta_seconds": -0.0024870000000021264,
+          "tail_10s_recall": 1.0,
+          "reference_types": {
+            "tap": 307,
+            "drag": 21,
+            "hold": 65,
+            "flick": 44
+          },
+          "predicted_types": {
+            "tap": 305,
+            "drag": 21,
+            "hold": 65,
+            "flick": 44
+          },
+          "generated_patterns": {
+            "note_count": 435,
+            "unique_onsets": 336,
+            "type_counts": {
+              "tap": 305,
+              "drag": 21,
+              "hold": 65,
+              "flick": 44
+            },
+            "chord_sizes": {
+              "2": 99,
+              "1": 237
+            },
+            "four_onset_patterns": {
+              "unclassified": 88,
+              "monotonic_run": 6,
+              "ABAB": 13,
+              "AAAA": 6
+            },
+            "singleton_windows": 113,
+            "chord_interrupted_windows": 220,
+            "jack_runs_2_to_3": 24,
+            "jack_runs_4_plus": 1,
+            "longest_jack_run": 9,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.9931192660550459,
+          "completed_only_joint_f1_50ms": 0.9931192660550459
+        },
+        "longest_gaps": [
+          {
+            "start": 144.85465555204016,
+            "end": 152.55074829931974,
+            "seconds": 7.696092747279579,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 7.696092747279579
+          },
+          {
+            "start": 0.0,
+            "end": 4.284133317389456,
+            "seconds": 4.284133317389456,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 4.284133317389456
+          },
+          {
+            "start": 141.42286501376267,
+            "end": 144.85465555204016,
+            "seconds": 3.4317905382774825,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 1.71750482399176
+          },
+          {
+            "start": 65.99644914345947,
+            "end": 67.71365069642358,
+            "seconds": 1.717201552964113,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 0.056487267249821116
+          },
+          {
+            "start": 67.71365069642358,
+            "end": 69.4308353391202,
+            "seconds": 1.7171846426966084,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 0.056470356982316616
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "Re_Nascence Psystyle Ver._IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.9882005899705014,
+          "onset_f1_50ms": 0.9896755162241888,
+          "onset_f1_100ms": 0.9896755162241888,
+          "time_type_f1": 0.9550425273390036,
+          "completed_only_time_type_f1": 0.9550425273390036,
+          "grid_bonus": 0.7891233185185141,
+          "reference_grid_bonus": 0.9823788546255506,
+          "reference_notes": 823,
+          "predicted_notes": 823,
+          "reference_unique_onsets": 681,
+          "predicted_unique_onsets": 675,
+          "note_count_ratio": 1.0,
+          "matched_onset_mae_ms": 2.506737704917925,
+          "last_onset_delta_seconds": 0.0031740000000013424,
+          "tail_10s_recall": 1.0,
+          "reference_types": {
+            "tap": 547,
+            "hold": 33,
+            "flick": 55,
+            "drag": 188
+          },
+          "predicted_types": {
+            "tap": 537,
+            "hold": 29,
+            "flick": 51,
+            "drag": 206
+          },
+          "generated_patterns": {
+            "note_count": 823,
+            "unique_onsets": 675,
+            "type_counts": {
+              "tap": 537,
+              "hold": 29,
+              "flick": 51,
+              "drag": 206
+            },
+            "chord_sizes": {
+              "1": 527,
+              "2": 148
+            },
+            "four_onset_patterns": {
+              "unclassified": 208,
+              "ABAB": 36,
+              "monotonic_run": 2,
+              "AAAA": 3
+            },
+            "singleton_windows": 249,
+            "chord_interrupted_windows": 423,
+            "jack_runs_2_to_3": 69,
+            "jack_runs_4_plus": 3,
+            "longest_jack_run": 4,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.8894289185905225,
+          "completed_only_joint_f1_50ms": 0.8894289185905225
+        },
+        "longest_gaps": [
+          {
+            "start": 71.99860506157216,
+            "end": 79.6026969830087,
+            "seconds": 7.604091921436535,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 7.604091921436535
+          },
+          {
+            "start": 140.80317441494827,
+            "end": 147.1114739229025,
+            "seconds": 6.308299507954217,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 6.308299507954217
+          },
+          {
+            "start": 89.59489691009867,
+            "end": 95.1587048440185,
+            "seconds": 5.563807933919833,
+            "reference_onsets": 11,
+            "no_active_note_seconds": 5.563807933919833
+          },
+          {
+            "start": 0.0,
+            "end": 5.198456809807256,
+            "seconds": 5.198456809807256,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 5.198456809807256
+          },
+          {
+            "start": 137.59893165501876,
+            "end": 140.80317441494827,
+            "seconds": 3.204242759929514,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 3.204242759929514
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "GOODBOUNCE_IN",
+        "split": "train15",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.9766266582438408,
+          "onset_f1_50ms": 0.9766266582438408,
+          "onset_f1_100ms": 0.9778900821225521,
+          "time_type_f1": 0.902229845626072,
+          "completed_only_time_type_f1": 0.902229845626072,
+          "grid_bonus": 0.8350611964056504,
+          "reference_grid_bonus": 1.0,
+          "reference_notes": 887,
+          "predicted_notes": 862,
+          "reference_unique_onsets": 804,
+          "predicted_unique_onsets": 779,
+          "note_count_ratio": 0.971815107102593,
+          "matched_onset_mae_ms": 1.7103725743854739,
+          "last_onset_delta_seconds": -3.7533960000000093,
+          "tail_10s_recall": 0.5172413793103449,
+          "reference_types": {
+            "tap": 617,
+            "hold": 102,
+            "drag": 139,
+            "flick": 29
+          },
+          "predicted_types": {
+            "tap": 614,
+            "hold": 106,
+            "drag": 126,
+            "flick": 16
+          },
+          "generated_patterns": {
+            "note_count": 862,
+            "unique_onsets": 779,
+            "type_counts": {
+              "tap": 614,
+              "hold": 106,
+              "drag": 126,
+              "flick": 16
+            },
+            "chord_sizes": {
+              "1": 696,
+              "2": 83
+            },
+            "four_onset_patterns": {
+              "unclassified": 441,
+              "ABAB": 78,
+              "AAAA": 27,
+              "monotonic_run": 2
+            },
+            "singleton_windows": 548,
+            "chord_interrupted_windows": 228,
+            "jack_runs_2_to_3": 101,
+            "jack_runs_4_plus": 3,
+            "longest_jack_run": 28,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          },
+          "joint_time_position_type_f1_50ms": 0.7810177244139508,
+          "completed_only_joint_f1_50ms": 0.7810177244139508
+        },
+        "longest_gaps": [
+          {
+            "start": 125.57993690819427,
+            "end": 132.72090702947847,
+            "seconds": 7.140970121284198,
+            "reference_onsets": 27,
+            "no_active_note_seconds": 7.140970121284198
+          },
+          {
+            "start": 107.66469348310613,
+            "end": 113.33162982828223,
+            "seconds": 5.666936345176097,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 5.666936345176097
+          },
+          {
+            "start": 63.91493892885931,
+            "end": 65.66727459697766,
+            "seconds": 1.7523356681183557,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 1.7523356681183557
+          },
+          {
+            "start": 10.666980329241072,
+            "end": 12.332341499588116,
+            "seconds": 1.665361170347044,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 1.665361170347044
+          },
+          {
+            "start": 0.0,
+            "end": 1.3317077830481152,
+            "seconds": 1.3317077830481152,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 1.3317077830481152
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "40717",
+        "split": "E20_development",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.4453496266123557,
+          "onset_f1_50ms": 0.6490156143923965,
+          "onset_f1_100ms": 0.6571622539035981,
+          "time_type_f1": 0.24658918645780697,
+          "completed_only_time_type_f1": 0.24658918645780697,
+          "grid_bonus": 0.1624950367135738,
+          "reference_grid_bonus": 0.8472622478386167,
+          "reference_notes": 850,
+          "predicted_notes": 1129,
+          "reference_unique_onsets": 694,
+          "predicted_unique_onsets": 779,
+          "note_count_ratio": 1.328235294117647,
+          "matched_onset_mae_ms": 19.581364016736416,
+          "last_onset_delta_seconds": 6.327832999999998,
+          "tail_10s_recall": 0.5588235294117647,
+          "reference_types": {
+            "hold": 218,
+            "flick": 71,
+            "drag": 278,
+            "tap": 283
+          },
+          "predicted_types": {
+            "drag": 265,
+            "tap": 837,
+            "hold": 8,
+            "flick": 19
+          },
+          "generated_patterns": {
+            "note_count": 1129,
+            "unique_onsets": 779,
+            "type_counts": {
+              "drag": 265,
+              "tap": 837,
+              "hold": 8,
+              "flick": 19
+            },
+            "chord_sizes": {
+              "2": 346,
+              "1": 431,
+              "3": 2
+            },
+            "four_onset_patterns": {
+              "unclassified": 128,
+              "ABAB": 23,
+              "monotonic_run": 2,
+              "AAAA": 76
+            },
+            "singleton_windows": 229,
+            "chord_interrupted_windows": 547,
+            "jack_runs_2_to_3": 35,
+            "jack_runs_4_plus": 5,
+            "longest_jack_run": 67,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          }
+        },
+        "longest_gaps": [
+          {
+            "start": 170.7403666953435,
+            "end": 175.24452209057452,
+            "seconds": 4.50415539523101,
+            "reference_onsets": 10,
+            "no_active_note_seconds": 4.50415539523101
+          },
+          {
+            "start": 162.46284812044934,
+            "end": 166.3181178238711,
+            "seconds": 3.8552697034217545,
+            "reference_onsets": 13,
+            "no_active_note_seconds": 3.8552697034217545
+          },
+          {
+            "start": 181.73665376762685,
+            "end": 185.05142857142857,
+            "seconds": 3.3147748038017255,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 3.3147748038017255
+          },
+          {
+            "start": 0.0,
+            "end": 2.481713708025528,
+            "seconds": 2.481713708025528,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 2.481713708025528
+          },
+          {
+            "start": 85.32889740613042,
+            "end": 87.09381415888295,
+            "seconds": 1.7649167527525265,
+            "reference_onsets": 11,
+            "no_active_note_seconds": 1.7649167527525265
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "37396",
+        "split": "E20_development",
+        "status": "failed",
+        "metrics": {
+          "onset_f1_25ms": 0.4006908462867012,
+          "onset_f1_50ms": 0.6044905008635578,
+          "onset_f1_100ms": 0.6563039723661486,
+          "time_type_f1": 0.3225806451612903,
+          "completed_only_time_type_f1": 0.0,
+          "grid_bonus": 0.11614583215684336,
+          "reference_grid_bonus": 0.9707112970711297,
+          "reference_notes": 297,
+          "predicted_notes": 354,
+          "reference_unique_onsets": 239,
+          "predicted_unique_onsets": 340,
+          "note_count_ratio": 1.1919191919191918,
+          "matched_onset_mae_ms": 21.43898857142844,
+          "last_onset_delta_seconds": 3.3874080000000077,
+          "tail_10s_recall": 0.6538461538461539,
+          "reference_types": {
+            "tap": 236,
+            "hold": 40,
+            "drag": 12,
+            "flick": 9
+          },
+          "predicted_types": {
+            "drag": 93,
+            "tap": 190,
+            "hold": 53,
+            "flick": 18
+          },
+          "generated_patterns": {
+            "note_count": 354,
+            "unique_onsets": 340,
+            "type_counts": {
+              "drag": 93,
+              "tap": 190,
+              "hold": 53,
+              "flick": 18
+            },
+            "chord_sizes": {
+              "1": 326,
+              "2": 14
+            },
+            "four_onset_patterns": {
+              "unclassified": 250,
+              "ABAB": 23,
+              "AAAA": 13,
+              "monotonic_run": 2
+            },
+            "singleton_windows": 288,
+            "chord_interrupted_windows": 49,
+            "jack_runs_2_to_3": 47,
+            "jack_runs_4_plus": 2,
+            "longest_jack_run": 15,
+            "hold_overlap_pairs": 3,
+            "hold_touching_pairs": 0,
+            "hold_examples": [
+              {
+                "first": 160,
+                "second": 161,
+                "gap_seconds": -0.13231674835323304
+              },
+              {
+                "first": 207,
+                "second": 210,
+                "gap_seconds": -0.004183732817921282
+              },
+              {
+                "first": 320,
+                "second": 322,
+                "gap_seconds": -0.008079508576130934
+              }
+            ],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          }
+        },
+        "longest_gaps": [
+          {
+            "start": 32.38381164965986,
+            "end": 35.69291065172814,
+            "seconds": 3.3090990020682796,
+            "reference_onsets": 9,
+            "no_active_note_seconds": 3.3090990020682796
+          },
+          {
+            "start": 0.0,
+            "end": 2.8966948355676907,
+            "seconds": 2.8966948355676907,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 2.8966948355676907
+          },
+          {
+            "start": 7.2176995863449545,
+            "end": 8.999969443669395,
+            "seconds": 1.7822698573244402,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 1.7822698573244402
+          },
+          {
+            "start": 42.544747771178784,
+            "end": 43.95400110223126,
+            "seconds": 1.4092533310524757,
+            "reference_onsets": 4,
+            "no_active_note_seconds": 0.6465414666457008
+          },
+          {
+            "start": 48.41366048448662,
+            "end": 49.67174142573696,
+            "seconds": 1.2580809412503413,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 0.749606364979158
+          }
+        ],
+        "forced_windows": 1,
+        "learned_window_end_fraction": 0.8888888888888888
+      },
+      {
+        "id": "6990",
+        "split": "E20_development",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.6952965235173824,
+          "onset_f1_50ms": 0.6993865030674846,
+          "onset_f1_100ms": 0.6993865030674846,
+          "time_type_f1": 0.43150123051681705,
+          "completed_only_time_type_f1": 0.43150123051681705,
+          "grid_bonus": 0.46607999619717727,
+          "reference_grid_bonus": 1.0,
+          "reference_notes": 625,
+          "predicted_notes": 594,
+          "reference_unique_onsets": 417,
+          "predicted_unique_onsets": 561,
+          "note_count_ratio": 0.9504,
+          "matched_onset_mae_ms": 8.367646198830007,
+          "last_onset_delta_seconds": -17.718570999999997,
+          "tail_10s_recall": 0.0,
+          "reference_types": {
+            "flick": 41,
+            "drag": 33,
+            "tap": 539,
+            "hold": 12
+          },
+          "predicted_types": {
+            "tap": 419,
+            "hold": 61,
+            "drag": 110,
+            "flick": 4
+          },
+          "generated_patterns": {
+            "note_count": 594,
+            "unique_onsets": 561,
+            "type_counts": {
+              "tap": 419,
+              "hold": 61,
+              "drag": 110,
+              "flick": 4
+            },
+            "chord_sizes": {
+              "1": 528,
+              "2": 33
+            },
+            "four_onset_patterns": {
+              "unclassified": 341,
+              "ABAB": 61,
+              "AAAA": 50,
+              "monotonic_run": 2
+            },
+            "singleton_windows": 454,
+            "chord_interrupted_windows": 104,
+            "jack_runs_2_to_3": 41,
+            "jack_runs_4_plus": 13,
+            "longest_jack_run": 21,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          }
+        },
+        "longest_gaps": [
+          {
+            "start": 120.00000027156635,
+            "end": 140.84267573696144,
+            "seconds": 20.84267546539509,
+            "reference_onsets": 4,
+            "no_active_note_seconds": 20.84267546539509
+          },
+          {
+            "start": 0.0,
+            "end": 11.550881087461027,
+            "seconds": 11.550881087461027,
+            "reference_onsets": 12,
+            "no_active_note_seconds": 11.550881087461027
+          },
+          {
+            "start": 32.84277374751984,
+            "end": 35.65500664328231,
+            "seconds": 2.8122328957624703,
+            "reference_onsets": 5,
+            "no_active_note_seconds": 2.8122328957624703
+          },
+          {
+            "start": 65.12155525605425,
+            "end": 67.53257105059635,
+            "seconds": 2.411015794542095,
+            "reference_onsets": 12,
+            "no_active_note_seconds": 2.411015794542095
+          },
+          {
+            "start": 70.74904241514314,
+            "end": 72.61837477357479,
+            "seconds": 1.8693323584316488,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 1.333618072717357
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "30114",
+        "split": "E20_development",
+        "status": "failed",
+        "metrics": {
+          "onset_f1_25ms": 0.27122049221496736,
+          "onset_f1_50ms": 0.3807132094424912,
+          "onset_f1_100ms": 0.40281265695630336,
+          "time_type_f1": 0.11719086600603189,
+          "completed_only_time_type_f1": 0.0,
+          "grid_bonus": 0.12962431870901991,
+          "reference_grid_bonus": 0.8340807174887892,
+          "reference_notes": 936,
+          "predicted_notes": 1385,
+          "reference_unique_onsets": 669,
+          "predicted_unique_onsets": 1322,
+          "note_count_ratio": 1.4797008547008548,
+          "matched_onset_mae_ms": 20.48458047493412,
+          "last_onset_delta_seconds": 11.05940799999999,
+          "tail_10s_recall": 0.275,
+          "reference_types": {
+            "tap": 359,
+            "drag": 407,
+            "hold": 59,
+            "flick": 111
+          },
+          "predicted_types": {
+            "hold": 231,
+            "tap": 316,
+            "drag": 791,
+            "flick": 47
+          },
+          "generated_patterns": {
+            "note_count": 1385,
+            "unique_onsets": 1322,
+            "type_counts": {
+              "hold": 231,
+              "tap": 316,
+              "drag": 791,
+              "flick": 47
+            },
+            "chord_sizes": {
+              "1": 1259,
+              "2": 63
+            },
+            "four_onset_patterns": {
+              "unclassified": 834,
+              "AAAA": 228,
+              "monotonic_run": 26,
+              "ABAB": 36
+            },
+            "singleton_windows": 1124,
+            "chord_interrupted_windows": 195,
+            "jack_runs_2_to_3": 182,
+            "jack_runs_4_plus": 70,
+            "longest_jack_run": 31,
+            "hold_overlap_pairs": 91,
+            "hold_touching_pairs": 0,
+            "hold_examples": [
+              {
+                "first": 141,
+                "second": 142,
+                "gap_seconds": -1.7621136766881236
+              },
+              {
+                "first": 141,
+                "second": 149,
+                "gap_seconds": -0.200159952408697
+              },
+              {
+                "first": 143,
+                "second": 146,
+                "gap_seconds": -0.6018241735984766
+              },
+              {
+                "first": 143,
+                "second": 147,
+                "gap_seconds": -0.2875362123609193
+              },
+              {
+                "first": 174,
+                "second": 179,
+                "gap_seconds": -0.10173987905708515
+              },
+              {
+                "first": 200,
+                "second": 227,
+                "gap_seconds": -0.2691272838888068
+              },
+              {
+                "first": 408,
+                "second": 409,
+                "gap_seconds": -0.1863022652908768
+              },
+              {
+                "first": 428,
+                "second": 429,
+                "gap_seconds": -0.3589256988602685
+              },
+              {
+                "first": 431,
+                "second": 442,
+                "gap_seconds": -0.24466752081691823
+              },
+              {
+                "first": 442,
+                "second": 446,
+                "gap_seconds": -0.44715487090019224
+              },
+              {
+                "first": 446,
+                "second": 447,
+                "gap_seconds": -1.7440665224422958
+              },
+              {
+                "first": 446,
+                "second": 448,
+                "gap_seconds": -1.331269562186847
+              },
+              {
+                "first": 446,
+                "second": 449,
+                "gap_seconds": -0.4436485132790011
+              },
+              {
+                "first": 447,
+                "second": 448,
+                "gap_seconds": -0.24896774562689927
+              },
+              {
+                "first": 529,
+                "second": 531,
+                "gap_seconds": -0.021552874649216847
+              },
+              {
+                "first": 531,
+                "second": 532,
+                "gap_seconds": -0.0497391174080235
+              },
+              {
+                "first": 533,
+                "second": 534,
+                "gap_seconds": -0.23574854201120843
+              },
+              {
+                "first": 536,
+                "second": 537,
+                "gap_seconds": -0.0468689730937939
+              },
+              {
+                "first": 586,
+                "second": 587,
+                "gap_seconds": -0.0528842323062122
+              },
+              {
+                "first": 587,
+                "second": 588,
+                "gap_seconds": -0.10821375197213001
+              }
+            ],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          }
+        },
+        "longest_gaps": [
+          {
+            "start": 179.99210620142705,
+            "end": 187.2597820560516,
+            "seconds": 7.267675854624542,
+            "reference_onsets": 15,
+            "no_active_note_seconds": 6.936793501683354
+          },
+          {
+            "start": 171.88409509291185,
+            "end": 176.33693666315403,
+            "seconds": 4.452841570242185,
+            "reference_onsets": 18,
+            "no_active_note_seconds": 4.452841570242185
+          },
+          {
+            "start": 190.42605416572553,
+            "end": 194.55367924040948,
+            "seconds": 4.127625074683948,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 4.127625074683948
+          },
+          {
+            "start": 150.10638611808656,
+            "end": 153.9757805552234,
+            "seconds": 3.869394437136833,
+            "reference_onsets": 3,
+            "no_active_note_seconds": 3.869394437136833
+          },
+          {
+            "start": 0.0,
+            "end": 3.5615864933212866,
+            "seconds": 3.5615864933212866,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 3.5615864933212866
+          }
+        ],
+        "forced_windows": 1,
+        "learned_window_end_fraction": 0.95
+      },
+      {
+        "id": "23968",
+        "split": "E20_development",
+        "status": "failed",
+        "metrics": {
+          "onset_f1_25ms": 0.18494271685761046,
+          "onset_f1_50ms": 0.690671031096563,
+          "onset_f1_100ms": 0.6939443535188216,
+          "time_type_f1": 0.4377564979480164,
+          "completed_only_time_type_f1": 0.0,
+          "grid_bonus": 0.020061329655180652,
+          "reference_grid_bonus": 1.0,
+          "reference_notes": 656,
+          "predicted_notes": 806,
+          "reference_unique_onsets": 497,
+          "predicted_unique_onsets": 725,
+          "note_count_ratio": 1.228658536585366,
+          "matched_onset_mae_ms": 27.06579857819874,
+          "last_onset_delta_seconds": 3.656176000000002,
+          "tail_10s_recall": 0.4426229508196721,
+          "reference_types": {
+            "flick": 41,
+            "tap": 463,
+            "drag": 50,
+            "hold": 102
+          },
+          "predicted_types": {
+            "tap": 604,
+            "hold": 34,
+            "flick": 11,
+            "drag": 157
+          },
+          "generated_patterns": {
+            "note_count": 806,
+            "unique_onsets": 725,
+            "type_counts": {
+              "tap": 604,
+              "hold": 34,
+              "flick": 11,
+              "drag": 157
+            },
+            "chord_sizes": {
+              "1": 644,
+              "2": 81
+            },
+            "four_onset_patterns": {
+              "unclassified": 381,
+              "ABAB": 78,
+              "AAAA": 56,
+              "monotonic_run": 1
+            },
+            "singleton_windows": 516,
+            "chord_interrupted_windows": 206,
+            "jack_runs_2_to_3": 56,
+            "jack_runs_4_plus": 20,
+            "longest_jack_run": 10,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          }
+        },
+        "longest_gaps": [
+          {
+            "start": 93.14312310567206,
+            "end": 97.00121916686597,
+            "seconds": 3.858096061193905,
+            "reference_onsets": 20,
+            "no_active_note_seconds": 3.858096061193905
+          },
+          {
+            "start": 0.0,
+            "end": 2.7828731725437574,
+            "seconds": 2.7828731725437574,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 2.7828731725437574
+          },
+          {
+            "start": 104.85315901360543,
+            "end": 107.25020120702904,
+            "seconds": 2.3970421934236015,
+            "reference_onsets": 26,
+            "no_active_note_seconds": 2.3970421934236015
+          },
+          {
+            "start": 102.70151214115204,
+            "end": 103.8978345819936,
+            "seconds": 1.1963224408415698,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 1.1963224408415698
+          },
+          {
+            "start": 50.775442640516495,
+            "end": 51.49024839232568,
+            "seconds": 0.7148057518091875,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 0.7148057518091875
+          }
+        ],
+        "forced_windows": 1,
+        "learned_window_end_fraction": 0.9166666666666666
+      },
+      {
+        "id": "51352",
+        "split": "E20_development",
+        "status": "completed",
+        "metrics": {
+          "onset_f1_25ms": 0.010738255033557046,
+          "onset_f1_50ms": 0.6778523489932886,
+          "onset_f1_100ms": 0.8657718120805369,
+          "time_type_f1": 0.40513392857142855,
+          "completed_only_time_type_f1": 0.40513392857142855,
+          "grid_bonus": 0.040536507936505005,
+          "reference_grid_bonus": 0.9836512261580381,
+          "reference_notes": 956,
+          "predicted_notes": 836,
+          "reference_unique_onsets": 734,
+          "predicted_unique_onsets": 756,
+          "note_count_ratio": 0.8744769874476988,
+          "matched_onset_mae_ms": 45.65953267326675,
+          "last_onset_delta_seconds": -0.3173129999999844,
+          "tail_10s_recall": 0.5918367346938775,
+          "reference_types": {
+            "tap": 738,
+            "hold": 52,
+            "drag": 146,
+            "flick": 20
+          },
+          "predicted_types": {
+            "hold": 44,
+            "tap": 782,
+            "drag": 8,
+            "flick": 2
+          },
+          "generated_patterns": {
+            "note_count": 836,
+            "unique_onsets": 756,
+            "type_counts": {
+              "hold": 44,
+              "tap": 782,
+              "drag": 8,
+              "flick": 2
+            },
+            "chord_sizes": {
+              "1": 676,
+              "2": 80
+            },
+            "four_onset_patterns": {
+              "ABAB": 126,
+              "unclassified": 456,
+              "AAAA": 3,
+              "monotonic_run": 1
+            },
+            "singleton_windows": 586,
+            "chord_interrupted_windows": 167,
+            "jack_runs_2_to_3": 30,
+            "jack_runs_4_plus": 1,
+            "longest_jack_run": 6,
+            "hold_overlap_pairs": 1,
+            "hold_touching_pairs": 0,
+            "hold_examples": [
+              {
+                "first": 672,
+                "second": 674,
+                "gap_seconds": -0.008868631029855578
+              }
+            ],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          }
+        },
+        "longest_gaps": [
+          {
+            "start": 153.7826870582217,
+            "end": 157.0,
+            "seconds": 3.217312941778289,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 3.0173129417783002
+          },
+          {
+            "start": 0.9539752183425454,
+            "end": 2.153269898291348,
+            "seconds": 1.1992946799488025,
+            "reference_onsets": 7,
+            "no_active_note_seconds": 0.5975868152436756
+          },
+          {
+            "start": 85.74594596603289,
+            "end": 86.54826711918491,
+            "seconds": 0.8023211531520218,
+            "reference_onsets": 6,
+            "no_active_note_seconds": 0.4023211531520161
+          },
+          {
+            "start": 0.0,
+            "end": 0.5302867406728317,
+            "seconds": 0.5302867406728317,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 0.5302867406728317
+          },
+          {
+            "start": 153.34873900329174,
+            "end": 153.7826870582217,
+            "seconds": 0.4339480549299708,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 0.23394805492998216
+          }
+        ],
+        "forced_windows": 0,
+        "learned_window_end_fraction": 1.0
+      },
+      {
+        "id": "64888",
+        "split": "E20_development",
+        "status": "failed",
+        "metrics": {
+          "onset_f1_25ms": 0.31060857998004654,
+          "onset_f1_50ms": 0.5513801130695045,
+          "onset_f1_100ms": 0.5926172264715663,
+          "time_type_f1": 0.2694077938017797,
+          "completed_only_time_type_f1": 0.0,
+          "grid_bonus": 0.15745120696259363,
+          "reference_grid_bonus": 0.5686813186813187,
+          "reference_notes": 1299,
+          "predicted_notes": 1960,
+          "reference_unique_onsets": 1092,
+          "predicted_unique_onsets": 1915,
+          "note_count_ratio": 1.5088529638183217,
+          "matched_onset_mae_ms": 22.73973823884228,
+          "last_onset_delta_seconds": 9.155046999999996,
+          "tail_10s_recall": 0.36666666666666664,
+          "reference_types": {
+            "tap": 889,
+            "drag": 276,
+            "flick": 24,
+            "hold": 110
+          },
+          "predicted_types": {
+            "tap": 734,
+            "drag": 1219,
+            "hold": 6,
+            "flick": 1
+          },
+          "generated_patterns": {
+            "note_count": 1960,
+            "unique_onsets": 1915,
+            "type_counts": {
+              "tap": 734,
+              "drag": 1219,
+              "hold": 6,
+              "flick": 1
+            },
+            "chord_sizes": {
+              "1": 1870,
+              "2": 45
+            },
+            "four_onset_patterns": {
+              "monotonic_run": 21,
+              "unclassified": 1198,
+              "AAAA": 473,
+              "ABAB": 98
+            },
+            "singleton_windows": 1790,
+            "chord_interrupted_windows": 122,
+            "jack_runs_2_to_3": 181,
+            "jack_runs_4_plus": 82,
+            "longest_jack_run": 48,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          }
+        },
+        "longest_gaps": [
+          {
+            "start": 141.38766744116268,
+            "end": 150.5468975013508,
+            "seconds": 9.159230060188122,
+            "reference_onsets": 53,
+            "no_active_note_seconds": 9.159230060188122
+          },
+          {
+            "start": 190.25119706134407,
+            "end": 197.52209400410555,
+            "seconds": 7.270896942761482,
+            "reference_onsets": 36,
+            "no_active_note_seconds": 5.020896942761482
+          },
+          {
+            "start": 44.806617565705785,
+            "end": 49.263331165962484,
+            "seconds": 4.456713600256698,
+            "reference_onsets": 11,
+            "no_active_note_seconds": 4.456713600256698
+          },
+          {
+            "start": 100.37861043017467,
+            "end": 104.82551183791388,
+            "seconds": 4.446901407739205,
+            "reference_onsets": 16,
+            "no_active_note_seconds": 4.446901407739205
+          },
+          {
+            "start": 20.640577662461467,
+            "end": 24.53085332338502,
+            "seconds": 3.890275660923553,
+            "reference_onsets": 16,
+            "no_active_note_seconds": 3.890275660923553
+          }
+        ],
+        "forced_windows": 5,
+        "learned_window_end_fraction": 0.782608695652174
+      },
+      {
+        "id": "51818",
+        "split": "E20_development",
+        "status": "failed",
+        "metrics": {
+          "onset_f1_25ms": 0.7673130193905817,
+          "onset_f1_50ms": 0.8254847645429363,
+          "onset_f1_100ms": 0.853185595567867,
+          "time_type_f1": 0.5509761388286334,
+          "completed_only_time_type_f1": 0.0,
+          "grid_bonus": 0.011031253534408581,
+          "reference_grid_bonus": 1.0,
+          "reference_notes": 1200,
+          "predicted_notes": 1105,
+          "reference_unique_onsets": 1105,
+          "predicted_unique_onsets": 1061,
+          "note_count_ratio": 0.9208333333333333,
+          "matched_onset_mae_ms": 20.03862080536852,
+          "last_onset_delta_seconds": 1.479421000000002,
+          "tail_10s_recall": 0.9325842696629213,
+          "reference_types": {
+            "tap": 884,
+            "flick": 76,
+            "hold": 50,
+            "drag": 190
+          },
+          "predicted_types": {
+            "tap": 790,
+            "drag": 294,
+            "flick": 21
+          },
+          "generated_patterns": {
+            "note_count": 1105,
+            "unique_onsets": 1061,
+            "type_counts": {
+              "tap": 790,
+              "drag": 294,
+              "flick": 21
+            },
+            "chord_sizes": {
+              "1": 1017,
+              "2": 44
+            },
+            "four_onset_patterns": {
+              "unclassified": 590,
+              "ABAB": 173,
+              "monotonic_run": 6,
+              "AAAA": 154
+            },
+            "singleton_windows": 923,
+            "chord_interrupted_windows": 135,
+            "jack_runs_2_to_3": 72,
+            "jack_runs_4_plus": 19,
+            "longest_jack_run": 105,
+            "hold_overlap_pairs": 0,
+            "hold_touching_pairs": 0,
+            "hold_examples": [],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          }
+        },
+        "longest_gaps": [
+          {
+            "start": 57.92127843463232,
+            "end": 60.337817954411584,
+            "seconds": 2.4165395197792634,
+            "reference_onsets": 12,
+            "no_active_note_seconds": 2.4165395197792634
+          },
+          {
+            "start": 0.0,
+            "end": 1.3330976186047336,
+            "seconds": 1.3330976186047336,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 1.3330976186047336
+          },
+          {
+            "start": 109.66511613011089,
+            "end": 110.17435096931025,
+            "seconds": 0.5092348391993653,
+            "reference_onsets": 6,
+            "no_active_note_seconds": 0.5092348391993653
+          },
+          {
+            "start": 47.497657506687574,
+            "end": 47.838052207964076,
+            "seconds": 0.3403947012765016,
+            "reference_onsets": 1,
+            "no_active_note_seconds": 0.3403947012765016
+          },
+          {
+            "start": 50.663909161972086,
+            "end": 51.00157589451796,
+            "seconds": 0.33766673254587687,
+            "reference_onsets": 2,
+            "no_active_note_seconds": 0.33766673254587687
+          }
+        ],
+        "forced_windows": 1,
+        "learned_window_end_fraction": 0.9285714285714286
+      },
+      {
+        "id": "52417",
+        "split": "E20_development",
+        "status": "failed",
+        "metrics": {
+          "onset_f1_25ms": 0.6,
+          "onset_f1_50ms": 0.6110294117647059,
+          "onset_f1_100ms": 0.6272058823529412,
+          "time_type_f1": 0.30947775628626695,
+          "completed_only_time_type_f1": 0.0,
+          "grid_bonus": 0.555336392831433,
+          "reference_grid_bonus": 0.9220698433915206,
+          "reference_notes": 2183,
+          "predicted_notes": 1436,
+          "reference_unique_onsets": 1604,
+          "predicted_unique_onsets": 1116,
+          "note_count_ratio": 0.657810352725607,
+          "matched_onset_mae_ms": 4.757442839951933,
+          "last_onset_delta_seconds": 12.050130999999965,
+          "tail_10s_recall": 0.35,
+          "reference_types": {
+            "tap": 1286,
+            "drag": 542,
+            "flick": 86,
+            "hold": 269
+          },
+          "predicted_types": {
+            "tap": 1111,
+            "drag": 223,
+            "flick": 62,
+            "hold": 40
+          },
+          "generated_patterns": {
+            "note_count": 1436,
+            "unique_onsets": 1116,
+            "type_counts": {
+              "tap": 1111,
+              "drag": 223,
+              "flick": 62,
+              "hold": 40
+            },
+            "chord_sizes": {
+              "2": 320,
+              "1": 796
+            },
+            "four_onset_patterns": {
+              "AAAA": 88,
+              "unclassified": 399,
+              "monotonic_run": 2,
+              "ABAB": 119
+            },
+            "singleton_windows": 608,
+            "chord_interrupted_windows": 505,
+            "jack_runs_2_to_3": 58,
+            "jack_runs_4_plus": 21,
+            "longest_jack_run": 21,
+            "hold_overlap_pairs": 35,
+            "hold_touching_pairs": 0,
+            "hold_examples": [
+              {
+                "first": 1299,
+                "second": 1302,
+                "gap_seconds": -0.005885323460290692
+              },
+              {
+                "first": 1302,
+                "second": 1304,
+                "gap_seconds": -0.5110997133957937
+              },
+              {
+                "first": 1302,
+                "second": 1306,
+                "gap_seconds": -0.17514998595029851
+              },
+              {
+                "first": 1303,
+                "second": 1305,
+                "gap_seconds": -0.34434037986096655
+              },
+              {
+                "first": 1304,
+                "second": 1306,
+                "gap_seconds": -0.18129165186485352
+              },
+              {
+                "first": 1314,
+                "second": 1316,
+                "gap_seconds": -0.16532801485544724
+              },
+              {
+                "first": 1314,
+                "second": 1318,
+                "gap_seconds": -0.16388596642403286
+              },
+              {
+                "first": 1314,
+                "second": 1320,
+                "gap_seconds": -0.16358147750329977
+              },
+              {
+                "first": 1314,
+                "second": 1322,
+                "gap_seconds": -0.16351864997545817
+              },
+              {
+                "first": 1314,
+                "second": 1324,
+                "gap_seconds": -0.16350551072150665
+              },
+              {
+                "first": 1315,
+                "second": 1317,
+                "gap_seconds": -0.16532801485544724
+              },
+              {
+                "first": 1315,
+                "second": 1319,
+                "gap_seconds": -0.16388596642403286
+              },
+              {
+                "first": 1315,
+                "second": 1321,
+                "gap_seconds": -0.16358147750329977
+              },
+              {
+                "first": 1315,
+                "second": 1323,
+                "gap_seconds": -0.16351864997545817
+              },
+              {
+                "first": 1315,
+                "second": 1325,
+                "gap_seconds": -0.16350551072150665
+              },
+              {
+                "first": 1316,
+                "second": 1318,
+                "gap_seconds": -0.17097174467204468
+              },
+              {
+                "first": 1316,
+                "second": 1320,
+                "gap_seconds": -0.1706672557513116
+              },
+              {
+                "first": 1316,
+                "second": 1322,
+                "gap_seconds": -0.17060442822347
+              },
+              {
+                "first": 1316,
+                "second": 1324,
+                "gap_seconds": -0.17059128896951847
+              },
+              {
+                "first": 1317,
+                "second": 1319,
+                "gap_seconds": -0.17097174467204468
+              }
+            ],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          }
+        },
+        "longest_gaps": [
+          {
+            "start": 193.557650196309,
+            "end": 250.10192981123114,
+            "seconds": 56.54427961492215,
+            "reference_onsets": 370,
+            "no_active_note_seconds": 56.54427961492215
+          },
+          {
+            "start": 22.693906067309737,
+            "end": 29.926952550632883,
+            "seconds": 7.233046483323147,
+            "reference_onsets": 45,
+            "no_active_note_seconds": 7.233046483323147
+          },
+          {
+            "start": 111.8216210892328,
+            "end": 118.0333124595867,
+            "seconds": 6.21169137035389,
+            "reference_onsets": 28,
+            "no_active_note_seconds": 6.21169137035389
+          },
+          {
+            "start": 261.82576757591056,
+            "end": 267.98940052127625,
+            "seconds": 6.163632945365691,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 6.163632945365691
+          },
+          {
+            "start": 124.29533180703922,
+            "end": 129.5880500305591,
+            "seconds": 5.29271822351987,
+            "reference_onsets": 34,
+            "no_active_note_seconds": 5.29271822351987
+          }
+        ],
+        "forced_windows": 3,
+        "learned_window_end_fraction": 0.8888888888888888
+      },
+      {
+        "id": "52244",
+        "split": "E20_development",
+        "status": "failed",
+        "metrics": {
+          "onset_f1_25ms": 0.7083333333333334,
+          "onset_f1_50ms": 0.7171052631578947,
+          "onset_f1_100ms": 0.7192982456140351,
+          "time_type_f1": 0.42952380952380953,
+          "completed_only_time_type_f1": 0.0,
+          "grid_bonus": 0.18515503432408686,
+          "reference_grid_bonus": 0.9948783610755442,
+          "reference_notes": 999,
+          "predicted_notes": 1101,
+          "reference_unique_onsets": 781,
+          "predicted_unique_onsets": 1043,
+          "note_count_ratio": 1.102102102102102,
+          "matched_onset_mae_ms": 8.436438837920031,
+          "last_onset_delta_seconds": 2.9168379999999843,
+          "tail_10s_recall": 0.6190476190476191,
+          "reference_types": {
+            "tap": 615,
+            "hold": 141,
+            "flick": 77,
+            "drag": 166
+          },
+          "predicted_types": {
+            "drag": 263,
+            "tap": 754,
+            "flick": 5,
+            "hold": 79
+          },
+          "generated_patterns": {
+            "note_count": 1101,
+            "unique_onsets": 1043,
+            "type_counts": {
+              "drag": 263,
+              "tap": 754,
+              "flick": 5,
+              "hold": 79
+            },
+            "chord_sizes": {
+              "1": 985,
+              "2": 58
+            },
+            "four_onset_patterns": {
+              "AAAA": 79,
+              "unclassified": 582,
+              "ABAB": 195,
+              "monotonic_run": 5
+            },
+            "singleton_windows": 861,
+            "chord_interrupted_windows": 179,
+            "jack_runs_2_to_3": 60,
+            "jack_runs_4_plus": 11,
+            "longest_jack_run": 50,
+            "hold_overlap_pairs": 81,
+            "hold_touching_pairs": 0,
+            "hold_examples": [
+              {
+                "first": 761,
+                "second": 763,
+                "gap_seconds": -0.36206888872820286
+              },
+              {
+                "first": 761,
+                "second": 765,
+                "gap_seconds": -0.35830251275123715
+              },
+              {
+                "first": 761,
+                "second": 767,
+                "gap_seconds": -0.3567428798289143
+              },
+              {
+                "first": 761,
+                "second": 769,
+                "gap_seconds": -0.35607046416930643
+              },
+              {
+                "first": 761,
+                "second": 771,
+                "gap_seconds": -0.3557528868618647
+              },
+              {
+                "first": 761,
+                "second": 773,
+                "gap_seconds": -0.3556182415531737
+              },
+              {
+                "first": 761,
+                "second": 775,
+                "gap_seconds": -0.355561992382178
+              },
+              {
+                "first": 761,
+                "second": 777,
+                "gap_seconds": -0.35553659291309714
+              },
+              {
+                "first": 761,
+                "second": 779,
+                "gap_seconds": -0.35552564038732726
+              },
+              {
+                "first": 761,
+                "second": 781,
+                "gap_seconds": -0.35552080590625224
+              },
+              {
+                "first": 762,
+                "second": 766,
+                "gap_seconds": -0.3573661925125009
+              },
+              {
+                "first": 762,
+                "second": 768,
+                "gap_seconds": -0.3563334417862336
+              },
+              {
+                "first": 762,
+                "second": 772,
+                "gap_seconds": -0.35567186017973995
+              },
+              {
+                "first": 762,
+                "second": 778,
+                "gap_seconds": -0.35552996573773044
+              },
+              {
+                "first": 762,
+                "second": 782,
+                "gap_seconds": -0.3555195522066299
+              },
+              {
+                "first": 763,
+                "second": 765,
+                "gap_seconds": -0.24013606304743007
+              },
+              {
+                "first": 763,
+                "second": 767,
+                "gap_seconds": -0.2385764301251072
+              },
+              {
+                "first": 763,
+                "second": 769,
+                "gap_seconds": -0.23790401446549936
+              },
+              {
+                "first": 763,
+                "second": 771,
+                "gap_seconds": -0.2375864371580576
+              },
+              {
+                "first": 763,
+                "second": 773,
+                "gap_seconds": -0.2374517918493666
+              }
+            ],
+            "interpretation": "descriptive; no desired type/pattern/chord quota or two-finger cap"
+          }
+        },
+        "longest_gaps": [
+          {
+            "start": 110.00073275820333,
+            "end": 118.30584608843537,
+            "seconds": 8.305113330232047,
+            "reference_onsets": 7,
+            "no_active_note_seconds": 7.634381622914972
+          },
+          {
+            "start": 130.61487118675595,
+            "end": 134.6339077115221,
+            "seconds": 4.019036524766165,
+            "reference_onsets": 12,
+            "no_active_note_seconds": 3.653182866229571
+          },
+          {
+            "start": 0.0,
+            "end": 3.9188810484317425,
+            "seconds": 3.9188810484317425,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 3.9188810484317425
+          },
+          {
+            "start": 135.6097710901377,
+            "end": 139.50934023971732,
+            "seconds": 3.899569149579605,
+            "reference_onsets": 8,
+            "no_active_note_seconds": 3.899569149579605
+          },
+          {
+            "start": 4.8917674452593545,
+            "end": 8.7883131536713,
+            "seconds": 3.8965457084119457,
+            "reference_onsets": 0,
+            "no_active_note_seconds": 3.8965457084119457
+          }
+        ],
+        "forced_windows": 4,
+        "learned_window_end_fraction": 0.8
+      }
+    ],
+    "aggregates": {
+      "train15": {
+        "examples": 15,
+        "completed": 14,
+        "onset_f1_25ms": 0.9634237673519921,
+        "onset_f1_50ms": 0.9640736767172131,
+        "onset_f1_100ms": 0.9655913529806335,
+        "grid_bonus": 0.6879140113005681,
+        "time_type_f1": 0.8843396915116261,
+        "completed_only_joint_f1_50ms": 0.7730105842473773
+      },
+      "E20_development": {
+        "examples": 10,
+        "completed": 3,
+        "onset_f1_25ms": 0.43944933932265356,
+        "onset_f1_50ms": 0.6407128760390823,
+        "onset_f1_100ms": 0.6767688501899303,
+        "grid_bonus": 0.1843916909020822,
+        "time_type_f1": 0.35201378531018807
+      }
+    },
+    "scope": "Raw generation; E20 is a development regression set, not a new blind test. Time+type ignores moving-line coordinates; not time+position+type joint F1."
+  },
+  "resources": {
+    "disk_free_gib": 26.546173095703125,
+    "ram_available_gib": 37.209739685058594,
+    "rss_gib": 2.0673065185546875,
+    "gpu_peak_allocated_gib": 0.4747037887573242,
+    "gpu_peak_reserved_gib": 0.8984375
+  },
+  "weights": [
+    {
+      "path": "out/joint_audio_scratch_20261102/model_latest.pt",
+      "bytes": 160863289,
+      "sha256": "b1bfc4a3ba85f86b338f201204b3e9bd354349d3a8a4398b4db5d5b8aeefe17a"
+    },
+    {
+      "path": "out/joint_audio_scratch_20261102/model_best_fit.pt",
+      "bytes": 53638865,
+      "sha256": "2fbd21ee9a04bb17e95e61a1e222fb4b65b3af7c58db661b4601b7b54b5763b3"
+    }
+  ],
+  "sources": {
+    "out/joint_audio_scratch_20261102/training.json": "5dbfbbb537f883f751afb1e2f4df0fa9d48cd561fd34c72fd8766135f288ffc8",
+    "out/joint_audio_scratch_20261102/evaluation-e0100/summary.json": "1390abb942c29add35ccd9b05fe2f3e41384ede0f4d83b68c061f902542e8f2e",
+    "out/joint_audio_scratch_20261102/evaluation-e0200/summary.json": "581692faa690d32aee483f7ca336915a2bfe055ef0cecf21df96d272a7238f48",
+    "out/joint_audio_scratch_20261102/evaluation-e0300/summary.json": "1dbaaa26a1e97da93c2205aa701dbd5d3a4c9f1e28ad6fc7eafb34f6eef92cff"
+  },
+  "curve_evidence": "docs/evaluations/assets/joint_audio_scratch_20261102/curves_e0300/provenance.json",
+  "scope": "Training completed, quality not passed. E20 songs are development regressions, not a blind test. Failed rollouts remain in F1/grid means. Completed means every window emitted learned END_WINDOW. completed_only_joint_f1_50ms zeroes failures before averaging all examples. No additional training or published-weight replacement."
+}
