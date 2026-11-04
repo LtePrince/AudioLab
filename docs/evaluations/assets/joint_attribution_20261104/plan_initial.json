@@ -1,0 +1,49 @@
+{
+  "experiment": "E24",
+  "checkpoint": "out/joint_audio_scratch_20261102/model_latest.pt",
+  "checkpoint_sha256": "b1bfc4a3ba85f86b338f201204b3e9bd354349d3a8a4398b4db5d5b8aeefe17a",
+  "epoch": 300,
+  "steps": 90000,
+  "training_updates": 0,
+  "focus": {
+    "Eltaw_IN": [
+      6,
+      13
+    ],
+    "Incyde_IN": [
+      18,
+      19,
+      20
+    ],
+    "40717": [
+      17,
+      18
+    ],
+    "52417": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+    ]
+  },
+  "source_sha256": {
+    "docs/evaluations/assets/joint_attribution_20261104/diagnose.py": "9baeabd10bb5aca2d58bde9817ec463a9ed6a822030f155c11851f368fa3d15f",
+    "src/windowed_ar.py": "6c972249fee21c3f20229534374e5615f8132cfb46f10a65b9cea750e074d392",
+    "src/joint_audio_ar.py": "69f1d255748100a784ddd8adb3af92af5b505376336b337a147d160f054a5a03",
+    "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+    "src/models/chart_history.py": "4129343021378c37f8eefc4b4f59ae5cbb8b940ce6aba278a914cf421b217f0d"
+  },
+  "controls": {
+    "greedy": true,
+    "seed": 42,
+    "max_tokens": 12000,
+    "full_audio": true,
+    "grid_snap": false
+  },
+  "scope": "Selected failure attribution, not population generalization. True 4K history only on training songs. Community timing-prefix uses reference onsets plus model-generated layouts. Any forced prefix is excluded from continuation scoring. Physical silence is a control, zero features an out-of-distribution sensitivity test. No training or product changes."
+}

@@ -230,7 +230,9 @@
       "delivery": "research_only_joint_frontend_required",
       "evidence": "docs/evaluations/joint_audio_scratch_20261102.md",
       "training_status": "E22_and_E23_completed",
-      "quality_status": "not_passed"
+      "quality_status": "not_passed",
+      "latest_diagnostic": "E24",
+      "diagnostic_evidence": "docs/evaluations/joint_attribution_20261104.md"
     }
   ],
   "experiments": [
@@ -6357,6 +6359,63 @@
         }
       ],
       "updated_at_utc": "2026-11-03T13:03:34.791161+00:00"
+    },
+    {
+      "id": "E24",
+      "title": "E23/e300 历史、音频与窗口结束归因",
+      "kind": "fixed_checkpoint_inference_attribution",
+      "models": [
+        "AL-AR4K@0.7.0/A"
+      ],
+      "status": "completed",
+      "quality_status": "underlying_model_not_passed",
+      "training_updates": 0,
+      "question": "区分生成历史造成的空窗/结束错误与参考时序条件下仍存在的定位和结束泛化问题。",
+      "result": "Four-song native replay and free continuation parity passed. Incyde true history before180s restores96/4/0 onsets and all three learned window ends. For52417 a reference-time/model-layout prefix before200s restores180 onsets across five empty windows but matches only104/338 reference onsets; ending still fails in four of these five windows. Physical audio interventions change outputs; history truncation or zero-summary is not a general fix. No training or production changes.",
+      "evidence": [
+        "docs/evaluations/joint_attribution_20261104.md",
+        "docs/evaluations/assets/joint_attribution_20261104/plan.json",
+        "docs/evaluations/assets/joint_attribution_20261104/validation_amendment.json",
+        "docs/evaluations/assets/joint_attribution_20261104/summary.json",
+        "docs/evaluations/assets/joint_attribution_20261104/attribution.png",
+        "docs/evaluations/assets/joint_attribution_20261104/results.json.gz"
+      ],
+      "controls": {
+        "greedy": true,
+        "seed": 42,
+        "max_tokens": 12000,
+        "full_audio": true,
+        "grid_snap": false
+      },
+      "scope": "Selected failure attribution, not population generalization. True 4K history only on training songs. Community timing-prefix uses reference onsets plus model-generated layouts. Any forced prefix is excluded from continuation scoring. Physical silence is a control, zero features an out-of-distribution sensitivity test. No training or product changes.",
+      "validation": "All four original outputs reproduced exactly; native-prefix replay preserved all notes and all free-continuation window records exactly; all scored continuation decisions free; checkpoint and frozen sources unchanged.",
+      "resources": {
+        "disk_free_gib": 26.07730484008789,
+        "ram_available_gib": 37.488182067871094,
+        "rss_gib": 1.71575927734375,
+        "gpu_peak_allocated_gib": 0.2051091194152832,
+        "gpu_peak_reserved_gib": 0.259765625
+      },
+      "updated_at_utc": "2026-11-04T22:23:34.799104+00:00",
+      "runs": [
+        {
+          "id": "E24-A",
+          "model": "AL-AR4K@0.7.0",
+          "variant": "A",
+          "status": "completed",
+          "parent_run": "E23-A",
+          "parent_epoch": 300,
+          "parent_steps": 90000,
+          "checkpoint": "out/joint_audio_scratch_20261102/model_latest.pt",
+          "checkpoint_sha256": "b1bfc4a3ba85f86b338f201204b3e9bd354349d3a8a4398b4db5d5b8aeefe17a",
+          "training_updates": 0,
+          "delivery": "diagnostic_only",
+          "report": "docs/evaluations/joint_attribution_20261104.md",
+          "summary": "docs/evaluations/assets/joint_attribution_20261104/summary.json",
+          "summary_sha256": "60b6a1087444b18ac57b534d28321494d99e741b2b610d5b0f7d7beda2441948"
+        }
+      ],
+      "next_proposed": "Same-budget continuation control versus generated-prior-windows / true-current-window recovery training. Not executed; S remains paused."
     }
   ],
   "bundles": [

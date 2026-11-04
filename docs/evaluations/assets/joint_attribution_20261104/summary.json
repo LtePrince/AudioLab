@@ -1,0 +1,2243 @@
+{
+  "experiment": "E24",
+  "status": "completed",
+  "training_updates": 0,
+  "checkpoint_sha256": "b1bfc4a3ba85f86b338f201204b3e9bd354349d3a8a4398b4db5d5b8aeefe17a",
+  "raw_results_sha256": "983be5ed6623645cd78f54cc7b9590bf78bb9750bc2c5958a51c383c56782547",
+  "summary_source_sha256": "70fc14d3a8fc4b93d604090927d9601226e0dd9b33ef553cc14300833e4e638a",
+  "plan_sha256": "577963c20b9a2dcbfd5f94ad17a249db5ba91c9b0e687f3d3d059cfdd266d5d9",
+  "results": [
+    {
+      "id": "Eltaw_IN",
+      "split": "train15",
+      "exact_replay": true,
+      "exact_native_prefix_control": true,
+      "native_windows": [
+        {
+          "window": 6,
+          "reference_onsets": 31,
+          "generated_onsets": 31,
+          "notes": 35,
+          "matched": 31,
+          "recall": 1.0,
+          "precision": 1.0,
+          "f1": 1.0,
+          "termination": "learned_end_window",
+          "decision_clock": 69.94849260187473
+        },
+        {
+          "window": 13,
+          "reference_onsets": 1,
+          "generated_onsets": 1,
+          "notes": 1,
+          "matched": 1,
+          "recall": 1.0,
+          "precision": 1.0,
+          "f1": 1.0,
+          "termination": "learned_end_window",
+          "decision_clock": 130.57224288006216
+        }
+      ],
+      "audio": [
+        {
+          "kind": "physical_silence",
+          "release_window": 6,
+          "window": {
+            "window": 6,
+            "reference_onsets": 31,
+            "generated_onsets": 20,
+            "notes": 20,
+            "matched": 1,
+            "recall": 0.03225806451612903,
+            "precision": 0.05,
+            "f1": 0.0392156862745098,
+            "termination": "learned_end_window",
+            "decision_clock": 62.993840726476144
+          },
+          "first_decision": {
+            "position": 1106,
+            "window": 6,
+            "clock": 60.0,
+            "window_start": true,
+            "native_stop_probability": 0.4750326871871948,
+            "native_end": false,
+            "forced": false,
+            "native_pointer_frame": 1314,
+            "selected_next_seconds": 61.036812602970876
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        },
+        {
+          "kind": "local_mute",
+          "release_window": 6,
+          "window": {
+            "window": 6,
+            "reference_onsets": 31,
+            "generated_onsets": 3,
+            "notes": 3,
+            "matched": 1,
+            "recall": 0.03225806451612903,
+            "precision": 0.3333333333333333,
+            "f1": 0.058823529411764705,
+            "termination": "learned_end_window",
+            "decision_clock": 69.99539912981818
+          },
+          "first_decision": {
+            "position": 1106,
+            "window": 6,
+            "clock": 60.0,
+            "window_start": true,
+            "native_stop_probability": 3.962222399422899e-05,
+            "native_end": false,
+            "forced": false,
+            "native_pointer_frame": 1291,
+            "selected_next_seconds": 60.000014698732464
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        },
+        {
+          "kind": "zero_features",
+          "release_window": 6,
+          "window": {
+            "window": 6,
+            "reference_onsets": 31,
+            "generated_onsets": 158,
+            "notes": 198,
+            "matched": 31,
+            "recall": 1.0,
+            "precision": 0.1962025316455696,
+            "f1": 0.328042328042328,
+            "termination": "learned_end_window",
+            "decision_clock": 69.92476778406676
+          },
+          "first_decision": {
+            "position": 1106,
+            "window": 6,
+            "clock": 60.0,
+            "window_start": true,
+            "native_stop_probability": 1.0446175036094019e-09,
+            "native_end": false,
+            "forced": false,
+            "native_pointer_frame": 1291,
+            "selected_next_seconds": 60.00000637697525
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        }
+      ],
+      "audio_evidence": {
+        "start": 60.0,
+        "end": 70.0,
+        "rms_dbfs": -14.99610710144043
+      },
+      "resources": {
+        "disk_free_gib": 26.111469268798828,
+        "ram_available_gib": 37.462894439697266,
+        "rss_gib": 1.7053871154785156,
+        "gpu_peak_allocated_gib": 0.15423917770385742,
+        "gpu_peak_reserved_gib": 0.203125
+      },
+      "source_plan_sha256": "4ff4944d9700c338ad6ce44b801af0c1d8454b1911dc980701ae69b967e6d308",
+      "forced_prefix_metadata_differences": [],
+      "native_window_starts": [
+        {
+          "window": 6,
+          "clock": 60.0,
+          "native_stop_probability": 5.636132414110762e-07,
+          "native_end": false
+        },
+        {
+          "window": 13,
+          "clock": 130.0,
+          "native_stop_probability": 0.001307936618104577,
+          "native_end": false
+        }
+      ],
+      "native_final_decisions": [
+        {
+          "position": 1213,
+          "window": 6,
+          "clock": 69.94849260187473,
+          "window_start": false,
+          "native_stop_probability": 1.0,
+          "native_end": true,
+          "forced": false
+        },
+        {
+          "position": 2310,
+          "window": 13,
+          "clock": 130.57224288006216,
+          "window_start": false,
+          "native_stop_probability": 1.0,
+          "native_end": true,
+          "forced": false
+        }
+      ],
+      "arms": [
+        {
+          "kind": "true_4k_prefix",
+          "release_window": 6,
+          "prefix_tokens": 1107,
+          "windows": [
+            {
+              "window": 6,
+              "reference_onsets": 31,
+              "generated_onsets": 31,
+              "notes": 35,
+              "matched": 31,
+              "recall": 1.0,
+              "precision": 1.0,
+              "f1": 1.0,
+              "termination": "learned_end_window",
+              "decision_clock": 69.94853390233047
+            },
+            {
+              "window": 13,
+              "reference_onsets": 1,
+              "generated_onsets": 1,
+              "notes": 1,
+              "matched": 1,
+              "recall": 1.0,
+              "precision": 1.0,
+              "f1": 1.0,
+              "termination": "learned_end_window",
+              "decision_clock": 130.57250680936437
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 6,
+              "clock": 60.0,
+              "native_stop_probability": 5.359306101127004e-07,
+              "native_end": false
+            },
+            {
+              "window": 13,
+              "clock": 130.0,
+              "native_stop_probability": 0.0014169472269713879,
+              "native_end": false
+            }
+          ]
+        },
+        {
+          "kind": "short_self_history",
+          "release_window": 6,
+          "windows": [
+            {
+              "window": 6,
+              "reference_onsets": 31,
+              "generated_onsets": 20,
+              "notes": 21,
+              "matched": 20,
+              "recall": 0.6451612903225806,
+              "precision": 1.0,
+              "f1": 0.7843137254901961,
+              "termination": "learned_end_window",
+              "decision_clock": 69.94336191051941
+            },
+            {
+              "window": 13,
+              "reference_onsets": 1,
+              "generated_onsets": 34,
+              "notes": 34,
+              "matched": 1,
+              "recall": 1.0,
+              "precision": 0.029411764705882353,
+              "f1": 0.05714285714285714,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 135.55083858684696
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 6,
+              "clock": 60.0,
+              "native_stop_probability": 6.759509618703419e-10,
+              "native_end": false
+            },
+            {
+              "window": 13,
+              "clock": 130.0,
+              "native_stop_probability": 3.2124022192325796e-11,
+              "native_end": false
+            }
+          ]
+        },
+        {
+          "kind": "zero_current_summary",
+          "release_window": 6,
+          "windows": [
+            {
+              "window": 6,
+              "reference_onsets": 31,
+              "generated_onsets": 31,
+              "notes": 35,
+              "matched": 31,
+              "recall": 1.0,
+              "precision": 1.0,
+              "f1": 1.0,
+              "termination": "learned_end_window",
+              "decision_clock": 69.94848229509904
+            },
+            {
+              "window": 13,
+              "reference_onsets": 1,
+              "generated_onsets": 1,
+              "notes": 1,
+              "matched": 1,
+              "recall": 1.0,
+              "precision": 1.0,
+              "f1": 1.0,
+              "termination": "learned_end_window",
+              "decision_clock": 130.5724588891546
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 6,
+              "clock": 60.0,
+              "native_stop_probability": 3.4751878956740256e-06,
+              "native_end": false
+            },
+            {
+              "window": 13,
+              "clock": 130.0,
+              "native_stop_probability": 0.0014503579586744308,
+              "native_end": false
+            }
+          ]
+        }
+      ],
+      "teacher": {
+        "continue_count": 701,
+        "false_stops": 0,
+        "stop_count": 14,
+        "missed_stops": 0,
+        "selected_decisions": [
+          {
+            "position": 1106,
+            "window": 6,
+            "clock": 60.0,
+            "truth_end": false,
+            "stop_probability": 5.359582360142667e-07,
+            "predicted_end": false,
+            "window_start": true
+          },
+          {
+            "position": 1213,
+            "window": 6,
+            "clock": 69.9481865284974,
+            "truth_end": true,
+            "stop_probability": 1.0,
+            "predicted_end": true,
+            "window_start": false
+          },
+          {
+            "position": 2307,
+            "window": 13,
+            "clock": 130.0,
+            "truth_end": false,
+            "stop_probability": 0.0008619254804216325,
+            "predicted_end": false,
+            "window_start": true
+          },
+          {
+            "position": 2310,
+            "window": 13,
+            "clock": 130.5699481865285,
+            "truth_end": true,
+            "stop_probability": 1.0,
+            "predicted_end": true,
+            "window_start": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "Incyde_IN",
+      "split": "train15",
+      "exact_replay": true,
+      "exact_native_prefix_control": true,
+      "native_windows": [
+        {
+          "window": 18,
+          "reference_onsets": 96,
+          "generated_onsets": 121,
+          "notes": 134,
+          "matched": 95,
+          "recall": 0.9895833333333334,
+          "precision": 0.7851239669421488,
+          "f1": 0.8755760368663594,
+          "termination": "forced_no_remaining_interval",
+          "decision_clock": 189.99999904902285
+        },
+        {
+          "window": 19,
+          "reference_onsets": 4,
+          "generated_onsets": 38,
+          "notes": 38,
+          "matched": 3,
+          "recall": 0.75,
+          "precision": 0.07894736842105263,
+          "f1": 0.14285714285714285,
+          "termination": "forced_no_remaining_interval",
+          "decision_clock": 199.9999998502248
+        },
+        {
+          "window": 20,
+          "reference_onsets": 0,
+          "generated_onsets": 11,
+          "notes": 11,
+          "matched": 0,
+          "recall": null,
+          "precision": 0.0,
+          "f1": 0.0,
+          "termination": "forced_no_remaining_interval",
+          "decision_clock": 200.5841266659781
+        }
+      ],
+      "audio": [
+        {
+          "kind": "physical_silence",
+          "release_window": 18,
+          "window": {
+            "window": 18,
+            "reference_onsets": 96,
+            "generated_onsets": 0,
+            "notes": 0,
+            "matched": 0,
+            "recall": 0.0,
+            "precision": null,
+            "f1": 0.0,
+            "termination": "learned_end_window",
+            "decision_clock": 180.0
+          },
+          "first_decision": {
+            "position": 4328,
+            "window": 18,
+            "clock": 180.0,
+            "window_start": true,
+            "native_stop_probability": 0.6987324357032776,
+            "native_end": true,
+            "forced": false
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        },
+        {
+          "kind": "local_mute",
+          "release_window": 18,
+          "window": {
+            "window": 18,
+            "reference_onsets": 96,
+            "generated_onsets": 63,
+            "notes": 63,
+            "matched": 31,
+            "recall": 0.3229166666666667,
+            "precision": 0.49206349206349204,
+            "f1": 0.389937106918239,
+            "termination": "learned_end_window",
+            "decision_clock": 189.9961943979712
+          },
+          "first_decision": {
+            "position": 4328,
+            "window": 18,
+            "clock": 180.0,
+            "window_start": true,
+            "native_stop_probability": 0.0004401942132972181,
+            "native_end": false,
+            "forced": false,
+            "native_pointer_frame": 3875,
+            "selected_next_seconds": 180.00011690280064
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        },
+        {
+          "kind": "zero_features",
+          "release_window": 18,
+          "window": {
+            "window": 18,
+            "reference_onsets": 96,
+            "generated_onsets": 153,
+            "notes": 153,
+            "matched": 86,
+            "recall": 0.8958333333333334,
+            "precision": 0.5620915032679739,
+            "f1": 0.6907630522088354,
+            "termination": "forced_no_remaining_interval",
+            "decision_clock": 189.99999965396847
+          },
+          "first_decision": {
+            "position": 4328,
+            "window": 18,
+            "clock": 180.0,
+            "window_start": true,
+            "native_stop_probability": 5.724959395436713e-10,
+            "native_end": false,
+            "forced": false,
+            "native_pointer_frame": 3876,
+            "selected_next_seconds": 180.00211222650785
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        }
+      ],
+      "audio_evidence": {
+        "start": 180.0,
+        "end": 190.0,
+        "rms_dbfs": -9.943648338317871
+      },
+      "resources": {
+        "disk_free_gib": 26.1024169921875,
+        "ram_available_gib": 37.38050079345703,
+        "rss_gib": 1.82745361328125,
+        "gpu_peak_allocated_gib": 0.1840834617614746,
+        "gpu_peak_reserved_gib": 0.22265625
+      },
+      "source_plan_sha256": "4ff4944d9700c338ad6ce44b801af0c1d8454b1911dc980701ae69b967e6d308",
+      "forced_prefix_metadata_differences": [],
+      "native_window_starts": [
+        {
+          "window": 18,
+          "clock": 180.0,
+          "native_stop_probability": 1.0337291200812615e-07,
+          "native_end": false
+        },
+        {
+          "window": 19,
+          "clock": 190.0,
+          "native_stop_probability": 4.1531047827447765e-06,
+          "native_end": false
+        },
+        {
+          "window": 20,
+          "clock": 200.0,
+          "native_stop_probability": 2.0397550315465196e-07,
+          "native_end": false
+        }
+      ],
+      "native_final_decisions": [
+        {
+          "position": 4723,
+          "window": 18,
+          "clock": 189.99999904902285,
+          "window_start": false,
+          "native_stop_probability": 0.0007232991047203541,
+          "native_end": false,
+          "forced": false
+        },
+        {
+          "position": 4838,
+          "window": 19,
+          "clock": 199.9999998502248,
+          "window_start": false,
+          "native_stop_probability": 6.075622422940796e-06,
+          "native_end": false,
+          "forced": false
+        },
+        {
+          "position": 4872,
+          "window": 20,
+          "clock": 200.5841266659781,
+          "window_start": false,
+          "native_stop_probability": 1.5750660509183945e-07,
+          "native_end": false,
+          "forced": false
+        }
+      ],
+      "arms": [
+        {
+          "kind": "true_4k_prefix",
+          "release_window": 18,
+          "prefix_tokens": 4330,
+          "windows": [
+            {
+              "window": 18,
+              "reference_onsets": 96,
+              "generated_onsets": 96,
+              "notes": 120,
+              "matched": 96,
+              "recall": 1.0,
+              "precision": 1.0,
+              "f1": 1.0,
+              "termination": "learned_end_window",
+              "decision_clock": 189.94481382685723
+            },
+            {
+              "window": 19,
+              "reference_onsets": 4,
+              "generated_onsets": 4,
+              "notes": 4,
+              "matched": 4,
+              "recall": 1.0,
+              "precision": 1.0,
+              "f1": 1.0,
+              "termination": "learned_end_window",
+              "decision_clock": 190.16518249650122
+            },
+            {
+              "window": 20,
+              "reference_onsets": 0,
+              "generated_onsets": 0,
+              "notes": 0,
+              "matched": 0,
+              "recall": null,
+              "precision": null,
+              "f1": null,
+              "termination": "learned_end_window",
+              "decision_clock": 200.0
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 18,
+              "clock": 180.0,
+              "native_stop_probability": 5.421675723482622e-06,
+              "native_end": false
+            },
+            {
+              "window": 19,
+              "clock": 190.0,
+              "native_stop_probability": 0.00011295916192466393,
+              "native_end": false
+            },
+            {
+              "window": 20,
+              "clock": 200.0,
+              "native_stop_probability": 0.9932030439376831,
+              "native_end": true
+            }
+          ]
+        },
+        {
+          "kind": "short_self_history",
+          "release_window": 18,
+          "windows": [
+            {
+              "window": 18,
+              "reference_onsets": 96,
+              "generated_onsets": 54,
+              "notes": 54,
+              "matched": 39,
+              "recall": 0.40625,
+              "precision": 0.7222222222222222,
+              "f1": 0.52,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 189.99999976906543
+            },
+            {
+              "window": 19,
+              "reference_onsets": 4,
+              "generated_onsets": 22,
+              "notes": 22,
+              "matched": 1,
+              "recall": 0.25,
+              "precision": 0.045454545454545456,
+              "f1": 0.07692307692307693,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 199.99999990660623
+            },
+            {
+              "window": 20,
+              "reference_onsets": 0,
+              "generated_onsets": 7,
+              "notes": 7,
+              "matched": 0,
+              "recall": null,
+              "precision": 0.0,
+              "f1": 0.0,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 200.5841266582349
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 18,
+              "clock": 180.0,
+              "native_stop_probability": 8.54475545875033e-10,
+              "native_end": false
+            },
+            {
+              "window": 19,
+              "clock": 190.0,
+              "native_stop_probability": 7.250127147945262e-13,
+              "native_end": false
+            },
+            {
+              "window": 20,
+              "clock": 200.0,
+              "native_stop_probability": 5.236354461146675e-09,
+              "native_end": false
+            }
+          ]
+        },
+        {
+          "kind": "zero_current_summary",
+          "release_window": 18,
+          "windows": [
+            {
+              "window": 18,
+              "reference_onsets": 96,
+              "generated_onsets": 80,
+              "notes": 81,
+              "matched": 74,
+              "recall": 0.7708333333333334,
+              "precision": 0.925,
+              "f1": 0.8409090909090909,
+              "termination": "learned_end_window",
+              "decision_clock": 189.9928673109661
+            },
+            {
+              "window": 19,
+              "reference_onsets": 4,
+              "generated_onsets": 109,
+              "notes": 109,
+              "matched": 2,
+              "recall": 0.5,
+              "precision": 0.01834862385321101,
+              "f1": 0.035398230088495575,
+              "termination": "learned_end_window",
+              "decision_clock": 198.51258969538335
+            },
+            {
+              "window": 20,
+              "reference_onsets": 0,
+              "generated_onsets": 0,
+              "notes": 0,
+              "matched": 0,
+              "recall": null,
+              "precision": null,
+              "f1": null,
+              "termination": "learned_end_window",
+              "decision_clock": 200.0
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 18,
+              "clock": 180.0,
+              "native_stop_probability": 1.4511419976770412e-07,
+              "native_end": false
+            },
+            {
+              "window": 19,
+              "clock": 190.0,
+              "native_stop_probability": 3.7124787013453897e-06,
+              "native_end": false
+            },
+            {
+              "window": 20,
+              "clock": 200.0,
+              "native_stop_probability": 0.7205166816711426,
+              "native_end": true
+            }
+          ]
+        }
+      ],
+      "teacher": {
+        "continue_count": 1390,
+        "false_stops": 0,
+        "stop_count": 21,
+        "missed_stops": 0,
+        "selected_decisions": [
+          {
+            "position": 4329,
+            "window": 18,
+            "clock": 180.0,
+            "truth_end": false,
+            "stop_probability": 5.421598416432971e-06,
+            "predicted_end": false,
+            "window_start": true
+          },
+          {
+            "position": 4675,
+            "window": 18,
+            "clock": 189.94444444444443,
+            "truth_end": true,
+            "stop_probability": 0.98276686668396,
+            "predicted_end": true,
+            "window_start": false
+          },
+          {
+            "position": 4676,
+            "window": 19,
+            "clock": 190.0,
+            "truth_end": false,
+            "stop_probability": 5.9447233070386574e-05,
+            "predicted_end": false,
+            "window_start": true
+          },
+          {
+            "position": 4688,
+            "window": 19,
+            "clock": 190.16666666666666,
+            "truth_end": true,
+            "stop_probability": 0.9971666932106018,
+            "predicted_end": true,
+            "window_start": false
+          },
+          {
+            "position": 4689,
+            "window": 20,
+            "clock": 200.0,
+            "truth_end": true,
+            "stop_probability": 0.9917213320732117,
+            "predicted_end": true,
+            "window_start": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "40717",
+      "split": "E20_development",
+      "exact_replay": true,
+      "exact_native_prefix_control": true,
+      "native_windows": [
+        {
+          "window": 17,
+          "reference_onsets": 13,
+          "generated_onsets": 56,
+          "notes": 58,
+          "matched": 2,
+          "recall": 0.15384615384615385,
+          "precision": 0.03571428571428571,
+          "f1": 0.057971014492753624,
+          "termination": "learned_end_window",
+          "decision_clock": 179.90247857818258
+        },
+        {
+          "window": 18,
+          "reference_onsets": 0,
+          "generated_onsets": 14,
+          "notes": 14,
+          "matched": 0,
+          "recall": null,
+          "precision": 0.0,
+          "f1": 0.0,
+          "termination": "learned_end_window",
+          "decision_clock": 181.73665376762685
+        }
+      ],
+      "audio": [
+        {
+          "kind": "physical_silence",
+          "release_window": 17,
+          "window": {
+            "window": 17,
+            "reference_onsets": 13,
+            "generated_onsets": 1,
+            "notes": 2,
+            "matched": 0,
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "termination": "learned_end_window",
+            "decision_clock": 170.30759980562866
+          },
+          "first_decision": {
+            "position": 2500,
+            "window": 17,
+            "clock": 170.0,
+            "window_start": true,
+            "native_stop_probability": 0.11686857789754868,
+            "native_end": false,
+            "forced": false,
+            "native_pointer_frame": 3667,
+            "selected_next_seconds": 170.30759980562866
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        },
+        {
+          "kind": "local_mute",
+          "release_window": 17,
+          "window": {
+            "window": 17,
+            "reference_onsets": 13,
+            "generated_onsets": 5,
+            "notes": 6,
+            "matched": 1,
+            "recall": 0.07692307692307693,
+            "precision": 0.2,
+            "f1": 0.1111111111111111,
+            "termination": "learned_end_window",
+            "decision_clock": 179.99882962224916
+          },
+          "first_decision": {
+            "position": 2500,
+            "window": 17,
+            "clock": 170.0,
+            "window_start": true,
+            "native_stop_probability": 1.2653819112529163e-06,
+            "native_end": false,
+            "forced": false,
+            "native_pointer_frame": 3660,
+            "selected_next_seconds": 170.00092939312495
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        },
+        {
+          "kind": "zero_features",
+          "release_window": 17,
+          "window": {
+            "window": 17,
+            "reference_onsets": 13,
+            "generated_onsets": 111,
+            "notes": 112,
+            "matched": 12,
+            "recall": 0.9230769230769231,
+            "precision": 0.10810810810810811,
+            "f1": 0.1935483870967742,
+            "termination": "learned_end_window",
+            "decision_clock": 179.88406634341564
+          },
+          "first_decision": {
+            "position": 2500,
+            "window": 17,
+            "clock": 170.0,
+            "window_start": true,
+            "native_stop_probability": 2.410293742372005e-09,
+            "native_end": false,
+            "forced": false,
+            "native_pointer_frame": 3662,
+            "selected_next_seconds": 170.0663283108043
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        }
+      ],
+      "audio_evidence": {
+        "start": 170.0,
+        "end": 180.0,
+        "rms_dbfs": -13.578910827636719
+      },
+      "resources": {
+        "disk_free_gib": 26.092971801757812,
+        "ram_available_gib": 37.39433670043945,
+        "rss_gib": 1.7895927429199219,
+        "gpu_peak_allocated_gib": 0.1840834617614746,
+        "gpu_peak_reserved_gib": 0.22265625
+      },
+      "source_plan_sha256": "4ff4944d9700c338ad6ce44b801af0c1d8454b1911dc980701ae69b967e6d308",
+      "forced_prefix_metadata_differences": [],
+      "native_window_starts": [
+        {
+          "window": 17,
+          "clock": 170.0,
+          "native_stop_probability": 2.8361479831318093e-10,
+          "native_end": false
+        },
+        {
+          "window": 18,
+          "clock": 180.0,
+          "native_stop_probability": 0.006067998707294464,
+          "native_end": false
+        }
+      ],
+      "native_final_decisions": [
+        {
+          "position": 2670,
+          "window": 17,
+          "clock": 179.90247857818258,
+          "window_start": false,
+          "native_stop_probability": 0.5123584270477295,
+          "native_end": true,
+          "forced": false
+        },
+        {
+          "position": 2713,
+          "window": 18,
+          "clock": 181.73665376762685,
+          "window_start": false,
+          "native_stop_probability": 0.5091484785079956,
+          "native_end": true,
+          "forced": false
+        }
+      ],
+      "arms": [
+        {
+          "kind": "reference_time_model_layout_prefix",
+          "release_window": 17,
+          "prefix_tokens": 2318,
+          "windows": [
+            {
+              "window": 17,
+              "reference_onsets": 13,
+              "generated_onsets": 97,
+              "notes": 104,
+              "matched": 11,
+              "recall": 0.8461538461538461,
+              "precision": 0.1134020618556701,
+              "f1": 0.2,
+              "termination": "learned_end_window",
+              "decision_clock": 179.9984703161336
+            },
+            {
+              "window": 18,
+              "reference_onsets": 0,
+              "generated_onsets": 57,
+              "notes": 58,
+              "matched": 0,
+              "recall": null,
+              "precision": 0.0,
+              "f1": 0.0,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 185.0514285220097
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 17,
+              "clock": 170.0,
+              "native_stop_probability": 5.690443342226681e-12,
+              "native_end": false
+            },
+            {
+              "window": 18,
+              "clock": 180.0,
+              "native_stop_probability": 0.0025073669385164976,
+              "native_end": false
+            }
+          ]
+        },
+        {
+          "kind": "short_self_history",
+          "release_window": 17,
+          "windows": [
+            {
+              "window": 17,
+              "reference_onsets": 13,
+              "generated_onsets": 54,
+              "notes": 61,
+              "matched": 6,
+              "recall": 0.46153846153846156,
+              "precision": 0.1111111111111111,
+              "f1": 0.1791044776119403,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 179.99999961332793
+            },
+            {
+              "window": 18,
+              "reference_onsets": 0,
+              "generated_onsets": 31,
+              "notes": 45,
+              "matched": 0,
+              "recall": null,
+              "precision": 0.0,
+              "f1": 0.0,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 185.0514285523804
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 17,
+              "clock": 170.0,
+              "native_stop_probability": 3.1025926185840325e-12,
+              "native_end": false
+            },
+            {
+              "window": 18,
+              "clock": 180.0,
+              "native_stop_probability": 6.895508469773048e-11,
+              "native_end": false
+            }
+          ]
+        },
+        {
+          "kind": "zero_current_summary",
+          "release_window": 17,
+          "windows": [
+            {
+              "window": 17,
+              "reference_onsets": 13,
+              "generated_onsets": 56,
+              "notes": 58,
+              "matched": 2,
+              "recall": 0.15384615384615385,
+              "precision": 0.03571428571428571,
+              "f1": 0.057971014492753624,
+              "termination": "learned_end_window",
+              "decision_clock": 179.90246573450344
+            },
+            {
+              "window": 18,
+              "reference_onsets": 0,
+              "generated_onsets": 14,
+              "notes": 14,
+              "matched": 0,
+              "recall": null,
+              "precision": 0.0,
+              "f1": 0.0,
+              "termination": "learned_end_window",
+              "decision_clock": 181.73664206714585
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 17,
+              "clock": 170.0,
+              "native_stop_probability": 5.55359647158582e-10,
+              "native_end": false
+            },
+            {
+              "window": 18,
+              "clock": 180.0,
+              "native_stop_probability": 0.006012150086462498,
+              "native_end": false
+            }
+          ]
+        }
+      ],
+      "teacher": null,
+      "oracle_timing_window_starts": [
+        {
+          "window": 17,
+          "clock": 170.0,
+          "native_stop_probability": 5.690443342226681e-12,
+          "native_end": false
+        },
+        {
+          "window": 18,
+          "clock": 180.0,
+          "native_stop_probability": 6.740570825058967e-05,
+          "native_end": false
+        }
+      ],
+      "oracle_timing_pointer_diagnostic": [
+        {
+          "window": 17,
+          "reference_next_onsets": 13,
+          "native_frame_hits": 3,
+          "native_false_stops": 0,
+          "continue_and_frame_hits": 3
+        },
+        {
+          "window": 18,
+          "reference_next_onsets": 0,
+          "native_frame_hits": 0,
+          "native_false_stops": 0,
+          "continue_and_frame_hits": 0
+        }
+      ]
+    },
+    {
+      "id": "52417",
+      "split": "E20_development",
+      "exact_replay": true,
+      "exact_native_prefix_control": true,
+      "native_windows": [
+        {
+          "window": 18,
+          "reference_onsets": 49,
+          "generated_onsets": 58,
+          "notes": 79,
+          "matched": 37,
+          "recall": 0.7551020408163265,
+          "precision": 0.6379310344827587,
+          "f1": 0.6915887850467289,
+          "termination": "forced_no_remaining_interval",
+          "decision_clock": 189.9999999932225
+        },
+        {
+          "window": 19,
+          "reference_onsets": 47,
+          "generated_onsets": 4,
+          "notes": 4,
+          "matched": 3,
+          "recall": 0.06382978723404255,
+          "precision": 0.75,
+          "f1": 0.11764705882352941,
+          "termination": "learned_end_window",
+          "decision_clock": 193.557650196309
+        },
+        {
+          "window": 20,
+          "reference_onsets": 56,
+          "generated_onsets": 0,
+          "notes": 0,
+          "matched": 0,
+          "recall": 0.0,
+          "precision": null,
+          "f1": 0.0,
+          "termination": "learned_end_window",
+          "decision_clock": 200.0
+        },
+        {
+          "window": 21,
+          "reference_onsets": 81,
+          "generated_onsets": 0,
+          "notes": 0,
+          "matched": 0,
+          "recall": 0.0,
+          "precision": null,
+          "f1": 0.0,
+          "termination": "learned_end_window",
+          "decision_clock": 210.0
+        },
+        {
+          "window": 22,
+          "reference_onsets": 75,
+          "generated_onsets": 0,
+          "notes": 0,
+          "matched": 0,
+          "recall": 0.0,
+          "precision": null,
+          "f1": 0.0,
+          "termination": "learned_end_window",
+          "decision_clock": 220.0
+        },
+        {
+          "window": 23,
+          "reference_onsets": 59,
+          "generated_onsets": 0,
+          "notes": 0,
+          "matched": 0,
+          "recall": 0.0,
+          "precision": null,
+          "f1": 0.0,
+          "termination": "learned_end_window",
+          "decision_clock": 230.0
+        },
+        {
+          "window": 24,
+          "reference_onsets": 67,
+          "generated_onsets": 0,
+          "notes": 0,
+          "matched": 0,
+          "recall": 0.0,
+          "precision": null,
+          "f1": 0.0,
+          "termination": "learned_end_window",
+          "decision_clock": 240.0
+        },
+        {
+          "window": 25,
+          "reference_onsets": 68,
+          "generated_onsets": 44,
+          "notes": 54,
+          "matched": 28,
+          "recall": 0.4117647058823529,
+          "precision": 0.6363636363636364,
+          "f1": 0.5,
+          "termination": "forced_no_remaining_interval",
+          "decision_clock": 259.99999941705613
+        },
+        {
+          "window": 26,
+          "reference_onsets": 0,
+          "generated_onsets": 46,
+          "notes": 46,
+          "matched": 0,
+          "recall": null,
+          "precision": 0.0,
+          "f1": 0.0,
+          "termination": "forced_no_remaining_interval",
+          "decision_clock": 269.9087523202368
+        }
+      ],
+      "audio": [
+        {
+          "kind": "physical_silence",
+          "release_window": 20,
+          "window": {
+            "window": 20,
+            "reference_onsets": 56,
+            "generated_onsets": 0,
+            "notes": 0,
+            "matched": 0,
+            "recall": 0.0,
+            "precision": null,
+            "f1": 0.0,
+            "termination": "learned_end_window",
+            "decision_clock": 200.0
+          },
+          "first_decision": {
+            "position": 3455,
+            "window": 20,
+            "clock": 200.0,
+            "window_start": true,
+            "native_stop_probability": 0.9999841451644897,
+            "native_end": true,
+            "forced": false
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        },
+        {
+          "kind": "local_mute",
+          "release_window": 20,
+          "window": {
+            "window": 20,
+            "reference_onsets": 56,
+            "generated_onsets": 0,
+            "notes": 0,
+            "matched": 0,
+            "recall": 0.0,
+            "precision": null,
+            "f1": 0.0,
+            "termination": "learned_end_window",
+            "decision_clock": 200.0
+          },
+          "first_decision": {
+            "position": 3455,
+            "window": 20,
+            "clock": 200.0,
+            "window_start": true,
+            "native_stop_probability": 0.9921221137046814,
+            "native_end": true,
+            "forced": false
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        },
+        {
+          "kind": "zero_features",
+          "release_window": 20,
+          "window": {
+            "window": 20,
+            "reference_onsets": 56,
+            "generated_onsets": 1,
+            "notes": 2,
+            "matched": 0,
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "termination": "learned_end_window",
+            "decision_clock": 203.43216586781196
+          },
+          "first_decision": {
+            "position": 3455,
+            "window": 20,
+            "clock": 200.0,
+            "window_start": true,
+            "native_stop_probability": 0.006168793886899948,
+            "native_end": false,
+            "forced": false,
+            "native_pointer_frame": 4380,
+            "selected_next_seconds": 203.43216586781196
+          },
+          "scope": "fixed native prefix, intervention re-encodes/replays all audio-conditioned hidden states"
+        }
+      ],
+      "audio_evidence": {
+        "start": 200.0,
+        "end": 210.0,
+        "rms_dbfs": -9.314573287963867
+      },
+      "resources": {
+        "disk_free_gib": 26.078567504882812,
+        "ram_available_gib": 37.48664093017578,
+        "rss_gib": 1.71575927734375,
+        "gpu_peak_allocated_gib": 0.2051091194152832,
+        "gpu_peak_reserved_gib": 0.259765625
+      },
+      "source_plan_sha256": "577963c20b9a2dcbfd5f94ad17a249db5ba91c9b0e687f3d3d059cfdd266d5d9",
+      "forced_prefix_metadata_differences": [
+        {
+          "native": {
+            "index": 18,
+            "start": 180.0,
+            "end": 190.0,
+            "decision_clock": 189.9999999932225,
+            "termination": "forced_no_remaining_interval",
+            "note_count": 79
+          },
+          "replayed": {
+            "index": 18,
+            "start": 180.0,
+            "end": 190.0,
+            "decision_clock": 189.9999999932225,
+            "termination": "learned_end_window",
+            "note_count": 79
+          }
+        }
+      ],
+      "native_window_starts": [
+        {
+          "window": 18,
+          "clock": 180.0,
+          "native_stop_probability": 2.431645329536991e-09,
+          "native_end": false
+        },
+        {
+          "window": 19,
+          "clock": 190.0,
+          "native_stop_probability": 3.157571773493295e-11,
+          "native_end": false
+        },
+        {
+          "window": 20,
+          "clock": 200.0,
+          "native_stop_probability": 0.980637788772583,
+          "native_end": true
+        },
+        {
+          "window": 21,
+          "clock": 210.0,
+          "native_stop_probability": 0.9799147248268127,
+          "native_end": true
+        },
+        {
+          "window": 22,
+          "clock": 220.0,
+          "native_stop_probability": 0.9982424974441528,
+          "native_end": true
+        },
+        {
+          "window": 23,
+          "clock": 230.0,
+          "native_stop_probability": 0.9818171262741089,
+          "native_end": true
+        },
+        {
+          "window": 24,
+          "clock": 240.0,
+          "native_stop_probability": 0.997582197189331,
+          "native_end": true
+        },
+        {
+          "window": 25,
+          "clock": 250.0,
+          "native_stop_probability": 0.0004934135358780622,
+          "native_end": false
+        },
+        {
+          "window": 26,
+          "clock": 260.0,
+          "native_stop_probability": 5.571976213758489e-09,
+          "native_end": false
+        }
+      ],
+      "native_final_decisions": [
+        {
+          "position": 3441,
+          "window": 18,
+          "clock": 189.9999999932225,
+          "window_start": false,
+          "native_stop_probability": 2.474400560004142e-07,
+          "native_end": false,
+          "forced": false
+        },
+        {
+          "position": 3454,
+          "window": 19,
+          "clock": 193.557650196309,
+          "window_start": false,
+          "native_stop_probability": 0.5922160744667053,
+          "native_end": true,
+          "forced": false
+        },
+        {
+          "position": 3455,
+          "window": 20,
+          "clock": 200.0,
+          "window_start": true,
+          "native_stop_probability": 0.980637788772583,
+          "native_end": true,
+          "forced": false
+        },
+        {
+          "position": 3456,
+          "window": 21,
+          "clock": 210.0,
+          "window_start": true,
+          "native_stop_probability": 0.9799147248268127,
+          "native_end": true,
+          "forced": false
+        },
+        {
+          "position": 3457,
+          "window": 22,
+          "clock": 220.0,
+          "window_start": true,
+          "native_stop_probability": 0.9982424974441528,
+          "native_end": true,
+          "forced": false
+        },
+        {
+          "position": 3458,
+          "window": 23,
+          "clock": 230.0,
+          "window_start": true,
+          "native_stop_probability": 0.9818171262741089,
+          "native_end": true,
+          "forced": false
+        },
+        {
+          "position": 3459,
+          "window": 24,
+          "clock": 240.0,
+          "window_start": true,
+          "native_stop_probability": 0.997582197189331,
+          "native_end": true,
+          "forced": false
+        },
+        {
+          "position": 3602,
+          "window": 25,
+          "clock": 259.99999941705613,
+          "window_start": false,
+          "native_stop_probability": 1.3568441659117525e-07,
+          "native_end": false,
+          "forced": false
+        },
+        {
+          "position": 3741,
+          "window": 26,
+          "clock": 269.9087523202368,
+          "window_start": false,
+          "native_stop_probability": 5.444905859519622e-09,
+          "native_end": false,
+          "forced": false
+        }
+      ],
+      "arms": [
+        {
+          "kind": "reference_time_model_layout_prefix",
+          "release_window": 19,
+          "prefix_tokens": 3893,
+          "windows": [
+            {
+              "window": 19,
+              "reference_onsets": 47,
+              "generated_onsets": 10,
+              "notes": 12,
+              "matched": 7,
+              "recall": 0.14893617021276595,
+              "precision": 0.7,
+              "f1": 0.24561403508771928,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 199.9999998844378
+            },
+            {
+              "window": 20,
+              "reference_onsets": 56,
+              "generated_onsets": 41,
+              "notes": 42,
+              "matched": 21,
+              "recall": 0.375,
+              "precision": 0.5121951219512195,
+              "f1": 0.4329896907216495,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 209.9999999982362
+            },
+            {
+              "window": 21,
+              "reference_onsets": 81,
+              "generated_onsets": 33,
+              "notes": 33,
+              "matched": 18,
+              "recall": 0.2222222222222222,
+              "precision": 0.5454545454545454,
+              "f1": 0.3157894736842105,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 219.9999999696093
+            },
+            {
+              "window": 22,
+              "reference_onsets": 75,
+              "generated_onsets": 38,
+              "notes": 38,
+              "matched": 28,
+              "recall": 0.37333333333333335,
+              "precision": 0.7368421052631579,
+              "f1": 0.49557522123893805,
+              "termination": "learned_end_window",
+              "decision_clock": 227.42925294075962
+            },
+            {
+              "window": 23,
+              "reference_onsets": 59,
+              "generated_onsets": 14,
+              "notes": 17,
+              "matched": 5,
+              "recall": 0.0847457627118644,
+              "precision": 0.35714285714285715,
+              "f1": 0.136986301369863,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 239.9999990281836
+            },
+            {
+              "window": 24,
+              "reference_onsets": 67,
+              "generated_onsets": 11,
+              "notes": 12,
+              "matched": 4,
+              "recall": 0.05970149253731343,
+              "precision": 0.36363636363636365,
+              "f1": 0.10256410256410256,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 249.999999313539
+            },
+            {
+              "window": 25,
+              "reference_onsets": 68,
+              "generated_onsets": 6,
+              "notes": 8,
+              "matched": 6,
+              "recall": 0.08823529411764706,
+              "precision": 1.0,
+              "f1": 0.16216216216216217,
+              "termination": "learned_end_window",
+              "decision_clock": 251.13455982165002
+            },
+            {
+              "window": 26,
+              "reference_onsets": 0,
+              "generated_onsets": 46,
+              "notes": 60,
+              "matched": 0,
+              "recall": null,
+              "precision": 0.0,
+              "f1": 0.0,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 269.90875247652724
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 19,
+              "clock": 190.0,
+              "native_stop_probability": 5.379164491614574e-08,
+              "native_end": false
+            },
+            {
+              "window": 20,
+              "clock": 200.0,
+              "native_stop_probability": 3.73988805222325e-05,
+              "native_end": false
+            },
+            {
+              "window": 21,
+              "clock": 210.0,
+              "native_stop_probability": 3.5445577029058484e-11,
+              "native_end": false
+            },
+            {
+              "window": 22,
+              "clock": 220.0,
+              "native_stop_probability": 8.401541684577296e-09,
+              "native_end": false
+            },
+            {
+              "window": 23,
+              "clock": 230.0,
+              "native_stop_probability": 8.181385783245787e-05,
+              "native_end": false
+            },
+            {
+              "window": 24,
+              "clock": 240.0,
+              "native_stop_probability": 0.00012048857752233744,
+              "native_end": false
+            },
+            {
+              "window": 25,
+              "clock": 250.0,
+              "native_stop_probability": 5.443365758139862e-10,
+              "native_end": false
+            },
+            {
+              "window": 26,
+              "clock": 260.0,
+              "native_stop_probability": 0.013476420193910599,
+              "native_end": false
+            }
+          ]
+        },
+        {
+          "kind": "reference_time_model_layout_prefix",
+          "release_window": 20,
+          "prefix_tokens": 4059,
+          "windows": [
+            {
+              "window": 20,
+              "reference_onsets": 56,
+              "generated_onsets": 26,
+              "notes": 26,
+              "matched": 22,
+              "recall": 0.39285714285714285,
+              "precision": 0.8461538461538461,
+              "f1": 0.5365853658536586,
+              "termination": "learned_end_window",
+              "decision_clock": 203.38430692850056
+            },
+            {
+              "window": 21,
+              "reference_onsets": 81,
+              "generated_onsets": 44,
+              "notes": 79,
+              "matched": 25,
+              "recall": 0.30864197530864196,
+              "precision": 0.5681818181818182,
+              "f1": 0.4,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 219.9999996008196
+            },
+            {
+              "window": 22,
+              "reference_onsets": 75,
+              "generated_onsets": 40,
+              "notes": 42,
+              "matched": 22,
+              "recall": 0.29333333333333333,
+              "precision": 0.55,
+              "f1": 0.3826086956521739,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 229.9999997047154
+            },
+            {
+              "window": 23,
+              "reference_onsets": 59,
+              "generated_onsets": 36,
+              "notes": 37,
+              "matched": 11,
+              "recall": 0.1864406779661017,
+              "precision": 0.3055555555555556,
+              "f1": 0.23157894736842105,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 239.99999989587647
+            },
+            {
+              "window": 24,
+              "reference_onsets": 67,
+              "generated_onsets": 34,
+              "notes": 48,
+              "matched": 24,
+              "recall": 0.3582089552238806,
+              "precision": 0.7058823529411765,
+              "f1": 0.4752475247524752,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 249.99999988899495
+            },
+            {
+              "window": 25,
+              "reference_onsets": 68,
+              "generated_onsets": 58,
+              "notes": 89,
+              "matched": 40,
+              "recall": 0.5882352941176471,
+              "precision": 0.6896551724137931,
+              "f1": 0.6349206349206349,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 259.99999992988927
+            },
+            {
+              "window": 26,
+              "reference_onsets": 0,
+              "generated_onsets": 21,
+              "notes": 29,
+              "matched": 0,
+              "recall": null,
+              "precision": 0.0,
+              "f1": 0.0,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 269.90875273302163
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 20,
+              "clock": 200.0,
+              "native_stop_probability": 1.1591264836852133e-08,
+              "native_end": false
+            },
+            {
+              "window": 21,
+              "clock": 210.0,
+              "native_stop_probability": 1.008467825158732e-05,
+              "native_end": false
+            },
+            {
+              "window": 22,
+              "clock": 220.0,
+              "native_stop_probability": 3.112170452368446e-05,
+              "native_end": false
+            },
+            {
+              "window": 23,
+              "clock": 230.0,
+              "native_stop_probability": 4.013203935837595e-10,
+              "native_end": false
+            },
+            {
+              "window": 24,
+              "clock": 240.0,
+              "native_stop_probability": 2.405989221188065e-07,
+              "native_end": false
+            },
+            {
+              "window": 25,
+              "clock": 250.0,
+              "native_stop_probability": 1.1340399452830496e-10,
+              "native_end": false
+            },
+            {
+              "window": 26,
+              "clock": 260.0,
+              "native_stop_probability": 7.708397288530566e-12,
+              "native_end": false
+            }
+          ]
+        },
+        {
+          "kind": "reference_time_model_layout_prefix",
+          "release_window": 24,
+          "prefix_tokens": 4963,
+          "windows": [
+            {
+              "window": 24,
+              "reference_onsets": 67,
+              "generated_onsets": 34,
+              "notes": 52,
+              "matched": 26,
+              "recall": 0.3880597014925373,
+              "precision": 0.7647058823529411,
+              "f1": 0.5148514851485149,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 249.99999993120454
+            },
+            {
+              "window": 25,
+              "reference_onsets": 68,
+              "generated_onsets": 47,
+              "notes": 67,
+              "matched": 30,
+              "recall": 0.4411764705882353,
+              "precision": 0.6382978723404256,
+              "f1": 0.5217391304347826,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 259.99999996308344
+            },
+            {
+              "window": 26,
+              "reference_onsets": 0,
+              "generated_onsets": 54,
+              "notes": 57,
+              "matched": 0,
+              "recall": null,
+              "precision": 0.0,
+              "f1": 0.0,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 269.90875278191555
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 24,
+              "clock": 240.0,
+              "native_stop_probability": 1.5568111244590455e-09,
+              "native_end": false
+            },
+            {
+              "window": 25,
+              "clock": 250.0,
+              "native_stop_probability": 2.6278004772173347e-10,
+              "native_end": false
+            },
+            {
+              "window": 26,
+              "clock": 260.0,
+              "native_stop_probability": 4.35249880581523e-09,
+              "native_end": false
+            }
+          ]
+        },
+        {
+          "kind": "short_self_history",
+          "release_window": 20,
+          "windows": [
+            {
+              "window": 20,
+              "reference_onsets": 56,
+              "generated_onsets": 57,
+              "notes": 57,
+              "matched": 18,
+              "recall": 0.32142857142857145,
+              "precision": 0.3157894736842105,
+              "f1": 0.3185840707964602,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 209.99999905313302
+            },
+            {
+              "window": 21,
+              "reference_onsets": 81,
+              "generated_onsets": 31,
+              "notes": 31,
+              "matched": 24,
+              "recall": 0.2962962962962963,
+              "precision": 0.7741935483870968,
+              "f1": 0.42857142857142855,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 219.9999999193655
+            },
+            {
+              "window": 22,
+              "reference_onsets": 75,
+              "generated_onsets": 20,
+              "notes": 20,
+              "matched": 13,
+              "recall": 0.17333333333333334,
+              "precision": 0.65,
+              "f1": 0.2736842105263158,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 229.999999980827
+            },
+            {
+              "window": 23,
+              "reference_onsets": 59,
+              "generated_onsets": 26,
+              "notes": 26,
+              "matched": 13,
+              "recall": 0.22033898305084745,
+              "precision": 0.5,
+              "f1": 0.3058823529411765,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 239.99999983614194
+            },
+            {
+              "window": 24,
+              "reference_onsets": 67,
+              "generated_onsets": 17,
+              "notes": 17,
+              "matched": 11,
+              "recall": 0.16417910447761194,
+              "precision": 0.6470588235294118,
+              "f1": 0.2619047619047619,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 249.99999990588918
+            },
+            {
+              "window": 25,
+              "reference_onsets": 68,
+              "generated_onsets": 49,
+              "notes": 51,
+              "matched": 40,
+              "recall": 0.5882352941176471,
+              "precision": 0.8163265306122449,
+              "f1": 0.6837606837606838,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 259.99999990019694
+            },
+            {
+              "window": 26,
+              "reference_onsets": 0,
+              "generated_onsets": 78,
+              "notes": 80,
+              "matched": 0,
+              "recall": null,
+              "precision": 0.0,
+              "f1": 0.0,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 269.9087526561846
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 20,
+              "clock": 200.0,
+              "native_stop_probability": 3.033450229850132e-05,
+              "native_end": false
+            },
+            {
+              "window": 21,
+              "clock": 210.0,
+              "native_stop_probability": 3.8874051547233e-12,
+              "native_end": false
+            },
+            {
+              "window": 22,
+              "clock": 220.0,
+              "native_stop_probability": 3.152407046513872e-08,
+              "native_end": false
+            },
+            {
+              "window": 23,
+              "clock": 230.0,
+              "native_stop_probability": 3.886944099917855e-09,
+              "native_end": false
+            },
+            {
+              "window": 24,
+              "clock": 240.0,
+              "native_stop_probability": 1.9595098876834527e-09,
+              "native_end": false
+            },
+            {
+              "window": 25,
+              "clock": 250.0,
+              "native_stop_probability": 6.337959490565481e-09,
+              "native_end": false
+            },
+            {
+              "window": 26,
+              "clock": 260.0,
+              "native_stop_probability": 1.696689490293668e-11,
+              "native_end": false
+            }
+          ]
+        },
+        {
+          "kind": "zero_current_summary",
+          "release_window": 20,
+          "windows": [
+            {
+              "window": 20,
+              "reference_onsets": 56,
+              "generated_onsets": 64,
+              "notes": 67,
+              "matched": 30,
+              "recall": 0.5357142857142857,
+              "precision": 0.46875,
+              "f1": 0.5,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 209.9999994288919
+            },
+            {
+              "window": 21,
+              "reference_onsets": 81,
+              "generated_onsets": 35,
+              "notes": 43,
+              "matched": 17,
+              "recall": 0.20987654320987653,
+              "precision": 0.4857142857142857,
+              "f1": 0.29310344827586204,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 219.99999969529702
+            },
+            {
+              "window": 22,
+              "reference_onsets": 75,
+              "generated_onsets": 61,
+              "notes": 103,
+              "matched": 53,
+              "recall": 0.7066666666666667,
+              "precision": 0.8688524590163934,
+              "f1": 0.7794117647058824,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 229.9999998518153
+            },
+            {
+              "window": 23,
+              "reference_onsets": 59,
+              "generated_onsets": 96,
+              "notes": 167,
+              "matched": 24,
+              "recall": 0.4067796610169492,
+              "precision": 0.25,
+              "f1": 0.3096774193548387,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 239.9999997702284
+            },
+            {
+              "window": 24,
+              "reference_onsets": 67,
+              "generated_onsets": 10,
+              "notes": 11,
+              "matched": 2,
+              "recall": 0.029850746268656716,
+              "precision": 0.2,
+              "f1": 0.05194805194805195,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 249.9999999865007
+            },
+            {
+              "window": 25,
+              "reference_onsets": 68,
+              "generated_onsets": 28,
+              "notes": 45,
+              "matched": 27,
+              "recall": 0.39705882352941174,
+              "precision": 0.9642857142857143,
+              "f1": 0.5625,
+              "termination": "learned_end_window",
+              "decision_clock": 254.9215657510563
+            },
+            {
+              "window": 26,
+              "reference_onsets": 0,
+              "generated_onsets": 20,
+              "notes": 20,
+              "matched": 0,
+              "recall": null,
+              "precision": 0.0,
+              "f1": 0.0,
+              "termination": "forced_no_remaining_interval",
+              "decision_clock": 269.90875255794674
+            }
+          ],
+          "window_starts": [
+            {
+              "window": 20,
+              "clock": 200.0,
+              "native_stop_probability": 0.003661762923002243,
+              "native_end": false
+            },
+            {
+              "window": 21,
+              "clock": 210.0,
+              "native_stop_probability": 4.1187311894397283e-10,
+              "native_end": false
+            },
+            {
+              "window": 22,
+              "clock": 220.0,
+              "native_stop_probability": 6.850291356386151e-07,
+              "native_end": false
+            },
+            {
+              "window": 23,
+              "clock": 230.0,
+              "native_stop_probability": 1.3655678809953997e-09,
+              "native_end": false
+            },
+            {
+              "window": 24,
+              "clock": 240.0,
+              "native_stop_probability": 1.9493663216962887e-07,
+              "native_end": false
+            },
+            {
+              "window": 25,
+              "clock": 250.0,
+              "native_stop_probability": 1.1416305234490665e-08,
+              "native_end": false
+            },
+            {
+              "window": 26,
+              "clock": 260.0,
+              "native_stop_probability": 5.2036655688425526e-05,
+              "native_end": false
+            }
+          ]
+        }
+      ],
+      "teacher": null,
+      "oracle_timing_window_starts": [
+        {
+          "window": 18,
+          "clock": 180.0,
+          "native_stop_probability": 3.4118447729269974e-06,
+          "native_end": false
+        },
+        {
+          "window": 19,
+          "clock": 190.0,
+          "native_stop_probability": 5.379164491614574e-08,
+          "native_end": false
+        },
+        {
+          "window": 20,
+          "clock": 200.0,
+          "native_stop_probability": 1.1591264836852133e-08,
+          "native_end": false
+        },
+        {
+          "window": 21,
+          "clock": 210.0,
+          "native_stop_probability": 1.0542941630831137e-08,
+          "native_end": false
+        },
+        {
+          "window": 22,
+          "clock": 220.0,
+          "native_stop_probability": 4.33061864146822e-10,
+          "native_end": false
+        },
+        {
+          "window": 23,
+          "clock": 230.0,
+          "native_stop_probability": 1.4258197955641094e-09,
+          "native_end": false
+        },
+        {
+          "window": 24,
+          "clock": 240.0,
+          "native_stop_probability": 1.5568111244590455e-09,
+          "native_end": false
+        },
+        {
+          "window": 25,
+          "clock": 250.0,
+          "native_stop_probability": 2.7949149938866213e-11,
+          "native_end": false
+        },
+        {
+          "window": 26,
+          "clock": 260.0,
+          "native_stop_probability": 0.0026409479323774576,
+          "native_end": false
+        }
+      ],
+      "oracle_timing_pointer_diagnostic": [
+        {
+          "window": 18,
+          "reference_next_onsets": 49,
+          "native_frame_hits": 27,
+          "native_false_stops": 0,
+          "continue_and_frame_hits": 27
+        },
+        {
+          "window": 19,
+          "reference_next_onsets": 47,
+          "native_frame_hits": 23,
+          "native_false_stops": 1,
+          "continue_and_frame_hits": 22
+        },
+        {
+          "window": 20,
+          "reference_next_onsets": 56,
+          "native_frame_hits": 35,
+          "native_false_stops": 0,
+          "continue_and_frame_hits": 35
+        },
+        {
+          "window": 21,
+          "reference_next_onsets": 81,
+          "native_frame_hits": 44,
+          "native_false_stops": 0,
+          "continue_and_frame_hits": 44
+        },
+        {
+          "window": 22,
+          "reference_next_onsets": 75,
+          "native_frame_hits": 39,
+          "native_false_stops": 0,
+          "continue_and_frame_hits": 39
+        },
+        {
+          "window": 23,
+          "reference_next_onsets": 59,
+          "native_frame_hits": 20,
+          "native_false_stops": 1,
+          "continue_and_frame_hits": 20
+        },
+        {
+          "window": 24,
+          "reference_next_onsets": 67,
+          "native_frame_hits": 42,
+          "native_false_stops": 0,
+          "continue_and_frame_hits": 42
+        },
+        {
+          "window": 25,
+          "reference_next_onsets": 68,
+          "native_frame_hits": 32,
+          "native_false_stops": 1,
+          "continue_and_frame_hits": 31
+        },
+        {
+          "window": 26,
+          "reference_next_onsets": 0,
+          "native_frame_hits": 0,
+          "native_false_stops": 0,
+          "continue_and_frame_hits": 0
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "disk_free_gib": 26.07730484008789,
+    "ram_available_gib": 37.488182067871094,
+    "rss_gib": 1.71575927734375,
+    "gpu_peak_allocated_gib": 0.2051091194152832,
+    "gpu_peak_reserved_gib": 0.259765625
+  },
+  "scope": "Selected failure attribution, not population generalization. True 4K history only on training songs. Community timing-prefix uses reference onsets plus model-generated layouts. Any forced prefix is excluded from continuation scoring. Physical silence is a control, zero features an out-of-distribution sensitivity test. No training or product changes.",
+  "validation": "All four original outputs reproduced exactly; native-prefix replay preserved all notes and all free-continuation window records exactly; all scored continuation decisions free; checkpoint and frozen sources unchanged."
+}
