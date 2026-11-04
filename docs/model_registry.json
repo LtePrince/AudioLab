@@ -203,12 +203,18 @@
       "id": "AL-AR4K@0.6.0",
       "family": "AL-AR4K",
       "version": "0.6.0",
-      "title": "整曲音频注意力＋分窗输出；受控 A 模型试验",
+      "title": "整曲音频注意力＋分窗输出；冻结前端及受控结构对照",
       "output_protocol": "audiolab-global-audio-window-output-ar-v1",
-      "delivery": "controlled_experiment_only_not_product",
-      "evidence": "docs/evaluations/windowed_ar_stage2_20261031.md",
-      "training_status": "controlled_training_completed",
-      "quality_status": "not_evaluated_on_natural_music"
+      "delivery": "research_only_window_protocol_required",
+      "evidence": "docs/evaluations/windowed_ar_natural_fit100_20261101.md",
+      "training_status": "controlled_and_full300_natural_training_completed",
+      "quality_status": "not_passed",
+      "additional_evidence": [
+        "docs/evaluations/windowed_ar_stage2_20261031.md",
+        "docs/evaluations/windowed_ar_stage3_20261031.md",
+        "docs/evaluations/windowed_ar_stage5_20261031.md",
+        "docs/evaluations/windowed_ar_natural_20261031.md"
+      ]
     },
     {
       "id": "AL-FreeX@0.5.0",
@@ -225,14 +231,59 @@
       "id": "AL-AR4K@0.7.0",
       "family": "AL-AR4K",
       "version": "0.7.0",
-      "title": "A 全音频编码器与分窗解码器端到端适配",
+      "title": "全参数分窗A：继承权重适配与全随机训练",
       "output_protocol": "audiolab-joint-audio-window-ar-v1",
       "delivery": "research_only_joint_frontend_required",
       "evidence": "docs/evaluations/joint_audio_scratch_20261102.md",
       "training_status": "E22_and_E23_completed",
       "quality_status": "not_passed",
       "latest_diagnostic": "E24",
-      "diagnostic_evidence": "docs/evaluations/joint_attribution_20261104.md"
+      "diagnostic_evidence": "docs/evaluations/joint_attribution_20261104.md",
+      "input_documentation": "docs/model_inputs_and_versions_20261105.md"
+    },
+    {
+      "id": "AL-AR4K@0.8.0",
+      "family": "AL-AR4K",
+      "version": "0.8.0",
+      "title": "纯注意力历史A：移除手工摘要（提议）",
+      "alias": "A-SA",
+      "output_protocol": "proposed_global_audio_window_output",
+      "delivery": "not_available_proposal_only",
+      "training_status": "not_started",
+      "implementation_status": "not_started",
+      "quality_status": "not_evaluated",
+      "evidence": "docs/model_inputs_and_versions_20261105.md",
+      "proposed_inputs": {
+        "explicit_history_summary_dim": 0,
+        "explicit_bpm_condition": false,
+        "causal_chart_self_attention": true,
+        "full_audio_cross_attention": true,
+        "musical_time": true,
+        "output_window_bounds": true
+      },
+      "weights": null
+    },
+    {
+      "id": "AL-AR4K@0.9.0",
+      "family": "AL-AR4K",
+      "version": "0.9.0",
+      "title": "纯注意力历史A＋显式BPM（提议）",
+      "alias": "A-SA-BPM",
+      "output_protocol": "proposed_global_audio_window_output",
+      "delivery": "not_available_proposal_only",
+      "training_status": "not_started",
+      "implementation_status": "not_started",
+      "quality_status": "not_evaluated",
+      "evidence": "docs/model_inputs_and_versions_20261105.md",
+      "proposed_inputs": {
+        "explicit_history_summary_dim": 0,
+        "explicit_bpm_condition": true,
+        "causal_chart_self_attention": true,
+        "full_audio_cross_attention": true,
+        "musical_time": true,
+        "output_window_bounds": true
+      },
+      "weights": null
     }
   ],
   "experiments": [
@@ -6416,6 +6467,33 @@
         }
       ],
       "next_proposed": "Same-budget continuation control versus generated-prior-windows / true-current-window recovery training. Not executed; S remains paused."
+    },
+    {
+      "id": "E25",
+      "title": "去手工历史摘要与显式BPM条件的独立版本提议",
+      "kind": "architecture_comparison_proposal",
+      "models": [
+        "AL-AR4K@0.8.0",
+        "AL-AR4K@0.9.0"
+      ],
+      "status": "proposed",
+      "training_updates": 0,
+      "quality_status": "not_evaluated",
+      "question": "错误历史是否通过28维手工摘要被放大；谱面历史仅通过self-attention获取时，显式BPM是否有增益？",
+      "result": null,
+      "evidence": [
+        "docs/model_inputs_and_versions_20261105.md",
+        "docs/evaluations/windowed_ar_stage5_20261031.md",
+        "docs/evaluations/joint_attribution_20261104.md"
+      ],
+      "runs": [],
+      "decision_status": "User asked for field-by-field input explanation; simultaneous two-version comparison not confirmed.",
+      "controls": [
+        "Full-song audio visibility and current-window output stay unchanged.",
+        "No-summary and added BPM are separate factors; recovery training is not mixed into this comparison.",
+        "Compare equal training budgets and matched shared random tensors; identical seeds alone do not ensure identical tensors after optional module removal."
+      ],
+      "weights": null
     }
   ],
   "bundles": [
@@ -6587,10 +6665,12 @@
   ],
   "not_run": [
     "同等设置下阈值硬起音作为网络输入 vs 连续soft输入的重训对照",
-    "将当前absolute-time协议迁移并充分训练到free-x",
     "新版定长diffusion课程训练",
     "学习式动态判定线生成",
-    "当前长训后的采样策略搜索（用户要求后置）"
+    "当前长训后的采样策略搜索（用户要求后置）",
+    "free-x分窗模型的全300首自然歌曲训练及全参数音频联合训练（现有v0.5.0只有受控训练）",
+    "E24建议的自产前窗历史→真实当前窗恢复训练",
+    "E25去手工摘要／显式BPM的独立版本对照（提议）"
   ],
   "legacy_inventory": [
     {
@@ -6775,7 +6855,8 @@
     "epoch/step不能跨AR与diffusion直接当作等计算预算。",
     "硬候选推理解码、连续条件输入、真实历史监督和生成时采样为不同维度。",
     "legacy_inventory中旧R1/R2等资产保留待核定谱系，不冒充已确认版本。",
-    "2026-10-31: E14/E18 archived checkpoint paths in historical records may no longer exist locally. Consult storage_archive_20261030 and cleanup.json for verified remote recovery; four e1400 exact-resume states remain local. Older optimizer/RNG copies were pruned, inference parameters preserved."
+    "2026-10-31: E14/E18 archived checkpoint paths in historical records may no longer exist locally. Consult storage_archive_20261030 and cleanup.json for verified remote recovery; four e1400 exact-resume states remain local. Older optimizer/RNG copies were pruned, inference parameters preserved.",
+    "2026-11-05: Current model tables reconciled through E24. AL-AR4K v0.8.0/v0.9.0 are reserved proposal identities only; no architecture code, training updates, checkpoints or released weights changed."
   ],
   "route_policy": {
     "updated_at_utc": "2026-11-03T13:03:34.791161+00:00",
