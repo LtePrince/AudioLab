@@ -1,7 +1,7 @@
 {
   "schema": "audiolab-model-registry-v1",
   "registered_at_utc": "2026-10-23T09:09:27.110480+00:00",
-  "version_policy": "Retrospective catalog IDs, not upstream release claims. 0.x denotes development. Minor identifies architecture/conditioning/data stages; patch identifies same-architecture continuation or fixes. Variants and checkpoint epochs are separate. No weight bytes or existing paths are renamed. Extending the epoch budget within an unchanged experiment keeps the version and experiment ID; record the phase, parent checkpoint and epoch.",
+  "version_policy": "User rule effective 2026-11-05: different core input representations use different model names; additional conditioning uses versions of the same name; every distinct retained/evaluated/delivered parameter checkpoint has its own immutable version. New IDs use v0.C.R, with C the conditioning configuration and R the weight revision. Epoch/step and SHA remain mandatory provenance, not substitutes for versions. Legacy IDs/reports remain intact and may receive exact checkpoint aliases; no checkpoint bytes or paths are rewritten.",
   "families": [
     {
       "id": "AL-Onset",
@@ -32,6 +32,12 @@
       "name": "AudioLab FreeX",
       "role": "静态无轨：64个横坐标bin加连续残差",
       "branch": "feature/freeform-gameplay"
+    },
+    {
+      "id": "AL-Event4K",
+      "name": "AudioLab Event4K",
+      "role": "同步事件AR：同一物理时刻一个4×5多标签事件token",
+      "branch": "feature/4k-generation"
     }
   ],
   "versions": [
@@ -239,13 +245,18 @@
       "quality_status": "not_passed",
       "latest_diagnostic": "E24",
       "diagnostic_evidence": "docs/evaluations/joint_attribution_20261104.md",
-      "input_documentation": "docs/model_inputs_and_versions_20261105.md"
+      "input_documentation": "docs/model_inputs_and_versions_20261105.md",
+      "identity_scope": "legacy_architecture_record_multiple_runs",
+      "checkpoint_versions": [
+        "AL-AR4K@0.7.1",
+        "AL-AR4K@0.7.2"
+      ]
     },
     {
       "id": "AL-AR4K@0.8.0",
       "family": "AL-AR4K",
       "version": "0.8.0",
-      "title": "纯注意力历史A：移除手工摘要（提议）",
+      "title": "纯注意力历史A：移除手工摘要（提议）；已由Event4K设计取代",
       "alias": "A-SA",
       "output_protocol": "proposed_global_audio_window_output",
       "delivery": "not_available_proposal_only",
@@ -261,13 +272,19 @@
         "musical_time": true,
         "output_window_bounds": true
       },
-      "weights": null
+      "weights": null,
+      "status": "superseded_before_implementation",
+      "superseded_by": [
+        "AL-Event4K@0.1.0",
+        "AL-Event4K@0.2.0"
+      ],
+      "supersession_evidence": "docs/event4k_model_design_20261105.md"
     },
     {
       "id": "AL-AR4K@0.9.0",
       "family": "AL-AR4K",
       "version": "0.9.0",
-      "title": "纯注意力历史A＋显式BPM（提议）",
+      "title": "纯注意力历史A＋显式BPM（提议）；已由Event4K设计取代",
       "alias": "A-SA-BPM",
       "output_protocol": "proposed_global_audio_window_output",
       "delivery": "not_available_proposal_only",
@@ -282,6 +299,126 @@
         "full_audio_cross_attention": true,
         "musical_time": true,
         "output_window_bounds": true
+      },
+      "weights": null,
+      "status": "superseded_before_implementation",
+      "superseded_by": [
+        "AL-Event4K@0.1.0",
+        "AL-Event4K@0.2.0"
+      ],
+      "supersession_evidence": "docs/event4k_model_design_20261105.md"
+    },
+    {
+      "id": "AL-AR4K@0.7.1",
+      "family": "AL-AR4K",
+      "version": "0.7.1",
+      "title": "逐音符AR：继承旧权重全参数适配20轮",
+      "output_protocol": "audiolab-joint-audio-window-ar-v1",
+      "delivery": "research_only_joint_frontend_required",
+      "training_status": "completed",
+      "quality_status": "not_passed",
+      "evidence": "docs/evaluations/joint_audio_a_20261102.md",
+      "legacy_identity": {
+        "model": "AL-AR4K@0.7.0",
+        "run": "E22-A",
+        "epoch": 20
+      },
+      "identity_scope": "immutable_checkpoint_catalog_alias",
+      "checkpoint": "out/joint_audio_a_20261102/model_latest.pt",
+      "checkpoint_sha256": "32f613de544d62226f051896f9c862f26fd1bebed2e22b308dcc7d1fd279c60f",
+      "artifact_metadata_unchanged": true
+    },
+    {
+      "id": "AL-AR4K@0.7.2",
+      "family": "AL-AR4K",
+      "version": "0.7.2",
+      "title": "逐音符AR：全参数从零训练300轮",
+      "output_protocol": "audiolab-joint-audio-window-ar-v1",
+      "delivery": "research_only_joint_frontend_required",
+      "training_status": "completed",
+      "quality_status": "not_passed",
+      "evidence": "docs/evaluations/joint_audio_scratch_20261102.md",
+      "legacy_identity": {
+        "model": "AL-AR4K@0.7.0",
+        "run": "E23-A",
+        "epoch": 300
+      },
+      "identity_scope": "immutable_checkpoint_catalog_alias",
+      "checkpoint": "out/joint_audio_scratch_20261102/model_latest.pt",
+      "checkpoint_sha256": "b1bfc4a3ba85f86b338f201204b3e9bd354349d3a8a4398b4db5d5b8aeefe17a",
+      "artifact_metadata_unchanged": true
+    },
+    {
+      "id": "AL-Event4K@0.1.0",
+      "family": "AL-Event4K",
+      "version": "0.1.0",
+      "title": "同步事件AR：时间嵌入；无显式BPM",
+      "output_protocol": "proposed_synchronous_4x5_events",
+      "delivery": "not_available_design_only",
+      "training_status": "not_started",
+      "implementation_status": "not_started",
+      "quality_status": "not_evaluated",
+      "evidence": "docs/event4k_model_design_20261105.md",
+      "input_contract": {
+        "chart_event_shape": [
+          4,
+          5
+        ],
+        "columns": [
+          "Tap",
+          "Drag",
+          "Flick",
+          "HoldStart",
+          "HoldEnd"
+        ],
+        "same_time_single_event_token": true,
+        "event_embedding": "flattened_sparse_binary_matrix_projection",
+        "event_output": "4x5_multilabel_logits",
+        "explicit_history_summary_dim": 0,
+        "explicit_bpm_condition": false,
+        "musical_time_embedding": true,
+        "window_boundary_embedding": false,
+        "window_output_constraint": true,
+        "causal_chart_self_attention": true,
+        "full_audio_cross_attention": true,
+        "explicit_soft_onset_dim": 0
+      },
+      "weights": null
+    },
+    {
+      "id": "AL-Event4K@0.2.0",
+      "family": "AL-Event4K",
+      "version": "0.2.0",
+      "title": "同步事件AR：时间嵌入＋显式BPM",
+      "output_protocol": "proposed_synchronous_4x5_events",
+      "delivery": "not_available_design_only",
+      "training_status": "not_started",
+      "implementation_status": "not_started",
+      "quality_status": "not_evaluated",
+      "evidence": "docs/event4k_model_design_20261105.md",
+      "input_contract": {
+        "chart_event_shape": [
+          4,
+          5
+        ],
+        "columns": [
+          "Tap",
+          "Drag",
+          "Flick",
+          "HoldStart",
+          "HoldEnd"
+        ],
+        "same_time_single_event_token": true,
+        "event_embedding": "flattened_sparse_binary_matrix_projection",
+        "event_output": "4x5_multilabel_logits",
+        "explicit_history_summary_dim": 0,
+        "explicit_bpm_condition": true,
+        "musical_time_embedding": true,
+        "window_boundary_embedding": false,
+        "window_output_constraint": true,
+        "causal_chart_self_attention": true,
+        "full_audio_cross_attention": true,
+        "explicit_soft_onset_dim": 0
       },
       "weights": null
     }
@@ -6257,7 +6394,8 @@
             "rss_gib": 2.0824813842773438,
             "gpu_peak_allocated_gib": 0.47246456146240234,
             "gpu_peak_reserved_gib": 0.83203125
-          }
+          },
+          "checkpoint_version": "AL-AR4K@0.7.1"
         }
       ],
       "updated_at_utc": "2026-11-02T03:43:31.932856+00:00",
@@ -6406,7 +6544,8 @@
             "rss_gib": 2.0673065185546875,
             "gpu_peak_allocated_gib": 0.4747037887573242,
             "gpu_peak_reserved_gib": 0.8984375
-          }
+          },
+          "checkpoint_version": "AL-AR4K@0.7.2"
         }
       ],
       "updated_at_utc": "2026-11-03T13:03:34.791161+00:00"
@@ -6476,7 +6615,7 @@
         "AL-AR4K@0.8.0",
         "AL-AR4K@0.9.0"
       ],
-      "status": "proposed",
+      "status": "superseded_before_implementation",
       "training_updates": 0,
       "quality_status": "not_evaluated",
       "question": "错误历史是否通过28维手工摘要被放大；谱面历史仅通过self-attention获取时，显式BPM是否有增益？",
@@ -6484,16 +6623,45 @@
       "evidence": [
         "docs/model_inputs_and_versions_20261105.md",
         "docs/evaluations/windowed_ar_stage5_20261031.md",
-        "docs/evaluations/joint_attribution_20261104.md"
+        "docs/evaluations/joint_attribution_20261104.md",
+        "docs/event4k_model_design_20261105.md"
       ],
       "runs": [],
-      "decision_status": "User asked for field-by-field input explanation; simultaneous two-version comparison not confirmed.",
+      "decision_status": "User replaced serial-token proposal with synchronous 4x5 Event4K input; window boundaries are output constraints only; explicit BPM/no-BPM comparison requested.",
       "controls": [
         "Full-song audio visibility and current-window output stay unchanged.",
         "No-summary and added BPM are separate factors; recovery training is not mixed into this comparison.",
         "Compare equal training budgets and matched shared random tensors; identical seeds alone do not ensure identical tensors after optional module removal."
       ],
-      "weights": null
+      "weights": null,
+      "superseded_by": "E26",
+      "updated_at_utc": "2026-11-04T23:43:37.340787+00:00"
+    },
+    {
+      "id": "E26",
+      "title": "Event4K同步事件输入与显式BPM对照",
+      "kind": "new_representation_design_and_conditioning_comparison",
+      "models": [
+        "AL-Event4K@0.1.0",
+        "AL-Event4K@0.2.0"
+      ],
+      "status": "design_defined_not_implemented",
+      "training_updates": 0,
+      "quality_status": "not_evaluated",
+      "question": "同刻4×5事件整体预测能否改善键型组合及历史稳定性；显式BPM是否改善时间/键型对应？",
+      "result": null,
+      "evidence": [
+        "docs/event4k_model_design_20261105.md"
+      ],
+      "runs": [],
+      "controls": [
+        "One event matrix token per physical timestamp; no within-event NOTE serialization.",
+        "Both arms keep musical time and full-song audio, remove handcrafted history summary and boundary embeddings.",
+        "Window bounds constrain outputs only; forced scheduler advancement is not learned termination.",
+        "Independent BPM/no-BPM weights; matched data, budget, decoding and shared random tensors.",
+        "HoldEnd events are scored separately from onset F1; preserve original benchmark definitions."
+      ],
+      "updated_at_utc": "2026-11-04T23:43:37.340787+00:00"
     }
   ],
   "bundles": [
@@ -6670,7 +6838,7 @@
     "当前长训后的采样策略搜索（用户要求后置）",
     "free-x分窗模型的全300首自然歌曲训练及全参数音频联合训练（现有v0.5.0只有受控训练）",
     "E24建议的自产前窗历史→真实当前窗恢复训练",
-    "E25去手工摘要／显式BPM的独立版本对照（提议）"
+    "E26 Event4K同步事件模型实现及有/无显式BPM训练对照（设计已定义，尚未实现/训练）"
   ],
   "legacy_inventory": [
     {
@@ -6856,10 +7024,11 @@
     "硬候选推理解码、连续条件输入、真实历史监督和生成时采样为不同维度。",
     "legacy_inventory中旧R1/R2等资产保留待核定谱系，不冒充已确认版本。",
     "2026-10-31: E14/E18 archived checkpoint paths in historical records may no longer exist locally. Consult storage_archive_20261030 and cleanup.json for verified remote recovery; four e1400 exact-resume states remain local. Older optimizer/RNG copies were pruned, inference parameters preserved.",
-    "2026-11-05: Current model tables reconciled through E24. AL-AR4K v0.8.0/v0.9.0 are reserved proposal identities only; no architecture code, training updates, checkpoints or released weights changed."
+    "2026-11-05: Current model tables reconciled through E24. AL-AR4K v0.8.0/v0.9.0 are reserved proposal identities only; no architecture code, training updates, checkpoints or released weights changed.",
+    "2026-11-05 naming update: distinct structures receive distinct names; conditioning and checkpoint differences use version numbers. E22/e20 and E23/e300 receive exact AL-AR4K v0.7.1/v0.7.2 aliases after file SHA verification; legacy metadata and bytes remain unchanged. E25 proposals superseded by Event4K E26 before any implementation/training."
   ],
   "route_policy": {
-    "updated_at_utc": "2026-11-03T13:03:34.791161+00:00",
+    "updated_at_utc": "2026-11-04T23:43:37.340787+00:00",
     "user_decision": "Pause S; A full encoder and decoder now train from random initialization.",
     "S": {
       "status": "paused_by_user",
@@ -6870,7 +7039,23 @@
       "active_run": null,
       "scope": "4K joint window AR first; free-x joint adaptation not executed",
       "initialization": "scratch",
-      "latest_completed_run": "E23-A"
+      "latest_completed_run": "E23-A",
+      "latest_checkpoint_version": "AL-AR4K@0.7.2",
+      "next_design": "E26",
+      "next_design_status": "not_implemented_not_trained"
     }
+  },
+  "legacy_version_policy": "Retrospective catalog IDs, not upstream release claims. 0.x denotes development. Minor identifies architecture/conditioning/data stages; patch identifies same-architecture continuation or fixes. Variants and checkpoint epochs are separate. No weight bytes or existing paths are renamed. Extending the epoch budget within an unchanged experiment keeps the version and experiment ID; record the phase, parent checkpoint and epoch.",
+  "naming_policy": {
+    "effective_date": "2026-11-05",
+    "source": "explicit_user_instruction",
+    "format": "MODEL_NAME@0.CONDITION.WEIGHT_REVISION",
+    "new_name_for": "core input representation changes",
+    "same_name_for": "optional information injection such as BPM, onset or history summary",
+    "weight_revision_for": "every different retained/evaluated/delivered parameter checkpoint, including continuation and seed changes",
+    "version_is_quality_ranking": false,
+    "latest_is_alias_only": true,
+    "legacy_records_preserved": true,
+    "evidence": "docs/event4k_model_design_20261105.md"
   }
 }
