@@ -1,0 +1,21 @@
+{
+  "status": "paused_by_user",
+  "method": "SIGSTOP",
+  "pid": 2391455,
+  "process_state": "State:\tT (stopped)",
+  "paused_at_utc": "2026-11-05T00:34:09.307891+00:00",
+  "last_reported_steps": 2440,
+  "last_reported_active_epoch": 9,
+  "last_reported_songs": 40,
+  "completed_epochs": 8,
+  "in_memory_state_preserved": true,
+  "resources_released": false,
+  "latest_saved": {
+    "version": "AL-Event4K@0.2.7",
+    "epoch": 8,
+    "steps": 2400,
+    "parameter_sha256": "e682f8a9a9dcf52ac3747d96cfabdaf4504fc75ba5c4d254ad67b21305939ed4",
+    "checkpoint_sha256": "fa1e089459eeee53854dd33ae529ba1ab7d7f8af4beddf487ae634a540b79cb7",
+    "retained_inference_files": []
+  }
+}
