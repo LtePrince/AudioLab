@@ -353,10 +353,10 @@
       "family": "AL-Event4K",
       "version": "0.1.0",
       "title": "同步事件AR：时间嵌入；无显式BPM",
-      "output_protocol": "proposed_synchronous_4x5_events",
+      "output_protocol": "audiolab-synchronous-event4k-v1",
       "delivery": "not_available_design_only",
       "training_status": "not_started",
-      "implementation_status": "not_started",
+      "implementation_status": "implemented",
       "quality_status": "not_evaluated",
       "evidence": "docs/event4k_model_design_20261105.md",
       "input_contract": {
@@ -390,12 +390,12 @@
       "family": "AL-Event4K",
       "version": "0.2.0",
       "title": "同步事件AR：时间嵌入＋显式BPM",
-      "output_protocol": "proposed_synchronous_4x5_events",
+      "output_protocol": "audiolab-synchronous-event4k-v1",
       "delivery": "not_available_design_only",
-      "training_status": "not_started",
-      "implementation_status": "not_started",
+      "training_status": "preflight_passed_ready_to_launch",
+      "implementation_status": "implemented",
       "quality_status": "not_evaluated",
-      "evidence": "docs/event4k_model_design_20261105.md",
+      "evidence": "docs/evaluations/event4k_bpm_20261105.md",
       "input_contract": {
         "chart_event_shape": [
           4,
@@ -420,7 +420,8 @@
         "full_audio_cross_attention": true,
         "explicit_soft_onset_dim": 0
       },
-      "weights": null
+      "weights": null,
+      "parameters": 13439894
     }
   ],
   "experiments": [
@@ -6645,15 +6646,68 @@
         "AL-Event4K@0.1.0",
         "AL-Event4K@0.2.0"
       ],
-      "status": "design_defined_not_implemented",
+      "status": "implemented_bpm_preflight_passed",
       "training_updates": 0,
       "quality_status": "not_evaluated",
       "question": "同刻4×5事件整体预测能否改善键型组合及历史稳定性；显式BPM是否改善时间/键型对应？",
       "result": null,
       "evidence": [
-        "docs/event4k_model_design_20261105.md"
+        "docs/event4k_model_design_20261105.md",
+        "docs/evaluations/event4k_bpm_20261105.md",
+        "docs/evaluations/assets/event4k_20261105/codec_audit.json",
+        "docs/evaluations/assets/event4k_20261105/gradient_probe.json"
       ],
-      "runs": [],
+      "runs": [
+        {
+          "id": "E26-BPM",
+          "model": "AL-Event4K@0.2.0",
+          "status": "preflight_passed",
+          "initialization": "scratch",
+          "inherited_parameter_tensors": 0,
+          "planned_epochs": 300,
+          "planned_optimizer_steps": 90000,
+          "training_songs": 300,
+          "parameters": 13439894,
+          "encoder_parameters": 6679424,
+          "decoder_parameters": 6760470,
+          "encoder_lr": 0.0003,
+          "decoder_lr": 0.0003,
+          "warmup_steps": 1500,
+          "mel_manifest_sha256": "dd5c2e7e638e26b736a44457f47de8f5bade4e2d385152c36c13f8bcfc8a0ea3",
+          "target_manifest_sha256": "7c2351d531eff7d1fd320db0b8ba672c75529f3075427dafb59b7a1c36bb768e",
+          "source_sha256": {
+            "src/event4k.py": "f40d55ee5da3d58b43ccaef7d70ccffe7d2f6985e779ff9a61a923a3c12dbc79",
+            "script/train_event4k.py": "896d70280717f40a2b44dd6da4543912a58da711f573685901938a3d5b07b105",
+            "script/train_models.py": "1ae0314c83af6d82794d0f90f01ff1296452ca5f0e5269eac11fc8ea8eebe854",
+            "src/joint_audio_ar.py": "69f1d255748100a784ddd8adb3af92af5b505376336b337a147d160f054a5a03",
+            "src/models/transcriber.py": "0f90e27d02f3d460666713f19ae62cc8e7833d925cf5991622810b2d153537dd",
+            "src/models/chart_decoder.py": "85f9045efc36fea050181d3839442d9def4bcc4aad1d0419467d467b1acd6d93",
+            "src/models/attention.py": "90dfa37bf305558c82758cae339bdcaa5536b7915e257cb9acd37249f6f66a40",
+            "src/condition/wave.py": "1f01a44f4d4b05a55c4ab06233d40414019903f8b23442dc2f5018f39748047c",
+            "src/windowed_ar.py": "6c972249fee21c3f20229534374e5615f8132cfb46f10a65b9cea750e074d392",
+            "src/chart_windows.py": "a799c78053c7a0b9822c91737a629019a0d7a67af68709b7ab550dc6a8308851",
+            "src/resource_budget.py": "b26ae4c3608a223b144d93de88e32fce02ce63f75c85277c91b6ae0432220c91",
+            "script/train_alignment_scratch.py": "fbe986e1ee0d78def6c09a9300c5e153de241f120b808dd4ed96484859404eed",
+            "script/train_joint_audio_a.py": "f20a41ac9e1072531b3a1040f5853fc30bc07acd38941de8805f8009211698d6",
+            "script/train_windowed_corpus.py": "00aea033b20879a493e0567fe3478192776e35257e35f9b3e5b93228dd16d082",
+            "src/audio_understanding/evaluation.py": "c57d0c4eb36df95f04f7772f98d68229946e168a3aa830458d4eb150357194e0",
+            "benchmarks/v1/protocol.json": "f7794e4f994fbe4e56801989f3517064d2545f87268551f36d5687a3c25188a5",
+            "docs/evaluations/assets/phira_generalization10_20261029/benchmark.py": "973f0bf0715a312461029e438d0f4b6d12bc049ca082014b0239e96529b2aecc"
+          },
+          "initial_encoder_sha256": "d76117c15eeedfc474fae32caf7aa46ef24cdb6035f72fd1ff78276bea7bb9cf",
+          "initial_decoder_sha256": "5cf020c603178928ea559bff89b0e355d75476fe362ae95f2ff7ea606a5eefe4",
+          "output": "out/event4k_bpm_20261105",
+          "report": "docs/evaluations/event4k_bpm_20261105.md",
+          "version_policy": "First saved epoch -> v0.2.0; each distinct saved epoch increments final component; versions.json binds hashes.",
+          "codec_audit": {
+            "songs": 300,
+            "views": 1200,
+            "errors": 0,
+            "max_roundtrip_error_seconds": 5.000089231543825e-10
+          },
+          "quality_status": "not_evaluated"
+        }
+      ],
       "controls": [
         "One event matrix token per physical timestamp; no within-event NOTE serialization.",
         "Both arms keep musical time and full-song audio, remove handcrafted history summary and boundary embeddings.",
@@ -6661,7 +6715,8 @@
         "Independent BPM/no-BPM weights; matched data, budget, decoding and shared random tensors.",
         "HoldEnd events are scored separately from onset F1; preserve original benchmark definitions."
       ],
-      "updated_at_utc": "2026-11-04T23:43:37.340787+00:00"
+      "updated_at_utc": "2026-11-04T23:43:37.340787+00:00",
+      "user_decision": "Train BPM arm first; explicit confirmation of END_WINDOW competing with in-window time candidates. No-BPM comparison remains unstarted."
     }
   ],
   "bundles": [
@@ -6838,7 +6893,7 @@
     "当前长训后的采样策略搜索（用户要求后置）",
     "free-x分窗模型的全300首自然歌曲训练及全参数音频联合训练（现有v0.5.0只有受控训练）",
     "E24建议的自产前窗历史→真实当前窗恢复训练",
-    "E26 Event4K同步事件模型实现及有/无显式BPM训练对照（设计已定义，尚未实现/训练）"
+    "E26无BPM独立训练对照尚未启动；有BPM组实现与预检完成，实际训练进度见运行记录"
   ],
   "legacy_inventory": [
     {
@@ -7042,7 +7097,7 @@
       "latest_completed_run": "E23-A",
       "latest_checkpoint_version": "AL-AR4K@0.7.2",
       "next_design": "E26",
-      "next_design_status": "not_implemented_not_trained"
+      "next_design_status": "implemented_bpm_preflight_passed"
     }
   },
   "legacy_version_policy": "Retrospective catalog IDs, not upstream release claims. 0.x denotes development. Minor identifies architecture/conditioning/data stages; patch identifies same-architecture continuation or fixes. Variants and checkpoint epochs are separate. No weight bytes or existing paths are renamed. Extending the epoch budget within an unchanged experiment keeps the version and experiment ID; record the phase, parent checkpoint and epoch.",

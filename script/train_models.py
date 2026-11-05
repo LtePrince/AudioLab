@@ -27,7 +27,7 @@ WORKERS = ['src.train_transcription', 'src.train_decoder', 'src.test_decoder',
            'script.audit_decoder_alignment', 'script.train_alignment_scratch', 'script.benchmark_diffusion',
            'script.train_grounded_ar', 'script.train_anchored_ar', 'script.probe_audio_localization',
            'script.train_windowed_ar', 'script.train_windowed_freex', 'script.train_windowed_variants',
-           'script.train_joint_audio_a']
+           'script.train_joint_audio_a', 'script.train_event4k']
 
 
 def write_json(path: Path, data: dict) -> None:
