@@ -167,7 +167,35 @@
     "parameter_sha256": "9e385298815523beda374d6f134c7864cac2f20ab78d54448aa540d82cb2cf03"
   },
   "validation": "19 Event4K tests passed, including exact optimizer/RNG restoration, version migration and real benchmark clock contract.",
-  "status": "validated_ready_to_resume",
+  "status": "resumed_and_missing_evaluation_completed",
   "weights_rewritten": false,
-  "model_training_contract_changed": false
+  "model_training_contract_changed": false,
+  "resumed_at_utc": "2026-11-05T02:27:49.371166+00:00",
+  "resume": {
+    "launch": {
+      "pid": 2466707,
+      "started": 1793845558.1564693,
+      "command": [
+        "/home/ziyaowang/Alvin/Audio/AudioLab/.venv/bin/python",
+        "-u",
+        "-m",
+        "script.train_models",
+        "--gpu",
+        "0",
+        "--worker",
+        "script.train_event4k",
+        "--",
+        "run",
+        "--resume"
+      ],
+      "log": "out/event4k_fullsong_bpm_20261105/resume.log",
+      "source_commit": "f8abee9ee0b9acf5525a92c464356a725b268873",
+      "requested_version": "AL-Event4K@0.3.0"
+    },
+    "steps_observed": 6140,
+    "active_epoch": 21,
+    "checkpoint": "AL-Event4K@0.3.0/e0020",
+    "training_state_restored": "model + AdamW + sampler and torch RNG",
+    "evaluation_evidence": "docs/evaluations/assets/event4k_fullsong_20261105/evaluation_e0020.json"
+  }
 }
