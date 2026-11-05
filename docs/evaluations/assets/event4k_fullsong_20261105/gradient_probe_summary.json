@@ -1,0 +1,53 @@
+{
+  "status": "passed",
+  "source_report": "out/event4k_fullsong_bpm_20261105/gradient_probe.json",
+  "source_sha256": "fe659f40caad63ddbd720b5993a72bac0b8c1d25583bec9e721854693c783559",
+  "probe_weights_discarded": true,
+  "rows": [
+    {
+      "id": "Eltaw_IN",
+      "all_connected": true,
+      "changed_tensors": 281,
+      "resources": {
+        "disk_free_gib": 26.06317901611328,
+        "ram_available_gib": 37.29706954956055,
+        "rss_gib": 1.8445777893066406,
+        "gpu_peak_allocated_gib": 0.24302101135253906,
+        "gpu_peak_reserved_gib": 0.412109375
+      }
+    },
+    {
+      "id": "Drop It_IN",
+      "all_connected": true,
+      "changed_tensors": 281,
+      "resources": {
+        "disk_free_gib": 26.06317901611328,
+        "ram_available_gib": 37.26771545410156,
+        "rss_gib": 1.8727836608886719,
+        "gpu_peak_allocated_gib": 0.2769174575805664,
+        "gpu_peak_reserved_gib": 0.5234375
+      }
+    },
+    {
+      "id": "祈 -我ら神祖と共に歩む者なり-_IN",
+      "all_connected": true,
+      "changed_tensors": 281,
+      "resources": {
+        "disk_free_gib": 26.06317901611328,
+        "ram_available_gib": 37.26002502441406,
+        "rss_gib": 1.8862113952636719,
+        "gpu_peak_allocated_gib": 0.31557512283325195,
+        "gpu_peak_reserved_gib": 0.59765625
+      }
+    }
+  ],
+  "generation_smoke": {
+    "status": "failed",
+    "events": 2,
+    "error": "unclosed_holds",
+    "termination": "learned_song_eos",
+    "learned_song_eos": true,
+    "unclosed_holds": 2,
+    "scope": "bounded rollout on an existing physical 24-second crop; no quality claim"
+  }
+}

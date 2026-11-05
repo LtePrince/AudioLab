@@ -1,6 +1,6 @@
 # E27：Event4K取消分窗，整曲仅一个EOS
 
-2026-11-05，按用户要求取消Event4K输出分窗。实现与CPU验证完成，**训练保持暂停，新协议没有自然歌曲训练权重**。原E26-BPM进程2391455复核为`Tsl`；已保存8轮，暂停前最后日志为2440步，最新保存身份仍为AL-Event4K v0.2.7。没有恢复或替换该进程中的旧模型。
+2026-11-05，按用户要求取消Event4K输出分窗。**用户随后授权丢弃v0.2训练产物并启动v0.3.0；E27-BPM已从零正式训练，计划全300首、300轮。** 下文验证段记录启动前证据，最新清理与启动快照见末节。原E26进程已终止，不继承其权重或优化器。
 
 ## 修改及理由
 
@@ -24,11 +24,11 @@
 
 ## 版本和续跑边界
 
-基础输入仍是4×5同步事件，保留模型名AL-Event4K。为不同输出协议预留**v0.3.0（整曲有BPM）**与**v0.4.0（整曲无BPM）**；两者当前`weights=null`。未来各自不同权重递增末位编号。参数量未变：有BPM为13,439,894，无BPM为13,439,638。
+基础输入仍是4×5同步事件，保留模型名AL-Event4K。**v0.3.0（整曲有BPM）**绑定首轮保存权重；其后不同权重递增末位编号。**v0.4.0（整曲无BPM）**仍未启动，`weights=null`。参数量未变：有BPM为13,439,894，无BPM为13,439,638。
 
-新schema为`audiolab-synchronous-event4k-full-song-v1`，默认输出目录`out/event4k_fullsong_bpm_20261105`。旧分窗目标、probe、checkpoint不能直接恢复为整曲协议；E26原代码由提交`28f2a2b`保留，旧权重、源代码哈希和暂停运行记录均不改写。暂停进程已经加载旧Python代码，恢复它不会自动使用新协议，因此当前不发送SIGCONT。
+新schema为`audiolab-synchronous-event4k-full-song-v1`，默认输出目录`out/event4k_fullsong_bpm_20261105`。旧分窗目标、probe、checkpoint不能直接恢复为整曲协议；E26原代码由提交`28f2a2b`保留，历史源代码哈希和运行记录仍可查。用户要求丢弃后，旧权重与专属标签已删除，进程终止，没有发送SIGCONT继续旧协议。
 
-入口仍为`script.train_event4k`。本次只执行`prepare --device cpu`和测试。后续获准启动前，需对新协议单独做GPU梯度／资源预检，再用新目录从零训练；不能把旧窗口实验的预检当成新协议训练已验证。
+入口仍为`script.train_event4k`。先执行`prepare --device cpu`和测试；用户授权后，对新协议单独执行GPU梯度／资源预检，再用新目录从零训练。没有把旧窗口实验的预检当成新协议的验证。
 
 ```bash
 .venv/bin/python -m script.train_event4k prepare --device cpu
@@ -36,3 +36,15 @@
   test/test_joint_audio_ar.py test/test_joint_audio_scratch.py \
   test/test_windowed_ar.py test/test_windowed_freex.py
 ```
+
+## 丢弃旧训练与正式启动
+
+2026-11-05T01:20:41Z，核实身份及暂停状态后终止E26-BPM进程2391455。删除v0.2专属的300份目标缓存及3份权重，共324,697,055字节（约309.7MiB）。历史配置、日志、版本SHA和审计记录保留；原始音频／谱面、共享Mel缓存及v0.3目标不删除。[逐文件清理记录](assets/event4k_fullsong_20261105/discard_legacy.json)。
+
+新协议在Eltaw、最长音频Drop It、最多事件的《祈》上完成全视图反向传播，每首281个参数张量有有限梯度且实际更新。预检最大GPU已分配0.316GiB、保留0.598GiB，RSS约1.89GiB。预检权重全部丢弃；24秒自由试跑仍有2个未闭合Hold，不能据此声明自然编谱质量通过。[GPU预检摘要](assets/event4k_fullsong_20261105/gradient_probe_summary.json)。
+
+正式训练代码提交`419c9fe`，PID **2430785**，音频编码器和事件解码器全部随机初始化，继承参数为0。全300首、300轮／90,000次更新；两部分LR均3e-4，1500步warmup，seed42，其余视图及评测配方不变。每20轮检查Eltaw及既有两首开发曲，每100轮及最终轮评测固定训练15首＋开发10首。S保持暂停，无BPM对照未启动。
+
+2026-11-05T01:23:15Z快照：已完成140次更新，处于第1轮140/300首，尚无首轮权重或自然曲质量评分。GPU峰值分配0.388GiB、保留0.586GiB，RSS1.88GiB，磁盘剩26.06GiB。[启动快照](assets/event4k_fullsong_20261105/startup.json)、[完整配置与源码哈希](assets/event4k_fullsong_20261105/config.json)。训练持续在后台运行；实时进度以运行目录的`training.json`为准。
+
+2026-11-05T01:26:05Z复核：**第1轮已完成，v0.3.0/e1/300步权重已保存且参数SHA验证通过；当前第2轮、460步。** 首轮约163秒，训练目标6.3769；这是训练损失，不是自由生成F1或网格成绩。固定首轮文件为`out/event4k_fullsong_bpm_20261105/model_e0001.pt`，后续权重不覆盖此身份。[首轮记录与SHA](assets/event4k_fullsong_20261105/first_epoch.json)。

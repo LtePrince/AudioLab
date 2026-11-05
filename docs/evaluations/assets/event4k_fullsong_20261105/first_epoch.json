@@ -1,0 +1,43 @@
+{
+  "observed_at_utc": "2026-11-05T01:26:05.428229+00:00",
+  "version": "AL-Event4K@0.3.0",
+  "weights": {
+    "path": "out/event4k_fullsong_bpm_20261105/model_e0001.pt",
+    "sha256": "f604425274527402b1461c7fd728d8c6e4a965b6b4a46cfb622640fc2f2b0b29",
+    "parameter_sha256": "162fd3d0f4f1cbc5abd2868bfbe6ccdbe09ae052c60157a94445166c28d772fe",
+    "epoch": 1,
+    "steps": 300,
+    "bytes": 53850125
+  },
+  "curve": {
+    "epoch": 1,
+    "steps": 300,
+    "elapsed_seconds": 162.60712668299675,
+    "time_ce": 5.4410187832865375,
+    "fraction_mse": 0.07556094972772487,
+    "event_bce": 0.409884181773267,
+    "eos_ce": 0.4504475821506154,
+    "event_exact": 0.003487752835974674,
+    "frame_accuracy": 0.05221186880201607,
+    "false_eos_rate": 0.5244403757862237,
+    "eos_recall": 0.9808333333333333,
+    "conditional_time_mae_seconds": 0.010920818573889967,
+    "counts": {
+      "event_count": 287291,
+      "continue_count": 287291,
+      "eos_count": 1200
+    },
+    "objective": 6.376911496938145
+  },
+  "run_status": "running",
+  "current_steps": 460,
+  "active_epoch": 2,
+  "resources": {
+    "disk_free_gib": 25.809715270996094,
+    "ram_available_gib": 36.80721664428711,
+    "rss_gib": 1.96075439453125,
+    "gpu_peak_allocated_gib": 0.4243617057800293,
+    "gpu_peak_reserved_gib": 0.634765625
+  },
+  "quality_status": "not_evaluated"
+}

@@ -1,0 +1,46 @@
+{
+  "observed_at_utc": "2026-11-05T01:23:15.195958+00:00",
+  "status": "running",
+  "pid": 2430785,
+  "steps": 140,
+  "active_epoch": 1,
+  "songs": 140,
+  "completed_epochs": 0,
+  "latest_saved_version": null,
+  "resources": {
+    "disk_free_gib": 26.061904907226562,
+    "ram_available_gib": 37.2810173034668,
+    "rss_gib": 1.8839759826660156,
+    "gpu_peak_allocated_gib": 0.3878493309020996,
+    "gpu_peak_reserved_gib": 0.5859375
+  },
+  "launch": {
+    "pid": 2430785,
+    "started": 1793841705.4039695,
+    "command": [
+      "/home/ziyaowang/Alvin/Audio/AudioLab/.venv/bin/python",
+      "-u",
+      "-m",
+      "script.train_models",
+      "--gpu",
+      "0",
+      "--worker",
+      "script.train_event4k",
+      "--",
+      "run"
+    ],
+    "log": "out/event4k_fullsong_bpm_20261105/worker.log",
+    "source_commit": "419c9fe0c45e88731866c231a3dafde8c314c9fc",
+    "requested_version": "AL-Event4K@0.3.0"
+  },
+  "requested_version": "AL-Event4K@0.3.0",
+  "planned_epochs": 300,
+  "planned_optimizer_steps": 90000,
+  "initialization": "scratch",
+  "inherited_parameter_tensors": 0,
+  "parent_checkpoint": null,
+  "probe_weights_discarded": true,
+  "config_sha256": "c3fb26b47af618d9bfd4f0c1109d72c967c2f16c06659cd3c9513ec47d1caf19",
+  "target_manifest_sha256": "88a8442466d2ab3f63655fe5e6bb0c0208263a3640d9155cc5e9582034b7a1c7",
+  "mel_manifest_sha256": "dd5c2e7e638e26b736a44457f47de8f5bade4e2d385152c36c13f8bcfc8a0ea3"
+}
