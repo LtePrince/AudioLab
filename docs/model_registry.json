@@ -392,7 +392,7 @@
       "title": "同步事件AR：时间嵌入＋显式BPM",
       "output_protocol": "audiolab-synchronous-event4k-v1",
       "delivery": "not_available_design_only",
-      "training_status": "preflight_passed_ready_to_launch",
+      "training_status": "running",
       "implementation_status": "implemented",
       "quality_status": "not_evaluated",
       "evidence": "docs/evaluations/event4k_bpm_20261105.md",
@@ -421,7 +421,11 @@
         "explicit_soft_onset_dim": 0
       },
       "weights": null,
-      "parameters": 13439894
+      "parameters": 13439894,
+      "run": "E26-BPM",
+      "planned_first_checkpoint": "out/event4k_bpm_20261105/model_e0001.pt",
+      "progress_file": "out/event4k_bpm_20261105/training.json",
+      "weight_version_manifest": "out/event4k_bpm_20261105/versions.json"
     }
   ],
   "experiments": [
@@ -6646,8 +6650,8 @@
         "AL-Event4K@0.1.0",
         "AL-Event4K@0.2.0"
       ],
-      "status": "implemented_bpm_preflight_passed",
-      "training_updates": 0,
+      "status": "bpm_training_running",
+      "training_updates": 140,
       "quality_status": "not_evaluated",
       "question": "同刻4×5事件整体预测能否改善键型组合及历史稳定性；显式BPM是否改善时间/键型对应？",
       "result": null,
@@ -6655,13 +6659,14 @@
         "docs/event4k_model_design_20261105.md",
         "docs/evaluations/event4k_bpm_20261105.md",
         "docs/evaluations/assets/event4k_20261105/codec_audit.json",
-        "docs/evaluations/assets/event4k_20261105/gradient_probe.json"
+        "docs/evaluations/assets/event4k_20261105/gradient_probe.json",
+        "docs/evaluations/assets/event4k_20261105/startup.json"
       ],
       "runs": [
         {
           "id": "E26-BPM",
           "model": "AL-Event4K@0.2.0",
-          "status": "preflight_passed",
+          "status": "running",
           "initialization": "scratch",
           "inherited_parameter_tensors": 0,
           "planned_epochs": 300,
@@ -6705,7 +6710,21 @@
             "errors": 0,
             "max_roundtrip_error_seconds": 5.000089231543825e-10
           },
-          "quality_status": "not_evaluated"
+          "quality_status": "not_evaluated",
+          "optimizer_steps": 140,
+          "completed_epochs": 0,
+          "active_epoch": 1,
+          "pid": 2391455,
+          "source_commit": "28f2a2ba912e3723abdb7fcc9d1412b881ad52e2",
+          "progress_snapshot_utc": "2026-11-05T00:14:16.818091+00:00",
+          "resources": {
+            "disk_free_gib": 26.063003540039062,
+            "ram_available_gib": 37.29507064819336,
+            "rss_gib": 1.8854942321777344,
+            "gpu_peak_allocated_gib": 0.4273972511291504,
+            "gpu_peak_reserved_gib": 0.66796875
+          },
+          "weight_version_manifest": "out/event4k_bpm_20261105/versions.json"
         }
       ],
       "controls": [
@@ -6716,7 +6735,8 @@
         "HoldEnd events are scored separately from onset F1; preserve original benchmark definitions."
       ],
       "updated_at_utc": "2026-11-04T23:43:37.340787+00:00",
-      "user_decision": "Train BPM arm first; explicit confirmation of END_WINDOW competing with in-window time candidates. No-BPM comparison remains unstarted."
+      "user_decision": "Train BPM arm first; explicit confirmation of END_WINDOW competing with in-window time candidates. No-BPM comparison remains unstarted.",
+      "progress_snapshot_utc": "2026-11-05T00:14:16.818091+00:00"
     }
   ],
   "bundles": [
@@ -6893,7 +6913,7 @@
     "当前长训后的采样策略搜索（用户要求后置）",
     "free-x分窗模型的全300首自然歌曲训练及全参数音频联合训练（现有v0.5.0只有受控训练）",
     "E24建议的自产前窗历史→真实当前窗恢复训练",
-    "E26无BPM独立训练对照尚未启动；有BPM组实现与预检完成，实际训练进度见运行记录"
+    "E26无BPM独立训练对照尚未启动；有BPM组已在全300首上训练"
   ],
   "legacy_inventory": [
     {
@@ -7083,21 +7103,21 @@
     "2026-11-05 naming update: distinct structures receive distinct names; conditioning and checkpoint differences use version numbers. E22/e20 and E23/e300 receive exact AL-AR4K v0.7.1/v0.7.2 aliases after file SHA verification; legacy metadata and bytes remain unchanged. E25 proposals superseded by Event4K E26 before any implementation/training."
   ],
   "route_policy": {
-    "updated_at_utc": "2026-11-04T23:43:37.340787+00:00",
+    "updated_at_utc": "2026-11-05T00:14:16.818091+00:00",
     "user_decision": "Pause S; A full encoder and decoder now train from random initialization.",
     "S": {
       "status": "paused_by_user",
       "scope": "future training/optimization for 4K and free-x; retain historical weights/results"
     },
     "A": {
-      "status": "completed",
-      "active_run": null,
-      "scope": "4K joint window AR first; free-x joint adaptation not executed",
+      "status": "running",
+      "active_run": "E26-BPM",
+      "scope": "Event4K with BPM: all300, random full encoder+decoder; no-BPM and free-x not started",
       "initialization": "scratch",
       "latest_completed_run": "E23-A",
       "latest_checkpoint_version": "AL-AR4K@0.7.2",
       "next_design": "E26",
-      "next_design_status": "implemented_bpm_preflight_passed"
+      "next_design_status": "bpm_training_running"
     }
   },
   "legacy_version_policy": "Retrospective catalog IDs, not upstream release claims. 0.x denotes development. Minor identifies architecture/conditioning/data stages; patch identifies same-architecture continuation or fixes. Variants and checkpoint epochs are separate. No weight bytes or existing paths are renamed. Extending the epoch budget within an unchanged experiment keeps the version and experiment ID; record the phase, parent checkpoint and epoch.",
