@@ -6986,6 +6986,47 @@
         "evidence": "docs/evaluations/assets/event4k_fullsong_20261105/evaluation_e0020.json",
         "scope": "Eltaw training song plus two reused development songs; not full train15 or a blind test."
       }
+    },
+    {
+      "id": "E28",
+      "title": "匙ノ咒Mel完整性与长时间跳跃只读诊断",
+      "kind": "audio_audit_and_same_checkpoint_inference_controls",
+      "models": [
+        "AL-Event4K@0.3.0"
+      ],
+      "status": "completed",
+      "training_updates": 0,
+      "weights_updated": false,
+      "checkpoint_epoch": 41,
+      "parameter_sha256": "9639a6312d9a0418d6d2115642be67acf6b8f594105db8be9ac5059831dfe1d4",
+      "checkpoint_sha256": "c51562641b5102f536b56433c66c4026519a9b2688550c9c90f1211468ef3fd7",
+      "observed_at_utc": "2026-11-05T03:31:53.661491+00:00",
+      "result": {
+        "all_310_full_song_mels_finite": true,
+        "recomputed_audio_mels_exact": 3,
+        "training_duration_max_seconds": 202.8887074829932,
+        "original_e20_gap_seconds": 82.92255298848055,
+        "original_gap_rms_median_dbfs": -9.549919128417969,
+        "encoder_variable_length": true,
+        "fixed_length_limit": false,
+        "conclusion": "Observed wrong future time selection, not missing/silent Mel; duration/history/time-coordinate causes not isolated.",
+        "control_epoch": 41,
+        "whole_song_jump_probability": 0.9695639610290527,
+        "shorter_200s_input_still_has_83s_jump": true
+      },
+      "evidence": [
+        "docs/evaluations/saji_mel_20261105.md",
+        "docs/evaluations/assets/saji_mel_20261105/mel_audit.json",
+        "docs/evaluations/assets/saji_mel_20261105/controls.json",
+        "docs/evaluations/assets/saji_mel_20261105/mel_comparison.png"
+      ],
+      "limitations": [
+        "These controls use the sampled current checkpoint, not the unavailable epoch-20 weights.",
+        "Cropping changes total duration, available future audio, and for the tail crop the time origin/history; it does not isolate length alone."
+      ],
+      "source_sha256": {
+        "docs/evaluations/assets/saji_mel_20261105/diagnose.py": "8f9126043968df885da7dc03a56a88364145fdb7598b90d20452da59212e69df"
+      }
     }
   ],
   "bundles": [
