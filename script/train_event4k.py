@@ -1,4 +1,4 @@
-"""Full300 synchronous Event4K from scratch, bounded storage and exact resume."""
+"""Full-song Event4K: one EOS, full history, bounded storage and exact resume."""
 from __future__ import annotations
 
 import argparse
@@ -57,8 +57,8 @@ def prepare(args,budget):
         raise ValueError('complete existing full300 Mel cache required')
     directory=args.output/'targets';directory.mkdir(exist_ok=True)
     path=directory/'manifest.json'
-    contract=dict(mel_manifest_sha256=sha256(args.mel_cache/'manifest.json'),
-        codec_source_sha256=sha256('src/event4k.py'),width=args.width,precision_seconds=1e-9)
+    contract=dict(schema=SCHEMA,mel_manifest_sha256=sha256(args.mel_cache/'manifest.json'),
+        codec_source_sha256=sha256('src/event4k.py'),output_protocol='full_song_single_eos',precision_seconds=1e-9)
     if path.exists():
         result=read(path)
         if result['status']!='completed' or result['contract']!=contract:raise ValueError('target cache contract changed')
@@ -76,14 +76,20 @@ def prepare(args,budget):
         for vi,view in enumerate(sample['views']):
             notes=source_notes(view['target'])
             try:
-                target=encode_events(notes,view['duration'],view['target']['bpm'],width=args.width)
+                target=encode_events(notes,view['duration'],view['target']['bpm'])
                 decoded=events_to_notes(target['times'],target['events'])
                 max_roundtrip_error=max(max_roundtrip_error,roundtrip_error(notes,decoded))
+                if target['eos_count']!=1 or target['event_indices'][-1]!=-1 or (target['event_indices'][:-1]<0).any():
+                    raise ValueError('exactly one terminal EOS required')
+                if target['prefix'].tolist()!=list(range(target['event_count']+1)):
+                    raise ValueError('full chronological prefixes required')
             except Exception as error:
                 result['errors'].append(dict(id=row['id'],view=vi,error=str(error)));continue
             counts['views']+=1;counts['notes']+=len(notes);counts['events']+=target['event_count']
             counts['hold_ends']+=int(target['events'][:,:,4].sum())
             counts['chord_events']+=int((target['events'][:,:,:4].sum((1,2))>1).sum())
+            counts['eos_labels']+=target['eos_count']
+            counts['legacy_intermediate_window_ends_removed']+=view['target']['stop_count']-1
             targets.append(target)
         if len(targets)!=4:continue
         saved=directory/f'train-{index:03d}.pt'
@@ -103,13 +109,14 @@ def prepare(args,budget):
 
 def load_initial(args,targets):
     architecture=read(args.architecture_config);torch.manual_seed(args.seed)
+    if architecture.get('output_protocol')!=SCHEMA:raise ValueError('full-song architecture contract required')
     model=Event4K(architecture['encoder_config'],architecture['decoder_config'])
     if model.chart.bpm_condition != args.bpm_condition:raise ValueError('requested BPM configuration mismatch')
-    config=dict(schema=SCHEMA,run='E26-BPM' if args.bpm_condition else 'E26-NOBPM',
-        requested_version='AL-Event4K@0.2.0' if args.bpm_condition else 'AL-Event4K@0.1.0',
+    config=dict(schema=SCHEMA,run='E27-BPM' if args.bpm_condition else 'E27-NOBPM',
+        requested_version='AL-Event4K@0.3.0' if args.bpm_condition else 'AL-Event4K@0.4.0',
         architecture=architecture,initialization='scratch',inherited_parameter_tensors=0,parent_checkpoint=None,
         seed=args.seed,epochs=args.epochs,lr=args.lr,encoder_lr=args.encoder_lr,warmup_steps=args.warmup_steps,
-        width=args.width,eval_every=args.eval_every,full_eval_every=args.full_eval_every,
+        output_protocol='full_song_single_eos',eval_every=args.eval_every,full_eval_every=args.full_eval_every,
         mel_cache=str(args.mel_cache),mel_manifest_sha256=sha256(args.mel_cache/'manifest.json'),
         targets_manifest_sha256=sha256(args.output/'targets/manifest.json'),
         selection_sha256=sha256(E20),initial_state_sha256=state_hash(model.state_dict()),
@@ -120,8 +127,8 @@ def load_initial(args,targets):
         source_sha256={p:sha256(p) for p in SOURCES},architecture_sha256=sha256(args.architecture_config),
         columns=list(COLUMNS),time_encoding='physical memory frames; sinusoidal projection',
         bpm_encoding='log2(BPM/120), bias-free learned projection' if args.bpm_condition else 'absent',
-        history_summary=False,boundary_embedding=False,window_policy='output mask only; END jointly normalized with allowed time intervals',
-        event_loss='mean-of-20 BCE per event',time_loss='joint time/END categorical CE; continuation/end separately normalized',
+        history_summary=False,boundary_embedding=False,window_policy='absent; monotonic time and physical audio limits only',
+        event_loss='mean-of-20 BCE per event',time_loss='joint remaining-time/song-EOS categorical CE; event/EOS separately normalized',
         coordinate_loss='frame-conditional fractional squared error',feature_precision='float32 end to end',
         training_views='all 300 full songs + two frozen physical crops + true waveform silence per song',
         retention='latest exact-resume + best-fit inference; first and 100/200/final inference snapshots; no cache duplication',
@@ -160,12 +167,11 @@ def probe(args,budget,targets,device):
         print(json.dumps(dict(stage='event_gradient_probe',id=id,all_connected=True,parameters=config['parameters'],resources=budget.log_state())),flush=True)
         del views,optimizer,before
     smoke=batch(args,rows['Eltaw_IN'])[1]
-    prediction=generate(model,smoke['mel'],smoke['duration'],smoke['target']['bpm'],
-                        width=args.width,max_events=500,check=budget.check)
+    prediction=generate(model,smoke['mel'],smoke['duration'],smoke['target']['bpm'],max_events=500,check=budget.check)
     if any(not 0<=t<smoke['duration'] for t in prediction['event_times_seconds']):
         raise RuntimeError('smoke generated an out-of-audio event')
     report['generation_smoke']=dict(status=prediction['status'],events=prediction['event_count'],
-        error=prediction['error'],forced_windows=prediction['forced_windows'],unclosed_holds=prediction['unclosed_holds'],
+        error=prediction['error'],termination=prediction['termination'],learned_song_eos=prediction['learned_song_eos'],unclosed_holds=prediction['unclosed_holds'],
         scope='bounded rollout on an existing physical 24-second crop; no quality claim')
     report.update(status='passed',probe_weights_discarded=True);write_json(args.output/'gradient_probe.json',report)
     del model;gc.collect()
@@ -176,6 +182,8 @@ def probe(args,budget,targets,device):
 def launch(args):
     """Detach only after a validated probe; never leave an unobserved duplicate worker."""
     if not (args.output/'gradient_probe.json').exists():raise ValueError('run GPU probe before detached launch')
+    if read(args.output/'gradient_probe.json')['config'].get('schema')!=SCHEMA:
+        raise ValueError('legacy window probe cannot authorize a full-song launch')
     lock=(args.output/'.launch.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     path=args.output/'launch.json'
     if path.exists() and not args.resume:raise ValueError('existing launch; inspect state before explicit resume')
@@ -189,7 +197,7 @@ def launch(args):
         child=subprocess.Popen(command,cwd=Path.cwd(),stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
     write_json(path,dict(pid=child.pid,started=time.time(),command=command,log=str(log_path),
         source_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
-        requested_version='AL-Event4K@0.2.0' if args.bpm_condition else 'AL-Event4K@0.1.0'))
+        requested_version='AL-Event4K@0.3.0' if args.bpm_condition else 'AL-Event4K@0.4.0'))
     time.sleep(3)
     if child.poll() is not None:raise RuntimeError('worker exited during startup: '+log_path.read_text()[-2000:])
     print(json.dumps(dict(status='launched',pid=child.pid,log=str(log_path))),flush=True)
@@ -204,7 +212,7 @@ def evaluate(model,args,budget,manifest,epoch,version,*,full):
     mel_rows={r['id']:r for r in manifest['rows']};dev_rows={r['id']:r for r in manifest['development']}
     result=[];output=args.output/f'evaluation-e{epoch:04d}';output.mkdir(exist_ok=True)
     def one(id,split,view,reference,clock):
-        prediction=generate(model,view['mel'],view['duration'],clock['bpm'],width=args.width,check=budget.check)
+        prediction=generate(model,view['mel'],view['duration'],clock['bpm'],check=budget.check)
         metrics=scorer.score(reference,prediction,clock,profile)
         if split=='train15':
             matched=sum(len(match_events([n['time_seconds'] for n in reference if n['position']==lane and n['type']==kind],
@@ -217,7 +225,8 @@ def evaluate(model,args,budget,manifest,epoch,version,*,full):
         gaps=sorted([dict(start=a,end=b,seconds=b-a,reference_onsets=sum(a<t<b for t in {n['time_seconds'] for n in reference}))
             for a,b in zip(times,times[1:]) if b>a],key=lambda g:g['seconds'],reverse=True)[:5]
         row=dict(id=id,split=split,status=prediction['status'],metrics=metrics,longest_gaps=gaps,
-            forced_windows=prediction['forced_windows'],unclosed_holds=prediction['unclosed_holds'])
+            termination=prediction['termination'],learned_song_eos=prediction['learned_song_eos'],
+            unclosed_holds=prediction['unclosed_holds'])
         write_json(output/f'{id}.json',dict(**row,version=version,prediction=prediction));result.append(row)
         print(json.dumps(dict(stage='event_evaluation',epoch=epoch,id=id,f1=metrics['onset_f1_50ms'],grid=metrics['grid_bonus'],status=prediction['status'])),flush=True)
     for row in chosen:
@@ -241,7 +250,7 @@ def evaluate(model,args,budget,manifest,epoch,version,*,full):
 
 
 def save_version(args,budget,model,optimizer,sampler,config,epoch,steps,curves,best):
-    version=f'AL-Event4K@0.{2 if args.bpm_condition else 1}.{epoch-1}'
+    version=f'AL-Event4K@0.{3 if args.bpm_condition else 4}.{epoch-1}'
     versions_path=args.output/'versions.json';versions=read(versions_path) if versions_path.exists() else dict(versions=[],aliases={})
     if any(r['version']==version for r in versions['versions']):raise RuntimeError('immutable version already registered')
     state={k:v.detach().cpu() for k,v in model.state_dict().items()}
@@ -268,6 +277,7 @@ def train(args,budget,manifest,targets,device):
     if latest.exists():
         if not args.resume:raise ValueError('checkpoint exists; resume must be explicit')
         old=torch.load(latest,map_location='cpu',weights_only=True)
+        if old.get('schema')!=SCHEMA:raise ValueError('legacy window checkpoint cannot resume the full-song protocol')
         if old['config']!=config:raise ValueError('resume config/source changed')
         model.load_state_dict(old['model'],strict=True);restore_training(old['training_state'],optimizer,sampler)
         curves=old['curves'];steps=old['steps'];started-=curves[-1]['elapsed_seconds'];best=min(r['objective'] for r in curves);del old
@@ -276,7 +286,7 @@ def train(args,budget,manifest,targets,device):
     def status(state,**extra):
         write_json(args.output/'training.json',dict(status=state,pid=os.getpid(),updated=time.time(),config=config,
             steps=steps,curves=curves,resources=budget.log_state(),**extra))
-    version=f'AL-Event4K@0.{2 if args.bpm_condition else 1}.{len(curves)-1}' if curves else None
+    version=f'AL-Event4K@0.{3 if args.bpm_condition else 4}.{len(curves)-1}' if curves else None
     status('running')
     for epoch in range(len(curves),args.epochs):
         order=list(targets['rows']);sampler.shuffle(order);model.train();stats=Counter()
@@ -299,11 +309,11 @@ def train(args,budget,manifest,targets,device):
                 print(json.dumps(dict(stage='event_train',epoch=epoch+1,songs=index+1,steps=steps,resources=budget.log_state())),flush=True)
         record=dict(epoch=epoch+1,steps=steps,elapsed_seconds=time.monotonic()-started,
             time_ce=stats['time_ce']/stats['event_count'],fraction_mse=stats['fraction_mse']/stats['event_count'],
-            event_bce=stats['event_bce']/stats['event_count'],end_ce=stats['end_ce']/stats['stop_count'],
+            event_bce=stats['event_bce']/stats['event_count'],eos_ce=stats['eos_ce']/stats['eos_count'],
             event_exact=stats['event_exact']/stats['event_count'],frame_accuracy=stats['frame_correct']/stats['event_count'],
-            false_end_rate=stats['false_ends']/stats['continue_count'],end_recall=stats['end_correct']/stats['stop_count'],
+            false_eos_rate=stats['false_eos']/stats['continue_count'],eos_recall=stats['eos_correct']/stats['eos_count'],
             conditional_time_mae_seconds=stats['offset_error']/stats['event_count'],counts={k:int(stats[k]) for k in COUNTS})
-        record['objective']=sum(record[k] for k in ['time_ce','fraction_mse','event_bce','end_ce']);curves.append(record)
+        record['objective']=sum(record[k] for k in ['time_ce','fraction_mse','event_bce','eos_ce']);curves.append(record)
         version,best=save_version(args,budget,model,optimizer,sampler,config,epoch+1,steps,curves,best)
         print(json.dumps(dict(version=version,**record)),flush=True);status('running',latest_version=version)
         full=(epoch+1)%args.full_eval_every==0 or epoch+1==args.epochs
@@ -324,12 +334,12 @@ def train(args,budget,manifest,targets,device):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('stage',choices=['prepare','probe','run','launch'])
-    p.add_argument('--output',type=Path,default=Path('out/event4k_bpm_20261105'))
-    p.add_argument('--architecture-config',type=Path,default=Path('docs/evaluations/assets/event4k_20261105/architecture.json'))
+    p.add_argument('--output',type=Path,default=Path('out/event4k_fullsong_bpm_20261105'))
+    p.add_argument('--architecture-config',type=Path,default=Path('docs/evaluations/assets/event4k_fullsong_20261105/architecture.json'))
     p.add_argument('--mel-cache',type=Path,default=Path('out/joint_audio_a_20261102/mel'))
     p.add_argument('--cache',type=Path,default=Path('out/full_corpus_v1/cache'))
     p.add_argument('--bpm-condition',action=argparse.BooleanOptionalAction,default=True)
-    p.add_argument('--epochs',type=int,default=300);p.add_argument('--width',type=float,default=10.)
+    p.add_argument('--epochs',type=int,default=300)
     p.add_argument('--eval-every',type=int,default=20);p.add_argument('--full-eval-every',type=int,default=100)
     p.add_argument('--lr',type=float,default=3e-4);p.add_argument('--encoder-lr',type=float,default=3e-4)
     p.add_argument('--warmup-steps',type=int,default=1500);p.add_argument('--seed',type=int,default=42)

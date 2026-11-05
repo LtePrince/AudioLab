@@ -1,0 +1,26 @@
+{
+  "schema": "audiolab-event4k-architecture-v2",
+  "output_protocol": "audiolab-synchronous-event4k-full-song-v1",
+  "encoder_config": {
+    "n_mels": 128,
+    "hidden_dim": 256,
+    "conv_blocks": 4,
+    "depth": 6,
+    "num_heads": 8,
+    "mlp_ratio": 4.0,
+    "dropout": 0.1,
+    "rope_theta": 10000.0,
+    "mel_per_frame": 2
+  },
+  "decoder_config": {
+    "hidden_dim": 256,
+    "depth": 6,
+    "num_heads": 8,
+    "mem_dim": 256,
+    "time_dim": 128,
+    "dropout": 0.1,
+    "mlp_ratio": 4.0,
+    "bpm_condition": false,
+    "pointer_dim": 64
+  }
+}

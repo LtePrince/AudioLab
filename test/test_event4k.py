@@ -1,10 +1,9 @@
 import math
-from copy import deepcopy
 
 import pytest
 import torch
 
-from src.event4k import Event4K, EventDecoder, encode_events, events_to_notes, normalized_loss, sample_event, source_notes
+from src.event4k import Event4K, EventDecoder, encode_events, event_intervals, events_to_notes, normalized_loss, sample_event, source_notes
 from src.joint_audio_ar import gradient_audit
 from src.pattern_diagnostics import KINDS, LANE_X
 from src.soft_onset import MEMORY_SECONDS, state_hash
@@ -23,15 +22,17 @@ def test_atomic_roundtrip_chords_mixed_holds_reopen_and_final_endpoint():
     assert target['events'][0].sum()==4
     assert target['events'][2,0,3:5].tolist()==[1.,1.]
     assert events_to_notes(target['times'],target['events'])==notes
-    assert target['event_indices'].tolist()==[0,1,-1,2,3,-1]
-    assert target['prefix'].tolist()==[0,1,2,2,3,4]
+    assert target['event_indices'].tolist()==[0,1,2,3,-1]
+    assert target['prefix'].tolist()==[0,1,2,3,4]
+    assert target['eos_count']==1
+    assert not {'width','upper','bounds','stop_count'} & target.keys()
     assert not any('history' in k or 'embedding' in k for k in target)
 
 def test_no_silent_merge_of_unsupported_notes():
     with pytest.raises(ValueError,match='duplicate'):encode_events([note(0,0),note(0,0)],2.,120.)
     with pytest.raises(ValueError,match='overlapping'):encode_events([note(0,0,'hold',1.5),note(.5,0,'hold',1.)],2.,120.)
     t=encode_events([],2.,120.)
-    assert t['event_count']==0 and t['stop_count']==1 and t['event_indices'].tolist()==[-1]
+    assert t['event_count']==0 and t['eos_count']==1 and t['event_indices'].tolist()==[-1]
     with pytest.raises(ValueError,match='HoldEnd'):events_to_notes([0.],torch.tensor([[[0,0,0,0,1]]*4]))
 
 def test_incremental_equals_teacher_forcing_and_no_future_leak():
@@ -64,10 +65,31 @@ def test_all_parameters_learn_from_atomic_targets_and_time_support():
     audit=gradient_audit(model)
     assert audit['all_connected'] and mel.grad.abs().sum()>0
     assert model.chart.bpm_proj.weight.grad.abs().sum()>0
-    # An empty output window must use END, without NaNs or a boundary embedding.
+    # No remaining physical time leaves only EOS, without NaNs or a boundary embedding.
     h=torch.randn(2,32);memory=torch.randn(1,5,32);mask=torch.zeros(2,5,dtype=torch.bool)
     p=model.chart.time_logits(h,memory,mask).softmax(-1)
     assert p[:,-1].tolist()==[1.,1.]
+
+def test_full_song_labels_and_support_cross_old_window_boundaries():
+    times=[0.,9.9,10.,10.1,19.9,20.,20.1]
+    target=encode_events([note(t,0) for t in times],21.,150.)
+    assert target['prefix'].tolist()==list(range(8))
+    assert target['event_indices'].tolist()==list(range(7))+[-1]
+    assert target['eos_count']==1
+    length=math.ceil(21./MEMORY_SECONDS)
+    lo,hi,allowed=event_intervals(torch.tensor([0.,10.001],dtype=torch.float64),21.,length)
+    assert allowed[0].all() and hi[0,-1]==21.
+    assert not allowed[1,:int(10./MEMORY_SECONDS)].any()
+    assert allowed[1,-1] and lo[1,int(10.001/MEMORY_SECONDS)]==10.001
+    # Every event can use all preceding events; neither 10 nor 20 adds a prefix/control row.
+    assert len(target['prefix'])==len(times)+1
+
+def test_legacy_window_labels_cannot_silently_train_full_song_eos():
+    model=Event4K(ENC,DEC);target=encode_events([note(.1,0)],1.,150.)
+    mel=torch.zeros(128,2*math.ceil(1./MEMORY_SECONDS))
+    for changed in ({'schema':'audiolab-synchronous-event4k-v1'}, {'stop_count':2}, {'eos_count':2}):
+        with pytest.raises(ValueError,match='full-song'):
+            model.components(dict(target,**changed),mel,1.)
 
 def test_silent_view_has_finite_loss_and_connected_heads():
     torch.set_num_threads(2);model=Event4K(ENC,DEC).train();target=encode_events([],1.,150.)

@@ -383,7 +383,8 @@
         "full_audio_cross_attention": true,
         "explicit_soft_onset_dim": 0
       },
-      "weights": null
+      "weights": null,
+      "implementation_source_commit": "28f2a2ba912e3723abdb7fcc9d1412b881ad52e2"
     },
     {
       "id": "AL-Event4K@0.2.0",
@@ -425,7 +426,90 @@
       "run": "E26-BPM",
       "planned_first_checkpoint": "out/event4k_bpm_20261105/model_e0001.pt",
       "progress_file": "out/event4k_bpm_20261105/training.json",
-      "weight_version_manifest": "out/event4k_bpm_20261105/versions.json"
+      "weight_version_manifest": "out/event4k_bpm_20261105/versions.json",
+      "implementation_source_commit": "28f2a2ba912e3723abdb7fcc9d1412b881ad52e2"
+    },
+    {
+      "id": "AL-Event4K@0.3.0",
+      "family": "AL-Event4K",
+      "version": "0.3.0",
+      "title": "整曲同步事件AR：时间嵌入＋显式BPM",
+      "output_protocol": "audiolab-synchronous-event4k-full-song-v1",
+      "delivery": "not_available_untrained",
+      "training_status": "not_started_user_pause",
+      "implementation_status": "implemented_and_cpu_validated",
+      "quality_status": "not_evaluated",
+      "evidence": "docs/evaluations/event4k_fullsong_20261105.md",
+      "input_contract": {
+        "chart_event_shape": [
+          4,
+          5
+        ],
+        "columns": [
+          "Tap",
+          "Drag",
+          "Flick",
+          "HoldStart",
+          "HoldEnd"
+        ],
+        "same_time_single_event_token": true,
+        "event_embedding": "flattened_sparse_binary_matrix_projection",
+        "event_output": "4x5_multilabel_logits",
+        "explicit_history_summary_dim": 0,
+        "explicit_bpm_condition": true,
+        "musical_time_embedding": true,
+        "window_boundary_embedding": false,
+        "window_output_constraint": false,
+        "causal_chart_self_attention": true,
+        "full_audio_cross_attention": true,
+        "explicit_soft_onset_dim": 0,
+        "intermediate_window_end_targets": false,
+        "terminal_song_eos_per_sequence": 1
+      },
+      "weights": null,
+      "run": "E27-BPM",
+      "parameters": 13439894
+    },
+    {
+      "id": "AL-Event4K@0.4.0",
+      "family": "AL-Event4K",
+      "version": "0.4.0",
+      "title": "整曲同步事件AR：时间嵌入；无显式BPM",
+      "output_protocol": "audiolab-synchronous-event4k-full-song-v1",
+      "delivery": "not_available_untrained",
+      "training_status": "not_started_user_pause",
+      "implementation_status": "implemented_and_cpu_validated",
+      "quality_status": "not_evaluated",
+      "evidence": "docs/evaluations/event4k_fullsong_20261105.md",
+      "input_contract": {
+        "chart_event_shape": [
+          4,
+          5
+        ],
+        "columns": [
+          "Tap",
+          "Drag",
+          "Flick",
+          "HoldStart",
+          "HoldEnd"
+        ],
+        "same_time_single_event_token": true,
+        "event_embedding": "flattened_sparse_binary_matrix_projection",
+        "event_output": "4x5_multilabel_logits",
+        "explicit_history_summary_dim": 0,
+        "explicit_bpm_condition": false,
+        "musical_time_embedding": true,
+        "window_boundary_embedding": false,
+        "window_output_constraint": false,
+        "causal_chart_self_attention": true,
+        "full_audio_cross_attention": true,
+        "explicit_soft_onset_dim": 0,
+        "intermediate_window_end_targets": false,
+        "terminal_song_eos_per_sequence": 1
+      },
+      "weights": null,
+      "run": "E27-NOBPM",
+      "parameters": 13439638
     }
   ],
   "experiments": [
@@ -6740,6 +6824,55 @@
       "updated_at_utc": "2026-11-04T23:43:37.340787+00:00",
       "user_decision": "Train BPM arm first; explicit confirmation of END_WINDOW competing with in-window time candidates. No-BPM comparison remains unstarted.",
       "progress_snapshot_utc": "2026-11-05T00:34:09.307891+00:00"
+    },
+    {
+      "id": "E27",
+      "title": "Event4K取消输出分窗：整曲单EOS",
+      "kind": "output_protocol_change_and_cpu_validation",
+      "models": [
+        "AL-Event4K@0.3.0",
+        "AL-Event4K@0.4.0"
+      ],
+      "status": "implemented_cpu_validated_training_not_started",
+      "training_updates": 0,
+      "quality_status": "not_evaluated",
+      "question": "取消周期性END_WINDOW及输出时间窗，保留完整历史与全曲音频，检查自由生成的误结束和缺音。",
+      "result": {
+        "songs": 300,
+        "counts": {
+          "views": 1200,
+          "notes": 326277,
+          "events": 287291,
+          "hold_ends": 33670,
+          "chord_events": 55562,
+          "eos_labels": 1200,
+          "legacy_intermediate_window_ends_removed": 5512
+        },
+        "codec_errors": 0,
+        "tests_passed": 34,
+        "natural_song_quality": null
+      },
+      "evidence": [
+        "docs/evaluations/event4k_fullsong_20261105.md",
+        "docs/evaluations/assets/event4k_fullsong_20261105/codec_audit.json"
+      ],
+      "output_protocol": "audiolab-synchronous-event4k-full-song-v1",
+      "target_manifest_sha256": "88a8442466d2ab3f63655fe5e6bb0c0208263a3640d9155cc5e9582034b7a1c7",
+      "source_sha256": {
+        "src/event4k.py": "13dda9d47bb2c9627cfd02549bb6f3c7b0d9fef0e4cd9bc5d5702298d3a69473",
+        "script/train_event4k.py": "0bb15b083203006be4a5deb680c1a6dce9ca39945cb80e490bbd13c179a9229a",
+        "test/test_event4k.py": "64dc65fa482c59870d76d6e177357aeb04f5f2517d77d3ec4daba00939dda048",
+        "test/test_event4k_training.py": "8161ae9d262eaa9f7b63972167d28c9dd055be61d491ee94e9fb2a72f11b53f8"
+      },
+      "updated_at_utc": "2026-11-05T01:13:40.127118+00:00",
+      "controls": [
+        "Same 4x5 event input, physical time, optional BPM, full audio and full causal chart history.",
+        "One terminal EOS per full-song or separately cropped audio sample; no intermediate END_WINDOW.",
+        "No periodic history reset or time-output window; only monotonicity and physical audio limits.",
+        "Forced audio/event-budget cutoff is not counted as learned EOS.",
+        "Legacy E26 checkpoint/cache schema cannot silently resume under E27.",
+        "No natural-song training or new retained weights; original E26 process remains stopped."
+      ]
     }
   ],
   "bundles": [
@@ -7106,8 +7239,8 @@
     "2026-11-05 naming update: distinct structures receive distinct names; conditioning and checkpoint differences use version numbers. E22/e20 and E23/e300 receive exact AL-AR4K v0.7.1/v0.7.2 aliases after file SHA verification; legacy metadata and bytes remain unchanged. E25 proposals superseded by Event4K E26 before any implementation/training."
   ],
   "route_policy": {
-    "updated_at_utc": "2026-11-05T00:34:09.307891+00:00",
-    "user_decision": "Pause S; A full encoder and decoder now train from random initialization.",
+    "updated_at_utc": "2026-11-05T01:13:40.127118+00:00",
+    "user_decision": "Keep training paused; remove Event4K output windows and intermediate END_WINDOW; retain complete chart history and full audio.",
     "S": {
       "status": "paused_by_user",
       "scope": "future training/optimization for 4K and free-x; retain historical weights/results"
@@ -7115,25 +7248,26 @@
     "A": {
       "status": "paused_by_user",
       "active_run": "E26-BPM",
-      "scope": "Event4K with BPM: all300, random full encoder+decoder; no-BPM and free-x not started",
+      "scope": "E26-BPM remains stopped; E27 full-song code and labels ready. No new training or automatic resume.",
       "initialization": "scratch",
       "latest_completed_run": "E23-A",
       "latest_checkpoint_version": "AL-AR4K@0.7.2",
-      "next_design": "E26",
-      "next_design_status": "paused_by_user"
+      "next_design": "E27",
+      "next_design_status": "implemented_cpu_validated_training_not_started"
     }
   },
   "legacy_version_policy": "Retrospective catalog IDs, not upstream release claims. 0.x denotes development. Minor identifies architecture/conditioning/data stages; patch identifies same-architecture continuation or fixes. Variants and checkpoint epochs are separate. No weight bytes or existing paths are renamed. Extending the epoch budget within an unchanged experiment keeps the version and experiment ID; record the phase, parent checkpoint and epoch.",
   "naming_policy": {
     "effective_date": "2026-11-05",
     "source": "explicit_user_instruction",
-    "format": "MODEL_NAME@0.CONDITION.WEIGHT_REVISION",
+    "format": "MODEL_NAME@0.CONFIGURATION.WEIGHT_REVISION",
     "new_name_for": "core input representation changes",
-    "same_name_for": "optional information injection such as BPM, onset or history summary",
+    "same_name_for": "optional information injection such as BPM, onset or history summary; output protocol changes with unchanged core input representation",
     "weight_revision_for": "every different retained/evaluated/delivered parameter checkpoint, including continuation and seed changes",
     "version_is_quality_ranking": false,
     "latest_is_alias_only": true,
     "legacy_records_preserved": true,
-    "evidence": "docs/event4k_model_design_20261105.md"
+    "evidence": "docs/event4k_model_design_20261105.md",
+    "configuration_for": "conditioning or output protocol; 0.1/0.2 legacy windows, 0.3/0.4 full-song single EOS"
   }
 }

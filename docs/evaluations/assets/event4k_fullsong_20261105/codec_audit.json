@@ -1,0 +1,50 @@
+{
+  "schema": "audiolab-synchronous-event4k-full-song-v1",
+  "status": "completed",
+  "contract": {
+    "schema": "audiolab-synchronous-event4k-full-song-v1",
+    "mel_manifest_sha256": "dd5c2e7e638e26b736a44457f47de8f5bade4e2d385152c36c13f8bcfc8a0ea3",
+    "codec_source_sha256": "13dda9d47bb2c9627cfd02549bb6f3c7b0d9fef0e4cd9bc5d5702298d3a69473",
+    "output_protocol": "full_song_single_eos",
+    "precision_seconds": 1e-09
+  },
+  "counts": {
+    "views": 1200,
+    "notes": 326277,
+    "events": 287291,
+    "hold_ends": 33670,
+    "chord_events": 55562,
+    "eos_labels": 1200,
+    "legacy_intermediate_window_ends_removed": 5512
+  },
+  "errors": [],
+  "bytes": 52581348,
+  "max_roundtrip_error_seconds": 5.000089231543825e-10,
+  "songs": 300,
+  "target_manifest": "out/event4k_fullsong_bpm_20261105/targets/manifest.json",
+  "target_manifest_sha256": "88a8442466d2ab3f63655fe5e6bb0c0208263a3640d9155cc5e9582034b7a1c7",
+  "completed_at_utc": "2026-11-05T01:13:40.127118+00:00",
+  "training_updates": 0,
+  "scope": "CPU-only codec audit; no natural-song fitting or GPU probe",
+  "source_sha256": {
+    "src/event4k.py": "13dda9d47bb2c9627cfd02549bb6f3c7b0d9fef0e4cd9bc5d5702298d3a69473",
+    "script/train_event4k.py": "0bb15b083203006be4a5deb680c1a6dce9ca39945cb80e490bbd13c179a9229a",
+    "test/test_event4k.py": "64dc65fa482c59870d76d6e177357aeb04f5f2517d77d3ec4daba00939dda048",
+    "test/test_event4k_training.py": "8161ae9d262eaa9f7b63972167d28c9dd055be61d491ee94e9fb2a72f11b53f8"
+  },
+  "verification": {
+    "tests_passed": 34,
+    "command": ".venv/bin/python -m pytest -q test/test_event4k.py test/test_event4k_training.py test/test_joint_audio_ar.py test/test_joint_audio_scratch.py test/test_windowed_ar.py test/test_windowed_freex.py",
+    "synthetic_fit": "Disposable 1-second small model: 250 updates; loss < 0.01, 3 recovered notes, timing error < 2 ms and learned song EOS. No retained weights."
+  },
+  "paused_run": {
+    "id": "E26-BPM",
+    "pid": 2391455,
+    "process_state_observed": "Tsl",
+    "last_reported_steps": 2440,
+    "completed_epochs": 8,
+    "latest_saved_version": "AL-Event4K@0.2.7",
+    "source_commit": "28f2a2ba912e3723abdb7fcc9d1412b881ad52e2",
+    "automatically_resumed": false
+  }
+}

@@ -1,4 +1,4 @@
-"""Synchronous 4x5 event AR. Window bounds affect output support only."""
+"""Full-song synchronous 4x5 event AR with one terminal EOS per sequence."""
 from __future__ import annotations
 
 from collections import Counter
@@ -10,20 +10,18 @@ from torch import nn
 import torch.nn.functional as F
 from torch.utils.checkpoint import checkpoint
 
-from src.chart_windows import chart_windows
 from src.data.chart_tokenizer import ChartTokenizer
 from src.joint_audio_ar import AcousticBackbone
 from src.models.attention import rope1d
 from src.models.chart_decoder import DecoderBlock, time_embed
 from src.pattern_diagnostics import KINDS, LANE_X
 from src.soft_onset import MEMORY_SECONDS
-from src.windowed_ar import window_intervals
 
-SCHEMA = 'audiolab-synchronous-event4k-v1'
+SCHEMA = 'audiolab-synchronous-event4k-full-song-v1'
 COLUMNS = ('Tap', 'Drag', 'Flick', 'HoldStart', 'HoldEnd')
 TYPE_COLUMN = {1: 0, 2: 1, 3: 3, 4: 2}
 COLUMN_TYPE = {v: k for k, v in TYPE_COLUMN.items()}
-COUNTS = ('event_count', 'continue_count', 'stop_count')
+COUNTS = ('event_count', 'continue_count', 'eos_count')
 TIME_EPS = 1e-9  # Floating-point canonicalization, not musical quantization.
 
 
@@ -52,9 +50,9 @@ def source_notes(target):
     return notes
 
 
-def encode_events(notes, duration, bpm, *, width=10.):
+def encode_events(notes, duration, bpm):
     if not math.isfinite(bpm) or bpm <= 0: raise ValueError('positive finite BPM required')
-    windows = chart_windows(duration, width)
+    if not math.isfinite(duration) or duration <= 0: raise ValueError('positive finite duration required')
     inverse = {v:k for k,v in KINDS.items()}; groups = {}
     def add(t, lane, column):
         key = round(t / TIME_EPS)
@@ -76,23 +74,22 @@ def encode_events(notes, duration, bpm, *, width=10.):
     # Validate pairing and ensure conversion cannot silently lose overlapping Holds.
     reconstructed = events_to_notes(times.tolist(), events)
     if len(reconstructed) != len(notes): raise ValueError('event codec changed note count')
-    prefix = []; lower = []; upper = []; next_times = []; indices = []; index = 0
-    for window in windows:
-        def decision(next_index):
-            previous = float(times[index-1]) if index else -TIME_EPS
-            prefix.append(index); lower.append(max(window.start, previous+TIME_EPS))
-            upper.append(window.end); indices.append(next_index)
-            next_times.append(float(times[next_index]) if next_index >= 0 else 0.)
-        while index < len(times) and (float(times[index]) < window.end or
-                                     window.index == len(windows)-1 and float(times[index]) == duration):
-            decision(index); index += 1
-        decision(-1)
-    if index != len(times): raise ValueError('unassigned events')
-    return dict(events=events, times=times, prefix=torch.tensor(prefix),
-        lower=torch.tensor(lower,dtype=torch.float64), upper=torch.tensor(upper,dtype=torch.float64),
-        next_times=torch.tensor(next_times,dtype=torch.float64), event_indices=torch.tensor(indices),
-        event_count=len(times), continue_count=len(times), stop_count=len(windows),
-        duration=float(duration), bpm=float(bpm), width=float(width), reference=notes)
+    # Each complete prefix predicts the next event, or exactly one final EOS.
+    # No boundary decisions, duplicated prefixes, scheduling tokens or upper windows.
+    return dict(schema=SCHEMA, events=events, times=times, prefix=torch.arange(len(times)+1),
+        lower=torch.cat([times.new_zeros(1),times+TIME_EPS]),
+        next_times=torch.cat([times,times.new_zeros(1)]),
+        event_indices=torch.cat([torch.arange(len(times)),torch.tensor([-1])]),
+        event_count=len(times), continue_count=len(times), eos_count=1,
+        duration=float(duration), bpm=float(bpm), reference=notes)
+
+
+def event_intervals(lower, duration, length):
+    """Every remaining physical audio interval; no per-window restriction."""
+    edges=torch.arange(length+1,device=lower.device,dtype=lower.dtype)*MEMORY_SECONDS
+    lo=torch.maximum(edges[:-1][None],lower[:,None])
+    hi=torch.minimum(edges[1:][None],lower.new_tensor(duration)).expand_as(lo)
+    return lo,hi,hi>lo
 
 
 def events_to_notes(times, events, *, allow_open=False):
@@ -137,7 +134,7 @@ class EventDecoder(nn.Module):
         self.norm = nn.LayerNorm(hidden_dim)
         self.time_query = nn.Linear(hidden_dim,pointer_dim)
         self.time_key = nn.Linear(hidden_dim,pointer_dim)
-        self.end_head = nn.Linear(hidden_dim,1)
+        self.eos_head = nn.Linear(hidden_dim,1)
         self.fraction_head = nn.Sequential(nn.Linear(2*hidden_dim,128),nn.GELU(),nn.Linear(128,1))
         self.event_head = nn.Sequential(nn.Linear(3*hidden_dim,hidden_dim),nn.GELU(),nn.Linear(hidden_dim,20))
         # Construct optional module last, with isolated RNG: common tensors match the no-BPM arm.
@@ -175,8 +172,8 @@ class EventDecoder(nn.Module):
     def time_logits(self, h, memory, allowed):
         keys = self.time_key(memory[0])
         scores = (self.time_query(h)@keys.T/math.sqrt(keys.shape[-1])).masked_fill(~allowed,-torch.inf)
-        # END competes with this window's valid event times. No independent stop sigmoid.
-        return torch.cat([scores,self.end_head(h)],-1)
+        # Song EOS competes with all remaining valid times, with no periodic END.
+        return torch.cat([scores,self.eos_head(h)],-1)
 
     def fractions(self,h,audio):
         return self.fraction_head(torch.cat([h,audio],-1)).sigmoid().squeeze(-1)
@@ -193,6 +190,7 @@ class Event4K(nn.Module):
         self.chart = EventDecoder(**decoder_config)
 
     def condition(self,mel,duration):
+        if not math.isfinite(duration) or duration<=0:raise ValueError('positive finite duration required')
         length = math.ceil(duration/MEMORY_SECONDS)
         if mel.ndim!=2 or mel.shape[0]!=128 or mel.shape[1]!=length*2:
             raise ValueError('complete even-padded physical-clock Mel required')
@@ -205,14 +203,17 @@ class Event4K(nn.Module):
                 dict(name='encoder',params=list(self.acoustic.parameters()),lr=encoder_lr)]
 
     def components(self,target,mel,duration):
+        if target.get('schema')!=SCHEMA or target.get('eos_count')!=1 or any(k in target for k in ('width','upper','bounds','stop_count')):
+            raise ValueError('full-song event target with one EOS required; legacy window targets are incompatible')
+        if target['duration']!=duration:raise ValueError('target and audio durations differ')
         c=self.chart; memory=c.memory(self.condition(mel,duration)['features']);device=memory.device
         events=target['events'].to(device);times=target['times'].to(device)
         inputs=torch.cat([events.new_zeros(1,4,5),events])[None]
         clocks=torch.cat([times.new_zeros(1),times])[None]
         hidden=c.hidden(inputs,clocks,memory,target['bpm'])[0]
         h=hidden[target['prefix'].to(device)];indices=target['event_indices'].to(device);positive=indices>=0
-        lower,upper=target['lower'].to(device),target['upper'].to(device)
-        lo,hi,allowed=window_intervals(lower,upper,memory.shape[1],torch.ones(memory.shape[1],dtype=torch.bool,device=device))
+        lower=target['lower'].to(device)
+        lo,hi,allowed=event_intervals(lower,duration,memory.shape[1])
         logits=c.time_logits(h,memory,allowed)
         labels=torch.full_like(indices,memory.shape[1]);truth=target['next_times'].to(device)[positive]
         edges=torch.arange(memory.shape[1]+1,device=device,dtype=torch.float64)*MEMORY_SECONDS
@@ -236,15 +237,15 @@ class Event4K(nn.Module):
             bit_correct=float(((output>=0)==reference.bool()).sum())
             frame_correct=float((logits[positive].argmax(-1)==bins).sum())
             offset_error=float((a+fractions*(b-a)-truth).abs().sum().detach())
-        return dict(time_ce=loss[positive].sum(),end_ce=loss[~positive].sum(),event_bce=event_loss,
+        return dict(time_ce=loss[positive].sum(),eos_ce=loss[~positive].sum(),event_bce=event_loss,
             fraction_mse=fraction_loss,event_exact=exact,event_bits_correct=bit_correct,frame_correct=frame_correct,
-            end_correct=float((logits[~positive].argmax(-1)==memory.shape[1]).sum()),
-            false_ends=float((logits[positive].argmax(-1)==memory.shape[1]).sum()),offset_error=offset_error)
+            eos_correct=float((logits[~positive].argmax(-1)==memory.shape[1]).sum()),
+            false_eos=float((logits[positive].argmax(-1)==memory.shape[1]).sum()),offset_error=offset_error)
 
 
 def normalized_loss(parts,counts):
     return ((parts['time_ce']+parts['fraction_mse']+parts['event_bce'])/max(1,counts['event_count'])
-            +parts['end_ce']/max(1,counts['stop_count']))
+            +parts['eos_ce']/max(1,counts['eos_count']))
 
 
 def sample_event(logits,active,*,greedy,rng):
@@ -278,52 +279,48 @@ def sample_event(logits,active,*,greedy,rng):
 
 
 @torch.no_grad()
-def generate(model,mel,duration,bpm,*,greedy=True,seed=42,width=10.,max_events=12000,check=lambda:None):
+def generate(model,mel,duration,bpm,*,greedy=True,seed=42,max_events=12000,check=lambda:None):
+    if type(max_events) is not int or max_events<1:raise ValueError('positive event budget required')
     model.eval();start=time.monotonic();c=model.chart;condition=model.condition(mel,duration)
     memory=c.memory(condition['features']);caches=[b.init_cache(memory) for b in c.blocks]
     rng=torch.Generator(device=memory.device).manual_seed(seed)
-    events=[];times=[];notes=[];active={};records=[];position=0
+    events=[];times=[];notes=[];active={};position=0
     h=c.step(memory.new_zeros(4,5),0.,position,caches,bpm)
-    error=None
-    for window in chart_windows(duration,width):
-        count=0
-        while True:
-            check()
-            if len(events)>=max_events:error='event_budget_exhausted';break
-            lower=max(window.start,times[-1]+TIME_EPS if times else window.start)
-            lo,hi,allowed=window_intervals(memory.new_tensor([lower],dtype=torch.float64),
-                memory.new_tensor([window.end],dtype=torch.float64),memory.shape[1],
-                torch.ones(memory.shape[1],dtype=torch.bool,device=memory.device))
-            if not allowed.any():
-                records.append(dict(index=window.index,start=window.start,end=window.end,termination='forced_no_remaining_interval',event_count=count));break
-            logits=c.time_logits(h,memory,allowed)[0]
-            index=int(logits.argmax()) if greedy else int(torch.multinomial(logits.softmax(-1),1,generator=rng))
-            if index==memory.shape[1]:
-                records.append(dict(index=window.index,start=window.start,end=window.end,termination='learned_end_window',event_count=count));break
-            a,b=float(lo[0,index]),float(hi[0,index])
-            fraction=float(c.fractions(h,memory[0,index:index+1])[0])
-            t=min(a+fraction*(b-a),math.nextafter(b,a))
-            if not lower<=t<window.end:raise RuntimeError('event outside output window')
-            event=sample_event(c.event_logits(h,memory[0,index:index+1],memory.new_tensor([t],dtype=torch.float64))[0],active,greedy=greedy,rng=rng)
-            for lane in range(4):
-                if event[lane,4]:notes[active.pop(lane)]['end_seconds']=t
-                for column in range(4):
-                    if event[lane,column]:
-                        notes.append(dict(time_seconds=t,end_seconds=t,position=lane,type=KINDS[COLUMN_TYPE[column]],screen_x=LANE_X[lane]))
-                        if column==3:active[lane]=len(notes)-1
-            events.append(event.cpu().tolist());times.append(t);count+=1;position+=1
-            h=c.step(event,t,position,caches,bpm)
-        if error:break
+    error=None;learned_eos=False;termination=None
+    while True:
+        check()
+        lower=times[-1]+TIME_EPS if times else 0.
+        lo,hi,allowed=event_intervals(memory.new_tensor([lower],dtype=torch.float64),duration,memory.shape[1])
+        if not allowed.any():
+            error='no_remaining_audio_interval';termination='forced_audio_end';break
+        logits=c.time_logits(h,memory,allowed)[0]
+        index=int(logits.argmax()) if greedy else int(torch.multinomial(logits.softmax(-1),1,generator=rng))
+        if index==memory.shape[1]:
+            learned_eos=True;termination='learned_song_eos';break
+        if len(events)>=max_events:
+            error='event_budget_exhausted';termination=error;break
+        a,b=float(lo[0,index]),float(hi[0,index])
+        fraction=float(c.fractions(h,memory[0,index:index+1])[0])
+        t=min(a+fraction*(b-a),math.nextafter(b,a))
+        if not lower<=t<duration:raise RuntimeError('event outside physical audio')
+        event=sample_event(c.event_logits(h,memory[0,index:index+1],memory.new_tensor([t],dtype=torch.float64))[0],active,greedy=greedy,rng=rng)
+        for lane in range(4):
+            if event[lane,4]:notes[active.pop(lane)]['end_seconds']=t
+            for column in range(4):
+                if event[lane,column]:
+                    notes.append(dict(time_seconds=t,end_seconds=t,position=lane,type=KINDS[COLUMN_TYPE[column]],screen_x=LANE_X[lane]))
+                    if column==3:active[lane]=len(notes)-1
+        events.append(event.cpu().tolist());times.append(t);position+=1
+        h=c.step(event,t,position,caches,bpm)
     if active:error=error or 'unclosed_holds'
     # Keep incomplete notes visible for diagnostics, explicitly marking their invalid pairing.
     for lane,index in active.items():notes[index]['unclosed_hold']=True
-    forced=sum(w['termination']!='learned_end_window' for w in records)
-    completed=error is None and not forced and len(records)==len(chart_windows(duration,width))
+    completed=error is None and learned_eos
     onsets=sorted({n['time_seconds'] for n in notes})
     return dict(status='completed' if completed else 'failed',error=error,notes=notes,onsets_seconds=onsets,
         note_count=len(notes),generated_onsets=len(onsets),types=dict(Counter(n['type'] for n in notes)),
         event_times_seconds=times,events=events,event_count=len(events),unclosed_holds=len(active),
-        hold_end_events=sum(sum(row[4] for row in e) for e in events),windows=records,forced_windows=forced,
-        learned_window_end_fraction=sum(w['termination']=='learned_end_window' for w in records)/len(chart_windows(duration,width)),
-        learned_song_eos=False,termination='window_scheduler_completed' if len(records)==len(chart_windows(duration,width)) else error,
-        eos_clock_seconds=None,last_onset_seconds=onsets[-1] if onsets else None,seconds=time.monotonic()-start)
+        hold_end_events=sum(sum(row[4] for row in e) for e in events),
+        learned_song_eos=learned_eos,termination=termination,
+        eos_clock_seconds=(times[-1] if times else 0.) if learned_eos else None,
+        last_onset_seconds=onsets[-1] if onsets else None,seconds=time.monotonic()-start)
