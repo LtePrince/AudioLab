@@ -203,6 +203,11 @@ def launch(args):
     print(json.dumps(dict(status='launched',pid=child.pid,log=str(log_path))),flush=True)
 
 
+def reference_clock(meta):
+    return dict(bpm=meta['timebase_bpm'],beat_zero_seconds=meta.get('offset_seconds',0.),
+                source='training_chart_metadata',verified=False)
+
+
 @torch.no_grad()
 def evaluate(model,args,budget,manifest,epoch,version,*,full):
     model.eval();scorer=scoring_module();profile=read('benchmarks/v1/protocol.json')['rhythm']
@@ -227,12 +232,12 @@ def evaluate(model,args,budget,manifest,epoch,version,*,full):
         row=dict(id=id,split=split,status=prediction['status'],metrics=metrics,longest_gaps=gaps,
             termination=prediction['termination'],learned_song_eos=prediction['learned_song_eos'],
             unclosed_holds=prediction['unclosed_holds'])
-        write_json(output/f'{id}.json',dict(**row,version=version,prediction=prediction));result.append(row)
+        write_json(output/f'{id}.json',dict(**row,version=version,epoch=epoch,prediction=prediction));result.append(row)
         print(json.dumps(dict(stage='event_evaluation',epoch=epoch,id=id,f1=metrics['onset_f1_50ms'],grid=metrics['grid_bonus'],status=prediction['status'])),flush=True)
     for row in chosen:
         sample=load_sample(args.cache,row);meta=sample['routes']['4k']['reference']
         view=torch.load(args.mel_cache/mel_rows[row['id']]['file'],map_location='cpu',weights_only=True)['views'][0]
-        one(row['id'],'train15',view,natural_reference(sample),dict(bpm=meta['timebase_bpm'],beat_zero_seconds=meta.get('offset_seconds',0.)))
+        one(row['id'],'train15',view,natural_reference(sample),reference_clock(meta))
         del sample,view
     for song in read(E20)['songs']:
         if not full and song['id'] not in (40717,52417):continue
@@ -249,23 +254,54 @@ def evaluate(model,args,budget,manifest,epoch,version,*,full):
     return aggregates
 
 
+def checkpoint_manifest(manifest,version):
+    """One product version per run; preserve old labels as checkpoint aliases."""
+    result=dict(manifest,product=version,version_policy='one_version_per_training_plan')
+    result['versions']=[];aliases={}
+    for entry in manifest['versions']:
+        row=dict(entry);identity=f'{version}/e{row["epoch"]:04d}'
+        aliases[row['version']]=identity
+        if row['version']!=version:row.setdefault('legacy_version',row['version'])
+        row.update(version=version,checkpoint_id=identity);result['versions'].append(row)
+    result['aliases']={k:aliases.get(v,v) for k,v in manifest.get('aliases',{}).items()}
+    return result
+
+
+def check_resume_config(saved,current,output,checkpoint):
+    if saved==current:return
+    # Only an explicitly recorded metadata/evaluation patch may change this file.
+    # Model, data, optimizer and schedule changes still require a separate experiment.
+    if {k:v for k,v in saved.items() if k!='source_sha256'}!={k:v for k,v in current.items() if k!='source_sha256'}:
+        raise ValueError('resume training config changed')
+    old,new=saved['source_sha256'],current['source_sha256']
+    if set(old)!=set(new) or {k for k in old if old[k]!=new[k]}!={'script/train_event4k.py'}:
+        raise ValueError('resume model/data source changed')
+    path=output/'resume_compatibility.json'
+    expected=dict(scope='version_metadata_and_evaluation_only',checkpoint_sha256=sha256(checkpoint),
+                  old_trainer_sha256=old['script/train_event4k.py'],new_trainer_sha256=new['script/train_event4k.py'])
+    if not path.exists() or any(read(path).get(k)!=v for k,v in expected.items()):
+        raise ValueError('resume source patch requires exact recorded compatibility')
+
+
 def save_version(args,budget,model,optimizer,sampler,config,epoch,steps,curves,best):
-    version=f'AL-Event4K@0.{3 if args.bpm_condition else 4}.{epoch-1}'
+    version=config.get('requested_version',f'AL-Event4K@0.{3 if args.bpm_condition else 4}.0')
+    identity=f'{version}/e{epoch:04d}'
     versions_path=args.output/'versions.json';versions=read(versions_path) if versions_path.exists() else dict(versions=[],aliases={})
-    if any(r['version']==version for r in versions['versions']):raise RuntimeError('immutable version already registered')
+    versions=checkpoint_manifest(versions,version)
+    if any(r['epoch']==epoch for r in versions['versions']):raise RuntimeError('immutable checkpoint already registered')
     state={k:v.detach().cpu() for k,v in model.state_dict().items()}
-    payload=dict(schema=SCHEMA,product=version,config=config,epoch=epoch,steps=steps,model=state,
+    payload=dict(schema=SCHEMA,product=version,checkpoint_id=identity,config=config,epoch=epoch,steps=steps,model=state,
         curves=curves,parameter_sha256=state_hash(state),training_state=training_state(optimizer,sampler))
     latest=args.output/'model_latest.pt';budget.save(payload,latest)
     if curves[-1]['objective']<best:
         best=curves[-1]['objective'];budget.save({k:v for k,v in payload.items() if k!='training_state'},args.output/'model_best_fit.pt')
-        versions['aliases']['best_fit']=version
+        versions['aliases']['best_fit']=identity
     retained=[]
     if epoch==1 or epoch%100==0 or epoch==args.epochs:
         path=args.output/f'model_e{epoch:04d}.pt';budget.save({k:v for k,v in payload.items() if k!='training_state'},path);retained.append(path.name)
-    versions['versions'].append(dict(version=version,epoch=epoch,steps=steps,parameter_sha256=payload['parameter_sha256'],
+    versions['versions'].append(dict(version=version,checkpoint_id=identity,epoch=epoch,steps=steps,parameter_sha256=payload['parameter_sha256'],
         checkpoint_sha256=sha256(latest),retained_inference_files=retained))
-    versions['aliases']['latest']=version;write_json(versions_path,versions)
+    versions['aliases']['latest']=identity;write_json(versions_path,versions)
     return version,best
 
 
@@ -278,7 +314,7 @@ def train(args,budget,manifest,targets,device):
         if not args.resume:raise ValueError('checkpoint exists; resume must be explicit')
         old=torch.load(latest,map_location='cpu',weights_only=True)
         if old.get('schema')!=SCHEMA:raise ValueError('legacy window checkpoint cannot resume the full-song protocol')
-        if old['config']!=config:raise ValueError('resume config/source changed')
+        check_resume_config(old['config'],config,args.output,latest)
         model.load_state_dict(old['model'],strict=True);restore_training(old['training_state'],optimizer,sampler)
         curves=old['curves'];steps=old['steps'];started-=curves[-1]['elapsed_seconds'];best=min(r['objective'] for r in curves);del old
     else:torch.manual_seed(args.seed+1000)
@@ -286,8 +322,18 @@ def train(args,budget,manifest,targets,device):
     def status(state,**extra):
         write_json(args.output/'training.json',dict(status=state,pid=os.getpid(),updated=time.time(),config=config,
             steps=steps,curves=curves,resources=budget.log_state(),**extra))
-    version=f'AL-Event4K@0.{3 if args.bpm_condition else 4}.{len(curves)-1}' if curves else None
+    version=config['requested_version']
     status('running')
+    # A crash after checkpoint saving must not silently skip its scheduled evaluation.
+    if curves:
+        previous=len(curves);full=previous%args.full_eval_every==0 or previous==args.epochs
+        summary=args.output/f'evaluation-e{previous:04d}'/'summary.json'
+        if (previous%args.eval_every==0 or full) and (not summary.exists() or full and not read(summary).get('full')):
+            status('evaluating',latest_version=version)
+            with torch.random.fork_rng(devices=[device.index or 0] if device.type=='cuda' else []):
+                evaluate(model,args,budget,manifest,previous,version,full=full)
+            gc.collect()
+            if device.type=='cuda':torch.cuda.empty_cache()
     for epoch in range(len(curves),args.epochs):
         order=list(targets['rows']);sampler.shuffle(order);model.train();stats=Counter()
         for index,row in enumerate(order):

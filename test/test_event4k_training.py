@@ -7,7 +7,7 @@ import pytest
 import torch
 
 from script.train_alignment_scratch import restore_training
-from script.train_event4k import save_version
+from script.train_event4k import save_version, checkpoint_manifest, check_resume_config, reference_clock, scoring_module
 from src.audio_understanding.inference import sha256
 from src.event4k import Event4K, encode_events, normalized_loss, generate
 from src.soft_onset import MEMORY_SECONDS, state_hash
@@ -42,7 +42,7 @@ def test_tiny_case_learns_atomic_chord_hold_and_one_song_eos():
         assert abs(actual['end_seconds']-expected['end_seconds'])<.002
 
 
-def test_weight_versions_are_distinct_and_exact_resume_matches_next_update(tmp_path):
+def test_run_version_is_stable_and_checkpoints_resume_exactly(tmp_path):
     torch.set_num_threads(2);torch.manual_seed(23)
     model=Event4K(ENC,DEC);mel,target=example()
     optimizer=torch.optim.AdamW(model.parameters(),lr=.001);sampler=random.Random(42)
@@ -55,6 +55,7 @@ def test_weight_versions_are_distinct_and_exact_resume_matches_next_update(tmp_p
     assert version=='AL-Event4K@0.3.0'
     path=tmp_path/'model_latest.pt';before=sha256(path)
     saved=torch.load(path,weights_only=True)
+    assert saved['checkpoint_id']=='AL-Event4K@0.3.0/e0001'
     update(model,optimizer,mel,target);expected=state_hash(model.state_dict())
     with pytest.raises(RuntimeError,match='immutable'):
         save_version(args,Budget(),model,optimizer,sampler,{},1,1,curves,best)
@@ -66,7 +67,47 @@ def test_weight_versions_are_distinct_and_exact_resume_matches_next_update(tmp_p
     objective2=update(restored,other,mel,target)
     assert state_hash(restored.state_dict())==expected
     version,_=save_version(args,Budget(),restored,other,sample2,{},2,2,curves+[dict(epoch=2,objective=objective2)],best)
-    assert version=='AL-Event4K@0.3.1' and sha256(path)!=before
+    assert version=='AL-Event4K@0.3.0' and sha256(path)!=before
+    assert torch.load(path,weights_only=True)['checkpoint_id']=='AL-Event4K@0.3.0/e0002'
+
+
+def test_legacy_version_labels_map_to_epoch_identities_without_losing_hashes():
+    old=dict(versions=[dict(version='AL-Event4K@0.3.0',epoch=1,checkpoint_sha256='first'),
+                       dict(version='AL-Event4K@0.3.19',epoch=20,checkpoint_sha256='twentieth')],
+             aliases=dict(best_fit='AL-Event4K@0.3.0',latest='AL-Event4K@0.3.19'))
+    converted=checkpoint_manifest(old,'AL-Event4K@0.3.0')
+    assert converted['aliases']==dict(best_fit='AL-Event4K@0.3.0/e0001',latest='AL-Event4K@0.3.0/e0020')
+    assert converted['versions'][1]['checkpoint_sha256']=='twentieth'
+    assert converted['versions'][1]['legacy_version']=='AL-Event4K@0.3.19'
+    assert checkpoint_manifest(converted,'AL-Event4K@0.3.0')==converted
+    assert old['versions'][1]['version']=='AL-Event4K@0.3.19'
+
+
+def test_resume_patch_requires_matching_checkpoint_and_unchanged_training_contract(tmp_path):
+    import json
+    path=tmp_path/'model_latest.pt';path.write_bytes(b'checkpoint fixture')
+    old=dict(lr=.001,source_sha256={'script/train_event4k.py':'old','src/event4k.py':'unchanged'})
+    new=dict(lr=.001,source_sha256={'script/train_event4k.py':'new','src/event4k.py':'unchanged'})
+    with pytest.raises(ValueError,match='recorded compatibility'):check_resume_config(old,new,tmp_path,path)
+    record=dict(scope='version_metadata_and_evaluation_only',checkpoint_sha256=sha256(path),old_trainer_sha256='old',new_trainer_sha256='new')
+    (tmp_path/'resume_compatibility.json').write_text(json.dumps(record))
+    check_resume_config(old,new,tmp_path,path)
+    with pytest.raises(ValueError,match='training config'):check_resume_config(old,dict(new,lr=.002),tmp_path,path)
+    changed=dict(new,source_sha256=dict(new['source_sha256'],**{'src/event4k.py':'changed'}))
+    with pytest.raises(ValueError,match='model/data'):check_resume_config(old,changed,tmp_path,path)
+    path.write_bytes(b'different checkpoint')
+    with pytest.raises(ValueError,match='recorded compatibility'):check_resume_config(old,new,tmp_path,path)
+
+
+def test_training_clock_satisfies_real_benchmark_contract():
+    import json
+    from pathlib import Path
+    clock=reference_clock(dict(timebase_bpm=120.,offset_seconds=0.))
+    reference=[note(0.,0),note(.5,1)]
+    score=scoring_module().score(reference,dict(notes=reference,status='completed'),clock,
+        json.loads(Path('benchmarks/v1/protocol.json').read_text())['rhythm'])
+    assert score['onset_f1_50ms']==1. and score['grid_bonus']==1.
+    assert clock['source']=='training_chart_metadata' and not clock['verified']
 
 
 @pytest.mark.parametrize('event_budget',[4,3])

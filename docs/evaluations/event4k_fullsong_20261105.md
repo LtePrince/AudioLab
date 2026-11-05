@@ -26,6 +26,8 @@
 
 基础输入仍是4×5同步事件，保留模型名AL-Event4K。**v0.3.0（整曲有BPM）**绑定首轮保存权重；其后不同权重递增末位编号。**v0.4.0（整曲无BPM）**仍未启动，`weights=null`。参数量未变：有BPM为13,439,894，无BPM为13,439,638。
 
+上述逐轮递增规则已被用户后续要求取代：**整次300轮训练统一为v0.3.0**，以epoch/step和SHA区分检查点。旧每轮编号仅保留为历史别名，已有文件字节不变。
+
 新schema为`audiolab-synchronous-event4k-full-song-v1`，默认输出目录`out/event4k_fullsong_bpm_20261105`。旧分窗目标、probe、checkpoint不能直接恢复为整曲协议；E26原代码由提交`28f2a2b`保留，历史源代码哈希和运行记录仍可查。用户要求丢弃后，旧权重与专属标签已删除，进程终止，没有发送SIGCONT继续旧协议。
 
 入口仍为`script.train_event4k`。先执行`prepare --device cpu`和测试；用户授权后，对新协议单独执行GPU梯度／资源预检，再用新目录从零训练。没有把旧窗口实验的预检当成新协议的验证。
@@ -48,3 +50,11 @@
 2026-11-05T01:23:15Z快照：已完成140次更新，处于第1轮140/300首，尚无首轮权重或自然曲质量评分。GPU峰值分配0.388GiB、保留0.586GiB，RSS1.88GiB，磁盘剩26.06GiB。[启动快照](assets/event4k_fullsong_20261105/startup.json)、[完整配置与源码哈希](assets/event4k_fullsong_20261105/config.json)。训练持续在后台运行；实时进度以运行目录的`training.json`为准。
 
 2026-11-05T01:26:05Z复核：**第1轮已完成，v0.3.0/e1/300步权重已保存且参数SHA验证通过；当前第2轮、460步。** 首轮约163秒，训练目标6.3769；这是训练损失，不是自由生成F1或网格成绩。固定首轮文件为`out/event4k_fullsong_bpm_20261105/model_e0001.pt`，后续权重不覆盖此身份。[首轮记录与SHA](assets/event4k_fullsong_20261105/first_epoch.json)。
+
+## 一次训练计划一个版本号；第20轮评测恢复
+
+用户修订规则后，E27-BPM的整个300轮计划统一为**AL-Event4K v0.3.0**。检查点写作`v0.3.0/e0020`并记录step和参数SHA；旧日志中的v0.3.19仅作这一检查点的历史别名。`versions.json`已经转换，`latest`／`best_fit`指向具体epoch；已有三个权重文件转换前后字节SHA相同。后续保存不再每轮升级产品版本。[规则迁移与校验](assets/event4k_fullsong_20261105/version_policy_update.json)。
+
+检查命名时发现：第20轮／6000步完整断点已保存，首次评测因训练曲时钟字典缺少`source`而抛出KeyError，进程已经退出。修复为明确提供`training_chart_metadata`来源，不改变BPM、offset或网格公式；恢复时先补跑遗漏的第20轮评测，再进入第21轮。模型、标签、学习率、优化器和随机状态恢复方式不变。
+
+19项Event4K测试通过，包含真实benchmark的时钟接口、稳定版本号下的不同epoch身份、旧别名迁移幂等性和精确优化器/RNG恢复。源码兼容恢复只允许记录中指定的旧断点SHA与新旧trainer文件哈希；模型／数据源码或训练配方不同仍拒绝恢复，未关闭来源校验。

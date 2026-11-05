@@ -1,0 +1,173 @@
+{
+  "updated_at_utc": "2026-11-05T02:23:55.340487+00:00",
+  "policy": "one_version_per_training_plan",
+  "product": "AL-Event4K@0.3.0",
+  "planned_epochs": 300,
+  "legacy_aliases": [
+    {
+      "legacy_version": "AL-Event4K@0.3.0",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0001",
+      "epoch": 1,
+      "steps": 300,
+      "parameter_sha256": "162fd3d0f4f1cbc5abd2868bfbe6ccdbe09ae052c60157a94445166c28d772fe"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.1",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0002",
+      "epoch": 2,
+      "steps": 600,
+      "parameter_sha256": "017a68cad78a45bbeb352f419f0b69d6a3d561e5ed16f1d1bced3fa8ce86fd05"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.2",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0003",
+      "epoch": 3,
+      "steps": 900,
+      "parameter_sha256": "6cd77400127746f0dad1150d26946b3c2fc797e9687f80c0f25e1deb1dd8f4fa"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.3",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0004",
+      "epoch": 4,
+      "steps": 1200,
+      "parameter_sha256": "a10f4f6e9b4aaa38bfc4b88168cb63412a0c33ad075885e69b539210c0a90424"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.4",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0005",
+      "epoch": 5,
+      "steps": 1500,
+      "parameter_sha256": "3e54c0abf50ccc7db38e3cc3752b3da65f551da1fbb0c2321e34782b8c8a58ad"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.5",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0006",
+      "epoch": 6,
+      "steps": 1800,
+      "parameter_sha256": "3aa1126e0cc7780a6983ac08583d794719474a005f7a71ed69cd16e5057b333d"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.6",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0007",
+      "epoch": 7,
+      "steps": 2100,
+      "parameter_sha256": "e413b378b3e207114141c59a8f4f8d45609d7123adf7198b2a7ed32d5d570fcc"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.7",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0008",
+      "epoch": 8,
+      "steps": 2400,
+      "parameter_sha256": "81d7e91a18c41fcb1617d17b40f64cf206c171f73519ff547637d923b1847c53"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.8",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0009",
+      "epoch": 9,
+      "steps": 2700,
+      "parameter_sha256": "ecb3eceddbdab26351d5681af59f2e3bb3afd56d04c138e579e05e23694b572c"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.9",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0010",
+      "epoch": 10,
+      "steps": 3000,
+      "parameter_sha256": "fd0e4f6a90394f1bc5d6d5d43139589d0cd53cc36dabb63ca364cc89e8fb2cc7"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.10",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0011",
+      "epoch": 11,
+      "steps": 3300,
+      "parameter_sha256": "450f9f0488bb18058fd4aaeeb57dcbd65db5b5cd424d096cb6b86ce4c9ed1c2d"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.11",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0012",
+      "epoch": 12,
+      "steps": 3600,
+      "parameter_sha256": "c21280de85b69925557e40eaddf80477eb553149833810a2d1717e8ddd4070e6"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.12",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0013",
+      "epoch": 13,
+      "steps": 3900,
+      "parameter_sha256": "bb2a3923cfe244029b6ed35ce80471dc38452d02e8b6ea04977654c16a90dcf9"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.13",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0014",
+      "epoch": 14,
+      "steps": 4200,
+      "parameter_sha256": "28d166ead79c44b4a12ab91f616dfe2dc8a27911693ac43b9cf941c382366c31"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.14",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0015",
+      "epoch": 15,
+      "steps": 4500,
+      "parameter_sha256": "f6bc2d1d3b6367668f9c508e9116e82488b4a1fea3656ab10691b8d6b00032a9"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.15",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0016",
+      "epoch": 16,
+      "steps": 4800,
+      "parameter_sha256": "0ad8a56c2462921d924534e284527265c831e693fc81d9f3cd2f5d3228170674"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.16",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0017",
+      "epoch": 17,
+      "steps": 5100,
+      "parameter_sha256": "ae8953674adaefe60a232036f780e7510d8aae018350b62fee8d66c334df48a5"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.17",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0018",
+      "epoch": 18,
+      "steps": 5400,
+      "parameter_sha256": "2d5fafb8416d506327e25f55a53193cc86722d27e2a07b602e2670d428a16fea"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.18",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0019",
+      "epoch": 19,
+      "steps": 5700,
+      "parameter_sha256": "5ac3952d3b3e206d67e0cf5b210aa40ff3c275956516bcc5e923c733adc8bc8d"
+    },
+    {
+      "legacy_version": "AL-Event4K@0.3.19",
+      "checkpoint_id": "AL-Event4K@0.3.0/e0020",
+      "epoch": 20,
+      "steps": 6000,
+      "parameter_sha256": "9e385298815523beda374d6f134c7864cac2f20ab78d54448aa540d82cb2cf03"
+    }
+  ],
+  "checkpoint_files_unchanged": {
+    "model_e0001.pt": "f604425274527402b1461c7fd728d8c6e4a965b6b4a46cfb622640fc2f2b0b29",
+    "model_latest.pt": "80639a6ccbb38426bdaecc5217bd73441134a93a39679708f6176ed3869d0a96",
+    "model_best_fit.pt": "8e20ff5aacbd31d31069e395d4653488d3a13b273d95a4cf311b6209653aa8eb"
+  },
+  "original_failure": {
+    "type": "KeyError",
+    "message": "'source'",
+    "time": 1793844934.6768477,
+    "pid": 2430785
+  },
+  "resume_compatibility": {
+    "scope": "version_metadata_and_evaluation_only",
+    "checkpoint_sha256": "80639a6ccbb38426bdaecc5217bd73441134a93a39679708f6176ed3869d0a96",
+    "old_trainer_sha256": "0bb15b083203006be4a5deb680c1a6dce9ca39945cb80e490bbd13c179a9229a",
+    "new_trainer_sha256": "93878ad4c6fea95985ee6527fc2043a0cc2b0c547526027e3512a3b570169b6a",
+    "reason": "User requests one version for the entire 300-epoch plan; fix missing benchmark clock source and retry checkpoint evaluation before continuation.",
+    "checkpoint_epoch": 20,
+    "checkpoint_steps": 6000,
+    "parameter_sha256": "9e385298815523beda374d6f134c7864cac2f20ab78d54448aa540d82cb2cf03"
+  },
+  "validation": "19 Event4K tests passed, including exact optimizer/RNG restoration, version migration and real benchmark clock contract.",
+  "status": "validated_ready_to_resume",
+  "weights_rewritten": false,
+  "model_training_contract_changed": false
+}

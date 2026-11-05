@@ -1,7 +1,7 @@
 {
   "schema": "audiolab-model-registry-v1",
   "registered_at_utc": "2026-10-23T09:09:27.110480+00:00",
-  "version_policy": "User rule effective 2026-11-05: different core input representations use different model names; additional conditioning uses versions of the same name; every distinct retained/evaluated/delivered parameter checkpoint has its own immutable version. New IDs use v0.C.R, with C the conditioning configuration and R the weight revision. Epoch/step and SHA remain mandatory provenance, not substitutes for versions. Legacy IDs/reports remain intact and may receive exact checkpoint aliases; no checkpoint bytes or paths are rewritten.",
+  "version_policy": "One model version per complete training plan; E27-BPM epochs 1-300 share AL-Event4K@0.3.0. Core input representations use different model names, conditioning/output configurations and new training plans use versions. Individual checkpoints use run/epoch/step and SHA; interrupted continuation within the same plan does not change the version. Preserve old labels as aliases and never rewrite existing checkpoint bytes.",
   "families": [
     {
       "id": "AL-Onset",
@@ -437,7 +437,7 @@
       "title": "整曲同步事件AR：时间嵌入＋显式BPM",
       "output_protocol": "audiolab-synchronous-event4k-full-song-v1",
       "delivery": "not_released_experimental_training",
-      "training_status": "checkpoint_saved_run_continuing",
+      "training_status": "checkpoint_saved_evaluation_recovery",
       "implementation_status": "implemented_cpu_and_gpu_validated",
       "quality_status": "not_evaluated",
       "evidence": "docs/evaluations/event4k_fullsong_20261105.md",
@@ -473,13 +473,19 @@
         "parameter_sha256": "162fd3d0f4f1cbc5abd2868bfbe6ccdbe09ae052c60157a94445166c28d772fe",
         "epoch": 1,
         "steps": 300,
-        "bytes": 53850125
+        "bytes": 53850125,
+        "checkpoint_id": "AL-Event4K@0.3.0/e0001",
+        "role": "retained_first_epoch_checkpoint"
       },
       "run": "E27-BPM",
       "parameters": 13439894,
       "progress_file": "out/event4k_fullsong_bpm_20261105/training.json",
       "weight_version_manifest": "out/event4k_fullsong_bpm_20261105/versions.json",
-      "planned_first_checkpoint": "out/event4k_fullsong_bpm_20261105/model_e0001.pt"
+      "planned_first_checkpoint": "out/event4k_fullsong_bpm_20261105/model_e0001.pt",
+      "version_scope": "training_plan",
+      "planned_epochs": 300,
+      "checkpoint_manifest": "out/event4k_fullsong_bpm_20261105/versions.json",
+      "legacy_epoch_label_mapping": "docs/evaluations/assets/event4k_fullsong_20261105/version_policy_update.json"
     },
     {
       "id": "AL-Event4K@0.4.0",
@@ -6848,8 +6854,8 @@
         "AL-Event4K@0.3.0",
         "AL-Event4K@0.4.0"
       ],
-      "status": "bpm_training_running",
-      "training_updates": 460,
+      "status": "evaluation_error_recovery",
+      "training_updates": 6000,
       "quality_status": "not_evaluated",
       "question": "取消周期性END_WINDOW及输出时间窗，保留完整历史与全曲音频，检查自由生成的误结束和缺音。",
       "result": {
@@ -6873,7 +6879,8 @@
         "docs/evaluations/assets/event4k_fullsong_20261105/gradient_probe_summary.json",
         "docs/evaluations/assets/event4k_fullsong_20261105/startup.json",
         "docs/evaluations/assets/event4k_fullsong_20261105/discard_legacy.json",
-        "docs/evaluations/assets/event4k_fullsong_20261105/first_epoch.json"
+        "docs/evaluations/assets/event4k_fullsong_20261105/first_epoch.json",
+        "docs/evaluations/assets/event4k_fullsong_20261105/version_policy_update.json"
       ],
       "output_protocol": "audiolab-synchronous-event4k-full-song-v1",
       "target_manifest_sha256": "88a8442466d2ab3f63655fe5e6bb0c0208263a3640d9155cc5e9582034b7a1c7",
@@ -6892,13 +6899,13 @@
         "Legacy E26 checkpoint/cache schema cannot silently resume under E27.",
         "No natural-song training or new retained weights; original E26 process remains stopped."
       ],
-      "progress_snapshot_utc": "2026-11-05T01:26:05.428229+00:00",
+      "progress_snapshot_utc": "2026-11-05T02:23:55.340487+00:00",
       "user_decision": "Discard E26/v0.2 training products; start v0.3.0 full-song BPM arm from random initialization. No-BPM and S remain unstarted/paused.",
       "runs": [
         {
           "id": "E27-BPM",
           "model": "AL-Event4K@0.3.0",
-          "status": "running",
+          "status": "evaluation_error_recovery",
           "initialization": "scratch",
           "inherited_parameter_tensors": 0,
           "parent_checkpoint": null,
@@ -6935,8 +6942,8 @@
           "target_manifest_sha256": "88a8442466d2ab3f63655fe5e6bb0c0208263a3640d9155cc5e9582034b7a1c7",
           "mel_manifest_sha256": "dd5c2e7e638e26b736a44457f47de8f5bade4e2d385152c36c13f8bcfc8a0ea3",
           "pid": 2430785,
-          "optimizer_steps": 460,
-          "completed_epochs": 1,
+          "optimizer_steps": 6000,
+          "completed_epochs": 20,
           "progress_snapshot_utc": "2026-11-05T01:26:05.428229+00:00",
           "resources": {
             "disk_free_gib": 25.809715270996094,
@@ -6948,7 +6955,9 @@
           "weight_version_manifest": "out/event4k_fullsong_bpm_20261105/versions.json",
           "quality_status": "not_evaluated",
           "active_epoch": 2,
-          "latest_saved_version": "AL-Event4K@0.3.0"
+          "latest_saved_version": "AL-Event4K@0.3.0",
+          "latest_saved_checkpoint": "AL-Event4K@0.3.0/e0020",
+          "version_policy": "One version for all 300 epochs; checkpoints distinguished by epoch/step/SHA."
         }
       ]
     }
@@ -7324,28 +7333,32 @@
       "scope": "future training/optimization for 4K and free-x; retain historical weights/results"
     },
     "A": {
-      "status": "training",
+      "status": "evaluation_error_recovery",
       "active_run": "E27-BPM",
       "scope": "Event4K full-song single EOS; all300 and full encoder+decoder random initialization; BPM arm only.",
       "initialization": "scratch",
       "latest_completed_run": "E23-A",
       "latest_checkpoint_version": "AL-Event4K@0.3.0",
       "next_design": "E27",
-      "next_design_status": "bpm_training_running"
+      "next_design_status": "bpm_training_running",
+      "latest_checkpoint_id": "AL-Event4K@0.3.0/e0020"
     }
   },
   "legacy_version_policy": "Retrospective catalog IDs, not upstream release claims. 0.x denotes development. Minor identifies architecture/conditioning/data stages; patch identifies same-architecture continuation or fixes. Variants and checkpoint epochs are separate. No weight bytes or existing paths are renamed. Extending the epoch budget within an unchanged experiment keeps the version and experiment ID; record the phase, parent checkpoint and epoch.",
   "naming_policy": {
     "effective_date": "2026-11-05",
     "source": "explicit_user_instruction",
-    "format": "MODEL_NAME@0.CONFIGURATION.WEIGHT_REVISION",
+    "format": "MODEL_NAME@0.CONFIGURATION.TRAINING_PLAN",
     "new_name_for": "core input representation changes",
     "same_name_for": "optional information injection such as BPM, onset or history summary; output protocol changes with unchanged core input representation",
-    "weight_revision_for": "every different retained/evaluated/delivered parameter checkpoint, including continuation and seed changes",
     "version_is_quality_ranking": false,
     "latest_is_alias_only": true,
     "legacy_records_preserved": true,
     "evidence": "docs/event4k_model_design_20261105.md",
-    "configuration_for": "conditioning or output protocol; 0.1/0.2 legacy windows, 0.3/0.4 full-song single EOS"
-  }
+    "configuration_for": "conditioning or output protocol; 0.1/0.2 legacy windows, 0.3/0.4 full-song single EOS",
+    "training_plan_revision_for": "A distinct training or fine-tuning plan, not every epoch; resumes within this 300-epoch plan keep v0.3.0.",
+    "checkpoint_identity": "model version + run + epoch/step + parameter SHA",
+    "current_run_epoch_budget": 300
+  },
+  "superseded_per_checkpoint_version_policy": "User rule effective 2026-11-05: different core input representations use different model names; additional conditioning uses versions of the same name; every distinct retained/evaluated/delivered parameter checkpoint has its own immutable version. New IDs use v0.C.R, with C the conditioning configuration and R the weight revision. Epoch/step and SHA remain mandatory provenance, not substitutes for versions. Legacy IDs/reports remain intact and may receive exact checkpoint aliases; no checkpoint bytes or paths are rewritten."
 }
